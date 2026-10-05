@@ -2096,7 +2096,10 @@ function n2Handoff(load){
   try{ localStorage.removeItem("praxisrapport.handoff"); }catch(e){}
   if(Date.now() - (h.at || 0) > 10 * 60 * 1000) return;          // nur frische Übergaben
   const id = String(h.id || "");
-  if(id && S.settings.paketId === id && S.students.length) return; // dieses Paket ist schon da
+  if(id && S.settings.paketId === id && S.students.length){        // dieses Paket ist schon da:
+    if(n2Refresh(h.paket.students)){ persist(); render(); }          // nur Fotos, Nicknames usw. nachführen
+    return;
+  }
   const hatDaten = !S.settings.isSample && Object.keys(S.days || {}).some(k => S.days[k] && Object.keys(S.days[k]).length);
   if(hatDaten && S.settings.paketId !== id){
     const lg = (S.settings.uiLang || "de");
@@ -2116,6 +2119,19 @@ function n2GoToday(){
   const d = new Date(), td = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   const s = slots().find(x => x.date === td); if(s) curSlot = s.id;
   return !!s;
+}
+/* Gleiches Paket, neuer Stand (z. B. Fotos nachgeliefert): Personendaten ergänzen, erfasste Tage bleiben. */
+function n2Refresh(list){
+  if(!Array.isArray(list)) return false;
+  let ch = false;
+  S.students.forEach(s => {
+    const n = list.find(x => x && ((s.nr && x.nr && String(x.nr) === String(s.nr)) || (!s.nr && x.id === s.id)));
+    if(!n) return;
+    ["foto","nick","klasse","gruppe","email","ortPlan","tmTage"].forEach(k => {
+      if(n[k] !== undefined && JSON.stringify(n[k]) !== JSON.stringify(s[k])){ s[k] = n[k]; ch = true; }
+    });
+  });
+  return ch;
 }
 setTimeout(() => n2Handoff(o => onRestore({target:{files:[new File([JSON.stringify(o)], "paket.json")], value:""}})), 30);
 </script>

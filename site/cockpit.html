@@ -412,6 +412,9 @@ async function readPdf(file){
       const y1 = Math.round(top), y0 = Math.max(0, Math.round(top - 124*scale));
       const crop = trimWhite(ctx, x0, y0, x1 - x0, y1 - y0);
       if(!crop) return;
+      /* Fotos mit weissem Hintergrund: nicht bis auf die Silhouette zuschneiden, sondern Hochformat 4:5 behalten */
+      const want = Math.round(crop.h * 0.8);
+      if(crop.w < want){ const cx = crop.x + crop.w / 2; const nx = Math.max(x0, Math.round(cx - want / 2)); crop.w = Math.min(want, x1 - nx); crop.x = nx; }
       const out = document.createElement("canvas"); const H = 150, W = Math.round(H * crop.w / crop.h);
       out.width = Math.min(W, 150); out.height = Math.round(out.width * crop.h / crop.w);
       out.getContext("2d").drawImage(cv, crop.x, crop.y, crop.w, crop.h, 0, 0, out.width, out.height);

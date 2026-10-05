@@ -114,6 +114,12 @@ with sync_playwright() as p:
     pg.locator("#main li").nth(1).locator("button").click(); pg.wait_for_load_state(); pg.wait_for_timeout(600)
     r = pg.evaluate("()=>Object.keys(S.days).length")
     ok("Gleiches Paket erneut oeffnen: Erfassung bleibt, keine Rueckfrage", r == 1 and not dialogs, (r, dialogs))
+    # gleiches Paket mit nachgelieferten Fotos -> Fotos kommen an, Erfassung bleibt
+    pg.goto(U + "mein.html"); pg.wait_for_timeout(400)
+    pg.evaluate("(f)=>{ const p = SEM.pakete[1]; p.paket.students.forEach(s=>{ s.foto = 'data:image/png;base64,' + f; }); openPack(p, false); }", "neu")
+    pg.wait_for_load_state(); pg.wait_for_timeout(700)
+    r = pg.evaluate("()=>({d:Object.keys(S.days).length, f:S.students.map(s=>s.foto), obs:Object.values(S.days)[0][S.students[0].id].obs})")
+    ok("Gleiches Paket mit neuen Fotos: Fotos nachgefuehrt, Erfassung bleibt", r["d"] == 1 and all(x.endswith("neu") for x in r["f"]) and r["obs"] == ["hyg-n1"] and not dialogs, (r["d"], r["obs"], [x[-6:] for x in r["f"]]))
     pg.goto(U + "mein.html"); pg.wait_for_timeout(400)
     pg.evaluate("()=>{ SEM.pakete[1] = Object.assign({}, SEM.pakete[1], {id:'anderes', titel:'Anderes Paket'}); openPack(SEM.pakete[1], false); }")
     ACCEPT[0] = False; pg.wait_for_load_state(); pg.wait_for_timeout(600)
