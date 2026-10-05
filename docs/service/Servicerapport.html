@@ -120,6 +120,7 @@ section[hidden]{display:none!important}
 .opill{font:600 12px/1 inherit;border:1px solid var(--line2);background:transparent;color:inherit;border-radius:999px;padding:6px 10px;cursor:pointer;white-space:nowrap;max-width:45%;overflow:hidden;text-overflow:ellipsis}
 .opill.alt{background:var(--petrol);border-color:var(--petrol);color:#fff}
 .ava{border-radius:50%;object-fit:cover;flex:0 0 auto;background:#ddd;vertical-align:middle}
+.ava.ini{display:inline-flex;align-items:center;justify-content:center;background:#e3e3e1;color:#005779;font-weight:700;letter-spacing:.02em}
 .stud-h .nm{font-family:var(--f-disp);font-weight:600;font-size:15.5px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .grade{font-variant-numeric:tabular-nums;font-weight:600;font-size:15px;padding:3px 9px;border-radius:5px;background:var(--surf3);border:1px solid var(--line);min-width:52px;text-align:center}
 .grade.g-hi{background:var(--plusSoft);border-color:var(--plusLine);color:var(--plus)}
@@ -1118,13 +1119,20 @@ function slots(){
     out.push({id:"d"+String(i+1).padStart(2,"0"), wd:wd[j % wd.length], week:Math.floor(j/wd.length)+1,
               idx:i+1, exam: HAS_EXAM && i === n-1});
   }
+  /* Noten 2.0: echte Daten aus dem Paket (S.settings.slotDates); der Wochentag folgt dann dem Datum */
+  const dts = Array.isArray(S.settings.slotDates) ? S.settings.slotDates : [];
+  out.forEach((s, i) => { const d = String(dts[i] || "");
+    if(/^\d{4}-\d{2}-\d{2}$/.test(d)){ s.date = d; s.wd = ["su","mo","tu","we","th","fr","sa"][new Date(d + "T12:00:00").getDay()]; } });
   return out;
 }
+function dmy(d){ return String(d).slice(8,10) + "." + String(d).slice(5,7) + "."; }
+/* Noten 2.0: Wochentag mit Datum statt Wochennummer; ohne Datum die Nummer des Einsatztags */
 function slotLabel(s, lg){
   const L2 = lg || S.settings.uiLang;
-  if(s.exam) return tOut("examDay", L2);
-  return (L2 === "zh") ? ("第" + s.week + "周 " + wdName(s.wd, L2))
-                       : (wdName(s.wd, L2) + " " + s.week);
+  if(s.exam) return tOut("examDay", L2) + (s.date ? " " + dmy(s.date) : "");
+  if(s.date) return wdName(s.wd, L2) + " " + dmy(s.date);
+  return (L2 === "zh") ? ("第" + s.idx + "天 " + wdName(s.wd, L2))
+                       : (wdName(s.wd, L2) + " (" + s.idx + ")");
 }
 const slotById = id => slots().find(s=>s.id===id) || slots()[0];
 const examSlot = () => slots().find(s=>s.exam) || null;
@@ -1176,7 +1184,10 @@ function avatar(s, size){
   const px = (size || 32) + "px";
   if(s && typeof s.foto === "string" && s.foto.indexOf("data:image/") === 0)
     return el("img",{class:"ava",src:s.foto,alt:"",style:"width:"+px+";height:"+px});
-  return null;
+  /* ohne Foto: Initialen, damit die Liste ruhig bleibt */
+  const w = String((s && s.name) || "?").trim().split(/\s+/);
+  const ini = ((w[0] || "?")[0] + (w.length > 1 ? w[w.length - 1][0] : "")).toUpperCase();
+  return el("span",{class:"ava ini",text:ini,style:"width:"+px+";height:"+px+";font-size:"+Math.round((size || 32) * 0.36)+"px"});
 }
 const nickTag = s => (s && s.nick) ? " «" + s.nick + "»" : "";
 const dayMeta = id => (S.dayMeta && S.dayMeta[id]) || {teacher:"", group:"", team:"", outlet:""};
@@ -1550,8 +1561,8 @@ function slotStrip(onPick){
       "aria-current":String(s.id===curSlot), onclick:()=>{ curSlot = s.id; onPick(); }});
     b.appendChild(el("span",{class:"sd",text: s.exam ? t("examShort") : wdName(s.wd)}));
     b.appendChild(el("span",{class:"sw",text: s.exam
-      ? wdName(s.wd)+" · "+s.idx+"/"+n
-      : t("weekN")+" "+s.week+" · "+s.idx+"/"+n}));
+      ? (s.date ? wdName(s.wd)+" "+dmy(s.date) : wdName(s.wd)+" · "+s.idx+"/"+n)
+      : (s.date ? dmy(s.date) : s.idx+"/"+n)}));
     if(s.id===curSlot) setTimeout(()=>{ try{ b.scrollIntoView({block:"nearest",inline:"center"}); }catch(e){} }, 0);
     strip.appendChild(b);
   });
@@ -1613,7 +1624,7 @@ function renderDay(){
         const c = CHIP[id]; if(!c) return;
         const auto = (id==="tea-n1" && !(r.obs||[]).includes("tea-n1"));
         const pill = el("span",{class:"obs "+(c.d>0?"p":"m")},
-          el("span",{class:"tx",text:chipT(c, S.settings.uiLang)}));
+          el("span",{class:"tx",text:(c.ko ? "K.-o. " : (c.d>0?"+":"\u2212") + c.w.toFixed(2).slice(1) + " ") + chipT(c, S.settings.uiLang)}));
         if(!auto) pill.appendChild(el("button",{class:"x",text:"×","aria-label":"x",
           onclick:()=>{ unseed(); r.obs = r.obs.filter(x=>x!==id); persist(); renderDay(); }}));
         body.appendChild(pill);
@@ -2039,7 +2050,7 @@ function renderWeek(){
   rows.forEach(({s,sum})=>{
     const ex = withExam ? examSummary(s.id) : null;
     const tr2 = el("tr");
-    tr2.appendChild(el("td",{class:"nm",text:s.name}));
+    tr2.appendChild(el("td",{class:"nm"},[avatar(s, 26), document.createTextNode(" " + s.name + nickTag(s))]));
     CRITS.forEach(c=>{
       const g = sum.crit ? sum.crit[c.k] : null;
       tr2.appendChild(el("td",{class:"n"},
@@ -2794,7 +2805,43 @@ document.getElementById("outLang").addEventListener("change", e=>{
   S.settings.outLang = e.target.value; persist(); render();
 });
 
-render();
+
+/* ---- Noten 2.0: Übergabe von der persönlichen Startseite (mein.html) ----
+   Die Startseite legt das passende Paket für genau diese Datei in den Browserspeicher
+   (gleiche Adresse, die Daten verlassen das Gerät nie) und öffnet dann diese Datei.
+   Hier wird es geladen. Bereits erfasste Tage eines anderen Pakets werden nur nach
+   Rückfrage ersetzt. */
+function n2Handoff(load){
+  let h = null;
+  try{ h = JSON.parse(localStorage.getItem("praxisrapport.handoff") || "null"); }catch(e){ h = null; }
+  if(!h || !h.target || !h.paket || !h.paket.settings) return;
+  let me = ""; try{ me = decodeURIComponent((location.pathname || "").split("/").pop() || ""); }catch(e){}
+  if(String(h.target).split("/").pop() !== me) return;
+  try{ localStorage.removeItem("praxisrapport.handoff"); }catch(e){}
+  if(Date.now() - (h.at || 0) > 10 * 60 * 1000) return;          // nur frische Übergaben
+  const id = String(h.id || "");
+  if(id && S.settings.paketId === id && S.students.length) return; // dieses Paket ist schon da
+  const hatDaten = !S.settings.isSample && Object.keys(S.days || {}).some(k => S.days[k] && Object.keys(S.days[k]).length);
+  if(hatDaten && S.settings.paketId !== id){
+    const lg = (S.settings.uiLang || "de");
+    const msg = {
+      de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag teilen», falls noch nicht geschehen.",
+      en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Share day» first if you have not done so.",
+      th: "โหลดชุดข้อมูลใหม่: " + (h.titel || id) + "?\n\nวันที่บันทึกไว้ในไฟล์นี้จะถูกแทนที่ กรุณากด «แชร์ข้อมูลของวันนี้» ก่อน หากยังไม่ได้ทำ"
+    }[lg] || "";
+    try{ if(!window.confirm(msg)) return; }catch(e){ return; }
+  }
+  const p = JSON.parse(JSON.stringify(h.paket));
+  p.settings.paketId = id;
+  Promise.resolve(load(p)).then(() => { n2GoToday(); view = "day"; render(); });
+}
+/* Heute ein Einsatztag des Pakets? Dann direkt diesen Tag zeigen. */
+function n2GoToday(){
+  const d = new Date(), td = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  const s = slots().find(x => x.date === td); if(s) curSlot = s.id;
+  return !!s;
+}
+setTimeout(() => n2Handoff(o => onRestore({target:{files:[new File([JSON.stringify(o)], "paket.json")], value:""}})), 30);
 </script>
 
 </body>

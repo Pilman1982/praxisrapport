@@ -329,10 +329,15 @@ function slots(){
     out.push({id:"d"+String(i+1).padStart(2,"0"), wd:wd[j % wd.length],
               week:Math.floor(j/wd.length)+1, idx:i+1, exam: hasEx && i === n-1});
   }
+  /* Noten 2.0: echte Daten aus dem Paket (S.settings.slotDates); der Wochentag folgt dann dem Datum */
+  const dts = Array.isArray(S.settings.slotDates) ? S.settings.slotDates : [];
+  out.forEach((s, i) => { const d = String(dts[i] || "");
+    if(/^\d{4}-\d{2}-\d{2}$/.test(d)){ s.date = d; s.wd = ["su","mo","tu","we","th","fr","sa"][new Date(d + "T12:00:00").getDay()]; } });
   return out;
 }
 const slotById = id => slots().find(s=>s.id===id) || slots()[0];
-const slotLabel = (s, lg) => s.exam ? tl("examDay", lg||L) : (wdName(s.wd, lg) + " " + s.week);
+const slotLabel = (s, lg) => s.exam ? tl("examDay", lg||L) + (s.date ? " " + dmy(s.date) : "")
+                                     : (wdName(s.wd, lg) + " " + (s.date ? dmy(s.date) : "(" + s.idx + ")"));
 const dayOpen = id => !!S.days[id];
 
 let curSlot = (function(){
@@ -390,7 +395,10 @@ function avatar(s, size){
   const px = (size || 32) + "px";
   if(s && typeof s.foto === "string" && s.foto.indexOf("data:image/") === 0)
     return el("img",{class:"ava",src:s.foto,alt:"",style:"width:"+px+";height:"+px});
-  return null;
+  /* ohne Foto: Initialen, damit die Liste ruhig bleibt */
+  const w = String((s && s.name) || "?").trim().split(/\s+/);
+  const ini = ((w[0] || "?")[0] + (w.length > 1 ? w[w.length - 1][0] : "")).toUpperCase();
+  return el("span",{class:"ava ini",text:ini,style:"width:"+px+";height:"+px+";font-size:"+Math.round((size || 32) * 0.36)+"px"});
 }
 const nickTag = s => (s && s.nick) ? " «" + s.nick + "»" : "";
 
@@ -501,8 +509,7 @@ function renderSlots(){
       "aria-current":String(s.id===curSlot),
       onclick:()=>{ curSlot = s.id; render(); }});
     b.appendChild(el("span",{class:"sd", text: s.exam ? t("examDay") : wdName(s.wd)}));
-    b.appendChild(el("span",{class:"sw", text: s.exam ? (s.idx+"/"+all.length)
-                                                      : (t("week")+" "+s.week+" · "+s.idx+"/"+all.length)}));
+    b.appendChild(el("span",{class:"sw", text: s.date ? dmy(s.date) : (s.idx+"/"+all.length)}));
     if(s.id === curSlot) setTimeout(()=>{ try{ b.scrollIntoView({block:"nearest",inline:"center"}); }catch(e){} }, 0);
     nav.appendChild(b);
   });
@@ -554,9 +561,11 @@ function renderDay(){
     b.appendChild(el("span",{class:"nm"},[
       el("span",{html:""}),
       document.createTextNode(dispName(s) + nickTag(s)),
-      el("div",{class:"sub",text:t(attOf(r)) + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))})
+      el("div",{class:"sub",text:t(attOf(r) === "tm" ? "teamMarket" : attOf(r)) + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))
+        + " · \u00d8 " + n2Fmt(n2Praxis(s.id).avg)})
     ]));
     if(n) b.appendChild(el("span",{class:"pill on",text:String(n)}));
+    b.appendChild(n2Pill(n2Day(curSlot, s.id)));
     b.appendChild(el("span",{class:"chev",text:"›"}));
     li.appendChild(b); ul.appendChild(li);
   });
@@ -575,10 +584,12 @@ function openSheet(student){
   document.body.style.overflow = "hidden";
   const sh = el("div",{class:"sheet"});
   const hd = el("div",{class:"sheet-h"});
+  { const av0 = avatar(student, 44); if(av0) hd.appendChild(av0); }
   hd.appendChild(el("div",{style:"min-width:0;flex:1"},[
     el("div",{class:"nm",text:dispName(student) + nickTag(student)}),
     el("div",{class:"sb",text:slotLabel(slotById(curSlot))})
   ]));
+  hd.appendChild(el("div",{id:"n2grade",class:"gpill big"}));
   hd.appendChild(el("button",{class:"hbtn",text:"✕","aria-label":t("done"),onclick:close}));
   sh.appendChild(hd);
   const body = el("div",{class:"sheet-b"});
@@ -596,6 +607,8 @@ function openSheet(student){
   function draw(){
     body.innerHTML = "";
     const r = dayRec(curSlot, student.id);
+    n2ShowHead(student.id);
+    const n2cg = n2Crit(curSlot, student.id);
 
     /* Anwesenheit */
     body.appendChild(el("span",{class:"eyebrow",style:"display:block;margin-bottom:7px",text:t("attendance")}));
@@ -616,6 +629,7 @@ function openSheet(student){
       const b = el("button",{"aria-current":String(sheetCrit===c.k),
         onclick:()=>{ sheetCrit = c.k; sheetAll = false; draw(); }});
       b.appendChild(el("span",{text:critName(c.k)}));
+      if(n2cg) b.appendChild(el("span",{class:"cg",text:n2cg[c.k].toFixed(2)}));
       if(n) b.appendChild(el("span",{class:"n",text:"("+n+")"}));
       if(sheetCrit === c.k) setTimeout(()=>{ try{ b.scrollIntoView({block:"nearest",inline:"center"}); }catch(e){} }, 0);
       bar.appendChild(b);
@@ -658,7 +672,7 @@ function openSheet(student){
       b.appendChild(el("span",{class:"sg",text: on ? "✓" : (c.d>0 ? "+" : "−")}));
       b.appendChild(el("span",{class:"tx"},[
         document.createTextNode(chipT(c)),
-        el("div",{class:"w",text:(c.d>0?"+ ":"− ")+wtxt})
+        el("div",{class:"w",text:(c.d>0?"+ ":"− ")+wtxt+"  \u00b7  "+n2Effect(c)})
       ]));
       box.appendChild(b);
     });
@@ -797,7 +811,7 @@ async function onLoadBackup(e){
 /* ---------- Fussleiste ---------- */
 function renderBar(){
   const bar = document.getElementById("bar"); bar.innerHTML = "";
-  if(view === "set"){
+  if(view === "set" || view === "grades"){
     bar.appendChild(el("button",{class:"btn pri wide",text:t("done"),
       onclick:()=>{ view = "day"; render(); }}));
     return;
@@ -821,10 +835,13 @@ function render(){
   L = T[S.settings.uiLang] ? S.settings.uiLang : "de";
   document.documentElement.setAttribute("lang", L);
   renderHead(); renderSlots(); renderBar();
-  if(view === "set") renderSet(); else renderDay();
+  if(view === "set") renderSet(); else if(view === "grades") n2RenderGrades(); else renderDay();
 }
 document.getElementById("btnSet").addEventListener("click", ()=>{
   view = (view === "set") ? "day" : "set"; loadArmed = false; render();
 });
 document.getElementById("btnLang").addEventListener("click", cycleLang);
+document.getElementById("btnGrades").addEventListener("click", ()=>{
+  view = (view === "grades") ? "day" : "grades"; render();
+});
 render();

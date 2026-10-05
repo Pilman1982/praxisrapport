@@ -102,6 +102,16 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
 }
 .srow:active{background:var(--surf2)}
 .ava{border-radius:50%;object-fit:cover;flex:0 0 auto;background:#ddd;vertical-align:middle}
+.ava.ini{display:inline-flex;align-items:center;justify-content:center;background:#e3e3e1;color:#005779;font-weight:700;letter-spacing:.02em}
+.gpill{flex:0 0 auto;font-weight:700;font-size:13.5px;padding:5px 9px;border-radius:999px;background:var(--surf2,#eee);margin-left:6px;font-variant-numeric:tabular-nums}
+.gpill.big{font-size:13px;padding:7px 11px;margin:0 8px 0 0;white-space:nowrap}
+.gpill.g-ok{background:#dff1e5;color:#1d5c34}.gpill.g-mid{background:#fbefd5;color:#7a5408}.gpill.g-bad{background:#f8dcd7;color:#8a2416}
+.gpill.strong{outline:2px solid currentColor}
+.srow.grow{flex-wrap:wrap;row-gap:8px}
+.gbox{display:grid;grid-template-rows:auto auto;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px 8px;justify-items:center;flex:1 1 100%}
+.gbox .gl{font-size:11px;color:var(--ink3,#777);text-align:center}
+.gbox .gpill{margin-left:0}
+.critbar .cg{font-size:11px;opacity:.75;margin-left:5px;font-variant-numeric:tabular-nums}
 .srow .nm{flex:1;min-width:0;font-size:16.5px;font-weight:600;
           overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .srow .sub{font-size:12.5px;color:var(--ink3);font-weight:400;margin-top:1px;
@@ -232,6 +242,7 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
     <div style="min-width:0;flex:1">
       <div class="htitle" id="brandSub">Küchenpraxis</div>
     </div>
+    <button class="hbtn" id="btnGrades" aria-label="Noten">Ø</button>
     <button class="hbtn" id="btnLang" aria-label="Sprache">文</button>
     <button class="hbtn" id="btnSet" aria-label="Setup">⚙</button>
   </div>
