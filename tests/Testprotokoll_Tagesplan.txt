@@ -1,0 +1,18 @@
+PRUEFUNG TAGESPLAN 05.10.2026
+
+OK      Keine Fehler, Halbturnus im selben Block ueberschneidet sich nicht []
+OK      Drei Pakete: Service W5, Kueche W6 5T und 4T                     [['W6', 'kueche', '5T', 'Da Fortunat', ''], ['W6', 'kueche', '4T', 'Umami', ''], ['W5', 'service', '10T', 'Da Fortunat',
+OK      Gruppe 'gr1 a' wird zu 'Gruppe 1 Team A'                         Gruppe 1 Team A
+OK      Service: ortPlan markiert die Umami-Tage                         ['', 'Umami', '', '', 'Umami', 'Umami', '', '', 'Umami']
+OK      Service: Team Market an Tag 4                                    [4]
+OK      Kueche 5T: Team Market an Tag 1, kein ortPlan                    {'id': 'p1', 'name': 'Muster Max', 'last': 'Muster', 'first': 'Max', 'nachname': 'Muster', 'vorname': 'Max', 'nick': 'Ma
+OK      service/Servicerapport_Mobil.html: Umami an Tag 2, 5, 6, 9       ['', 'Umami', '', '', 'Umami', 'Umami', '', '', 'Umami', '']
+OK      service/Servicerapport_Mobil.html: Team Market an Tag 4 vorbelegt ['present', 'present', 'present', 'tm', 'present', 'present', 'present', 'present', 'present', 'present']
+OK      service/Servicerapport_Mobil.html: keine JavaScript-Fehler       []
+OK      service/Servicerapport.html: Umami an Tag 2, 5, 6, 9             ['', 'Umami', '', '', 'Umami', 'Umami', '', '', 'Umami', '']
+OK      service/Servicerapport.html: Team Market an Tag 4 vorbelegt      ['present', 'present', 'present', 'tm', 'present', 'present', 'present', 'present', 'present', 'present']
+OK      service/Servicerapport.html: keine JavaScript-Fehler             []
+OK      kueche/Kuechenrapport_Mobil_5Tage_ohneExam.html: Team Market an Tag 1 vorbelegt ['tm', 'present', 'present', 'present', 'present']
+OK      kueche/Kuechenrapport_Mobil_5Tage_ohneExam.html: keine JavaScript-Fehler []
+OK      kueche/Kuechenrapport_5Tage_ohneExam.html: Team Market an Tag 1 vorbelegt ['tm', 'present', 'present', 'present', 'present']
+OK      kueche/Kuechenrapport_5Tage_ohneExam.html: keine JavaScript-Fehler []

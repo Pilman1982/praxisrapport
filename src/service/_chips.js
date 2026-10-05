@@ -1,7 +1,7 @@
 /* ---- Feste Auswahllisten: Klasse und Gruppe ----
    Hier aendern, wenn eine Klasse oder eine Gruppe dazukommt. Beide Apps lesen daraus. */
 const KLASSEN = ["HFD", "HFE1", "HFE2"];
-const GRUPPEN = ["Gruppe 1", "Gruppe 2", "Team 1", "Team 2"];
+const GRUPPEN = ["Gruppe 1 Team A","Gruppe 1 Team B","Gruppe 2 Team A","Gruppe 2 Team B","Gruppe 3 Team A","Gruppe 3 Team B", "Gruppe 1", "Gruppe 2", "Team 1", "Team 2"];
 
 /* ---- Kriterien Servicepraxis ---- */
 const CRITS = [

@@ -217,11 +217,15 @@ function erkenneKlasse(v){
   return m ? ("HF" + m[1] + m[2]).toUpperCase() : "";
 }
 function erkenneGruppe(v){
-  const m = String(v || "").trim().match(/^(gruppe|grp|group|team)\s*(\d+)$/i);
+  const s = String(v || "").trim();
+  /* EHL-Einteilung: "Gruppe 1 Team A", auch "Gruppe 1A", "Gr1 A" */
+  const e = s.match(/^(?:gruppe|grp|gr|group)\s*(\d+)\s*(?:team\s*)?([a-z])$/i);
+  if(e) return "Gruppe " + e[1] + " Team " + e[2].toUpperCase();
+  const m = s.match(/^(gruppe|grp|group|team)\s*(\d+)$/i);
   return m ? ((/^t/i.test(m[1]) ? "Team " : "Gruppe ") + m[2]) : "";
 }
 
-const GRUPPEN = ["Gruppe 1","Team 1","Gruppe 2","Team 2"];
+const GRUPPEN = ["Gruppe 1 Team A","Gruppe 1 Team B","Gruppe 2 Team A","Gruppe 2 Team B","Gruppe 3 Team A","Gruppe 3 Team B","Gruppe 1","Team 1","Gruppe 2","Team 2"];
 const dispName = x => [x && x.last, x && x.first].filter(Boolean).join(" ") || (x && x.name) || "";
 const sortName = x => [x && x.last, x && x.first].filter(Boolean).join(", ") || (x && x.name) || "";
 const longName = x => sortName(x) + (x && x.nick ? " \u00ab" + x.nick + "\u00bb" : "");
@@ -389,9 +393,15 @@ function avatar(s, size){
   return null;
 }
 const nickTag = s => (s && s.nick) ? " «" + s.nick + "»" : "";
+
+/* Tagesplan aus dem Cockpit: Team Market an diesem Einsatztag? */
+function planTM(s, slotId){
+  const sl = slots().find(x => x.id === slotId);
+  return !!(s && Array.isArray(s.tmTage) && sl && s.tmTage.indexOf(sl.idx) >= 0);
+}
 function openSlot(id){
   S.days[id] = S.days[id] || {};
-  S.students.forEach(s=>{ S.days[id][s.id] = S.days[id][s.id] || {att:"present", obs:[], note:null}; });
+  S.students.forEach(s=>{ S.days[id][s.id] = S.days[id][s.id] || {att: planTM(s, id) ? "tm" : "present", obs:[], note:null}; });
   const sl = slotById(id);
   const m = S.dayMeta[id] || {};
   if(!m.teacher) m.teacher = teacherForWd(sl && sl.wd);
