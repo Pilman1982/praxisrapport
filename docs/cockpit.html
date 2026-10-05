@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#001436">
+<meta name="robots" content="noindex">
+<title>Cockpit Kursleitung</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root{--navy:#001436;--petrol:#005779;--salbei:#919388;--terra:#B6633F;--hell:#E3E3E1;--cyan:#5EC7F0;
+  --bg:#F4F4F2;--ink:#1a1f2b;--card:#fff;--line:#d9d9d5;--muted:#5b616b;--field:#fafaf8;--ok:#2f7d4f;--warn:#a86a12;--err:#b3261e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0c111c;--ink:#e9eaee;--card:#151c2b;--line:#2a3346;--muted:#9aa3b2;--hell:#1d2638;--field:#10172a;--ok:#5cc28a;--warn:#e0a948;--err:#ff8a80}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--navy);color:#fff;padding:16px}
+header .in,main{max-width:1180px;margin:0 auto}
+h1{font:600 24px/1.2 Georgia,serif;margin:0}
+header p{margin:4px 0 0;opacity:.85;font-size:13.5px}
+main{padding:16px 16px 60px;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+h2{font:600 17px/1.3 Georgia,serif;margin:0 0 10px;display:flex;gap:10px;align-items:baseline}
+h2 .n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font:600 13px/1 system-ui}
+@media (prefers-color-scheme: dark){h2 .n{background:var(--petrol)}}
+h3{font:600 15px/1.3 Georgia,serif;margin:0}
+.muted{color:var(--muted)} .small{font-size:12.5px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,.btn{font:inherit;font-weight:600;border:0;border-radius:9px;padding:9px 13px;cursor:pointer;background:var(--hell);color:var(--ink);text-decoration:none;display:inline-block}
+button.pri{background:var(--navy);color:#fff}
+@media (prefers-color-scheme: dark){button.pri{background:var(--petrol)}}
+button:disabled{opacity:.45;cursor:default}
+textarea,input[type=text],input[type=search]{width:100%;font:13px/1.45 ui-monospace,Consolas,monospace;color:inherit;background:var(--field);border:1px solid var(--line);border-radius:9px;padding:9px}
+input[type=search]{font:inherit}
+textarea{min-height:90px;resize:vertical}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:14px;text-align:center;color:var(--muted)}
+.drop.over{border-color:var(--petrol);color:var(--ink)}
+.stat{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12.5px;white-space:nowrap}
+.chip.ok{border-color:var(--ok);color:var(--ok)} .chip.warn{border-color:var(--warn);color:var(--warn)} .chip.err{border-color:var(--err);color:var(--err)}
+ul.iss{margin:6px 0 0;padding-left:18px} ul.iss li{margin:2px 0}
+li.err{color:var(--err)} li.warn{color:var(--warn)}
+.tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.tabs button[aria-pressed=true]{background:var(--navy);color:#fff}
+.pk{border:1px solid var(--line);border-radius:12px;margin:10px 0;overflow:hidden}
+.pk-h{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--hell)}
+.pk-h .t{font-weight:600}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-top:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+th{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);border-top:0}
+img.ava{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#ccc;display:block}
+.ph{width:34px;height:34px;border-radius:50%;background:var(--hell);display:grid;place-items:center;font-size:11px;color:var(--muted)}
+.link{font:12px/1.4 ui-monospace,Consolas,monospace;word-break:break-all;color:var(--muted)}
+.ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)}
+.hide{display:none!important}
+.hit{background:color-mix(in srgb,var(--cyan) 22%,transparent)}
+</style>
+</head>
+<body>
+<header><div class="in">
+  <h1>Cockpit Kursleitung</h1>
+  <p>Turnusplan prüfen, Fotos zuordnen, Pakete für die Outlets erzeugen, Rapporte kontrollieren. Alles läuft in diesem Browser. Es wird nichts hochgeladen oder gespeichert.</p>
+</div></header>
+<main>
+
+<section class="card">
+  <h2><span class="n">1</span>Turnusplan laden</h2>
+  <p class="muted small" style="margin-top:0">Das JSON aus Copilot (Prompt 3) hier einfügen oder als Datei wählen.</p>
+  <textarea id="planText" placeholder='{"format":"praxisrapport-turnusplan", ...}'></textarea>
+  <div class="row" style="margin-top:8px">
+    <button class="pri" id="btnPlan">Plan prüfen</button>
+    <button id="btnAdd" title="Weitere Klasse oder weiteren Teil dazunehmen, z. B. wenn Copilot pro Klasse ein JSON liefert">+ Teil hinzufügen</button>
+    <label class="btn">Datei wählen<input type="file" id="planFile" accept=".json,application/json" hidden></label>
+    <span id="planStat" class="small muted"></span>
+  </div>
+</section>
+
+<section class="card">
+  <h2><span class="n">2</span>Fotos (freiwillig)</h2>
+  <div class="drop" id="pdfDrop">Foto-PDF der Schule hierher ziehen oder <label class="btn" style="margin-left:6px">wählen<input type="file" id="pdfFile" accept="application/pdf" multiple hidden></label>
+    <div class="small" style="margin-top:6px">Die Fotos werden über die Studierendennummer (N°) oder den Namen zugeordnet.</div></div>
+  <div id="fotoStat" class="small" style="margin-top:8px"></div>
+</section>
+
+<section class="card">
+  <h2><span class="n">3</span>Prüfung</h2>
+  <div id="checks" class="muted">Noch kein Plan geladen.</div>
+</section>
+
+<section class="card">
+  <h2><span class="n">4</span>Übersicht: wer ist wo</h2>
+  <input type="search" id="search" placeholder="Name, Nickname oder Nummer suchen …" style="margin-bottom:10px">
+  <div class="tabs" id="tabs"></div>
+  <div id="overview" class="muted">Noch kein Plan geladen.</div>
+</section>
+
+<section class="card">
+  <h2><span class="n">5</span>Pakete und Startlinks</h2>
+  <p class="muted small" style="margin-top:0">Ein Paket pro Outlet und Einsatz. Die Dozierenden laden es in der App mit «Sicherung laden» (iPhone/iPad) oder «Sicherung einlesen» (Laptop). Danach sind Namen, Nicknames, Fotos, Klasse, Gruppe und Turnusstart drin.</p>
+  <div class="row"><button class="pri" id="btnZip" disabled>Alle Pakete als ZIP</button><span id="zipStat" class="small muted"></span></div>
+  <div id="packs" style="margin-top:10px"></div>
+</section>
+
+<section class="card">
+  <h2><span class="n">6</span>Eingangskontrolle</h2>
+  <p class="muted small" style="margin-top:0">Rapporte der Dozierenden (JSON, auch ältere) hierher ziehen. Du siehst, was angekommen ist und wie weit erfasst wurde. Für Noten und Versand die Laptop-Fassung öffnen und dort «Rapporte zusammenführen».</p>
+  <div class="drop" id="repDrop">JSON-Rapporte hierher ziehen oder <label class="btn" style="margin-left:6px">wählen<input type="file" id="repFile" accept=".json,application/json" multiple hidden></label></div>
+  <div id="reports" style="margin-top:10px"></div>
+</section>
+
+</main>
+<script>
+"use strict";
+/* ================= Grundlagen ================= */
+const $ = id => document.getElementById(id);
+const el = (tag, attrs, kids) => {
+  const n = document.createElement(tag);
+  for(const k in (attrs||{})){ const v = attrs[k]; if(v == null || v === false) continue;
+    if(k === "text") n.textContent = v; else if(k === "html") n.innerHTML = v;
+    else if(k.slice(0,2) === "on") n.addEventListener(k.slice(2), v); else n.setAttribute(k, v === true ? "" : v); }
+  (Array.isArray(kids) ? kids : (kids ? [kids] : [])).forEach(c => c && n.appendChild(typeof c === "string" ? document.createTextNode(c) : c));
+  return n;
+};
+const BASE = location.href.replace(/[#?].*$/, "").replace(/[^/]*$/, "");
+const WD = ["su","mo","tu","we","th","fr","sa"];
+const WD_DE = {mo:"Mo",tu:"Di",we:"Mi",th:"Do",fr:"Fr",sa:"Sa",su:"So"};
+const VARS = {"10T":{n:10, exam:true, label:"9 Tage + Exam"}, "4T":{n:5, exam:true, label:"4 Tage + Exam"}, "5T":{n:5, exam:false, label:"5 Tage"}};
+const APP = {
+  kueche:  {app:"Kuechenrapport", dir:"kueche",  file:{"10T":"Kuechenrapport","4T":"Kuechenrapport_4Tage_Exam","5T":"Kuechenrapport_5Tage_ohneExam"}, mobil:{"10T":"Kuechenrapport_Mobil","4T":"Kuechenrapport_Mobil_4Tage_Exam","5T":"Kuechenrapport_Mobil_5Tage_ohneExam"}, w2:"hyg2"},
+  service: {app:"Servicerapport", dir:"service", file:{"10T":"Servicerapport","4T":"Servicerapport_4Tage_Exam","5T":"Servicerapport_5Tage_ohneExam"}, mobil:{"10T":"Servicerapport_Mobil","4T":"Servicerapport_Mobil_4Tage_Exam","5T":"Servicerapport_Mobil_5Tage_ohneExam"}, w2:"gas2"}
+};
+const BER_LABEL = {kueche:"Küche", service:"Service"};
+const norm = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+const nameKey = (a, b) => norm(a + " " + b).split(" ").filter(Boolean).sort().join(" ");
+const klasseNorm = v => { const m = String(v||"").trim().match(/^hf\s*([a-z])\s*(\d?)$/i); return m ? ("HF"+m[1]+m[2]).toUpperCase() : String(v||"").trim(); };
+const gruppeNorm = v => { const m = String(v||"").trim().match(/^(gruppe|grp|group|team)\s*(\d+)$/i); return m ? ((/^t/i.test(m[1])?"Team ":"Gruppe ")+m[2]) : String(v||"").trim(); };
+const pDate = s => { const m = String(s||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return null; const d = new Date(+m[1], +m[2]-1, +m[3], 12); return isNaN(d) ? null : d; };
+const fDate = d => d ? String(d.getDate()).padStart(2,"0") + "." + String(d.getMonth()+1).padStart(2,"0") + "." : "–";
+const iso = d => d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+/* Einsatztage zwischen zwei Daten (inklusiv) an den Wochentagen des Plans */
+function workDays(von, bis, wdays){
+  const out = []; if(!von || !bis) return out;
+  for(let d = new Date(von); d <= bis; d.setDate(d.getDate()+1)) if(wdays.includes(WD[d.getDay()])) out.push(new Date(d));
+  return out;
+}
+const fileSafe = s => String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,"");
+
+/* ================= Zustand ================= */
+let PLAN = null, PACKS = [], ISSUES = [], FOTOS = {byNr:{}, byName:{}, n:0}, TAB = "alle";
+
+/* ================= 1 · Plan laden und prüfen ================= */
+function parsePlan(txt){
+  try{ return JSON.parse(String(txt).replace(/^﻿/, "").trim().replace(/^```(?:json)?\s*|\s*```\s*$/g, "")); }
+  catch(e){ $("planStat").innerHTML = '<span class="err">Kein gültiges JSON: ' + e.message.replace(/</g,"&lt;")
+    + '. Ist die Antwort von Copilot vollständig? Sonst «weiter» schreiben oder pro Klasse einzeln erzeugen.</span>'; return null; }
+}
+function loadPlanText(txt){ const o = parsePlan(txt); if(!o) return; PLAN = o; build(); render(); }
+/* Teil hinzufuegen: Studierende eines weiteren JSON anhaengen (gleiche Nummer = ersetzen) */
+function addPlanText(txt){
+  const o = parsePlan(txt); if(!o) return;
+  if(!PLAN){ PLAN = o; build(); render(); return; }
+  const neu = Array.isArray(o.studierende) ? o.studierende : [];
+  PLAN.studierende = (PLAN.studierende || []).filter(s => !s.nr || !neu.some(n => String(n.nr) === String(s.nr))).concat(neu);
+  if((!PLAN.dozierende || !PLAN.dozierende.length) && Array.isArray(o.dozierende)) PLAN.dozierende = o.dozierende;
+  $("planText").value = ""; build(); render();
+  $("planStat").innerHTML += " · Teil mit " + neu.length + " Personen hinzugefügt";
+}
+$("btnPlan").onclick = () => loadPlanText($("planText").value);
+$("btnAdd").onclick = () => addPlanText($("planText").value);
+$("planFile").onchange = async e => { const f = e.target.files[0]; if(!f) return; const t = await f.text(); $("planText").value = t; loadPlanText(t); e.target.value = ""; };
+
+function build(){
+  ISSUES = []; PACKS = [];
+  const err = (m) => ISSUES.push({lv:"err", m}), warn = (m) => ISSUES.push({lv:"warn", m});
+  /* gleichartige Hinweise zusammenfassen, damit die Liste lesbar bleibt */
+  const agg = {};
+  const aggAdd = (key, text, who) => { (agg[key] = agg[key] || {text, who:[]}).who.push(who); };
+  const P = PLAN;
+  if(!P || typeof P !== "object"){ err("Der Plan ist leer."); return; }
+  if(P.format !== "praxisrapport-turnusplan") warn("Feld «format» fehlt oder ist falsch (erwartet: praxisrapport-turnusplan).");
+  const wdays = (Array.isArray(P.wochentage) && P.wochentage.length ? P.wochentage : ["mo","tu","we","th"]).map(x => String(x).toLowerCase()).filter(x => WD.includes(x));
+  P._wd = wdays;
+  const doz = Array.isArray(P.dozierende) ? P.dozierende : [];
+  if(!doz.length) warn("Keine Dozierenden im Plan. Pakete haben dann keinen Namen und keine Sprache.");
+  const studs = Array.isArray(P.studierende) ? P.studierende : [];
+  if(!studs.length) err("Keine Studierenden im Plan.");
+  const seenNr = {}, seenName = {};
+  const packMap = {};
+  studs.forEach((s, i) => {
+    const who = (s.nachname || "?") + " " + (s.vorname || "") + (s.nr ? " (" + s.nr + ")" : "");
+    s._i = i;
+    if(!s.nachname || !s.vorname) err("Person " + (i+1) + ": Nachname oder Vorname fehlt (" + who + ").");
+    s.klasse = klasseNorm(s.klasse); s.gruppe = gruppeNorm(s.gruppe);
+    if(s.klasse && !["HFD","HFE1","HFE2","HFE"].includes(s.klasse)) warn(who + ": unbekannte Klasse «" + s.klasse + "».");
+    if(s.sprache && !["de","en","zh"].includes(s.sprache)) warn(who + ": Sprache «" + s.sprache + "» unbekannt, es gilt Deutsch.");
+    if(s.nr){ if(seenNr[s.nr]) err("Nummer " + s.nr + " doppelt: " + seenNr[s.nr] + " und " + who + "."); seenNr[s.nr] = who; }
+    else aggAdd("nonr", "ohne Studierendennummer (Foto-Zuordnung dann nur über den Namen)", who);
+    const nk = nameKey(s.nachname, s.vorname);
+    if(seenName[nk]) warn("Gleicher Name zweimal: " + who + ". Bitte Nummer prüfen.");
+    seenName[nk] = who;
+    const eins = Array.isArray(s.einsaetze) ? s.einsaetze : [];
+    if(!eins.length) warn(who + ": kein Einsatz eingetragen.");
+    const spans = [];
+    eins.forEach((e, k) => {
+      let ber = String(e.bereich || "").toLowerCase().replace("ü","ue");
+      if(ber === "patisserie"){ ber = "kueche"; if(!e.outlet) e.outlet = "Patisserie"; }
+      if(!APP[ber]){ err(who + ", Einsatz " + (k+1) + ": Bereich «" + e.bereich + "» unbekannt (kueche, service, patisserie)."); return; }
+      const v = String(e.variante || "").toUpperCase();
+      if(!VARS[v]){ err(who + ", Einsatz " + (k+1) + ": Variante «" + e.variante + "» unbekannt (10T, 4T, 5T)."); return; }
+      const von = pDate(e.von), bis = pDate(e.bis);
+      if(!von || !bis){ err(who + ", Einsatz " + (k+1) + ": Datum fehlt oder falsch (Format JJJJ-MM-TT)."); return; }
+      if(bis < von){ err(who + ", Einsatz " + (k+1) + ": «bis» liegt vor «von»."); return; }
+      if(!e.outlet){ err(who + ", Einsatz " + (k+1) + ": Outlet fehlt."); return; }
+      const days = workDays(von, bis, wdays);
+      if(!wdays.includes(WD[von.getDay()])) aggAdd("wd|" + e.outlet + iso(von), e.outlet + ": Beginn " + fDate(von) + " ist ein " + ["So","Mo","Di","Mi","Do","Fr","Sa"][von.getDay()] + ", kein Einsatztag", who);
+      if(days.length !== VARS[v].n) aggAdd("dc|" + e.outlet + v + iso(von) + iso(bis), e.outlet + " " + v + ": " + days.length + " Einsatztage zwischen " + fDate(von) + " und " + fDate(bis) + " (erwartet " + VARS[v].n + "). Study Week oder Feiertag? Sonst Daten prüfen", who);
+      spans.forEach(sp => { if(von <= sp.bis && sp.von <= bis) err(who + ": Einsätze überschneiden sich (" + sp.o + " und " + e.outlet + ")."); });
+      spans.push({von, bis, o:e.outlet});
+      /* Dozierende finden: gleicher Bereich, Outlet in der Liste */
+      const d = doz.find(x => String(x.bereich||"").toLowerCase().replace("ü","ue").replace("patisserie","kueche") === ber
+                    && (x.outlets || []).some(o => norm(o) === norm(e.outlet)))
+             || (e.wechsel && doz.find(x => String(x.bereich||"").toLowerCase() === ber && (x.outlets||[]).some(o => norm(o) === norm(e.wechsel.outlet))));
+      const homeOutlet = d ? d.outlets[0] : e.outlet;
+      const key = [ber, d ? d.name : e.outlet, v, iso(von)].join("|");
+      let p = packMap[key];
+      if(!p){
+        p = packMap[key] = {key, ber, v, von, bis, doz:d || null, outlet:homeOutlet,
+              outlet2: (ber === "service" && d && d.outlets.length > 1) ? d.outlets[1] : "", studs:[]};
+        if(!d) warn("Kein Dozent für " + BER_LABEL[ber] + " " + e.outlet + " eingetragen.");
+      }
+      if(bis > p.bis) p.bis = bis;
+      let wAb = 0, wOut = "";
+      if(e.wechsel && e.wechsel.outlet){
+        const ab = pDate(e.wechsel.ab);
+        if(!ab || ab < von || ab > bis) warn(who + ": Wechseldatum fehlt oder liegt ausserhalb des Einsatzes.");
+        else { wAb = workDays(von, ab, wdays).length; wOut = e.wechsel.outlet; }
+        if(ber !== "service") warn(who + ": Wechsel ist nur im Service vorgesehen.");
+      }
+      /* Ein Einsatz im zweiten Restaurant einer Service-Gruppe: ganzer Einsatz dort */
+      if(ber === "service" && p.outlet2 && norm(e.outlet) === norm(p.outlet2) && !wOut){ wAb = 1; wOut = p.outlet2; }
+      p.studs.push({s, e, wAb, wOut, days: days.length});
+    });
+  });
+  Object.values(agg).forEach(a => warn(a.text + ": " + (a.who.length > 4 ? a.who.length + " Personen" : a.who.join(", ")) + "."));
+  PACKS = Object.values(packMap).sort((a, b) => a.ber.localeCompare(b.ber) || a.von - b.von || a.outlet.localeCompare(b.outlet));
+  PACKS.forEach(p => {
+    p.studs.sort((a, b) => (a.s.nachname||"").localeCompare(b.s.nachname||"", "de"));
+    const sd = WD[p.von.getDay()];
+    p.startIdx = Math.max(0, wdays.indexOf(sd));
+    if(p.studs.length > 14) warn(BER_LABEL[p.ber] + " " + p.outlet + " " + p.v + ": " + p.studs.length + " Personen in einem Paket. Stimmt das?");
+    p.file = ["Paket", {kueche:"Kueche", service:"Service"}[p.ber], fileSafe(p.outlet + (p.outlet2 ? "-" + p.outlet2 : "")), p.v, iso(p.von)].join("_") + ".json";
+  });
+}
+
+/* ================= Pakete im App-Format ================= */
+function same(list){ const u = Array.from(new Set(list.filter(Boolean))); return u.length === 1 ? u[0] : ""; }
+function packageJSON(p){
+  const A = APP[p.ber], V = VARS[p.v];
+  const studs = p.studs.map(x => {
+    const s = x.s, id = "p" + (s.nr ? String(s.nr).replace(/\W/g,"") : Math.abs(hash(nameKey(s.nachname, s.vorname))).toString(36));
+    const o = {id, name:[s.nachname, s.vorname].filter(Boolean).join(" "),
+      last:s.nachname||"", first:s.vorname||"", nachname:s.nachname||"", vorname:s.vorname||"",
+      nick:s.nickname||"", mail:s.email||"", lang:["de","en","zh"].includes(s.sprache) ? s.sprache : "",
+      klasse:s.klasse||"", gruppe:s.gruppe||""};
+    if(s.nr) o.nr = String(s.nr);
+    const f = fotoFor(s); if(f) o.foto = f;
+    if(x.wAb && x.wOut){ o.wechselAb = x.wAb; o.wechselOutlet = x.wOut; }
+    return o;
+  });
+  const teacher = p.doz ? p.doz.name : "";
+  const settings = {group: same(p.studs.map(x=>x.s.klasse)), team: same(p.studs.map(x=>x.s.gruppe)),
+    outlet:p.outlet, teacher, uiLang: p.doz && ["de","en","th"].includes(p.doz.sprache) ? p.doz.sprache : "de",
+    outLang:"de", weekdays:PLAN._wd.slice(), startIdx:p.startIdx, base:5, isSample:false};
+  settings[A.w2] = true;
+  if(p.outlet2) settings.outlet2 = p.outlet2;
+  if(p.doz && p.doz.plan && typeof p.doz.plan === "object") settings.teacherPlan = p.doz.plan;
+  return {app:A.app, variant:p.v, savedAt:new Date().toISOString(), source:"cockpit",
+    meta:{group:settings.group, team:settings.team, outlet:p.outlet, outlet2:p.outlet2||"", teacher,
+          slotCount:V.n, hasExam:V.exam, weekdays:settings.weekdays, startIdx:p.startIdx,
+          startDay:WD_DE[WD[p.von.getDay()]], von:iso(p.von), bis:iso(p.bis), semester:PLAN.semester||"", turnus:PLAN.bezeichnung||""},
+    settings, students:studs, days:{}, dayMeta:{}};
+}
+function hash(s){ let h = 0; for(let i = 0; i < s.length; i++){ h = ((h<<5)-h) + s.charCodeAt(i); h |= 0; } return h; }
+function startLink(p){
+  const A = APP[p.ber]; const q = [];
+  const add = (k, v) => { if(v) q.push(k + "=" + encodeURIComponent(v)); };
+  if(p.doz){ add("lang", p.doz.sprache); }
+  add("outlet", p.outlet); add("outlet2", p.outlet2);
+  if(p.doz){ add("dozent", p.doz.name);
+    if(p.doz.plan) q.push("plan=" + Object.entries(p.doz.plan).map(([k,v]) => k + ":" + encodeURIComponent(v)).join(",")); }
+  return BASE + A.dir + "/" + A.mobil[p.v] + ".html" + (q.length ? "#" + q.join("&") : "");
+}
+function download(name, text){
+  const a = el("a",{href:URL.createObjectURL(new Blob([text],{type:"application/json"})), download:name});
+  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+$("btnZip").onclick = async () => {
+  if(!window.JSZip){ $("zipStat").textContent = "ZIP nicht verfügbar (offline). Bitte Pakete einzeln speichern."; return; }
+  const z = new JSZip();
+  PACKS.forEach(p => z.file(p.file, JSON.stringify(packageJSON(p), null, 1)));
+  z.file("Startlinks.txt", PACKS.map(p => BER_LABEL[p.ber] + " · " + p.outlet + (p.outlet2 ? " + " + p.outlet2 : "") + " · " + p.v + " · ab " + fDate(p.von)
+    + " · " + (p.doz ? p.doz.name : "ohne Dozent") + "\n" + startLink(p) + "\n").join("\n"));
+  const blob = await z.generateAsync({type:"blob"});
+  const a = el("a",{href:URL.createObjectURL(blob), download:"Pakete_" + fileSafe(PLAN.semester||"") + "_" + fileSafe(PLAN.bezeichnung||"Turnus") + ".zip"});
+  document.body.appendChild(a); a.click(); setTimeout(()=>a.remove(), 500);
+  $("zipStat").textContent = PACKS.length + " Pakete und Startlinks.txt gespeichert.";
+};
+
+/* ================= 2 · Fotos aus der PDF ================= */
+function fotoFor(s){
+  if(s.nr && FOTOS.byNr[String(s.nr)]) return FOTOS.byNr[String(s.nr)];
+  return FOTOS.byName[nameKey(s.nachname, s.vorname)] || "";
+}
+async function readPdf(file){
+  if(!window.pdfjsLib) throw new Error("PDF-Leser nicht geladen (Internet nötig).");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  const pdf = await pdfjsLib.getDocument({data: new Uint8Array(await file.arrayBuffer())}).promise;
+  const found = [];
+  for(let pn = 1; pn <= pdf.numPages; pn++){
+    const page = await pdf.getPage(pn);
+    const scale = 3, vp = page.getViewport({scale});
+    const cv = document.createElement("canvas"); cv.width = vp.width; cv.height = vp.height;
+    const ctx = cv.getContext("2d", {willReadFrequently:true});
+    ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height);
+    await page.render({canvasContext:ctx, viewport:vp}).promise;
+    const tc = await page.getTextContent();
+    const items = tc.items.filter(it => it.str && it.str.trim()).map(it => {
+      const [x, y] = vp.convertToViewportPoint(it.transform[4], it.transform[5]);
+      const h = Math.hypot(it.transform[2], it.transform[3]) * scale;
+      return {s:it.str.trim(), x, y, w:it.width * scale, h, cx: x + it.width * scale / 2};
+    });
+    /* Anker: Zeile mit der Studierendennummer, z. B. "N° étu : 1234567890" */
+    const anchors = items.filter(it => /N\s*°.*?(\d{6,})/.test(it.s) || /^\d{8,}$/.test(it.s));
+    anchors.forEach(a => {
+      const nr = (a.s.match(/(\d{6,})/) || [])[1]; if(!nr) return;
+      /* Namenszeilen direkt darüber, gleiche Spalte */
+      const lines = items.filter(it => it !== a && Math.abs(it.cx - a.cx) < 60*scale && it.y < a.y && a.y - it.y < 32*scale && !/N\s*°/.test(it.s))
+                         .sort((p, q) => p.y - q.y);
+      const name = lines.map(l => l.s).join(" ");
+      const top = (lines.length ? lines[0].y - lines[0].h : a.y - a.h) - 3*scale;
+      /* Fotobereich über dem Namen, dann weisse Ränder abschneiden */
+      const x0 = Math.max(0, Math.round(a.cx - 68*scale)), x1 = Math.min(cv.width, Math.round(a.cx + 68*scale));
+      const y1 = Math.round(top), y0 = Math.max(0, Math.round(top - 124*scale));
+      const crop = trimWhite(ctx, x0, y0, x1 - x0, y1 - y0);
+      if(!crop) return;
+      const out = document.createElement("canvas"); const H = 150, W = Math.round(H * crop.w / crop.h);
+      out.width = Math.min(W, 150); out.height = Math.round(out.width * crop.h / crop.w);
+      out.getContext("2d").drawImage(cv, crop.x, crop.y, crop.w, crop.h, 0, 0, out.width, out.height);
+      found.push({nr, name, foto: out.toDataURL("image/jpeg", 0.8)});
+    });
+  }
+  return found;
+}
+function trimWhite(ctx, x, y, w, h){
+  if(w <= 4 || h <= 4) return null;
+  const d = ctx.getImageData(x, y, w, h).data;
+  let minX = w, minY = h, maxX = -1, maxY = -1;
+  for(let j = 0; j < h; j += 2) for(let i = 0; i < w; i += 2){
+    const k = (j * w + i) * 4; if(d[k] < 238 || d[k+1] < 238 || d[k+2] < 238){ if(i < minX) minX = i; if(i > maxX) maxX = i; if(j < minY) minY = j; if(j > maxY) maxY = j; }
+  }
+  if(maxX < 0 || (maxX - minX) < 20 || (maxY - minY) < 20) return null;
+  return {x: x + minX, y: y + minY, w: maxX - minX + 1, h: maxY - minY + 1};
+}
+async function onPdfs(files){
+  $("fotoStat").textContent = "Lese Fotos …";
+  let n = 0;
+  try{
+    for(const f of files){
+      const list = await readPdf(f);
+      list.forEach(x => { FOTOS.byNr[x.nr] = x.foto; if(x.name) FOTOS.byName[nameKey(x.name, "")] = x.foto; n++; });
+    }
+    FOTOS.n = Object.keys(FOTOS.byNr).length;
+    showFotoStat(n);
+    if(PLAN){ build(); render(); }
+  }catch(e){ $("fotoStat").innerHTML = '<span class="err">' + e.message + '</span>'; }
+}
+function showFotoStat(nNew){
+  let txt = FOTOS.n + " Fotos gelesen.";
+  if(PLAN && Array.isArray(PLAN.studierende)){
+    const miss = PLAN.studierende.filter(s => !fotoFor(s));
+    txt += " Zugeordnet: " + (PLAN.studierende.length - miss.length) + " von " + PLAN.studierende.length + ".";
+    if(miss.length && miss.length <= 12) txt += " Ohne Foto: " + miss.map(s => s.nachname + " " + s.vorname).join(", ") + ".";
+  }
+  $("fotoStat").textContent = txt;
+}
+$("pdfFile").onchange = e => { onPdfs([...e.target.files]); e.target.value = ""; };
+dropZone("pdfDrop", files => onPdfs(files.filter(f => /pdf$/i.test(f.name) || f.type === "application/pdf")));
+
+/* ================= 6 · Eingangskontrolle ================= */
+const REPS = [];
+async function onReports(files){
+  for(const f of files){
+    try{
+      const o = JSON.parse(await f.text());
+      if(!o || !Array.isArray(o.students)) throw new Error("kein Rapport");
+      const st = o.settings || {}, m = o.meta || {};
+      const days = o.days || {};
+      const filled = Object.keys(days).filter(k => days[k] && Object.keys(days[k]).length).length;
+      let e = 0, u = 0, l = 0, tm = 0, obs = 0;
+      Object.values(days).forEach(d => Object.values(d || {}).forEach(r => {
+        if(!r) return; if(r.att === "excused") e++; else if(r.att === "unexcused") u++; else if(r.att === "late") l++; else if(r.att === "tm") tm++;
+        if(Array.isArray(r.obs)) obs += r.obs.length; }));
+      const app = o.app || (/service/i.test(f.name) ? "Servicerapport" : /kuech|kitchen/i.test(f.name) ? "Kuechenrapport" : "?");
+      REPS.push({file:f.name, app, variant:o.variant || "10T", outlet:m.outlet || st.outlet || "", teacher:m.teacher || st.teacher || "",
+        saved:o.savedAt ? new Date(o.savedAt) : null, n:o.students.length, filled, e, u, l, tm, obs, source:o.source || "",
+        students:o.students.map(s => nameKey(s.nachname || s.last || (s.name||"").split(" ")[0], s.vorname || s.first || (s.name||"").split(" ").slice(1).join(" ")))});
+    }catch(err){ REPS.push({file:f.name, bad:true}); }
+  }
+  renderReports(); if(PLAN) render();
+}
+function renderReports(){
+  const host = $("reports"); host.innerHTML = "";
+  if(!REPS.length) return;
+  const tb = el("table");
+  tb.appendChild(el("tr",{},["Datei","App","Var.","Outlet","Dozent/in","gespeichert","Pers.","Tage","entsch.","unentsch.","versp.","Beob."].map(h => el("th",{text:h}))));
+  REPS.forEach(r => {
+    if(r.bad){ tb.appendChild(el("tr",{},[el("td",{text:r.file}), el("td",{class:"err",colspan:"11",text:"nicht lesbar oder kein Rapport"})])); return; }
+    const age = r.saved ? Math.round((Date.now() - r.saved) / 864e5) : null;
+    tb.appendChild(el("tr",{},[el("td",{text:r.file}), el("td",{text:r.app.replace("rapport","")}), el("td",{text:r.variant}),
+      el("td",{text:r.outlet}), el("td",{text:r.teacher}),
+      el("td",{class: age != null && age > 3 ? "warn" : "", text: r.saved ? r.saved.toLocaleDateString("de-CH") + (age != null ? " (vor " + age + " T.)" : "") : "–"}),
+      el("td",{text:String(r.n)}), el("td",{text:String(r.filled)}), el("td",{text:String(r.e)}), el("td",{class:r.u?"err":"",text:String(r.u)}),
+      el("td",{text:String(r.l)}), el("td",{text:String(r.obs)})]));
+  });
+  host.appendChild(el("div",{class:"tw"}, tb));
+}
+$("repFile").onchange = e => { onReports([...e.target.files]); e.target.value = ""; };
+dropZone("repDrop", files => onReports(files.filter(f => /json$/i.test(f.name))));
+
+function dropZone(id, cb){
+  const z = $(id);
+  ["dragenter","dragover"].forEach(ev => z.addEventListener(ev, e => { e.preventDefault(); z.classList.add("over"); }));
+  ["dragleave","drop"].forEach(ev => z.addEventListener(ev, e => { e.preventDefault(); z.classList.remove("over"); }));
+  z.addEventListener("drop", e => cb([...(e.dataTransfer.files || [])]));
+}
+
+/* ================= Darstellung ================= */
+function render(){
+  const P = PLAN; const studs = (P && P.studierende) || [];
+  const nErr = ISSUES.filter(i => i.lv === "err").length, nWarn = ISSUES.length - nErr;
+  $("planStat").innerHTML = P ? (studs.length + " Studierende · " + PACKS.length + " Pakete · "
+    + (nErr ? '<span class="err">' + nErr + ' Fehler</span>' : '<span class="ok">keine Fehler</span>') + (nWarn ? ' · <span class="warn">' + nWarn + ' Hinweise</span>' : "")) : "";
+  /* Prüfung */
+  const ch = $("checks"); ch.innerHTML = ""; ch.classList.remove("muted");
+  const stat = el("div",{class:"stat"});
+  const byBer = b => PACKS.filter(p => p.ber === b).reduce((n, p) => n + p.studs.length, 0);
+  stat.appendChild(el("span",{class:"chip",text:studs.length + " Studierende"}));
+  stat.appendChild(el("span",{class:"chip",text:"Küche: " + byBer("kueche") + " Einsätze"}));
+  stat.appendChild(el("span",{class:"chip",text:"Service: " + byBer("service") + " Einsätze"}));
+  stat.appendChild(el("span",{class:"chip " + (FOTOS.n ? "ok" : ""),text:"Fotos: " + studs.filter(s => fotoFor(s)).length + " / " + studs.length}));
+  stat.appendChild(el("span",{class:"chip " + (nErr ? "err" : "ok"),text:nErr ? nErr + " Fehler" : "keine Fehler"}));
+  if(nWarn) stat.appendChild(el("span",{class:"chip warn",text:nWarn + " Hinweise"}));
+  ch.appendChild(stat);
+  if(ISSUES.length){ const ul = el("ul",{class:"iss"}); ISSUES.forEach(i => ul.appendChild(el("li",{class:i.lv,text:i.m}))); ch.appendChild(ul); }
+  else ch.appendChild(el("p",{class:"ok",style:"margin:4px 0 0",text:"Alles in Ordnung. Die Pakete können erzeugt werden."}));
+  /* Tabs */
+  const tabs = $("tabs"); tabs.innerHTML = "";
+  [["alle","Alle"],["kueche","Küche"],["service","Service"]].forEach(([k, l]) =>
+    tabs.appendChild(el("button",{"aria-pressed":String(TAB === k), text:l, onclick:()=>{ TAB = k; render(); }})));
+  renderOverview();
+  renderPacks();
+  $("btnZip").disabled = !PACKS.length;
+  if(FOTOS.n) showFotoStat();
+}
+function avatarCell(s){
+  const f = fotoFor(s);
+  return el("td",{}, f ? el("img",{class:"ava",src:f,alt:""}) : el("div",{class:"ph",text:((s.vorname||"?")[0] + (s.nachname||"?")[0]).toUpperCase()}));
+}
+function arrived(p){
+  return REPS.find(r => !r.bad && r.app === APP[p.ber].app && norm(r.outlet) === norm(p.outlet) && r.variant === p.v
+    && p.studs.some(x => r.students.includes(nameKey(x.s.nachname, x.s.vorname))));
+}
+function renderOverview(){
+  const host = $("overview"); host.innerHTML = ""; host.classList.remove("muted");
+  const q = norm($("search").value);
+  const list = PACKS.filter(p => TAB === "alle" || p.ber === TAB);
+  if(!list.length){ host.textContent = "Keine Einsätze."; return; }
+  list.forEach(p => {
+    const rows = p.studs.filter(x => !q || norm([x.s.nachname, x.s.vorname, x.s.nickname, x.s.nr].join(" ")).includes(q));
+    if(q && !rows.length) return;
+    const box = el("div",{class:"pk"});
+    const rep = arrived(p);
+    box.appendChild(el("div",{class:"pk-h"},[
+      el("div",{},[el("div",{class:"t",text:BER_LABEL[p.ber] + " · " + p.outlet + (p.outlet2 ? " ⇄ " + p.outlet2 : "")}),
+        el("div",{class:"small muted",text:VARS[p.v].label + " · " + fDate(p.von) + " bis " + fDate(p.bis) + " · Start " + WD_DE[WD[p.von.getDay()]]
+          + " · " + (p.doz ? p.doz.name + " (" + (p.doz.sprache || "de").toUpperCase() + ")" : "ohne Dozent")})]),
+      el("div",{class:"row"},[el("span",{class:"chip",text:p.studs.length + " Pers."}),
+        rep ? el("span",{class:"chip ok",text:"Rapport da · " + rep.filled + " Tage"}) : null])
+    ]));
+    const tb = el("table");
+    tb.appendChild(el("tr",{},["","Name","Nickname","Klasse","Gruppe","Nr.","Einsatz","Tage","Wechsel"].map(h => el("th",{text:h}))));
+    rows.forEach(x => {
+      const s = x.s;
+      tb.appendChild(el("tr",{class: q ? "hit" : ""},[avatarCell(s), el("td",{text:(s.nachname||"") + " " + (s.vorname||"")}),
+        el("td",{text:s.nickname || ""}), el("td",{text:s.klasse || ""}), el("td",{text:s.gruppe || ""}), el("td",{class:"muted",text:s.nr || ""}),
+        el("td",{text:x.e.outlet + " · " + fDate(pDate(x.e.von)) + "–" + fDate(pDate(x.e.bis))}),
+        el("td",{class: x.days !== VARS[p.v].n ? "warn" : "", text:String(x.days)}),
+        el("td",{text: x.wOut ? "ab Tag " + x.wAb + " " + x.wOut : ""})]));
+    });
+    box.appendChild(el("div",{class:"tw"}, tb));
+    host.appendChild(box);
+  });
+}
+$("search").addEventListener("input", () => PLAN && renderOverview());
+function renderPacks(){
+  const host = $("packs"); host.innerHTML = "";
+  if(!PACKS.length) return;
+  const tb = el("table");
+  tb.appendChild(el("tr",{},["Paket","Dozent/in","Pers.","Startlink","",""].map(h => el("th",{text:h}))));
+  PACKS.forEach(p => {
+    const link = startLink(p);
+    tb.appendChild(el("tr",{},[
+      el("td",{},[el("div",{text:BER_LABEL[p.ber] + " · " + p.outlet + (p.outlet2 ? " ⇄ " + p.outlet2 : "") + " · " + p.v}),
+                 el("div",{class:"small muted",text:"ab " + fDate(p.von) + " · " + p.file})]),
+      el("td",{text:p.doz ? p.doz.name : "–"}), el("td",{text:String(p.studs.length)}),
+      el("td",{style:"white-space:normal;max-width:360px"}, el("div",{class:"link",text:link})),
+      el("td",{}, el("button",{text:"Link kopieren",onclick:e=>{ navigator.clipboard && navigator.clipboard.writeText(link); e.target.textContent = "Kopiert ✓"; }})),
+      el("td",{}, el("button",{class:"pri",text:"Paket speichern",onclick:()=>download(p.file, JSON.stringify(packageJSON(p), null, 1))}))
+    ]));
+  });
+  host.appendChild(el("div",{class:"tw"}, tb));
+}
+</script>
+</body>
+</html>

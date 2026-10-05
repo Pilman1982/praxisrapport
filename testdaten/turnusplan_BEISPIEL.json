@@ -1,0 +1,894 @@
+{
+ "format": "praxisrapport-turnusplan",
+ "version": 1,
+ "semester": "HS26",
+ "bezeichnung": "Testturnus (erfundene Daten)",
+ "wochentage": [
+  "mo",
+  "tu",
+  "we",
+  "th"
+ ],
+ "dozierende": [
+  {
+   "name": "Koch Essence",
+   "bereich": "kueche",
+   "outlets": [
+    "The Essence"
+   ],
+   "sprache": "de"
+  },
+  {
+   "name": "Koch Patisserie",
+   "bereich": "kueche",
+   "outlets": [
+    "Patisserie"
+   ],
+   "sprache": "de"
+  },
+  {
+   "name": "Koch Umami",
+   "bereich": "kueche",
+   "outlets": [
+    "Umami"
+   ],
+   "sprache": "th"
+  },
+  {
+   "name": "Koch Fortunat",
+   "bereich": "kueche",
+   "outlets": [
+    "Da Fortunat"
+   ],
+   "sprache": "de"
+  },
+  {
+   "name": "Koch Campigiana",
+   "bereich": "kueche",
+   "outlets": [
+    "Campigiana"
+   ],
+   "sprache": "de"
+  },
+  {
+   "name": "Service Essence",
+   "bereich": "service",
+   "outlets": [
+    "The Essence"
+   ],
+   "sprache": "en"
+  },
+  {
+   "name": "Service A / Service B",
+   "bereich": "service",
+   "outlets": [
+    "Umami",
+    "Da Fortunat"
+   ],
+   "sprache": "de",
+   "plan": {
+    "mo": "Service A",
+    "tu": "Service A",
+    "we": "Service B",
+    "th": "Service B"
+   }
+  },
+  {
+   "name": "Service Campigiana",
+   "bereich": "service",
+   "outlets": [
+    "Campigiana"
+   ],
+   "sprache": "de"
+  }
+ ],
+ "studierende": [
+  {
+   "nr": "1000000001",
+   "nachname": "Ammann",
+   "vorname": "Lea",
+   "nickname": "",
+   "email": "lea.ammann@beispiel.ch",
+   "klasse": "HFD",
+   "gruppe": "Gruppe 1",
+   "sprache": "de",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "The Essence",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "The Essence",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000002",
+   "nachname": "Bürgi",
+   "vorname": "Nino",
+   "nickname": "",
+   "email": "nino.burgi@beispiel.ch",
+   "klasse": "HFD",
+   "gruppe": "Gruppe 1",
+   "sprache": "de",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Patisserie",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Umami",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000003",
+   "nachname": "Caflisch",
+   "vorname": "Seraina",
+   "nickname": "Sera",
+   "email": "seraina.caflisch@beispiel.ch",
+   "klasse": "HFD",
+   "gruppe": "Gruppe 1",
+   "sprache": "de",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Umami",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Campigiana",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000004",
+   "nachname": "Da Silva",
+   "vorname": "Rui Miguel",
+   "nickname": "Rui",
+   "email": "rui.dasilva@beispiel.ch",
+   "klasse": "HFD",
+   "gruppe": "Gruppe 2",
+   "sprache": "de",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Umami",
+     "von": "2026-10-12",
+     "bis": "2026-10-19",
+     "variante": "5T"
+    },
+    {
+     "bereich": "kueche",
+     "outlet": "Campigiana",
+     "von": "2026-10-20",
+     "bis": "2026-10-27",
+     "variante": "4T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "The Essence",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000005",
+   "nachname": "Egger",
+   "vorname": "Jana",
+   "nickname": "",
+   "email": "jana.egger@beispiel.ch",
+   "klasse": "HFD",
+   "gruppe": "Gruppe 2",
+   "sprache": "de",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Campigiana",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Umami",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T",
+     "wechsel": {
+      "outlet": "Da Fortunat",
+      "ab": "2026-11-04"
+     }
+    }
+   ]
+  },
+  {
+   "nr": "1000000006",
+   "nachname": "Frei",
+   "vorname": "Luca",
+   "nickname": "",
+   "email": "luca.frei@beispiel.ch",
+   "klasse": "HFD",
+   "gruppe": "Gruppe 2",
+   "sprache": "de",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "The Essence",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Campigiana",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000007",
+   "nachname": "Gisler",
+   "vorname": "Timo",
+   "nickname": "Timi",
+   "email": "timo.gisler@beispiel.ch",
+   "klasse": "HFD",
+   "gruppe": "Team 1",
+   "sprache": "de",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Patisserie",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "The Essence",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000008",
+   "nachname": "Hösli",
+   "vorname": "Anja",
+   "nickname": "",
+   "email": "anja.hosli@beispiel.ch",
+   "klasse": "HFD",
+   "gruppe": "Team 1",
+   "sprache": "de",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Umami",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Umami",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000009",
+   "nachname": "Imhof",
+   "vorname": "Dario",
+   "nickname": "",
+   "email": "dario.imhof@beispiel.ch",
+   "klasse": "HFD",
+   "gruppe": "Team 2",
+   "sprache": "de",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Da Fortunat",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Campigiana",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000010",
+   "nachname": "Jenny",
+   "vorname": "Selina",
+   "nickname": "",
+   "email": "selina.jenny@beispiel.ch",
+   "klasse": "HFD",
+   "gruppe": "Team 2",
+   "sprache": "de",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Campigiana",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "The Essence",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000011",
+   "nachname": "Chen",
+   "vorname": "Yuxuan",
+   "nickname": "Ethan",
+   "email": "yuxuan.chen@beispiel.ch",
+   "klasse": "HFE1",
+   "gruppe": "Gruppe 1",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "The Essence",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Umami",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T",
+     "wechsel": {
+      "outlet": "Da Fortunat",
+      "ab": "2026-11-04"
+     }
+    }
+   ]
+  },
+  {
+   "nr": "1000000012",
+   "nachname": "Liu",
+   "vorname": "Mengqi",
+   "nickname": "Mia",
+   "email": "mengqi.liu@beispiel.ch",
+   "klasse": "HFE2",
+   "gruppe": "Gruppe 1",
+   "sprache": "zh",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Patisserie",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Campigiana",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000013",
+   "nachname": "Wang",
+   "vorname": "Haoran",
+   "nickname": "Henry",
+   "email": "haoran.wang@beispiel.ch",
+   "klasse": "HFE1",
+   "gruppe": "Gruppe 1",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Umami",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "The Essence",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000014",
+   "nachname": "Zhang",
+   "vorname": "Xinyi",
+   "nickname": "Cindy",
+   "email": "xinyi.zhang@beispiel.ch",
+   "klasse": "HFE2",
+   "gruppe": "Gruppe 1",
+   "sprache": "zh",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Da Fortunat",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Umami",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000015",
+   "nachname": "Nguyen",
+   "vorname": "Thi Lan",
+   "nickname": "Lan",
+   "email": "thi.nguyen@beispiel.ch",
+   "klasse": "HFE1",
+   "gruppe": "Gruppe 1",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Campigiana",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Campigiana",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000016",
+   "nachname": "Sharma",
+   "vorname": "Aarav",
+   "nickname": "",
+   "email": "aarav.sharma@beispiel.ch",
+   "klasse": "HFE2",
+   "gruppe": "Gruppe 2",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "The Essence",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "The Essence",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000017",
+   "nachname": "Li",
+   "vorname": "Jiahao",
+   "nickname": "Jack",
+   "email": "jiahao.li@beispiel.ch",
+   "klasse": "HFE1",
+   "gruppe": "Gruppe 2",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Patisserie",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Umami",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T",
+     "wechsel": {
+      "outlet": "Da Fortunat",
+      "ab": "2026-11-04"
+     }
+    }
+   ]
+  },
+  {
+   "nr": "1000000018",
+   "nachname": "Zhao",
+   "vorname": "Yiran",
+   "nickname": "Eve",
+   "email": "yiran.zhao@beispiel.ch",
+   "klasse": "HFE2",
+   "gruppe": "Gruppe 2",
+   "sprache": "zh",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Umami",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Campigiana",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000019",
+   "nachname": "Kim",
+   "vorname": "Minji",
+   "nickname": "",
+   "email": "minji.kim@beispiel.ch",
+   "klasse": "HFE1",
+   "gruppe": "Gruppe 2",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Da Fortunat",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "The Essence",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000020",
+   "nachname": "Okafor",
+   "vorname": "Chidi",
+   "nickname": "",
+   "email": "chidi.okafor@beispiel.ch",
+   "klasse": "HFE2",
+   "gruppe": "Gruppe 2",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Campigiana",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Umami",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000021",
+   "nachname": "Huang",
+   "vorname": "Zihan",
+   "nickname": "Leo",
+   "email": "zihan.huang@beispiel.ch",
+   "klasse": "HFE1",
+   "gruppe": "Team 1",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "The Essence",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Campigiana",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000022",
+   "nachname": "Sun",
+   "vorname": "Ruoxi",
+   "nickname": "Rose",
+   "email": "ruoxi.sun@beispiel.ch",
+   "klasse": "HFE2",
+   "gruppe": "Team 1",
+   "sprache": "zh",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Patisserie",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "The Essence",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000023",
+   "nachname": "Pereira",
+   "vorname": "Ana Clara",
+   "nickname": "Ana",
+   "email": "ana.pereira@beispiel.ch",
+   "klasse": "HFE1",
+   "gruppe": "Team 1",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Umami",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Umami",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T",
+     "wechsel": {
+      "outlet": "Da Fortunat",
+      "ab": "2026-11-04"
+     }
+    }
+   ]
+  },
+  {
+   "nr": "1000000024",
+   "nachname": "Wu",
+   "vorname": "Junjie",
+   "nickname": "Jason",
+   "email": "junjie.wu@beispiel.ch",
+   "klasse": "HFE2",
+   "gruppe": "Team 1",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Da Fortunat",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Campigiana",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000025",
+   "nachname": "Lin",
+   "vorname": "Shuting",
+   "nickname": "Sophie",
+   "email": "shuting.lin@beispiel.ch",
+   "klasse": "HFE1",
+   "gruppe": "Team 2",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Campigiana",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "The Essence",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000026",
+   "nachname": "Tan",
+   "vorname": "Wei Ming",
+   "nickname": "William",
+   "email": "wei.tan@beispiel.ch",
+   "klasse": "HFE2",
+   "gruppe": "Team 2",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "The Essence",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Umami",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000027",
+   "nachname": "van der Berg",
+   "vorname": "Sanne",
+   "nickname": "",
+   "email": "sanne.vanderberg@beispiel.ch",
+   "klasse": "HFE1",
+   "gruppe": "Team 2",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Patisserie",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Campigiana",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000028",
+   "nachname": "Xu",
+   "vorname": "Boyang",
+   "nickname": "Bob",
+   "email": "boyang.xu@beispiel.ch",
+   "klasse": "HFE2",
+   "gruppe": "Team 2",
+   "sprache": "zh",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Umami",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "The Essence",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  },
+  {
+   "nr": "1000000029",
+   "nachname": "Ma",
+   "vorname": "Yutong",
+   "nickname": "Tina",
+   "email": "yutong.ma@beispiel.ch",
+   "klasse": "HFE1",
+   "gruppe": "Team 2",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Da Fortunat",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Umami",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T",
+     "wechsel": {
+      "outlet": "Da Fortunat",
+      "ab": "2026-11-04"
+     }
+    }
+   ]
+  },
+  {
+   "nr": "1000000030",
+   "nachname": "Gao",
+   "vorname": "Zeyu",
+   "nickname": "Zack",
+   "email": "zeyu.gao@beispiel.ch",
+   "klasse": "HFE2",
+   "gruppe": "Team 2",
+   "sprache": "en",
+   "einsaetze": [
+    {
+     "bereich": "kueche",
+     "outlet": "Campigiana",
+     "von": "2026-10-12",
+     "bis": "2026-10-27",
+     "variante": "10T"
+    },
+    {
+     "bereich": "service",
+     "outlet": "Campigiana",
+     "von": "2026-10-28",
+     "bis": "2026-11-12",
+     "variante": "10T"
+    }
+   ]
+  }
+ ]
+}

@@ -522,6 +522,10 @@ function saubereStudierende(list){
         klasse:   erkenneKlasse(s.klasse) || String(s.klasse || "").trim(),
         gruppe:   erkenneGruppe(s.gruppe) || String(s.gruppe || "").trim()
       };
+      /* Noten 2.0: Studierendennummer, Foto und Wechselplan aus dem Cockpit mitnehmen */
+      if(s.nr) o.nr = String(s.nr).trim();
+      if(typeof s.foto === "string" && s.foto.indexOf("data:image/") === 0) o.foto = s.foto;
+      if(s.wechselAb && s.wechselOutlet){ o.wechselAb = parseInt(s.wechselAb, 10) || 0; o.wechselOutlet = String(s.wechselOutlet); }
       o.name = anzeigeName(o);
       return o;
     })
@@ -653,7 +657,7 @@ function openSlot(id){
   S.students.forEach(s=>{
     if(!S.days[id][s.id]){
       S.days[id][s.id] = {att:"present", obs:[], note:null};
-      const vo = hasOutlet2() ? prevOutlet(id, s.id) : "";
+      const vo = planOutlet(s, id) || (hasOutlet2() ? prevOutlet(id, s.id) : "");
       if(vo) S.days[id][s.id].outlet = vo;
     }
   });
@@ -675,6 +679,15 @@ function dayRec(id, sid){
   S.days[id][sid] = S.days[id][sid] || {att:"present", obs:[], note:null};
   return S.days[id][sid];
 }
+
+/* Foto und Nickname fuer die Erfassung (Noten 2.0). foto ist ein kleines JPEG aus dem Cockpit. */
+function avatar(s, size){
+  const px = (size || 32) + "px";
+  if(s && typeof s.foto === "string" && s.foto.indexOf("data:image/") === 0)
+    return el("img",{class:"ava",src:s.foto,alt:"",style:"width:"+px+";height:"+px});
+  return null;
+}
+const nickTag = s => (s && s.nick) ? " «" + s.nick + "»" : "";
 const dayMeta = id => (S.dayMeta && S.dayMeta[id]) || {teacher:"", group:"", team:"", outlet:""};
 /* ---- Restaurantwechsel: Ort pro Person und Einsatztag ----
    S.settings.outlet = Stammrestaurant, S.settings.outlet2 = zweites Restaurant (freiwillig).
@@ -689,6 +702,11 @@ function prevOutlet(slotId, sid){
   const all = slots(); const i = all.findIndex(s => s.id === slotId);
   for(let k = i - 1; k >= 0; k--){ const r = (S.days[all[k].id] || {})[sid]; if(r) return r.outlet || ""; }
   return "";
+}
+/* Wechselplan aus dem Cockpit: ab Einsatztag n im zweiten Restaurant */
+function planOutlet(s, slotId){
+  const sl = slots().find(x => x.id === slotId);
+  return (s && s.wechselAb && s.wechselOutlet && sl && sl.idx >= s.wechselAb) ? s.wechselOutlet : "";
 }
 function toggleOutlet(r){
   r.outlet = r.outlet ? "" : String(S.settings.outlet2 || "").trim();
@@ -1065,7 +1083,7 @@ function renderDay(){
     const r = dayRec(curSlot, s.id);
     const tot = dayTotal(curSlot, s.id);
     const card = el("article",{class:"stud"+(r.att==="excused"||r.att==="unexcused"||r.att==="tm"?" absent":"")});
-    const head = el("div",{class:"stud-h"},[el("div",{class:"nm",text:s.name})]);
+    const head = el("div",{class:"stud-h"},[avatar(s, 34), el("div",{class:"nm",text:s.name + nickTag(s)})]);
     if(hasOutlet2()) head.appendChild(el("button",{class:"opill"+(r.outlet?" alt":""),title:t("switchTitle"),
       text:"⇄ " + (r.outlet || S.settings.outlet || "–"),
       onclick:()=>{ unseed(); toggleOutlet(r); persist(); renderDay(); }}));

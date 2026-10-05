@@ -1,0 +1,32 @@
+PRUEFUNG COCKPIT 05.10.2026
+
+OK      Plan mit Codeblock-Rahmen wird gelesen, 30 Personen                30
+OK      Keine Fehler im Beispielplan                                       []
+OK      Pakete gebildet (Kueche 5 Outlets + Halbturnus, Service 3)         10
+OK      Service Umami + Da Fortunat als ein Paket mit zweitem Restaurant   [{'b': 'service', 'o': 'Umami', 'o2': 'Da Fortunat', 'v': '10T', 'n': 10, 'd': 'Service A / Service B', 'si': 2}]
+OK      Halbturnus Kueche: 5T- und 4T-Paket vorhanden                      [{'b': 'kueche', 'o': 'Umami', 'o2': '', 'v': '5T', 'n': 1, 'd': 'Koch Umami', 'si': 0}, {'b': 'kueche', 'o': 'Campigiana', 'o2': 
+OK      Erkennt falsche Variante                                           
+OK      Erkennt doppelte Nummer                                            
+OK      Warnt bei falscher Anzahl Einsatztage                              
+OK      Fotos aus PDF gelesen und per Nummer zugeordnet (20)               [20, 20]
+OK      Foto ist klein (unter 20 kB)                                       2463
+OK      Fotos in der Uebersicht sichtbar                                   41
+OK      Suche nach Nickname findet die Person in Kueche und Service        2
+OK      ZIP enthaelt alle Pakete und Startlinks.txt                        ['Paket_Kueche_Campigiana_10T_2026-10-12.json', 'Paket_Kueche_Da-Fortunat_10T_2026-10-12.json', 'Paket_Kueche_Patisserie_10T_2026-
+OK      Paket Kueche Umami: Sprache Thai, Dozent, Start Montag             {'group': '', 'team': '', 'outlet': 'Umami', 'teacher': 'Koch Umami', 'uiLang': 'th', 'outLang': 'de', 'weekdays': ['mo', 'tu', 'w
+OK      Paket enthaelt Fotos                                               4
+OK      Service-Paket: outlet2 und Wochentagsplan                          {'group': '', 'team': '', 'outlet': 'Umami', 'teacher': 'Service A / Service B', 'uiLang': 'de', 'outLang': 'de', 'weekdays': ['mo
+OK      Service-Paket: Wechsel ab Einsatztag 5 bei geplanten Personen      [None, 5, 5, None, 5, 5, None, 5, None, None]
+OK      Startlink Service enthaelt outlet2 und plan                        
+OK      Kueche mobil: Paket laden ergibt Personen, Thai, Dozent            {'n': 6, 'l': 'th', 't': 'Koch Umami', 'foto': 4}
+OK      Kueche mobil: Fotos und Nicknames in der Liste                     4
+OK      Kueche mobil: keine JavaScript-Fehler                              []
+OK      Service Laptop: Paket einlesen, zweites Restaurant gesetzt         {'n': 10, 'o2': 'Da Fortunat', 'w': ['Umami', 'Da Fortunat', 'Umami (Tag 1–4), Da Fortunat (Tag 5–10)'], 'foto': 7}
+OK      Service Laptop: Wechselplan ab Tag 5 automatisch                   ['Umami', 'Da Fortunat', 'Umami (Tag 1–4), Da Fortunat (Tag 5–10)']
+OK      Service Laptop: Fotos bleiben erhalten                             7
+OK      Service Laptop: keine JavaScript-Fehler                            []
+OK      Eingangskontrolle: Rapport erscheint in der Tabelle                2
+OK      Eingangskontrolle: Paket zeigt 'Rapport da'                        1
+OK      Cockpit: keine JavaScript-Fehler                                   []
+OK      Teil hinzufuegen: 10 + 20 = 30, doppelter Teil ersetzt statt verdoppelt  [[30, 10, 0], 30]
+29 von 29 bestanden.

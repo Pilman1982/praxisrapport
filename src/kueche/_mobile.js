@@ -380,6 +380,15 @@ function dayRec(id, sid){
   S.days[id][sid] = S.days[id][sid] || {att:"present", obs:[], note:null};
   return S.days[id][sid];
 }
+
+/* Foto und Nickname fuer die Erfassung (Noten 2.0). foto ist ein kleines JPEG aus dem Cockpit. */
+function avatar(s, size){
+  const px = (size || 32) + "px";
+  if(s && typeof s.foto === "string" && s.foto.indexOf("data:image/") === 0)
+    return el("img",{class:"ava",src:s.foto,alt:"",style:"width:"+px+";height:"+px});
+  return null;
+}
+const nickTag = s => (s && s.nick) ? " «" + s.nick + "»" : "";
 function openSlot(id){
   S.days[id] = S.days[id] || {};
   S.students.forEach(s=>{ S.days[id][s.id] = S.days[id][s.id] || {att:"present", obs:[], note:null}; });
@@ -531,9 +540,10 @@ function renderDay(){
     const li = el("li");
     const b = el("button",{class:"srow",onclick:()=>openSheet(s)});
     b.appendChild(el("span",{class:"dot "+attOf(r)}));
+    const av = avatar(s, 34); if(av) b.appendChild(av);
     b.appendChild(el("span",{class:"nm"},[
       el("span",{html:""}),
-      document.createTextNode(dispName(s)),
+      document.createTextNode(dispName(s) + nickTag(s)),
       el("div",{class:"sub",text:t(attOf(r)) + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))})
     ]));
     if(n) b.appendChild(el("span",{class:"pill on",text:String(n)}));
@@ -556,7 +566,7 @@ function openSheet(student){
   const sh = el("div",{class:"sheet"});
   const hd = el("div",{class:"sheet-h"});
   hd.appendChild(el("div",{style:"min-width:0;flex:1"},[
-    el("div",{class:"nm",text:dispName(student)}),
+    el("div",{class:"nm",text:dispName(student) + nickTag(student)}),
     el("div",{class:"sb",text:slotLabel(slotById(curSlot))})
   ]));
   hd.appendChild(el("button",{class:"hbtn",text:"✕","aria-label":t("done"),onclick:close}));

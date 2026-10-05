@@ -12,6 +12,7 @@ Es werden nie Daten von Studierenden hier abgelegt (siehe `.gitignore`).
 | Seite | Zweck |
 |---|---|
 | `/` | Startseite mit allen Programmen |
+| `/cockpit.html` | Cockpit Kursleitung: Turnusplan prüfen, Fotos zuordnen, Pakete pro Outlet, Eingangskontrolle |
 | `/startlink.html` | Persönliche Startlinks für Dozierende erzeugen (Sprache, Outlet, Name, Wochentagsplan) |
 | `/kueche/…` | Küchenrapport (Laptop und Mobil, 10T / 4T / 5T) |
 | `/service/…` | Servicerapport (Laptop und Mobil, 10T / 4T / 5T) |
@@ -29,6 +30,21 @@ Es werden nie Daten von Studierenden hier abgelegt (siehe `.gitignore`).
 | `plan` | Geteiltes Gerät: `plan=mo:Name,tu:Name,we:Name,th:Name` setzt pro Einsatztag die bewertende Person |
 
 Alles nach `#` bleibt im Browser und wird nie an einen Server übertragen.
+
+## Turnusplan (Austauschformat Copilot → Cockpit)
+
+```json
+{"format":"praxisrapport-turnusplan","version":1,"semester":"HS26","bezeichnung":"Turnus 3",
+ "wochentage":["mo","tu","we","th"],
+ "dozierende":[{"name":"…","bereich":"kueche|service","outlets":["…"],"sprache":"de|en|th","plan":{"mo":"…"}}],
+ "studierende":[{"nr":"…","nachname":"…","vorname":"…","nickname":"","email":"","klasse":"HFD|HFE1|HFE2",
+   "gruppe":"Gruppe 1","sprache":"de|en|zh",
+   "einsaetze":[{"bereich":"kueche|patisserie|service","outlet":"…","von":"JJJJ-MM-TT","bis":"JJJJ-MM-TT",
+                 "variante":"10T|4T|5T","wechsel":{"outlet":"…","ab":"JJJJ-MM-TT"}}]}]}
+```
+
+Beispiel mit erfundenen Daten: `testdaten/turnusplan_BEISPIEL.json`, Foto-PDF: `testdaten/Fotoliste_BEISPIEL.pdf`.
+Das Cockpit erzeugt daraus Pakete im Sicherungsformat der Apps (Laden mit «Sicherung laden» / «Sicherung einlesen»).
 
 ## Aufbau
 
@@ -50,6 +66,8 @@ python3 tests/test_merge.py         # Zusammenführen
 python3 tests/test_startlink.py     # Startlinks
 python3 tests/test_halbturnus.py    # 5T + 4T in die 10T-Datei
 python3 tests/test_wechsel.py       # Service: Restaurantwechsel
+python3 tests/test_cockpit.py       # Cockpit: Plan, Fotos, Pakete, Eingangskontrolle
+python3 tests/test_altdaten.py      # Rapporte aus dem Pilot (alter Programmstand)
 git commit -am "…" && git push      # GitHub Pages aktualisiert sich in 1 bis 2 Minuten
 ```
 
@@ -59,7 +77,8 @@ Feste Regeln (Basisnote 5.00, Gewichte, Exam Day, 2/3 Praxis + 1/3 Exam) stehen 
 ## Fahrplan Noten 2.0
 
 1. Okt. 2026: Küche und Service harmonisiert, Startlinks, Veröffentlichung ✓
-2. Okt./Nov.: Cockpit Kursleitung (Klassenliste, Nicknames, Einteilung, Pakete pro Outlet, Eingangskontrolle)
+2. Okt.: Cockpit Kursleitung (Turnusplan, Fotos, Pakete pro Outlet, Eingangskontrolle) ✓, Fotos und Nicknames in den Apps ✓
+2b. Nov.: Durchmischung (Einteilungsvorschlag), Live-Übersicht prüfen
 3. Nov.: Testlauf mit den Outlets
 4. Dez.: zweiter Testlauf, Kriterien pro Outlet, Anleitungen DE/EN/TH
 5. Jan. 2027: Go-live

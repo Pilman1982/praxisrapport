@@ -346,6 +346,10 @@ function prevOutlet(slotId, sid){
   for(let k = i - 1; k >= 0; k--){ const r = (S.days[all[k].id] || {})[sid]; if(r) return r.outlet || ""; }
   return "";
 }
+function planOutlet(s, slotId){
+  const sl = slots().find(x => x.id === slotId);
+  return (s && s.wechselAb && s.wechselOutlet && sl && sl.idx >= s.wechselAb) ? s.wechselOutlet : "";
+}
 function toggleOutlet(r){
   r.outlet = r.outlet ? "" : String(S.settings.outlet2 || "").trim();
   if(!r.outlet) delete r.outlet;
@@ -373,12 +377,21 @@ function mitOrt(r, o){
   if(r && !r.outlet && src && src !== String(S.settings.outlet || "").trim()) return Object.assign({}, r, {outlet: src});
   return r;
 }
+
+/* Foto und Nickname fuer die Erfassung (Noten 2.0). foto ist ein kleines JPEG aus dem Cockpit. */
+function avatar(s, size){
+  const px = (size || 32) + "px";
+  if(s && typeof s.foto === "string" && s.foto.indexOf("data:image/") === 0)
+    return el("img",{class:"ava",src:s.foto,alt:"",style:"width:"+px+";height:"+px});
+  return null;
+}
+const nickTag = s => (s && s.nick) ? " «" + s.nick + "»" : "";
 function openSlot(id){
   S.days[id] = S.days[id] || {};
   S.students.forEach(s=>{
     if(!S.days[id][s.id]){
       S.days[id][s.id] = {att:"present", obs:[], note:null};
-      const vo = hasOutlet2() ? prevOutlet(id, s.id) : "";
+      const vo = planOutlet(s, id) || (hasOutlet2() ? prevOutlet(id, s.id) : "");
       if(vo) S.days[id][s.id].outlet = vo;
     }
   });
@@ -540,9 +553,10 @@ function renderDay(){
     const li = el("li");
     const b = el("button",{class:"srow",onclick:()=>openSheet(s)});
     b.appendChild(el("span",{class:"dot "+(r.att||"present")}));
+    const av = avatar(s, 34); if(av) b.appendChild(av);
     b.appendChild(el("span",{class:"nm"},[
       el("span",{}),
-      document.createTextNode(s.name),
+      document.createTextNode(s.name + nickTag(s)),
       el("div",{class:"sub",text:t(r.att||"present") + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))
         + (r.outlet ? " · \u21c4 " + r.outlet : "")})
     ]));
@@ -568,7 +582,7 @@ function openSheet(student){
   const sh = el("div",{class:"sheet"});
   const hd = el("div",{class:"sheet-h"});
   hd.appendChild(el("div",{style:"min-width:0;flex:1"},[
-    el("div",{class:"nm",text:student.name}),
+    el("div",{class:"nm",text:student.name + nickTag(student)}),
     el("div",{class:"sb",text:slotLabel(slotById(curSlot))})
   ]));
   if(hasOutlet2()){
