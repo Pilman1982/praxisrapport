@@ -105,6 +105,18 @@ with sync_playwright() as p:
     v = pg.inner_text("#view")
     ok("Mobil: Notenuebersicht mit Ø Praxis, Exam, Schlussnote", "Ø Praxis" in v and "Schlussnote" in v and pg.locator("#view .gbox").count() == 2, v[:80])
     ok("Mobil: Notenuebersicht mit Fotos", pg.locator("#view img.ava").count() == 2, pg.locator("#view img.ava").count())
+    # Feedback-Mail: Max ist HFE1 (Englisch), Lea HFD (Deutsch)
+    ok("Feedback: Knopf pro Person in der Notenuebersicht", pg.locator("#view .fbbtn").count() == 2, pg.locator("#view .fbbtn").count())
+    pg.locator("#view .fbbtn").first.click(); pg.wait_for_timeout(150)
+    fb = pg.evaluate("()=>({txt:document.getElementById('n2fbtext').value, mail:S.students[0].mail, lg:n2FbLang(S.students[0]), lg2:n2FbLang(S.students[1]), de:n2FbText(S.students[1],'de',true).body})")
+    ok("Feedback: Sprache nach Klasse (HFE1 Englisch, HFD Deutsch)", fb["lg"] == "en" and fb["lg2"] == "de", (fb["lg"], fb["lg2"]))
+    ok("Feedback: englischer Text mit Verbesserung und Tipp", fb["txt"].startswith("Hi ") and "Where you can still improve:" in fb["txt"] and "Tip:" in fb["txt"] and "Uniform" in fb["txt"], fb["txt"][:160])
+    ok("Feedback: ohne Noten, solange nicht angekreuzt", "grade" not in fb["txt"].split("Where")[0] and "Your grade" not in fb["txt"], "")
+    ok("Feedback: deutscher Text sympathisch mit Gruss und Noten auf Wunsch", fb["de"].startswith("Hallo ") and "Herzliche Grüsse" in fb["de"] and "Deine Note" in fb["de"], fb["de"][:120])
+    pg.evaluate("()=>{ const t=document.getElementById('n2fbtext'); t.value = t.value + '\\nPS: Danke!'; }")
+    pg.locator(".sheet-f .btn.pri").click(); pg.wait_for_timeout(200)
+    ok("Feedback: nach dem Senden als gesendet markiert", bool(pg.evaluate("()=>n2FbSent(S.students[0].id)")))
+    pg.evaluate("()=>{ document.getElementById('sheetHost').innerHTML=''; document.body.style.overflow=''; view='grades'; render(); }")
     # Laptop rechnet gleich
     st = pg.evaluate("()=>JSON.stringify({settings:S.settings, students:S.students, days:S.days, dayMeta:S.dayMeta})")
     days = json.loads(st)["days"]
