@@ -16,6 +16,7 @@ SRC, DIST, DOCS = R / "src", R / "src" / "dist", R / "docs"
 def run(folder, script):
     subprocess.run([sys.executable, script], cwd=SRC / folder, check=True, stdout=subprocess.DEVNULL)
 
+subprocess.run([sys.executable, str(R / "tools" / "sync_handoff.py")], check=True)
 if DIST.exists(): shutil.rmtree(DIST)
 for folder in ("kueche", "service"):
     run(folder, "build_variants.py"); run(folder, "mobile_build.py")

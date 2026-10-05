@@ -29,6 +29,8 @@ def build(variant, only=None):
         .replace("__ICON__", read("_icon.txt").strip()) \
         .replace("<title>Servicerapport Mobil · 10 Tage</title>", "<title>" + cfg["title"] + "</title>")
     js = read("_mobile.js")
+    # Noten 2.0: gemeinsamer Zusatz fuer beide mobilen Apps (Noten, Daten)
+    js = js.replace("/* ---------- Start ---------- */", (SRC.parent / "_noten2_mobile.js").read_text(encoding="utf-8") + "\n/* ---------- Start ---------- */", 1)
     old = 'const MVARIANT = "10T";'
     if old not in js: sys.exit("Platzhalter fehlt in _mobile.js: " + old)
     js = js.replace(old, 'const MVARIANT = "%s";' % variant)

@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#001436">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Rapport">
+<meta name="robots" content="noindex">
+<title>Mein Rapport</title>
+<style>
+:root{--navy:#001436;--petrol:#005779;--salbei:#919388;--terra:#B6633F;--hell:#E3E3E1;--bg:#F4F4F2;--ink:#1a1f2b;--card:#fff;--line:#d9d9d5;--muted:#5b616b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0c111c;--ink:#e9eaee;--card:#151c2b;--line:#2a3346;--muted:#9aa3b2;--hell:#1d2638}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--navy);color:#fff;padding:14px 16px calc(14px);display:flex;align-items:center;gap:12px}
+header .t{flex:1;min-width:0}
+h1{font:600 21px/1.2 Georgia,serif;margin:0}
+header .who{font-size:13.5px;opacity:.85;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbtn{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:10px;width:42px;height:42px;font-size:18px;cursor:pointer}
+main{max-width:640px;margin:0 auto;padding:16px 16px 48px;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.now{border:2px solid var(--petrol)}
+.now h2{font:600 19px/1.3 Georgia,serif;margin:6px 0 4px}
+.meta{color:var(--muted);font-size:14px}
+.btn{display:block;width:100%;text-align:center;font:inherit;font-weight:700;border:0;border-radius:12px;padding:15px;cursor:pointer;margin-top:12px;text-decoration:none}
+.pri{background:var(--navy);color:#fff}
+@media (prefers-color-scheme: dark){.pri{background:var(--petrol)}}
+.sec{background:var(--hell);color:var(--ink)}
+.small{font-size:13px}
+.lnk{background:none;border:0;color:var(--petrol);font:inherit;font-size:14px;cursor:pointer;padding:6px 0;text-decoration:underline}
+ul{list-style:none;margin:0;padding:0}
+li{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line)}
+li:first-child{border-top:0}
+li .tx{flex:1;min-width:0}
+li .tx b{display:block;font-size:15px;font-weight:600}
+li.past{opacity:.55}
+.tag{font-size:11.5px;font-weight:700;border-radius:999px;padding:3px 8px;white-space:nowrap}
+.tag.now{background:#dff1e5;color:#1d5c34;border:0}.tag.soon{background:var(--hell);color:var(--ink)}.tag.past{background:transparent;color:var(--muted)}
+li button{font:inherit;font-weight:600;border:0;border-radius:9px;padding:8px 12px;background:var(--hell);color:var(--ink);cursor:pointer}
+.err{color:var(--terra);font-weight:600}
+.note{font-size:13px;color:var(--muted);border-left:3px solid var(--salbei);padding:2px 0 2px 10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="t"><h1 id="ttl">Mein Rapport</h1><div class="who" id="who"></div></div>
+  <button class="hbtn" id="lang" aria-label="Sprache">文</button>
+</header>
+<main id="main"></main>
+<input type="file" id="file" accept=".json,application/json" hidden>
+<script>
+"use strict";
+const KEY = "praxisrapport.semester", LKEY = "praxisrapport.lang";
+const TX = {
+  de:{title:"Mein Rapport", load:"Semesterpaket laden", loadHint:"Die Datei «Semesterpaket_….json» von Michael aus Teams oder «Dateien» wählen. Das ist nur einmal pro Semester nötig.",
+      now:"Jetzt", next:"Als Nächstes", open:"Rapport öffnen", laptop:"Laptop-Fassung öffnen", all:"Alle Einsätze im Semester",
+      past:"vorbei", soon:"kommt", cur:"jetzt", persons:"Personen", from:"ab", until:"bis", other:"Anderes Semesterpaket laden",
+      remove:"Semesterpaket von diesem Gerät entfernen", removeQ:"Semesterpaket von diesem Gerät entfernen? Die erfassten Rapporte bleiben erhalten.",
+      privacy:"Alles bleibt auf diesem Gerät. Nichts wird ins Internet geschickt.", bad:"Diese Datei ist kein Semesterpaket.", done:"Semesterpaket geladen",
+      homeHint:"Tipp: Diese Seite über Teilen → «Zum Home-Bildschirm» als Symbol ablegen.", none:"Im Moment kein Einsatz geplant."},
+  en:{title:"My report", load:"Load semester package", loadHint:"Choose the file «Semesterpaket_….json» from Michael in Teams or «Files». You only need to do this once per semester.",
+      now:"Now", next:"Next", open:"Open report", laptop:"Open laptop version", all:"All assignments this semester",
+      past:"done", soon:"upcoming", cur:"now", persons:"students", from:"from", until:"to", other:"Load another semester package",
+      remove:"Remove semester package from this device", removeQ:"Remove the semester package from this device? Recorded reports are kept.",
+      privacy:"Everything stays on this device. Nothing is sent to the internet.", bad:"This file is not a semester package.", done:"Semester package loaded",
+      homeHint:"Tip: add this page to your home screen via Share → «Add to Home Screen».", none:"No assignment planned at the moment."},
+  th:{title:"รายงานของฉัน", load:"โหลดชุดข้อมูลภาคเรียน", loadHint:"เลือกไฟล์ «Semesterpaket_….json» ที่ Michael ส่งให้ จาก Teams หรือ «ไฟล์» ทำเพียงครั้งเดียวต่อภาคเรียน",
+      now:"ตอนนี้", next:"ถัดไป", open:"เปิดรายงาน", laptop:"เปิดเวอร์ชันแล็ปท็อป", all:"การฝึกทั้งหมดในภาคเรียน",
+      past:"ผ่านไปแล้ว", soon:"กำลังจะมา", cur:"ตอนนี้", persons:"คน", from:"ตั้งแต่", until:"ถึง", other:"โหลดชุดข้อมูลภาคเรียนอื่น",
+      remove:"ลบชุดข้อมูลภาคเรียนออกจากอุปกรณ์นี้", removeQ:"ลบชุดข้อมูลภาคเรียนออกจากอุปกรณ์นี้หรือไม่ รายงานที่บันทึกไว้จะยังอยู่",
+      privacy:"ข้อมูลทั้งหมดอยู่บนอุปกรณ์นี้เท่านั้น ไม่มีการส่งขึ้นอินเทอร์เน็ต", bad:"ไฟล์นี้ไม่ใช่ชุดข้อมูลภาคเรียน", done:"โหลดชุดข้อมูลภาคเรียนแล้ว",
+      homeHint:"เคล็ดลับ: เพิ่มหน้านี้ไปยังหน้าจอโฮมผ่าน แชร์ → «เพิ่มไปยังหน้าจอโฮม»", none:"ขณะนี้ไม่มีการฝึกตามแผน"}
+};
+const $ = id => document.getElementById(id);
+const el = (tag, attrs, kids) => { const n = document.createElement(tag);
+  for(const k in (attrs || {})){ const v = attrs[k]; if(v == null || v === false) continue;
+    if(k === "text") n.textContent = v; else if(k.slice(0,2) === "on") n.addEventListener(k.slice(2), v); else n.setAttribute(k, v === true ? "" : v); }
+  (Array.isArray(kids) ? kids : (kids ? [kids] : [])).forEach(c => c && n.appendChild(typeof c === "string" ? document.createTextNode(c) : c));
+  return n; };
+const get = k => { try{ return localStorage.getItem(k); }catch(e){ return null; } };
+const put = (k, v) => { try{ localStorage.setItem(k, v); return true; }catch(e){ return false; } };
+/* Semesterpaket in IndexedDB (gross genug für Fotos); localStorage nur als Rückfall.
+   Nur das gerade geöffnete Paket geht kurz über localStorage an die App. */
+let SEM = null;
+const idb = () => new Promise((res, rej) => { try{ const r = indexedDB.open("praxisrapport", 1);
+  r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }catch(e){ rej(e); } });
+async function semLoad(){
+  try{ const db = await idb(); const v = await new Promise((res, rej) => { const q = db.transaction("kv").objectStore("kv").get(KEY); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); });
+       if(v) return v; }catch(e){}
+  try{ return JSON.parse(get(KEY) || "null"); }catch(e){ return null; }
+}
+async function semSave(o){
+  try{ const db = await idb(); await new Promise((res, rej) => { const tx = db.transaction("kv", "readwrite");
+         if(o) tx.objectStore("kv").put(o, KEY); else tx.objectStore("kv").delete(KEY);
+         tx.oncomplete = res; tx.onerror = () => rej(tx.error); });
+       try{ localStorage.removeItem(KEY); }catch(e){}
+       return true; }catch(e){}
+  if(!o){ try{ localStorage.removeItem(KEY); }catch(e){} return true; }
+  return put(KEY, JSON.stringify(o));
+}
+const hashLang = (location.hash.match(/lang=(de|en|th)/) || [])[1];
+let L = hashLang || get(LKEY) || "de";
+if(!TX[L]) L = "de";
+const t = k => TX[L][k] || TX.de[k];
+const dmy = d => String(d).slice(8,10) + "." + String(d).slice(5,7) + ".";
+const todayIso = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); };
+function status(p){ const d = todayIso(); return d < p.von ? "soon" : (d > p.bis ? "past" : "cur"); }
+function current(){
+  if(!SEM || !SEM.pakete || !SEM.pakete.length) return null;
+  const ps = SEM.pakete;
+  const now = ps.filter(p => status(p) === "cur");
+  if(now.length) return {p: now[0], kind:"now"};
+  const next = ps.filter(p => status(p) === "soon").sort((a, b) => a.von.localeCompare(b.von))[0];
+  return next ? {p: next, kind:"next"} : null;
+}
+/* Paket an die richtige App übergeben (gleiche Adresse, bleibt im Browser) und App öffnen */
+function openPack(p, laptop){
+  const target = laptop ? p.laptop : p.mobil;
+  const ok = put("praxisrapport.handoff", JSON.stringify({target, id:p.id, titel:p.titel, at:Date.now(), paket:p.paket}));
+  if(!ok){ alert("Speicher voll oder gesperrt (privater Modus?)."); return; }
+  location.href = target + (p.start ? "#" + p.start : "");
+}
+function onFile(e){
+  const f = e.target.files && e.target.files[0]; e.target.value = ""; if(!f) return;
+  f.text().then(txt => {
+    let o = null; try{ o = JSON.parse(txt); }catch(err){}
+    if(!o || o.format !== "praxisrapport-semesterpaket" || !Array.isArray(o.pakete)){ render(t("bad")); return; }
+    SEM = o; if(!hashLang && o.dozent && TX[o.dozent.sprache]){ L = o.dozent.sprache; }
+    semSave(o).then(ok => render(ok ? t("done") + " ✓" : "Speicher voll oder gesperrt."));
+  });
+}
+$("file").addEventListener("change", onFile);
+$("lang").addEventListener("click", () => { const ks = Object.keys(TX); L = ks[(ks.indexOf(L) + 1) % ks.length]; put(LKEY, L); render(); });
+function render(msg){
+  document.documentElement.lang = L;
+  $("ttl").textContent = t("title");
+  $("who").textContent = SEM && SEM.dozent ? [SEM.dozent.name, (SEM.dozent.outlets || []).join(" ⇄ "), SEM.semester].filter(Boolean).join(" · ") : "";
+  const m = $("main"); m.innerHTML = "";
+  if(msg) m.appendChild(el("div",{class:"card " + (msg === t("bad") ? "err" : ""), text:msg}));
+  if(!SEM){
+    m.appendChild(el("div",{class:"card"},[el("div",{class:"eyebrow",text:t("load")}), el("p",{class:"meta",text:t("loadHint")}),
+      el("button",{class:"btn pri",text:t("load"),onclick:()=>$("file").click()})]));
+    m.appendChild(el("p",{class:"note",text:t("privacy")}));
+    m.appendChild(el("p",{class:"note",text:t("homeHint")}));
+    return;
+  }
+  const c = current();
+  if(c){
+    const p = c.p;
+    m.appendChild(el("div",{class:"card now"},[
+      el("div",{class:"eyebrow",text:c.kind === "now" ? t("now") : t("next")}),
+      el("h2",{text:p.titel}),
+      el("div",{class:"meta",text:dmy(p.von) + " " + t("until") + " " + dmy(p.bis) + " · " + p.personen + " " + t("persons")}),
+      el("button",{class:"btn pri",text:t("open"),onclick:()=>openPack(p, false)}),
+      el("button",{class:"lnk",text:t("laptop"),onclick:()=>openPack(p, true)})]));
+  } else m.appendChild(el("div",{class:"card meta",text:t("none")}));
+  const ul = el("ul");
+  SEM.pakete.slice().sort((a, b) => a.von.localeCompare(b.von)).forEach(p => {
+    const st = status(p);
+    ul.appendChild(el("li",{class:st === "past" ? "past" : ""},[
+      el("div",{class:"tx"},[el("b",{text:p.titel}), el("span",{class:"meta small",text:dmy(p.von) + " " + t("until") + " " + dmy(p.bis) + " · " + p.personen + " " + t("persons")})]),
+      el("span",{class:"tag " + (st === "cur" ? "now" : st), text:st === "cur" ? t("cur") : t(st)}),
+      el("button",{text:"›",onclick:()=>openPack(p, false),"aria-label":t("open")})]));
+  });
+  m.appendChild(el("div",{class:"card"},[el("div",{class:"eyebrow",text:t("all")}), ul]));
+  m.appendChild(el("button",{class:"lnk",text:t("other"),onclick:()=>$("file").click()}));
+  m.appendChild(el("button",{class:"lnk",text:t("remove"),onclick:()=>{ if(confirm(t("removeQ"))){ SEM = null; semSave(null).then(() => render()); } }}));
+  m.appendChild(el("p",{class:"note",text:t("privacy")}));
+}
+semLoad().then(o => { SEM = (o && o.format === "praxisrapport-semesterpaket") ? o : null;
+  if(SEM && !hashLang && !get(LKEY) && SEM.dozent && TX[SEM.dozent.sprache]) L = SEM.dozent.sprache;
+  render(); });
+</script>
+</body>
+</html>

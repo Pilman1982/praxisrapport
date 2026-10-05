@@ -10,6 +10,9 @@ a    = io.open(SRC/"_scriptA.js", encoding="utf-8").read()
 a    = a[a.index('"use strict"'):] if '"use strict"' in a[:400] else a
 chips= io.open(SRC/"_chips.js", encoding="utf-8").read()
 app  = io.open(SRC/"_mobile.js", encoding="utf-8").read()
+# Noten 2.0: gemeinsamer Zusatz fuer beide mobilen Apps (Noten, Daten)
+addon = io.open(SRC.parent/"_noten2_mobile.js", encoding="utf-8").read()
+app  = app.replace("/* ---------- Start ---------- */", addon + "\n/* ---------- Start ---------- */", 1)
 
 VARIANTS = [
   ("Kuechenrapport_Mobil.html",                "10T", "Küchenrapport Mobil · 10 Tage"),

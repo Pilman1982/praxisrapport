@@ -1,0 +1,53 @@
+PRUEFUNG NOTEN 2.0 (Datum, Noten, Fotos, Semesterpaket) 05.10.2026
+
+OK      Cockpit: ein Semesterpaket pro Person                                  ['Chef Essence', 'Koch Pat', 'Service A / Service B']
+OK      Semesterpaket: Format und Dozent                                       {'name': 'Koch Pat', 'sprache': 'de', 'bereich': 'kueche', 'outlets': ['Patisserie'], 'plan': None}
+OK      Semesterpaket Patisserie: 5T und 4T in zeitlicher Reihenfolge          ['5T', '4T']
+OK      Paket-Titel nennt den Zyklus                                           ['Zyklus 1.1 · Küche Patisserie · 5 Tage · ab 17.08.', 'Zyklus 1.1 · Küche Patisserie · 4 Tage + Exam · ab 25.08.']
+OK      4T: slotDates = 4 Einsatztage + Exam Day                               ['2026-08-25', '2026-08-26', '2026-08-27', '2026-08-31', '2026-09-01']
+OK      4T: paketId gesetzt, gleich der Paket-ID                               Paket_Zyklus-1-1_Kueche_Patisserie_4T_2026-08-25
+OK      4T: beide Personen mit Foto                                            2
+OK      Ziel-Dateien: Mobil und Laptop passend zur Variante                    kueche/Kuechenrapport_Mobil_4Tage_Exam.html
+OK      Startseiten-Link zeigt auf mein.html                                   http://127.0.0.1:49485/mein.html#lang=de
+OK      Cockpit: Liste der Semesterpakete sichtbar                             4
+OK      Cockpit: ZIP mit Semesterpaketen                                       Semesterpakete_TEST.zip
+OK      Cockpit: keine JavaScript-Fehler                                       []
+OK      mein.html: ohne Paket Hinweis zum Laden                                
+OK      mein.html: Paket bleibt nach Neuladen (IndexedDB)                      Koch Pat · Patisserie · TEST
+OK      mein.html: beide Pakete in der Liste                                   2
+OK      mein.html: Semesterpaket nicht im localStorage                         
+OK      Uebergabe: richtige Datei geoeffnet (Mobil 4T)                         http://127.0.0.1:49485/kueche/Kuechenrapport_Mobil_4Tage_Exam.html#lang=de&outlet=Patisserie&dozent=Koch%20Pat
+OK      Uebergabe: zwei Personen geladen, paketId gesetzt                      {'n': 2, 'id': 'Paket_Zyklus-1-1_Kueche_Patisserie_4T_2026-08-25', 'lab': ['Dienstag 25.08.', 'Mittwoch 26.08.', 'Donnerstag 27.08
+OK      Uebergabe: Uebergabe-Eintrag danach geloescht                          
+OK      Mobil: Wochentag + Datum statt Woche                                   ['Dienstag 25.08.', 'Mittwoch 26.08.', 'Donnerstag 27.08.', 'Montag 31.08.', 'Exam Day 01.09.']
+OK      Mobil: Tagesleiste zeigt Datum, keine Woche                            ['25.08.', '26.08.', '27.08.', '31.08.', '01.09.']
+OK      Mobil: Tagesnote mit Hygiene doppelt (4.50 bei −0.50)                  (4.875, 4.875)
+OK      Mobil: Note in der Liste sichtbar                                      4.88
+OK      Mobil: Note im Kopf des Erfassungsblatts                               Tag 4.88  ·  Ø 4.88
+OK      Mobil: Foto im Erfassungsblatt                                         
+OK      Mobil: Kriteriennoten in den Reitern                                   ['4.50', '5.00', '5.00', '5.00', '5.00', '5.00', '5.00']
+OK      Mobil: Wirkung des Bausteins sichtbar (−0.50)                          − mittel  ·  −0.50
+OK      Mobil: Notenuebersicht mit Ø Praxis, Exam, Schlussnote                 Noten
+Muster Max «Maxi»
+1 Tage gewertet
+Ø Praxis
+4.88
+Exam
+–
+Schlussnote
+–
+van d
+OK      Mobil: Notenuebersicht mit Fotos                                       2
+OK      Gleiches Paket erneut oeffnen: Erfassung bleibt, keine Rueckfrage      (1, [])
+OK      Anderes Paket bei erfassten Tagen: Rueckfrage, Abbruch behaelt Daten   (['Neues Paket laden: Anderes Paket?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag teilen», falls
+OK      mein.html / Mobil: keine JavaScript-Fehler                             []
+OK      Laptop: Uebergabe in die Laptop-Datei 4T                               {'u': '/kueche/Kuechenrapport_4Tage_Exam.html', 'n': 2, 'lab': ['Dienstag 25.08.', 'Mittwoch 26.08.', 'Donnerstag 27.08.', 'Montag
+OK      Laptop: Wochentag + Datum                                              ['Dienstag 25.08.', 'Mittwoch 26.08.', 'Donnerstag 27.08.', 'Montag 31.08.', 'Exam Day 01.09.']
+OK      Laptop und Mobil rechnen gleich                                        (4.875, 4.875)
+OK      Laptop: keine JavaScript-Fehler                                        []
+OK      Service: Mobil 10T geoeffnet                                           /service/Servicerapport_Mobil.html
+OK      Service: Mittwoch 02.09. statt Woche                                   Mittwoch 02.09.
+OK      Service: Foto im Erfassungsblatt                                       
+OK      Service: Tagesnote 5.00 im Kopf, Kriteriennoten sichtbar               {'u': '/service/Servicerapport_Mobil.html', 'lab': 'Mittwoch 02.09.', 'ava': True, 'head': 'Tag 5.00  ·  Ø 5.00', 'cg': 9, 'n': 9,
+OK      Service: Gastgeberhaltung doppelt gewichtet                            gas
+OK      Service: keine JavaScript-Fehler                                       []

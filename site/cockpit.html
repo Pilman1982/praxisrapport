@@ -98,6 +98,8 @@ img.ava{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#cc
 <section class="card">
   <h2><span class="n">5</span>Pakete und Startlinks</h2>
   <p class="muted small" style="margin-top:0">Ein Paket pro Outlet und Einsatz. Die Dozierenden laden es in der App mit «Sicherung laden» (iPhone/iPad) oder «Sicherung einlesen» (Laptop). Danach sind Namen, Nicknames, Fotos, Klasse, Gruppe und Turnusstart drin.</p>
+  <div class="row" style="margin-bottom:10px"><button class="pri" id="btnSem" disabled>Semesterpakete pro Person (ZIP)</button><span class="small muted">Empfohlen: Jede Person lädt ihr Semesterpaket einmal auf ihrer Startseite «mein.html». Die Startseite öffnet dann immer das richtige Paket.</span></div>
+  <div id="semList" style="margin-bottom:14px"></div>
   <div class="row"><button class="pri" id="btnZip" disabled>Pakete der Auswahl als ZIP</button><span class="small muted">Auswahl über Bereich und Block in Schritt 4</span><span id="zipStat" class="small muted"></span></div>
   <div id="packs" style="margin-top:10px"></div>
 </section>
@@ -256,7 +258,8 @@ function build(){
         tageList.slice(0, praxisSlots).forEach((t, k) => { if(t.market) tmTage.push(k + 1); });
         if(!ortPlan.some(Boolean)) ortPlan = null;
       }
-      p.studs.push({s, e, wAb, wOut, ortPlan, tmTage, days: tageList ? tageList.length + (VARS[v].exam ? 1 : 0) : days.length});
+      p.studs.push({s, e, wAb, wOut, ortPlan, tmTage, days: tageList ? tageList.length + (VARS[v].exam ? 1 : 0) : days.length,
+        dates: tageList ? tageList.map(t => String(t.datum)) : null, exam: e.exam || (VARS[v].exam ? iso(bis) : null)});
     });
   });
   Object.values(agg).forEach(a => warn(a.text + ": " + (a.who.length > 4 ? a.who.length + " Personen" : a.who.join(", ")) + "."));
@@ -266,7 +269,7 @@ function build(){
     const sd = WD[p.von.getDay()];
     p.startIdx = Math.max(0, wdays.indexOf(sd));
     if(p.studs.length > 14) warn(BER_LABEL[p.ber] + " " + p.outlet + " " + p.v + ": " + p.studs.length + " Personen in einem Paket. Stimmt das?");
-    p.file = ["Paket", p.block || "", {kueche:"Kueche", service:"Service"}[p.ber], fileSafe(p.outlet + (p.outlet2 ? "-" + p.outlet2 : "")), p.v, iso(p.von)].filter(Boolean).join("_") + ".json";
+    p.file = ["Paket", fileSafe(p.block || ""), {kueche:"Kueche", service:"Service"}[p.ber], fileSafe(p.outlet + (p.outlet2 ? "-" + p.outlet2 : "")), p.v, iso(p.von)].filter(Boolean).join("_") + ".json";
   });
 }
 
@@ -292,13 +295,38 @@ function packageJSON(p){
     outlet:p.outlet, teacher, uiLang: p.doz && ["de","en","th"].includes(p.doz.sprache) ? p.doz.sprache : "de",
     outLang:"de", weekdays:PLAN._wd.slice(), startIdx:p.startIdx, base:5, isSample:false};
   settings[A.w2] = true;
+  /* Datum pro Einsatztag: das häufigste Datum aller Personen an dieser Stelle */
+  const pick = arr => { const c = {}; arr.filter(Boolean).forEach(d => c[d] = (c[d] || 0) + 1);
+    let best = "", bn = 0; Object.keys(c).sort().forEach(d => { if(c[d] > bn){ bn = c[d]; best = d; } }); return best; };
+  const nPr = V.n - (V.exam ? 1 : 0), slotDates = [];
+  for(let k = 0; k < nPr; k++) slotDates.push(pick(p.studs.map(x => x.dates ? x.dates[k] : "")));
+  if(V.exam) slotDates.push(pick(p.studs.map(x => x.exam || "")));
+  if(slotDates.some(Boolean)) settings.slotDates = slotDates;
+  settings.paketId = p.file.replace(/\.json$/, "");
   if(p.outlet2) settings.outlet2 = p.outlet2;
   if(p.doz && p.doz.plan && typeof p.doz.plan === "object") settings.teacherPlan = p.doz.plan;
   return {app:A.app, variant:p.v, savedAt:new Date().toISOString(), source:"cockpit",
     meta:{group:settings.group, team:settings.team, outlet:p.outlet, outlet2:p.outlet2||"", teacher,
           slotCount:V.n, hasExam:V.exam, weekdays:settings.weekdays, startIdx:p.startIdx,
-          startDay:WD_DE[WD[p.von.getDay()]], von:iso(p.von), bis:iso(p.bis), semester:PLAN.semester||"", turnus:PLAN.bezeichnung||""},
+          startDay:WD_DE[WD[p.von.getDay()]], von:iso(p.von), bis:iso(p.bis), semester:PLAN.semester||"", turnus:PLAN.bezeichnung||"",
+          block:p.block||"", paketId:settings.paketId, titel:packTitle(p)},
     settings, students:studs, days:{}, dayMeta:{}};
+}
+function packTitle(p){ return [p.block || "", BER_LABEL[p.ber] + " " + p.outlet + (p.outlet2 ? " \u21c4 " + p.outlet2 : ""), VARS[p.v].label, "ab " + fDate(p.von)].filter(Boolean).join(" \u00b7 "); }
+/* Semesterpaket: alle Pakete einer Person in einer Datei, für die persönliche Startseite */
+function semesterPackages(){
+  const by = {};
+  PACKS.forEach(p => { const k = p.doz ? p.doz.name : ("ohne Dozent " + p.outlet); (by[k] = by[k] || {doz:p.doz, list:[]}).list.push(p); });
+  return Object.keys(by).sort().map(name => { const o = by[name];
+    return {name, file: "Semesterpaket_" + [fileSafe(PLAN.semester||""), fileSafe(name)].filter(Boolean).join("_") + ".json",
+      link: BASE + "mein.html" + (o.doz && o.doz.sprache ? "#lang=" + o.doz.sprache : ""),
+      data: {format:"praxisrapport-semesterpaket", version:1, semester:PLAN.semester||"", erstellt:new Date().toISOString(),
+        dozent:{name, sprache:(o.doz && o.doz.sprache) || "de", bereich:o.list[0].ber, outlets:o.doz ? o.doz.outlets : [o.list[0].outlet], plan:(o.doz && o.doz.plan) || null},
+        pakete:o.list.slice().sort((a, b) => a.von - b.von || a.v.localeCompare(b.v)).map(p => ({
+          id:p.file.replace(/\.json$/, ""), titel:packTitle(p), block:p.block || "", bereich:p.ber, variante:p.v,
+          von:iso(p.von), bis:iso(p.bis), personen:p.studs.length,
+          mobil:APP[p.ber].dir + "/" + APP[p.ber].mobil[p.v] + ".html", laptop:APP[p.ber].dir + "/" + APP[p.ber].file[p.v] + ".html",
+          start:startLink(p).split("#")[1] || "", paket:packageJSON(p)}))}}; });
 }
 function hash(s){ let h = 0; for(let i = 0; i < s.length; i++){ h = ((h<<5)-h) + s.charCodeAt(i); h |= 0; } return h; }
 function startLink(p){
@@ -313,6 +341,26 @@ function startLink(p){
 function download(name, text){
   const a = el("a",{href:URL.createObjectURL(new Blob([text],{type:"application/json"})), download:name});
   document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+$("btnSem").onclick = async () => {
+  if(!window.JSZip){ $("zipStat").textContent = "ZIP nicht verfügbar (offline)."; return; }
+  const z = new JSZip(); const sp = semesterPackages();
+  sp.forEach(x => z.file(x.file, JSON.stringify(x.data)));
+  z.file("Startseiten.txt", sp.map(x => x.name + "\n" + x.link + "\nDatei: " + x.file + "\n").join("\n"));
+  const blob = await z.generateAsync({type:"blob"});
+  const a = el("a",{href:URL.createObjectURL(blob), download:"Semesterpakete_" + fileSafe(PLAN.semester||"") + ".zip"});
+  document.body.appendChild(a); a.click(); setTimeout(()=>a.remove(), 500);
+};
+function renderSem(){
+  const host = $("semList"); host.innerHTML = ""; if(!PACKS.length) return;
+  const tb = el("table");
+  tb.appendChild(el("tr",{},["Person","Pakete","Startseite","",""].map(h => el("th",{text:h}))));
+  semesterPackages().forEach(x => tb.appendChild(el("tr",{},[
+    el("td",{text:x.name}), el("td",{text:String(x.data.pakete.length)}),
+    el("td",{style:"white-space:normal;max-width:320px"}, el("div",{class:"link",text:x.link})),
+    el("td",{}, el("button",{text:"Link kopieren",onclick:e=>{ navigator.clipboard && navigator.clipboard.writeText(x.link); e.target.textContent = "Kopiert ✓"; }})),
+    el("td",{}, el("button",{class:"pri",text:"Speichern",onclick:()=>download(x.file, JSON.stringify(x.data))}))])));
+  host.appendChild(el("div",{class:"tw"}, tb));
 }
 $("btnZip").onclick = async () => {
   if(!window.JSZip){ $("zipStat").textContent = "ZIP nicht verfügbar (offline). Bitte Pakete einzeln speichern."; return; }
@@ -490,6 +538,8 @@ function render(){
   renderOverview();
   renderPacks();
   $("btnZip").disabled = !PACKS.length;
+  $("btnSem").disabled = !PACKS.length;
+  renderSem();
   if(FOTOS.n) showFotoStat();
 }
 function avatarCell(s){
