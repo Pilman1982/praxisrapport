@@ -9,7 +9,7 @@ OK      Erkennt falsche Variante
 OK      Erkennt doppelte Nummer                                            
 OK      Warnt bei falscher Anzahl Einsatztage                              
 OK      Fotos aus PDF gelesen und per Nummer zugeordnet (20)               [20, 20]
-OK      Foto ist klein (unter 20 kB)                                       2463
+OK      Foto ist klein (unter 20 kB)                                       2455
 OK      Fotos in der Uebersicht sichtbar                                   41
 OK      Suche nach Nickname findet die Person in Kueche und Service        2
 OK      ZIP enthaelt alle Pakete und Startlinks.txt                        ['Paket_Kueche_Campigiana_10T_2026-10-12.json', 'Paket_Kueche_Da-Fortunat_10T_2026-10-12.json', 'Paket_Kueche_Patisserie_10T_2026-
