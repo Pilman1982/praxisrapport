@@ -14,6 +14,8 @@ FILES = [
   ("Kueche Mobil 5T", R/"src/dist/Kuechenrapport_Mobil_5Tage_ohneExam.html", "mobil", "kueche"),
   ("Service Laptop", R/"src/dist/Servicerapport.html",          "browser", "service"),
   ("Service Mobil",  R/"src/dist/Servicerapport_Mobil.html",    "mobil",   "service"),
+  ("Service Laptop 4T", R/"src/dist/Servicerapport_4Tage_Exam.html", "browser", "service"),
+  ("Service Mobil 5T",  R/"src/dist/Servicerapport_Mobil_5Tage_ohneExam.html", "mobil", "service"),
 ]
 res = []
 def ok(name, cond, info=""):

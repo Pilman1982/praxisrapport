@@ -79,5 +79,32 @@ OK      Service Mobil: Meldezeile mit Klasse/Gruppe der Person     ["Ammann, Lea
 OK      Service Mobil: 'Turnus startet am' zeigt die Auswahl (Dienstag) ['1', 1]
 OK      Service Mobil: 'Turnus startet am' zeigt Montag            0
 OK      Service Mobil: keine JavaScript-Fehler                     []
+OK      Service Laptop 4T: alle 34 Personen gelesen                34
+OK      Service Laptop 4T: HFE1 bleibt erhalten                    ['Neu', 'Nina', 'Nini', 'nina.neu@beispiel.ch', 'en', 'HFE1', '']
+OK      Service Laptop 4T: 'HFe 2' und 'team 2' werden HFE2 / Team 2 ['Muster', 'Max', '', 'max.muster@beispiel.ch', 'de', 'HFE2', 'Team 2']
+OK      Service Laptop 4T: ohne Nickname landet Klasse nicht im Nickname ['Muster', 'Max', '', 'max.muster@beispiel.ch', 'de', 'HFE2', 'Team 2']
+OK      Service Laptop 4T: altes HFE bleibt lesbar                 ['Alt', 'Anna', '', 'anna.alt@beispiel.ch', 'en', 'HFE', '']
+OK      Service Laptop 4T: Nur Name ohne weitere Felder            ['Ohne', 'Otto', '', '', '', '', '']
+OK      Service Laptop 4T: Mehrteiliger Nachname 'van der Berg'    
+OK      Service Laptop 4T: Nickname 'Ethan' bei Chen               ['Chen', 'Yuxuan', 'Ethan', 'yuxuan.chen@beispiel.ch', 'en', 'HFE1', 'Gruppe 1']
+OK      Service Laptop 4T: Liste wird mit 7 Feldern zurueckgeschrieben ['Muster; Max; max.muster@beispiel.ch; de; HFE2; Team 2']
+OK      Service Laptop 4T: Meldezeile mit Nickname in «»           ["- Ammann, Lea   ·   HFD · Gruppe 1   —   Unentschuldigt", "- Chen, Yuxuan «Ethan»   ·   HFE1 · Gruppe 1   — 
+OK      Service Laptop 4T: Meldezeile mit Klasse/Gruppe der Person ["- Ammann, Lea   ·   HFD · Gruppe 1   —   Unentschuldigt", "- Chen, Yuxuan «Ethan»   ·   HFE1 · Gruppe 1   — 
+OK      Service Laptop 4T: eingebauter Selbsttest                  23 Pruefungen
+OK      Service Laptop 4T: keine JavaScript-Fehler                 []
+OK      Service Mobil 5T: alle 34 Personen gelesen                 34
+OK      Service Mobil 5T: HFE1 bleibt erhalten                     ['Neu', 'Nina', 'Nini', 'nina.neu@beispiel.ch', 'en', 'HFE1', '']
+OK      Service Mobil 5T: 'HFe 2' und 'team 2' werden HFE2 / Team 2 ['Muster', 'Max', '', 'max.muster@beispiel.ch', 'de', 'HFE2', 'Team 2']
+OK      Service Mobil 5T: ohne Nickname landet Klasse nicht im Nickname ['Muster', 'Max', '', 'max.muster@beispiel.ch', 'de', 'HFE2', 'Team 2']
+OK      Service Mobil 5T: altes HFE bleibt lesbar                  ['Alt', 'Anna', '', 'anna.alt@beispiel.ch', 'en', 'HFE', '']
+OK      Service Mobil 5T: Nur Name ohne weitere Felder             ['Ohne', 'Otto', '', '', '', '', '']
+OK      Service Mobil 5T: Mehrteiliger Nachname 'van der Berg'     
+OK      Service Mobil 5T: Nickname 'Ethan' bei Chen                ['Chen', 'Yuxuan', 'Ethan', 'yuxuan.chen@beispiel.ch', 'en', 'HFE1', 'Gruppe 1']
+OK      Service Mobil 5T: Liste wird mit 7 Feldern zurueckgeschrieben ['Muster; Max; max.muster@beispiel.ch; de; HFE2; Team 2']
+OK      Service Mobil 5T: Meldezeile mit Nickname in «»            ["Ammann, Lea   ·   HFD · Gruppe 1   —   Unentschuldigt", "Chen, Yuxuan «Ethan»   ·   HFE1 · Gruppe 1   —   Ve
+OK      Service Mobil 5T: Meldezeile mit Klasse/Gruppe der Person  ["Ammann, Lea   ·   HFD · Gruppe 1   —   Unentschuldigt", "Chen, Yuxuan «Ethan»   ·   HFE1 · Gruppe 1   —   Ve
+OK      Service Mobil 5T: 'Turnus startet am' zeigt die Auswahl (Dienstag) ['1', 1]
+OK      Service Mobil 5T: 'Turnus startet am' zeigt Montag         0
+OK      Service Mobil 5T: keine JavaScript-Fehler                  []
 
-79 von 79 bestanden.
+106 von 106 bestanden.

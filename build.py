@@ -23,7 +23,8 @@ for folder in ("kueche", "service"):
 PUBLISH = {
     "kueche":  ["Kuechenrapport.html", "Kuechenrapport_4Tage_Exam.html", "Kuechenrapport_5Tage_ohneExam.html",
                 "Kuechenrapport_Mobil.html", "Kuechenrapport_Mobil_4Tage_Exam.html", "Kuechenrapport_Mobil_5Tage_ohneExam.html"],
-    "service": ["Servicerapport.html", "Servicerapport_Mobil.html"],
+    "service": ["Servicerapport.html", "Servicerapport_4Tage_Exam.html", "Servicerapport_5Tage_ohneExam.html",
+                "Servicerapport_Mobil.html", "Servicerapport_Mobil_4Tage_Exam.html", "Servicerapport_Mobil_5Tage_ohneExam.html"],
 }
 if DOCS.exists(): shutil.rmtree(DOCS)
 for folder, files in PUBLISH.items():
