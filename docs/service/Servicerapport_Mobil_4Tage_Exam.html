@@ -110,6 +110,12 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
 .gpill.g-ok{background:#dff1e5;color:#1d5c34}.gpill.g-mid{background:#eceef2;color:#1a1f2b}.gpill.g-bad{background:#f8dcd7;color:#8a2416}
 .gpill.strong{outline:2px solid currentColor}
 .srow.grow{flex-wrap:wrap;row-gap:8px}
+.fbtext{width:100%;min-height:52vh;border:1px solid var(--line,#d9d9d5);border-radius:12px;padding:12px;font-size:15px;line-height:1.5;background:var(--card,#fff);color:inherit;resize:vertical}
+.fbopts{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:0 0 10px;font-size:14px}
+.fbopts select{font-size:15px;padding:6px 8px;border-radius:8px}
+.srow .fbbtn{flex:1 1 100%;margin-top:2px;padding:9px 12px;font-size:14px}
+.srow .fbbtn.done{opacity:.75}
+
 .gbox{display:grid;grid-template-rows:auto auto;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px 8px;justify-items:center;flex:1 1 100%}
 .gbox .gl{font-size:11px;color:var(--ink3,#777);text-align:center}
 .gbox .gpill{margin-left:0}
@@ -1401,6 +1407,7 @@ function n2RenderGrades(){
   const root = document.getElementById("view"); root.innerHTML = "";
   const hasEx = slots().some(s => s.exam);
   root.appendChild(el("h2",{class:"sec",text:n2t("grades")}));
+  root.appendChild(el("p",{class:"muted",style:"margin:0 2px 10px",text:n2u("fbHint")}));
   const card = el("div",{class:"card"});
   const ul = el("ul",{class:"slist"});
   S.students.forEach(s => {
@@ -1416,10 +1423,161 @@ function n2RenderGrades(){
     if(hasEx){ box.appendChild(el("span",{class:"gl",text:n2t("exam")})); box.appendChild(n2Pill(e));
                box.appendChild(el("span",{class:"gl",text:n2t("final")})); box.appendChild(n2Pill(f, f != null ? "strong" : "")); }
     row.appendChild(box);
+    const sent = n2FbSent(s.id);
+    row.appendChild(el("button",{class:"btn fbbtn" + (sent ? " done" : ""),text:"✉ " + n2u("fb") + (sent ? " ✓" : ""),
+      title: sent ? n2u("sent") + " " + sent : "", onclick:()=>n2OpenFb(s)}));
     li.appendChild(row); ul.appendChild(li);
   });
   card.appendChild(ul); root.appendChild(card);
   root.appendChild(el("p",{class:"muted",style:"margin:14px 2px 0",text:n2t("hint")}));
+}
+
+/* ====================================================================================
+   Feedback-Mail an die Studierenden (Noten 2.0, 05.10.2026)
+   Jede/r Dozierende löst sie am Ende ihres/seines Einsatzes selbst aus (Notenübersicht Ø).
+   Sprache: Deutsch für HFD, Englisch für HFE1/HFE2 (oder die Sprache aus der Klassenliste).
+   Inhalt: was gut lief, wo die Person sich verbessern kann (mit Tipp), freundlicher Abschluss.
+   Der Text ist im Blatt frei bearbeitbar und geht über die Mail-App der Dozierenden hinaus.
+   ==================================================================================== */
+const N2FB = {
+  de:{subj:"Dein Feedback aus der Praxis", hi:"Hallo", thanks:"vielen Dank für deinen Einsatz bei uns", period:"vom {a} bis {b}", intro:"Gerne gebe ich dir ein kurzes Feedback.",
+      good:"Das hat mir besonders gefallen:", goodNone:"Du hast die Erwartungen zuverlässig erfüllt, besonders in diesen Bereichen: {c}.",
+      improve:"Hier kannst du dich noch verbessern:", improveNone:"Mir sind keine Punkte aufgefallen, an denen du dringend arbeiten musst. Bleib so dran!",
+      tip:"Tipp", often:"mehrmals", late:"Achte bitte auf Pünktlichkeit: Du warst {n}× verspätet.", unex:"Bitte melde Abwesenheiten immer im Voraus: {n} Tag(e) waren nicht entschuldigt.",
+      grades:"Deine Note für diesen Einsatz: Praxis {p}", exam:", Exam Day {e}",
+      c1:"Du warst eine echte Stütze im Team. Mach genau so weiter!", c2:"Du bist auf einem guten Weg. Mit den Tipps oben holst du noch mehr heraus.",
+      c3:"Die Grundlage stimmt. Nimm dir die Punkte oben Schritt für Schritt vor, dann merkst du schnell Fortschritte.",
+      c4:"Ich sehe, dass bei dir noch einiges drin liegt, und ich traue es dir zu. Komm gerne auf mich zu, wenn du Unterstützung möchtest.",
+      wish:"Ich wünsche dir viel Erfolg und Freude im nächsten Einsatz.", bye:"Herzliche Grüsse"},
+  en:{subj:"Your feedback from practical training", hi:"Hi", thanks:"thank you for your work with us", period:"from {a} to {b}", intro:"Here is some short feedback from me.",
+      good:"What I particularly liked:", goodNone:"You reliably met expectations, especially in these areas: {c}.",
+      improve:"Where you can still improve:", improveNone:"I did not notice anything you urgently need to work on. Keep it up!",
+      tip:"Tip", often:"several times", late:"Please watch your punctuality: you were late {n} time(s).", unex:"Please always report absences in advance: {n} day(s) were unexcused.",
+      grades:"Your grade for this assignment: practice {p}", exam:", Exam Day {e}",
+      c1:"You were a real asset to the team. Keep it up exactly like this!", c2:"You are on a good path. With the tips above you will get even more out of it.",
+      c3:"The foundation is there. Work through the points above step by step and you will soon see progress.",
+      c4:"I can see there is more in you, and I am confident you can do it. Feel free to come to me if you would like support.",
+      wish:"I wish you every success and enjoyment on your next assignment.", bye:"Kind regards"}
+};
+const N2FBUI = {
+  de:{fb:"Feedback", fbTitle:"Feedback-Mail", fbHint:"Am Ende deines Einsatzes: pro Person eine Feedback-Mail. Der Text ist ein Vorschlag, du kannst ihn ändern.",
+      withGrades:"Noten mitschicken", open:"In Mail öffnen", copy:"Kopieren", close:"Schliessen", noMail:"Keine E-Mail-Adresse hinterlegt. Text kopieren und selbst senden.",
+      sent:"gesendet", copied:"Kopiert", lang:"Sprache"},
+  en:{fb:"Feedback", fbTitle:"Feedback e-mail", fbHint:"At the end of your assignment: one feedback e-mail per student. The text is a suggestion; you can change it.",
+      withGrades:"Include grades", open:"Open in Mail", copy:"Copy", close:"Close", noMail:"No e-mail address on file. Copy the text and send it yourself.",
+      sent:"sent", copied:"Copied", lang:"Language"},
+  th:{fb:"ข้อเสนอแนะ", fbTitle:"อีเมลข้อเสนอแนะ", fbHint:"เมื่อจบการฝึก: ส่งอีเมลข้อเสนอแนะให้นักศึกษาแต่ละคน ข้อความเป็นเพียงข้อเสนอ แก้ไขได้",
+      withGrades:"ส่งคะแนนด้วย", open:"เปิดในแอปเมล", copy:"คัดลอก", close:"ปิด", noMail:"ไม่มีที่อยู่อีเมล ให้คัดลอกข้อความแล้วส่งเอง",
+      sent:"ส่งแล้ว", copied:"คัดลอกแล้ว", lang:"ภาษา"}
+};
+const n2u = k => (N2FBUI[L] && N2FBUI[L][k]) || N2FBUI.de[k];
+function n2FbLang(s){
+  if(s && (s.lang === "de" || s.lang === "en")) return s.lang;
+  const k = String((s && s.klasse) || "").toUpperCase();
+  if(k === "HFD") return "de";
+  if(/^HFE/.test(k)) return "en";
+  return (S.settings.outLang === "en") ? "en" : "de";
+}
+function n2Teacher(){
+  const wds = ["su","mo","tu","we","th","fr","sa"], wd = wds[new Date().getDay()];
+  const p = S.settings.teacherPlan;
+  if(p && typeof p === "object" && p[wd]) return p[wd];
+  return S.settings.teacher || "";
+}
+/* Auswertung pro Person über alle Tage dieses Pakets */
+function n2FbData(sid){
+  const tally = {}; let late = 0, unex = 0, days = 0;
+  slots().forEach(sl => {
+    const r = (S.days[sl.id] || {})[sid]; if(!r) return;
+    const att = r.att || "present";
+    if(att === "late") late++;
+    if(att === "unexcused") unex++;
+    if(att === "excused" || att === "unexcused" || att === "tm") return;
+    days++;
+    n2Obs(r).forEach(i => { tally[i] = (tally[i] || 0) + 1; });
+  });
+  const per = {}; CRITS.forEach(c => per[c.k] = []);
+  slots().filter(x => !x.exam).forEach(sl => { const g = n2Crit(sl.id, sid); if(g) CRITS.forEach(c => per[c.k].push(g[c.k])); });
+  const crit = {}; CRITS.forEach(c => { const v = per[c.k]; crit[c.k] = v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; });
+  const list = Object.keys(tally).map(i => ({c: CHIP[i], n: tally[i]})).filter(x => x.c);
+  const pos = list.filter(x => x.c.d > 0).sort((a, b) => (b.n * (b.c.w || 1)) - (a.n * (a.c.w || 1)));
+  const neg = list.filter(x => x.c.d < 0 && x.c.i !== N2_LATE).sort((a, b) => ((b.c.ko ? 9 : 0) + b.n * (b.c.w || 1)) - ((a.c.ko ? 9 : 0) + a.n * (a.c.w || 1)));
+  return {pos, neg, late, unex, days, crit};
+}
+function n2FbText(s, lg, withGrades){
+  const X = N2FB[lg] || N2FB.de, D = n2FbData(s.id);
+  const sl = slots().filter(x => x.date), a = sl.length ? dmy(sl[0].date) : "", b = sl.length ? dmy(sl[sl.length - 1].date) : "";
+  const outlet = [S.settings.outlet, S.settings.outlet2].filter(Boolean).join(" / ");
+  const first = (s.nick || s.first || String(s.name || "").split(/\s+/).slice(1).join(" ") || s.name || "").trim();
+  const cn = k => { const c = CRITS.find(x => x.k === k); return c ? (c[lg] || c.de) : k; };
+  const ct = c => (c.t && (c.t[lg] || c.t.de)) || "";
+  const ca = c => (c.a && (c.a[lg] || c.a.de)) || "";
+  const o = [];
+  o.push(X.hi + " " + first + ",", "");
+  o.push(X.thanks + (outlet ? " (" + outlet + (a ? ", " + X.period.replace("{a}", a).replace("{b}", b) : "") + ")" : (a ? " " + X.period.replace("{a}", a).replace("{b}", b) : "")) + ". " + X.intro, "");
+  if(D.pos.length){
+    o.push(X.good);
+    D.pos.slice(0, 3).forEach(x => o.push("– " + ct(x.c) + (x.n > 1 ? " (" + X.often + ")" : "")));
+  } else {
+    const best = CRITS.filter(c => D.crit[c.k] != null && D.crit[c.k] >= 5).map(c => cn(c.k)).slice(0, 3);
+    if(best.length) o.push(X.goodNone.replace("{c}", best.join(", ")));
+  }
+  o.push("");
+  if(D.neg.length){
+    o.push(X.improve);
+    D.neg.slice(0, 3).forEach(x => {
+      o.push("– " + cn(x.c.c) + ": " + ct(x.c) + (x.n > 1 ? " (" + X.often + ")" : "") + ".");
+      if(ca(x.c)) o.push("  " + X.tip + ": " + ca(x.c));
+    });
+  } else o.push(X.improveNone);
+  o.push("");
+  if(D.late) o.push(X.late.replace("{n}", D.late));
+  if(D.unex) o.push(X.unex.replace("{n}", D.unex));
+  if(D.late || D.unex) o.push("");
+  const p = n2Praxis(s.id).avg, e = n2Exam(s.id);
+  if(withGrades && p != null){ o.push(X.grades.replace("{p}", p.toFixed(2)) + (e != null ? X.exam.replace("{e}", e.toFixed(2)) : "") + ".", ""); }
+  const g = p == null ? 5 : p;
+  o.push(g >= 5.25 ? X.c1 : g >= 4.75 ? X.c2 : g >= 4 ? X.c3 : X.c4);
+  o.push(X.wish, "", X.bye, n2Teacher());
+  const subj = X.subj + (outlet ? " – " + outlet : "") + (a ? " " + a + "–" + b : "");
+  return {subj, body: o.join("\n").replace(/\n{3,}/g, "\n\n")};
+}
+function n2FbSent(sid){ return (S.settings.fbSent && S.settings.fbSent[sid]) || ""; }
+function n2OpenFb(s){
+  const host = document.getElementById("sheetHost");
+  let lg = n2FbLang(s), withGrades = false, edited = false;
+  const close = () => { host.innerHTML = ""; document.body.style.overflow = ""; render(); };
+  document.body.style.overflow = "hidden";
+  const sh = el("div",{class:"sheet"});
+  const hd = el("div",{class:"sheet-h"});
+  { const av = (typeof avatar === "function") ? avatar(s, 44) : null; if(av) hd.appendChild(av); }
+  hd.appendChild(el("div",{style:"min-width:0;flex:1"},[el("div",{class:"nm",text:n2u("fbTitle")}), el("div",{class:"sb",text:(s.name || "") + (s.mail ? " · " + s.mail : "")})]));
+  hd.appendChild(el("button",{class:"hbtn",text:"✕","aria-label":n2u("close"),onclick:close}));
+  sh.appendChild(hd);
+  const body = el("div",{class:"sheet-b"});
+  const ta = el("textarea",{class:"fbtext",id:"n2fbtext",oninput:()=>{ edited = true; }});
+  const fill = () => { ta.value = n2FbText(s, lg, withGrades).body; edited = false; };
+  const row = el("div",{class:"fbopts"});
+  const ls = el("select",{"aria-label":n2u("lang"),onchange:e=>{ lg = e.target.value; fill(); }});
+  [["de","Deutsch"],["en","English"]].forEach(([v, n]) => ls.appendChild(el("option",{value:v,text:n,selected:v === lg})));
+  row.appendChild(el("label",{},[document.createTextNode(n2u("lang") + " "), ls]));
+  const cb = el("input",{type:"checkbox",onchange:e=>{ withGrades = e.target.checked; fill(); }});
+  row.appendChild(el("label",{},[cb, document.createTextNode(" " + n2u("withGrades"))]));
+  body.appendChild(row);
+  if(!s.mail) body.appendChild(el("div",{class:"banner",text:n2u("noMail")}));
+  body.appendChild(ta);
+  sh.appendChild(body);
+  const ft = el("div",{class:"sheet-f"});
+  ft.appendChild(el("button",{class:"btn",text:n2u("copy"),onclick:()=>{
+    try{ navigator.clipboard.writeText(ta.value).then(()=>toast(n2u("copied"))); }catch(e){ ta.select(); try{ document.execCommand("copy"); toast(n2u("copied")); }catch(_){} } }}));
+  ft.appendChild(el("button",{class:"btn pri",text:"✉ " + n2u("open"),onclick:()=>{
+    const subj = n2FbText(s, lg, withGrades).subj;
+    S.settings.fbSent = S.settings.fbSent || {}; S.settings.fbSent[s.id] = new Date().toISOString().slice(0, 10); persist();
+    location.href = "mailto:" + encodeURIComponent(s.mail || "") + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(ta.value);
+  }}));
+  sh.appendChild(ft);
+  host.innerHTML = ""; host.appendChild(sh);
+  fill();
 }
 
 /* ---- Noten 2.0: Übergabe von der persönlichen Startseite (mein.html) ----
