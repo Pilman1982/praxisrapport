@@ -611,7 +611,7 @@ function openSheet(student){
   { const av0 = avatar(student, 44); if(av0) hd.appendChild(av0); }
   hd.appendChild(el("div",{style:"min-width:0;flex:1"},[
     el("div",{class:"nm",text:student.name + nickTag(student)}),
-    el("div",{class:"sb",text:slotLabel(slotById(curSlot))})
+    el("div",{class:"sb"},[document.createTextNode(slotLabel(slotById(curSlot)) + "  "), el("span",{id:"n2grade",class:"gpill big"})])
   ]));
   if(hasOutlet2()){
     const rr = dayRec(curSlot, student.id);
@@ -621,7 +621,6 @@ function openSheet(student){
       ob.className = "opill" + (rr.outlet ? " alt" : ""); ob.textContent = "\u21c4 " + (rr.outlet || S.settings.outlet || "\u2013"); });
     hd.appendChild(ob);
   }
-  hd.appendChild(el("div",{id:"n2grade",class:"gpill big"}));
   hd.appendChild(el("button",{class:"hbtn",text:"✕","aria-label":t("done"),onclick:close}));
   sh.appendChild(hd);
   const body = el("div",{class:"sheet-b"});
