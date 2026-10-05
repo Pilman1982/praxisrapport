@@ -57,7 +57,8 @@ function n2Praxis(sid){
 function n2Exam(sid){ const ex = slots().find(s => s.exam); return ex ? n2Day(ex.id, sid) : null; }
 function n2Final(sid){ const p = n2Praxis(sid).avg, e = n2Exam(sid); return (p != null && e != null) ? (2 * p + e) / 3 : null; }
 const n2Fmt = v => v == null ? "–" : v.toFixed(2);
-const n2Cls = v => v == null ? "g-na" : (v >= 5 ? "g-ok" : (v >= 4 ? "g-mid" : "g-bad"));
+/* Farben wie am Laptop: grün ab 5.25 (über Erwartung), rot unter 4.25, dazwischen neutral */
+const n2Cls = v => v == null ? "g-na" : (v >= 5.25 ? "g-ok" : (v < 4.25 ? "g-bad" : "g-mid"));
 function n2Effect(c){ return c.ko ? "→ 1.0" : ((c.d > 0 ? "+" : "−") + c.w.toFixed(2)); }
 function n2Pill(v, extra){ return el("span",{class:"gpill " + n2Cls(v) + (extra ? " " + extra : ""), text: n2Fmt(v)}); }
 /* Kopf des Erfassungsblatts: Tagesnote und Praxisdurchschnitt, laufend aktualisiert */
@@ -123,7 +124,7 @@ function n2Handoff(load){
   }
   const p = JSON.parse(JSON.stringify(h.paket));
   p.settings.paketId = id;
-  Promise.resolve(load(p)).then(() => { n2GoToday(); view = "day"; render(); });
+  Promise.resolve(load(p)).then(() => { n2GoToday(); view = "day"; render(); if(h.titel) toast("✓ " + h.titel); });
 }
 /* Heute ein Einsatztag des Pakets? Dann direkt diesen Tag zeigen. */
 function n2GoToday(){
@@ -142,6 +143,17 @@ function n2Refresh(list){
       if(n[k] !== undefined && JSON.stringify(n[k]) !== JSON.stringify(s[k])){ s[k] = n[k]; ch = true; }
     });
   });
+  /* neu im Plan: Person ergänzen (niemand wird entfernt, damit keine Erfassung verloren geht) */
+  list.forEach(n => {
+    if(!n || typeof n.name !== "string") return;
+    const da = S.students.some(s => (s.nr && n.nr && String(s.nr) === String(n.nr)) || (!n.nr && s.id === n.id));
+    if(da) return;
+    const x = JSON.parse(JSON.stringify(n));
+    if(!x.id || S.students.some(s => s.id === x.id)){ let i = S.students.length + 1; while(S.students.some(s => s.id === "s" + i)) i++; x.id = "s" + i; }
+    S.students.push(x); ch = true;
+  });
+  if(ch && typeof normalizeStudents === "function") normalizeStudents();
+  else if(ch && typeof saubereStudierende === "function") S.students = saubereStudierende(S.students);
   return ch;
 }
 setTimeout(() => n2Handoff(o => onLoadBackup({target:{files:[new File([JSON.stringify(o)], "paket.json")], value:""}})), 30);

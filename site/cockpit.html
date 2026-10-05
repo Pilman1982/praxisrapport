@@ -309,10 +309,16 @@ function packageJSON(p){
     meta:{group:settings.group, team:settings.team, outlet:p.outlet, outlet2:p.outlet2||"", teacher,
           slotCount:V.n, hasExam:V.exam, weekdays:settings.weekdays, startIdx:p.startIdx,
           startDay:WD_DE[WD[p.von.getDay()]], von:iso(p.von), bis:iso(p.bis), semester:PLAN.semester||"", turnus:PLAN.bezeichnung||"",
-          block:p.block||"", paketId:settings.paketId, titel:packTitle(p)},
+          block:p.block||"", paketId:settings.paketId, titel:packTitle(p, "de")},
     settings, students:studs, days:{}, dayMeta:{}};
 }
-function packTitle(p){ return [p.block || "", BER_LABEL[p.ber] + " " + p.outlet + (p.outlet2 ? " \u21c4 " + p.outlet2 : ""), VARS[p.v].label, "ab " + fDate(p.von)].filter(Boolean).join(" \u00b7 "); }
+/* Titel in der Sprache der Person (Zyklus bleibt als Name stehen) */
+const TITLE_TX = {
+  de:{kueche:"Küche", service:"Service", "10T":"9 Tage + Exam", "4T":"4 Tage + Exam", "5T":"5 Tage", ab:"ab"},
+  en:{kueche:"Kitchen", service:"Service", "10T":"9 days + exam", "4T":"4 days + exam", "5T":"5 days", ab:"from"},
+  th:{kueche:"ครัว", service:"บริการ", "10T":"9 วัน + สอบ", "4T":"4 วัน + สอบ", "5T":"5 วัน", ab:"ตั้งแต่"}};
+function packTitle(p, lg){ const X = TITLE_TX[lg] || TITLE_TX[(p.doz && p.doz.sprache)] || TITLE_TX.de;
+  return [p.block || "", X[p.ber] + " " + p.outlet + (p.outlet2 ? " \u21c4 " + p.outlet2 : ""), X[p.v], X.ab + " " + fDate(p.von)].filter(Boolean).join(" \u00b7 "); }
 /* Semesterpaket: alle Pakete einer Person in einer Datei, für die persönliche Startseite */
 function semesterPackages(){
   const by = {};
