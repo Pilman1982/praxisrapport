@@ -1,6 +1,10 @@
 Servicerapport - Quellcode und Bausteine
 Stand 05.10.2026
 
+HAUPTQUELLE ab 05.10.2026: GitHub-Repository Pilman1982/praxisrapport (Ordner src/).
+Der Ordner "09 Quellcode" im OneDrive ist eine Kopie davon. Aenderungen immer zuerst im
+Repository machen, dann bauen (python3 build.py) und die Dateien hierher zuruecklegen.
+
 Die beiden Programmdateien in "01 Programm" entstehen aus diesen Teilen.
 Wer einen Baustein aendern will, aendert nur _chips.js und baut neu.
 Alles andere bleibt gleich.

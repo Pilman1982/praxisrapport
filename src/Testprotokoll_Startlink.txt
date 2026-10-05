@@ -1,0 +1,16 @@
+PRUEFUNG STARTLINK 05.10.2026
+
+OK      Kueche Mobil: Sprache Thai aus dem Link                      {'l': 'th', 'o': 'Umami', 'g': 'HFE1', 't': 'Team 2', 'te': 'Sybille / Laura', 'lang': 'th'}
+OK      Kueche Mobil: Outlet, Klasse, Gruppe aus dem Link            {'l': 'th', 'o': 'Umami', 'g': 'HFE1', 't': 'Team 2', 'te': 'Sybille / Laura', 'lang': 'th'}
+OK      Kueche Mobil: Dozent = beide Namen                           Sybille / Laura
+OK      Kueche Mobil: Montag bewertet Sybille, Mittwoch Laura        ['Sybille', 'Laura']
+OK      Kueche Mobil: ohne Link bleibt Thai und Umami gespeichert    ['th', 'Umami']
+OK      Kueche Mobil: unbekannte Sprache wird ignoriert              
+OK      Kueche Mobil: keine JavaScript-Fehler                        []
+OK      Service Mobil: Sprache Thai aus dem Link                     {'l': 'th', 'o': 'Umami', 'g': 'HFE1', 't': 'Team 2', 'te': 'Sybille / Laura', 'lang': 'th'}
+OK      Service Mobil: Outlet, Klasse, Gruppe aus dem Link           {'l': 'th', 'o': 'Umami', 'g': 'HFE1', 't': 'Team 2', 'te': 'Sybille / Laura', 'lang': 'th'}
+OK      Service Mobil: Dozent = beide Namen                          Sybille / Laura
+OK      Service Mobil: Montag bewertet Sybille, Mittwoch Laura       ['Sybille', 'Laura']
+OK      Service Mobil: ohne Link bleibt Thai und Umami gespeichert   ['th', 'Umami']
+OK      Service Mobil: unbekannte Sprache wird ignoriert             
+OK      Service Mobil: keine JavaScript-Fehler                       []

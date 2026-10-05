@@ -2,6 +2,10 @@ QUELLCODE KÜCHENRAPPORT
 =======================
 Stand: 05.10.2026
 
+HAUPTQUELLE ab 05.10.2026: GitHub-Repository Pilman1982/praxisrapport (Ordner src/).
+Der Ordner "09 Quellcode" im OneDrive ist eine Kopie davon. Aenderungen immer zuerst im
+Repository machen, dann bauen (python3 build.py) und die Dateien hierher zuruecklegen.
+
 Die sechs HTML-Dateien in "01 Programm" werden NICHT von Hand bearbeitet.
 Sie entstehen aus den Bauteilen in diesem Ordner. Wer direkt in der HTML
 etwas ändert, verliert die Änderung beim nächsten Bauen.
