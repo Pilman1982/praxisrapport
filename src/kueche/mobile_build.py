@@ -11,7 +11,8 @@ a    = a[a.index('"use strict"'):] if '"use strict"' in a[:400] else a
 chips= io.open(SRC/"_chips.js", encoding="utf-8").read()
 app  = io.open(SRC/"_mobile.js", encoding="utf-8").read()
 # Noten 2.0: gemeinsamer Zusatz fuer beide mobilen Apps (Noten, Daten)
-addon = io.open(SRC.parent/"_noten2_mobile.js", encoding="utf-8").read()
+_ad = SRC/"_noten2_mobile.js" if (SRC/"_noten2_mobile.js").exists() else SRC.parent/"_noten2_mobile.js"   # im OneDrive liegt eine Kopie im Quellcode-Ordner
+addon = io.open(_ad, encoding="utf-8").read()
 app  = app.replace("/* ---------- Start ---------- */", addon + "\n/* ---------- Start ---------- */", 1)
 
 VARIANTS = [
