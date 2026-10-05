@@ -1,0 +1,66 @@
+QUELLCODE KÜCHENRAPPORT
+=======================
+Stand: 05.10.2026
+
+Die sechs HTML-Dateien in "01 Programm" werden NICHT von Hand bearbeitet.
+Sie entstehen aus den Bauteilen in diesem Ordner. Wer direkt in der HTML
+etwas ändert, verliert die Änderung beim nächsten Bauen.
+
+
+BAUTEILE
+--------
+_head_top.html     Titel, Schriften, das ganze CSS, Kopf- und Grundgerüst
+                   (auch die Druck-CSS für die A4-Papiervorlagen)
+_scriptA.js        Logo als Data-URI, Gewichte (leicht/mittel/schwer),
+                   Kappungen, Wochentage, die sieben Kriterien
+_chips.js          Bausteinbibliothek, 67 Einträge mit Beobachtungstext und
+                   Massnahmentext in DE / EN / TH / ZH
+_scriptB.js        die ganze Logik: Notenrechnung, Erfassen, Übersicht,
+                   Beurteilung, Export, Zusammenführen, Papiervorlagen
+_mobile_head.html  Kopf und CSS der iPhone-Fassung
+_mobile.js         Logik der iPhone-Fassung
+_logo.txt          EHL-Logo, Base64
+_icon.txt          App-Icon für "Zum Home-Bildschirm", Base64
+
+
+BAUEN
+-----
+Die fertigen Dateien landen im Ordner "dist" neben diesem Ordner und
+werden danach nach "01 Programm" kopiert (wie beim Servicerapport).
+
+python3 build_variants.py
+   erzeugt Kuechenrapport.html, Kuechenrapport_4Tage_Exam.html und
+   Kuechenrapport_5Tage_ohneExam.html
+   (ersetzt dabei VARIANT, SLOT_COUNT und HAS_EXAM)
+
+python3 mobile_build.py
+   erzeugt die drei Kuechenrapport_Mobil*.html
+   (ersetzt dabei MVARIANT)
+
+python3 guide_build.py
+   erzeugt die vier Anleitungen als HTML; die PDF entstehen daraus mit
+   einem Browser-Druck (im Projekt mit Playwright, Rand 0, A4)
+
+
+WICHTIG BEIM ÄNDERN
+-------------------
+- Bausteine ändern: nur _chips.js anfassen. IDs niemals umbenennen, sonst
+  passen alte JSON-Dateien nicht mehr dazu.
+- Kriterien ändern: _scriptA.js (CRITS) und die Kürzel CRIT_ABBR in
+  _scriptB.js müssen zusammenpassen.
+- Neue Texte brauchen immer alle drei Bedienungssprachen DE / EN / TH.
+- Klasse und Gruppe werden am Inhalt erkannt (erkenneKlasse / erkenneGruppe in
+  _scriptB.js und _mobile.js). Diese Funktionen sind im Servicerapport identisch
+  und muessen es bleiben. Klassenliste KLASSEN = HFD, HFE1, HFE2.
+- Die Variante steht in den fertigen Dateien fest. Sie wird beim Bauen
+  gesetzt, nicht über die Oberfläche gewählt.
+- Nach jeder Änderung: Papiervorlagen auf die Seitenzahl prüfen
+  (Tagesblatt muss eine Seite bleiben) und einmal Laptop -> iPhone ->
+  Laptop durchspielen.
+
+
+PRUEFUNG
+--------
+Testprotokoll_Harmonisierung.txt: 83 Pruefungen nach der Angleichung an den
+Servicerapport vom 05.10.2026 (Namensliste, Klassen, Meldezeile, Zusammenfuehren,
+Auswahlfelder mobil).

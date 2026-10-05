@@ -1,0 +1,64 @@
+Servicerapport - Quellcode und Bausteine
+Stand 05.10.2026
+
+Die beiden Programmdateien in "01 Programm" entstehen aus diesen Teilen.
+Wer einen Baustein aendern will, aendert nur _chips.js und baut neu.
+Alles andere bleibt gleich.
+
+  _head_top.html      Kopf, Styles, Druckansicht, Grundgeruest der Browser-Datei
+  _scriptA.js         Logo-Platzhalter, Gewichte (W), Kappung, Wochentage
+  _chips.js           KLASSEN, GRUPPEN, KRITERIEN und BAUSTEINE  <-- hier wird inhaltlich geaendert
+  _scriptB.js         Rechenlogik, Oberflaechentexte DE/EN/TH/ZH, Render, Selbsttest
+  _footer.html        Abschluss der Browser-Datei
+
+  _mobile_head.html   Kopf, Icon, Styles, Grundgeruest der iPhone-Datei
+  _mobile.js          Logik und Texte der iPhone-Datei, dazu die Schnellwahl QUICK
+  _mobile_footer.html Abschluss der iPhone-Datei
+
+  _logo.txt           EHL-Logo als Base64, wird beim Bauen eingesetzt
+  _icon.txt           Touch-Icon fuer den iPhone-Homescreen
+
+  build_variants.py   baut die Browser-Dateien   ->  python3 build_variants.py 10T
+  mobile_build.py     baut die iPhone-Dateien    ->  python3 mobile_build.py 10T
+
+Ohne Argument bauen beide Skripte alle drei Varianten (10T, 4T, 5T).
+Im Einsatz sind nur 10T und die mobile 10T-Datei.
+Die Dateien landen im Ordner "dist" neben diesem Ordner und muessen danach
+nach "01 Programm" kopiert werden.
+
+Testprotokolle in diesem Ordner, aus dem letzten Durchlauf:
+
+  Testprotokoll_Browser.txt      57 Funktionspruefungen der Laptop-Datei
+  Testprotokoll_Mobil.txt        30 Funktionspruefungen der iPhone-Datei
+  Testprotokoll_Robustheit.txt   23 Pruefungen gegen kaputte Sicherungen und Fehlklicks
+  Testprotokoll_Namen.txt        27 Pruefungen zu Namen, Klasse, Gruppe und Absenzmeldung (Stand 02.10.)
+  Testprotokoll_Harmonisierung.txt  83 Pruefungen Kueche und Service nach der Angleichung vom 05.10.2026
+
+Aufbau eines Bausteins in _chips.js:
+
+  {i:"gas-n1",          eindeutige ID, Praefix = Kriterium
+   c:"gas",             Kriterium
+   d:-1,                Richtung: 1 = positiv, -1 = negativ
+   w:W.m,               Gewicht: W.l = 0.25, W.m = 0.50, W.s = 1.00
+   ko:true,             nur bei K.-o.-Bausteinen, dann w:0
+   t:{de,en,th,zh},     Beobachtungstext
+   a:{de,en,th,zh}}     Massnahme, nur bei negativen Bausteinen
+
+Ganz oben in _chips.js stehen zwei Listen, die beide Apps lesen:
+
+  const KLASSEN = ["HFD", "HFE1", "HFE2"];
+  const GRUPPEN = ["Gruppe 1", "Gruppe 2", "Team 1", "Team 2"];
+
+Kommt eine Klasse oder eine Gruppe dazu, wird hier eine Zeile ergaenzt.
+
+Feste Regeln, die nicht ueber die Oberflaeche aenderbar sind:
+  - tea-lt ist der Baustein, den "Verspaetet" automatisch setzt. Nicht umbenennen.
+  - Die Doppelgewichtung haengt am Kriterium "gas" (Gastgeberhaltung).
+  - Jeder negative Baustein braucht einen Massnahmentext, sonst fehlt er im Bericht.
+  - Studierende haben die Felder nachname, vorname, nick, mail, lang, klasse, gruppe.
+    Das Feld name wird daraus berechnet und nicht von Hand gesetzt.
+    klasse und gruppe leer = Vorgabe aus der Kopfzeile (klasseOf / gruppeOf).
+  - Klasse und Gruppe werden am Inhalt erkannt (erkenneKlasse / erkenneGruppe).
+    Diese beiden Funktionen sind in Kueche und Service identisch und muessen es bleiben.
+
+Nach jeder Aenderung: Datei oeffnen, Reiter Eintragen, Knopf "Selbsttest ausfuehren".
