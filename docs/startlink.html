@@ -112,7 +112,7 @@ const $ = id => document.getElementById(id);
 const BASE = location.href.replace(/[#?].*$/, "").replace(/[^/]*$/, "");
 const FILES = {
   kueche:  {"10T":"kueche/Kuechenrapport_Mobil.html", "4T":"kueche/Kuechenrapport_Mobil_4Tage_Exam.html", "5T":"kueche/Kuechenrapport_Mobil_5Tage_ohneExam.html"},
-  service: {"10T":"service/Servicerapport_Mobil.html"}
+  service: {"10T":"service/Servicerapport_Mobil.html", "4T":"service/Servicerapport_Mobil_4Tage_Exam.html", "5T":"service/Servicerapport_Mobil_5Tage_ohneExam.html"}
 };
 const MAILTXT = {
   de: {s:"Dein persönlicher Link zum Praxisrapport", b:"Hallo\n\nHier ist dein persönlicher Link zum Praxisrapport:\n\n{L}\n\nSo richtest du ihn ein (einmalig):\n1. Link auf dem iPad oder iPhone in Safari öffnen.\n2. Auf «Teilen» tippen (Quadrat mit Pfeil).\n3. «Zum Home-Bildschirm» wählen.\n\nDanach startest du die App immer über das Symbol auf dem Home-Bildschirm.\nDie Daten bleiben auf deinem Gerät.\n\nGruss\nMichael"},

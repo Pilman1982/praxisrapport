@@ -1,0 +1,14 @@
+PRUEFUNG HALBTURNUS 05.10.2026
+
+OK      Kueche 5T: Datei traegt die Variante                           5T
+OK      Kueche 4T: Datei traegt die Variante                           4T
+OK      Kueche: beide Halbturnus-Dateien zusammengefuehrt, 30 Personen 30
+OK      Kueche: alle 10 Einsatztage belegt (5T = 1-5, 4T = 6-9, Exam = 10) ['d01', 'd02', 'd03', 'd04', 'd05', 'd06', 'd07', 'd08', 'd09', 'd10']
+OK      Kueche: Exam Day liegt auf Tag 10                              d10
+OK      Kueche: keine JavaScript-Fehler                                []
+OK      Service 5T: Datei traegt die Variante                          5T
+OK      Service 4T: Datei traegt die Variante                          4T
+OK      Service: beide Halbturnus-Dateien zusammengefuehrt, 30 Personen 30
+OK      Service: alle 10 Einsatztage belegt (5T = 1-5, 4T = 6-9, Exam = 10) ['d01', 'd02', 'd03', 'd04', 'd05', 'd06', 'd07', 'd08', 'd09', 'd10']
+OK      Service: Exam Day liegt auf Tag 10                             d10
+OK      Service: keine JavaScript-Fehler                               []
