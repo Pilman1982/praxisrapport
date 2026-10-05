@@ -1,0 +1,21 @@
+PRUEFUNG RESTAURANTWECHSEL SERVICE 05.10.2026
+
+OK      Laptop: Feld 'Zweites Restaurant' im Reiter Eintragen            
+OK      Laptop: Wechsel ab Tag 6 bleibt bis Tag 10 erhalten              Da Fortunat
+OK      Laptop: Einsatzorte DE                                           Umami (Tag 1–5), Da Fortunat (Tag 6–10)
+OK      Laptop: Einsatzorte EN und ZH                                    ['Umami (Day 1–5), Da Fortunat (Day 6–10)', 'Umami (第1–5天), Da Fortunat (第6–10天)']
+OK      Laptop: ohne Wechsel kein Eintrag                                
+OK      Laptop: Absenzmeldung nennt Restaurant des Tages                 ['- Chen, Yuxuan «Ethan»   ·   HFE1 · Gruppe 1   ·   Da Fortunat   —   Verspätet']
+OK      Laptop: Beurteilung enthaelt Einsatzorte                         
+OK      Laptop: Umschalter pro Person sichtbar (30), 1 im zweiten Restaurant [30, 1]
+OK      Laptop: Klick auf Umschalter wechselt                            
+OK      Laptop: ohne zweites Restaurant keine Umschalter                 
+OK      Laptop: keine JavaScript-Fehler                                  []
+OK      Zusammenfuehren: Halbturnus aus anderem Restaurant behaelt Ort   Umami (Tag 1–5), Da Fortunat (Tag 6–10)
+OK      Zusammenfuehren: keine JavaScript-Fehler                         []
+OK      Mobil: Startlink setzt zweites Restaurant                        
+OK      Mobil: neuer Tag uebernimmt Restaurant vom Vortag                Da Fortunat
+OK      Mobil: Absenzmeldung nennt Restaurant                            ['Chen, Yuxuan «Ethan»   ·   HFE1 · Gruppe 1   ·   Da Fortunat   —   Unentschuldigt']
+OK      Mobil: Liste zeigt den Wechsel                                   
+OK      Mobil: Umschalter im Erfassungsblatt                             
+OK      Mobil: keine JavaScript-Fehler                                   []
