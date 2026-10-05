@@ -14,7 +14,7 @@ Es werden nie Daten von Studierenden hier abgelegt (siehe `.gitignore`).
 | `/` | Startseite mit allen Programmen |
 | `/startlink.html` | Persönliche Startlinks für Dozierende erzeugen (Sprache, Outlet, Name, Wochentagsplan) |
 | `/kueche/…` | Küchenrapport (Laptop und Mobil, 10T / 4T / 5T) |
-| `/service/…` | Servicerapport (Laptop und Mobil, 10T) |
+| `/service/…` | Servicerapport (Laptop und Mobil, 10T / 4T / 5T) |
 
 ## Startlink
 
@@ -24,6 +24,7 @@ Es werden nie Daten von Studierenden hier abgelegt (siehe `.gitignore`).
 |---|---|
 | `lang` | Sprache der Oberfläche: `de`, `en`, `th` |
 | `outlet`, `dozent` | Vorbelegung im Setup |
+| `outlet2` | Service: zweites Restaurant, aktiviert den Umschalter pro Person und Tag |
 | `klasse`, `gruppe` | Vorgabe für Klasse (`HFD`, `HFE1`, `HFE2`) und Gruppe |
 | `plan` | Geteiltes Gerät: `plan=mo:Name,tu:Name,we:Name,th:Name` setzt pro Einsatztag die bewertende Person |
 
@@ -47,6 +48,8 @@ python3 build.py                    # baut docs/
 python3 tests/test_harmonize.py     # Namensliste, Klassen, Meldezeile
 python3 tests/test_merge.py         # Zusammenführen
 python3 tests/test_startlink.py     # Startlinks
+python3 tests/test_halbturnus.py    # 5T + 4T in die 10T-Datei
+python3 tests/test_wechsel.py       # Service: Restaurantwechsel
 git commit -am "…" && git push      # GitHub Pages aktualisiert sich in 1 bis 2 Minuten
 ```
 

@@ -117,6 +117,8 @@ section[hidden]{display:none!important}
 .stud{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
 .stud.absent{background:var(--surf2)}
 .stud-h{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.opill{font:600 12px/1 inherit;border:1px solid var(--line2);background:transparent;color:inherit;border-radius:999px;padding:6px 10px;cursor:pointer;white-space:nowrap;max-width:45%;overflow:hidden;text-overflow:ellipsis}
+.opill.alt{background:var(--petrol);border-color:var(--petrol);color:#fff}
 .stud-h .nm{font-family:var(--f-disp);font-weight:600;font-size:15.5px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .grade{font-variant-numeric:tabular-nums;font-weight:600;font-size:15px;padding:3px 9px;border-radius:5px;background:var(--surf3);border:1px solid var(--line);min-width:52px;text-align:center}
 .grade.g-hi{background:var(--plusSoft);border-color:var(--plusLine);color:var(--plus)}
@@ -527,6 +529,7 @@ day:"Erfassen",week:"Übersicht",rep:"Beurteilung",data:"Daten",set:"Eintragen",
   merge:"Rapporte zusammenführen",mergeHint:"JSON-Dateien der anderen Dozierenden auswählen. Namen und Einsatztage werden zusammengeführt.",
   exportJson:"Sicherung (JSON)",exportCsv:"CSV",exportXlsx:"Excel (.xlsx)",exportTxt:"Text (.txt)",
   printPdf:"Drucken / PDF",
+  outlet2Field:"Zweites Restaurant (Wechsel)",outlet2Hint:"Nur ausfüllen, wenn Studierende zwischen zwei Restaurants wechseln. Beim Erfassen erscheint dann pro Person ein Umschalter, der sich pro Tag merkt, wo die Person war.",placements:"Einsatzorte",switchTitle:"Restaurant für diesen Tag wechseln",
   daysCounted:"gewertete Tage",obsCount:"Beobachtungen",topObs:"Häufigste Beobachtungen",
   emailSubj:"Servicerapport",openDay:"Tag erfassen",
   openDayHint:"Dieser Einsatztag ist noch nicht erfasst. Alle Studierenden starten anwesend auf der Basisnote; erfasst wird nur, was abweicht.",
@@ -628,6 +631,7 @@ day:"Record",week:"Overview",rep:"Feedback",data:"Data",set:"Setup",
   merge:"Merge reports",mergeHint:"Select the other lecturers' JSON files. Names and shift days are merged.",
   exportJson:"Backup (JSON)",exportCsv:"CSV",exportXlsx:"Excel (.xlsx)",exportTxt:"Text (.txt)",
   printPdf:"Print / PDF",
+  outlet2Field:"Second restaurant (switch)",outlet2Hint:"Only fill in if students switch between two restaurants. A switch then appears for each person when recording and remembers per day where the person worked.",placements:"Placements",switchTitle:"Switch restaurant for this day",
   daysCounted:"counted days",obsCount:"observations",topObs:"Most frequent observations",
   emailSubj:"Service report",openDay:"Open this day",
   openDayHint:"This shift day is not recorded yet. Everyone starts present at the baseline; you only record what deviates.",
@@ -729,6 +733,7 @@ day:"บันทึก",week:"ภาพรวม",rep:"ผลประเมิ
   merge:"รวมรายงาน",mergeHint:"เลือกไฟล์ JSON ของผู้สอนคนอื่น ระบบจะรวมชื่อและวันฝึกให้",
   exportJson:"สำรองข้อมูล (JSON)",exportCsv:"CSV",exportXlsx:"Excel (.xlsx)",exportTxt:"ข้อความ (.txt)",
   printPdf:"พิมพ์ / PDF",
+  outlet2Field:"ร้านอาหารที่สอง (สลับ)",outlet2Hint:"กรอกเฉพาะเมื่อนักศึกษาสลับระหว่างสองร้าน ระบบจะแสดงปุ่มสลับสำหรับแต่ละคนและจำร้านของแต่ละวัน",placements:"สถานที่ฝึก",switchTitle:"สลับร้านอาหารของวันนี้",
   daysCounted:"วันที่นับคะแนน",obsCount:"ข้อสังเกต",topObs:"ข้อสังเกตที่พบบ่อย",
   emailSubj:"รายงานบริการ",openDay:"เปิดบันทึกวันนี้",
   openDayHint:"ยังไม่ได้บันทึกวันฝึกนี้ ทุกคนเริ่มที่คะแนนพื้นฐานและถือว่ามาเรียน บันทึกเฉพาะสิ่งที่แตกต่าง",
@@ -821,6 +826,7 @@ day:"记录",week:"总览",rep:"评估",data:"数据",set:"设置",
   unexcusedNote:"旷工（当日成绩 1.00）",
   base:"基准分「符合预期」",weighting:"权重",gas2:"待客态度双倍计分",
   group:"班级 / 部门",teacher:"授课教师",
+  placements:"实习地点",
   daysCounted:"个计分日",obsCount:"条观察记录",
   emailSubj:"餐厅服务实践评估",
   examDay:"考核日",examShort:"考核",praxis:"实践",
@@ -1126,7 +1132,13 @@ const repMode = "all";   // Auswertung immer über den ganzen Turnus
 const dayOpen = id => !!S.days[id];
 function openSlot(id){
   S.days[id] = S.days[id] || {};
-  S.students.forEach(s=>{ S.days[id][s.id] = S.days[id][s.id] || {att:"present", obs:[], note:null}; });
+  S.students.forEach(s=>{
+    if(!S.days[id][s.id]){
+      S.days[id][s.id] = {att:"present", obs:[], note:null};
+      const vo = hasOutlet2() ? prevOutlet(id, s.id) : "";
+      if(vo) S.days[id][s.id].outlet = vo;
+    }
+  });
   const _m = S.dayMeta[id] || {};
   if(!_m.teacher) _m.teacher = S.settings.teacher || "";
   if(!_m.group)   _m.group   = S.settings.group   || "";
@@ -1146,6 +1158,48 @@ function dayRec(id, sid){
   return S.days[id][sid];
 }
 const dayMeta = id => (S.dayMeta && S.dayMeta[id]) || {teacher:"", group:"", team:"", outlet:""};
+/* ---- Restaurantwechsel: Ort pro Person und Einsatztag ----
+   S.settings.outlet = Stammrestaurant, S.settings.outlet2 = zweites Restaurant (freiwillig).
+   r.outlet steht im Tagesdatensatz nur, wenn die Person nicht im Stammrestaurant war. */
+const hasOutlet2 = () => !!String(S.settings.outlet2 || "").trim();
+function outletOfDay(slotId, sid){
+  const r = (S.days[slotId] || {})[sid];
+  return (r && r.outlet) ? r.outlet : (S.settings.outlet || "");
+}
+/* Vorgabe fuer einen neuen Tag: Ort des letzten erfassten Tages dieser Person. */
+function prevOutlet(slotId, sid){
+  const all = slots(); const i = all.findIndex(s => s.id === slotId);
+  for(let k = i - 1; k >= 0; k--){ const r = (S.days[all[k].id] || {})[sid]; if(r) return r.outlet || ""; }
+  return "";
+}
+function toggleOutlet(r){
+  r.outlet = r.outlet ? "" : String(S.settings.outlet2 || "").trim();
+  if(!r.outlet) delete r.outlet;
+}
+/* Einsatzorte als Text: "Umami (Tag 1–5), Da Fortunat (Tag 6–10)". Leer, wenn die Person
+   nur im Stammrestaurant war. lg = Sprache des Textes (de, en, zh, th). */
+function placementText(sid, lg){
+  const segs = [];
+  slots().forEach(sl => {
+    const r = (S.days[sl.id] || {})[sid]; if(!r) return;
+    const o = r.outlet || S.settings.outlet || "–";
+    const last = segs[segs.length - 1];
+    if(last && last.o === o) last.to = sl.idx; else segs.push({o: o, from: sl.idx, to: sl.idx});
+  });
+  if(!segs.length) return "";
+  if(segs.length === 1 && segs[0].o === (S.settings.outlet || "–")) return "";
+  const rng = g => g.from === g.to ? String(g.from) : (g.from + "–" + g.to);
+  const fmtR = g => (lg === "zh") ? ("第" + rng(g) + "天") : (lg === "en") ? ("Day " + rng(g))
+                  : (lg === "th") ? ("วันที่ " + rng(g)) : ("Tag " + rng(g));
+  return segs.map(g => g.o + " (" + fmtR(g) + ")").join(", ");
+}
+/* Beim Zusammenfuehren: Tage aus einer Datei mit anderem Stammrestaurant behalten ihren Ort. */
+function mitOrt(r, o){
+  const src = String((o && o.meta && o.meta.outlet) || (o && o.settings && o.settings.outlet) || "").trim();
+  if(r && !r.outlet && src && src !== String(S.settings.outlet || "").trim()) return Object.assign({}, r, {outlet: src});
+  return r;
+}
+
 
 /* Halbturnus in die volle Datei einordnen.
    5T liefert 5 Praxistage, 4T liefert 4 Praxistage plus den Exam Day.
@@ -1494,6 +1548,9 @@ function renderDay(){
     const tot = dayTotal(curSlot, s.id);
     const card = el("article",{class:"stud"+(r.att==="excused"||r.att==="unexcused"||r.att==="tm"?" absent":"")});
     const head = el("div",{class:"stud-h"},[el("div",{class:"nm",text:s.name})]);
+    if(hasOutlet2()) head.appendChild(el("button",{class:"opill"+(r.outlet?" alt":""),title:t("switchTitle"),
+      text:"⇄ " + (r.outlet || S.settings.outlet || "–"),
+      onclick:()=>{ unseed(); toggleOutlet(r); persist(); renderDay(); }}));
     head.appendChild(el("div",{class:"grade num "+gradeClass(tot),text: tot==null ? t("excused") : fmt(tot)}));
     card.appendChild(head);
     const seg = el("div",{class:"seg"+(sl.exam?" two":" five")});
@@ -1710,7 +1767,7 @@ function absenceList(slotId){
     const k = r.att === "late" ? t("late")
             : r.att === "excused" ? t("excused")
             : r.att === "unexcused" ? t("unexcused") : null;
-    if(k) out.push({st:st, name:st.name, kind:k});
+    if(k) out.push({st:st, name:st.name, kind:k, outlet: (hasOutlet2() || r.outlet) ? outletOfDay(slotId, st.id) : ""});
   });
   return out;
 }
@@ -1722,7 +1779,8 @@ function absenceZeile(x){
   const person = [s.nachname || s.name || "", s.vorname || ""].filter(Boolean).join(", ")
                + (s.nick ? " \u00ab" + s.nick + "\u00bb" : "");
   const kg = [klasseOf(s), gruppeOf(s)].filter(Boolean).join(" \u00b7 ");
-  return "- " + person + (kg ? "   \u00b7   " + kg : "") + "   \u2014   " + x.kind;
+  return "- " + person + (kg ? "   \u00b7   " + kg : "") + (x.outlet ? "   \u00b7   " + x.outlet : "")
+       + "   \u2014   " + x.kind;
 }
 function absenceMailHref(slotId){
   const sl = slotById(slotId);
@@ -2001,6 +2059,8 @@ function buildReport(s, mode, lg){
   const out = [];
   out.push(s.name + (klasseOf(s) ? " · " + klasseOf(s) : ""));
   out.push(period + " · " + sum.counted + " " + P("daysCounted"));
+  const _pl = placementText(s.id, lg);
+  if(_pl) out.push(P("placements") + ": " + _pl);
   if(sum.total!=null) out.push(P(ex?"praxisGrade":"grade") + ": " + fmt(sum.total) + " (" + bandName(sum.total, lg) + ")");
   if(ex){
     out.push(P("examGrade") + ": " + (ex.total!=null
@@ -2132,7 +2192,8 @@ function printReports(){
     doc.appendChild(el("div",{class:"phead"},[
       el("h2",{text:s.name}),
       el("div",{class:"pmeta",text:[klasseOf(s), gruppeOf(s), S.settings.teacher, recordedPeriod(s.id, repMode, lg),
-        sum.counted+" "+tOut("daysCounted",lg)].filter(Boolean).join("   ·   ")})
+        sum.counted+" "+tOut("daysCounted",lg)].filter(Boolean).join("   ·   ")}),
+      placementText(s.id, lg) ? el("div",{class:"pmeta",text:tOut("placements",lg) + ": " + placementText(s.id, lg)}) : null
     ]));
     const gr = el("div",{class:"pgrades"});
     gr.appendChild(gbox(tOut(ex?"praxisGrade":"grade",lg), sum.total, !ex || fin==null, lg));
@@ -2190,14 +2251,14 @@ function gradeRows(){
   const rng = slotsInRange(repMode);
   const period = rng.length ? slotLabel(rng[0],"de")+" – "+slotLabel(rng[rng.length-1],"de") : "";
   const withExam = (repMode === "all") && !!examSlot();
-  const head = ["Klasse","Gruppe","Outlet","Dozent","Nachname","Vorname","Nickname","E-Mail","Turnus","Tage gewertet","Entschuldigt","Unentschuldigt","Verspaetet","Team Market",
+  const head = ["Klasse","Gruppe","Outlet","Einsatzorte","Dozent","Nachname","Vorname","Nickname","E-Mail","Turnus","Tage gewertet","Entschuldigt","Unentschuldigt","Verspaetet","Team Market",
     ...CRITS.map(c=>c.de), withExam?"Praxisnote":"Gesamtnote","Gerundet","Prädikat"]
     .concat(withExam ? [...CRITS.map(c=>"Exam "+c.de), "Prüfungsnote","Exam Anwesenheit"] : [])
     .concat(withExam ? ["Schlussnote"] : []).concat(["Sprache","Beurteilung"]);
   const rows = S.students.map(s=>{
     const su = summary(s.id, repMode);
     const ex = withExam ? examSummary(s.id) : null;
-    const base = [klasseOf(s), gruppeOf(s), S.settings.outlet||"", S.settings.teacher,
+    const base = [klasseOf(s), gruppeOf(s), S.settings.outlet||"", placementText(s.id, "de"), S.settings.teacher,
                   s.nachname||s.name||"", s.vorname||"", s.nick||"", s.mail||"", period,
                   su.counted, su.exc, su.unx, su.late, su.tm||0,
       ...CRITS.map(c=>su.crit?Number(su.crit[c.k].toFixed(2)):""),
@@ -2236,7 +2297,7 @@ function evidenceRows(){
       const kind = sl.exam ? "Exam Day" : "Praxis";
       const lab = sl.exam ? "Exam Day" : slotLabel(sl,"de");
       const mt = dayMeta(sl.id);
-      const pre = [s.name, lab, sl.week, kind, mt.teacher, mt.group, mt.team||"", mt.outlet||"", att];
+      const pre = [s.name, lab, sl.week, kind, mt.teacher, mt.group, mt.team||"", outletOfDay(sl.id, s.id) || mt.outlet || "", att];
       (r.obs||[]).forEach(id=>{
         const c = CHIP[id]; if(!c) return;
         rows.push(pre.concat([critName(c.c,"de"), c.ko?"K.-o.":(c.d>0?"+":"−"), c.ko?"":c.w, chipT(c,"de")]));
@@ -2404,7 +2465,7 @@ async function onMerge(e){
         if(o.dayMeta && o.dayMeta[srcId] && !S.dayMeta[slid]) S.dayMeta[slid] = o.dayMeta[srcId];
         Object.entries(recs).forEach(([oldId,r])=>{
           const nid = map[oldId]; if(!nid) return;
-          if(!S.days[slid][nid]){ S.days[slid][nid] = r; addedD++; }
+          if(!S.days[slid][nid]){ S.days[slid][nid] = mitOrt(r, o); addedD++; }
           else{
             const nm = (S.students.find(x=>x.id===nid)||{}).name || nid;
             const sl = slots().find(x=>x.id===slid);
@@ -2482,6 +2543,11 @@ function renderSet(){
   const selB = el("select",{id:"fBase",onchange:e=>{S.settings.base=parseFloat(e.target.value);persist();}});
   [4.5,4.75,5,5.25,5.5].forEach(v=>selB.appendChild(el("option",{value:String(v),text:v.toFixed(2),selected:S.settings.base===v})));
   f3.appendChild(selB); g2.appendChild(f3);
+  const fO2 = el("div",{class:"field",style:"margin-top:4px"});
+  fO2.appendChild(el("label",{for:"fOutlet2",text:t("outlet2Field")}));
+  fO2.appendChild(el("input",{id:"fOutlet2",value:S.settings.outlet2||"",
+    oninput:e=>{ S.settings.outlet2 = e.target.value; persist(); }}));
+  fO2.appendChild(el("span",{class:"muted",style:"font-size:12.5px",text:t("outlet2Hint")}));
   const f4 = el("div",{class:"field"});
   f4.appendChild(el("label",{text:t("weighting")}));
   const lbl = el("label",{style:"display:flex;gap:8px;align-items:center;font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink);padding:8px 0"});
@@ -2490,6 +2556,7 @@ function renderSet(){
   lbl.appendChild(el("span",{text:t("gas2")}));
   f4.appendChild(lbl);
   c1.appendChild(g2);
+  c1.appendChild(fO2);
   c1.appendChild(el("div",{class:"grid2"}, f4));
 
   const f5 = el("div",{class:"field"});

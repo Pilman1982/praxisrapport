@@ -71,6 +71,7 @@ button,a.b{font:inherit;font-weight:600;border:0;border-radius:9px;padding:10px 
           <option value="Da Fortunat"><option value="Campigiana">
         </datalist></div>
       <div><label for="dozent">Dozent/in</label><input id="dozent" placeholder="Name wie in der Absenzmeldung"></div>
+      <div><label for="outlet2">Zweites Restaurant (nur Service, bei Wechsel)</label><input id="outlet2" list="outlets" placeholder="z. B. Da Fortunat"></div>
       <div><label for="klasse">Klasse (Vorgabe, freiwillig)</label>
         <select id="klasse"><option value="">–</option><option>HFD</option><option>HFE1</option><option>HFE2</option></select></div>
       <div><label for="gruppe">Gruppe (Vorgabe, freiwillig)</label>
@@ -129,6 +130,8 @@ function build(){
   add("lang", $("lang").value);
   add("outlet", $("outlet").value || (ber === "patisserie" ? "Patisserie" : ""));
   add("dozent", $("dozent").value);
+  if(app === "service") add("outlet2", $("outlet2").value);
+  $("outlet2").disabled = (app !== "service");
   add("klasse", $("klasse").value);
   add("gruppe", $("gruppe").value);
   const plan = ["mo","tu","we","th"].map(d => [d, $("p_"+d).value.trim()]).filter(x => x[1]);

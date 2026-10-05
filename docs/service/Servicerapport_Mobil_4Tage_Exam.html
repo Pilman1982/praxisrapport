@@ -101,6 +101,8 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
   min-height:62px;padding:9px 13px;background:transparent;border:0;text-align:left;color:var(--ink);
 }
 .srow:active{background:var(--surf2)}
+.opill{font:600 13px/1 inherit;border:1px solid var(--line2,#c0c0b8);background:transparent;color:inherit;border-radius:999px;padding:8px 12px;margin-right:8px;white-space:nowrap;max-width:48%;overflow:hidden;text-overflow:ellipsis}
+.opill.alt{background:var(--petrol,#005779);border-color:var(--petrol,#005779);color:#fff}
 .srow .nm{flex:1;min-width:0;font-size:16.5px;font-weight:600;
           overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .srow .sub{font-size:12.5px;color:var(--ink3);font-weight:400;margin-top:1px;
@@ -400,6 +402,7 @@ const T = {
 de:{
   stNames:"Alle Studierenden haben einen Namen",stClass:"Klasse und Gruppe sind gesetzt",
   selfTest:"Selbsttest",selfTestBtn:"Selbsttest ausführen",selfTestHint:"Prüft die Bausteine und den Turnus dieser Datei.",selfTestOkN:"bestanden",stChips:"Bausteine eindeutig",stCrit:"Jeder Baustein hat ein gültiges Kriterium",stAction:"Jeder negative Baustein hat eine Massnahme",stLang:"Alle vier Sprachen vorhanden",stLate:"Baustein für Verspätung vorhanden",stSlots:"Einsatztage korrekt nummeriert",stStart:"Starttag stimmt mit Tag 1 überein",stQuick:"Schnellwahl zeigt gültige Bausteine",stStore:"Browserspeicher funktioniert",days:"Tage",
+  outlet2:"Zweites Restaurant (Wechsel)", outlet2Hint:"Nur bei Wechsel zwischen zwei Restaurants. Dann erscheint pro Person ein Umschalter.", switchTitle:"Restaurant wechseln",
   appTitle:"Rapport", setup:"Setup", done:"Fertig", back:"Zurück", cancel:"Abbrechen",
   students:"Studierende", noStudents:"Noch keine Studierenden erfasst.",
   toSetup:"Zum Setup", openDay:"Tag erfassen",
@@ -435,6 +438,7 @@ de:{
 en:{
   stNames:"Every student has a name",stClass:"Class and group are set",
   selfTest:"Self-test",selfTestBtn:"Run self-test",selfTestHint:"Checks the building blocks and the rotation of this file.",selfTestOkN:"passed",stChips:"Building block IDs unique",stCrit:"Every block has a valid criterion",stAction:"Every negative block has an action",stLang:"All four languages present",stLate:"Lateness block present",stSlots:"Shift days numbered correctly",stStart:"Start day matches day 1",stQuick:"Quick list points to valid blocks",stStore:"Browser storage works",days:"days",
+  outlet2:"Second restaurant (switch)", outlet2Hint:"Only if students switch between two restaurants. A switch then appears for each person.", switchTitle:"Switch restaurant",
   appTitle:"Report", setup:"Setup", done:"Done", back:"Back", cancel:"Cancel",
   students:"Students", noStudents:"No students yet.",
   toSetup:"Go to setup", openDay:"Open this day",
@@ -471,6 +475,7 @@ en:{
 th:{
   stNames:"นักศึกษาทุกคนมีชื่อ",stClass:"ตั้งชั้นเรียนและกลุ่มแล้ว",
   selfTest:"การทดสอบระบบ",selfTestBtn:"เริ่มทดสอบ",selfTestHint:"ตรวจสอบคลังข้อสังเกตและรอบการฝึก",selfTestOkN:"ผ่าน",stChips:"รหัสข้อสังเกตไม่ซ้ำ",stCrit:"ทุกข้อมีเกณฑ์ที่ถูกต้อง",stAction:"ข้อเชิงลบมีแนวทางแก้ไข",stLang:"มีครบทั้งสี่ภาษา",stLate:"มีข้อสำหรับการมาสาย",stSlots:"ลำดับวันฝึกถูกต้อง",stStart:"วันเริ่มตรงกับวันที่ 1",stQuick:"รายการใช้บ่อยถูกต้อง",stStore:"หน่วยความจำทำงานได้",days:"วัน",
+  outlet2:"ร้านอาหารที่สอง (สลับ)", outlet2Hint:"เฉพาะเมื่อนักศึกษาสลับระหว่างสองร้าน จะมีปุ่มสลับสำหรับแต่ละคน", switchTitle:"สลับร้านอาหาร",
   appTitle:"รายงาน", setup:"ตั้งค่า", done:"เสร็จ", back:"กลับ", cancel:"ยกเลิก",
   students:"นักศึกษา", noStudents:"ยังไม่มีรายชื่อนักศึกษา",
   toSetup:"ไปที่การตั้งค่า", openDay:"เปิดบันทึกวันนี้",
@@ -624,6 +629,7 @@ const STARTLINK = (function(){
   const put = (k, v) => { if(v != null && v !== "" && st[k] !== v){ st[k] = v; changed = true; } };
   if(p.lang && ["de","en","th"].indexOf(p.lang.toLowerCase()) >= 0) put("uiLang", p.lang.toLowerCase());
   put("outlet", p.outlet);
+  put("outlet2", p.outlet2);
   put("teacher", p.dozent);
   if(p.klasse) put("group", (typeof erkenneKlasse === "function" && erkenneKlasse(p.klasse)) || p.klasse);
   if(p.gruppe) put("team",  (typeof erkenneGruppe === "function" && erkenneGruppe(p.gruppe)) || p.gruppe);
@@ -712,9 +718,57 @@ function dayRec(id, sid){
   S.days[id][sid] = S.days[id][sid] || {att:"present", obs:[], note:null};
   return S.days[id][sid];
 }
+
+/* ---- Restaurantwechsel: Ort pro Person und Einsatztag ----
+   S.settings.outlet = Stammrestaurant, S.settings.outlet2 = zweites Restaurant (freiwillig).
+   r.outlet steht im Tagesdatensatz nur, wenn die Person nicht im Stammrestaurant war. */
+const hasOutlet2 = () => !!String(S.settings.outlet2 || "").trim();
+function outletOfDay(slotId, sid){
+  const r = (S.days[slotId] || {})[sid];
+  return (r && r.outlet) ? r.outlet : (S.settings.outlet || "");
+}
+/* Vorgabe fuer einen neuen Tag: Ort des letzten erfassten Tages dieser Person. */
+function prevOutlet(slotId, sid){
+  const all = slots(); const i = all.findIndex(s => s.id === slotId);
+  for(let k = i - 1; k >= 0; k--){ const r = (S.days[all[k].id] || {})[sid]; if(r) return r.outlet || ""; }
+  return "";
+}
+function toggleOutlet(r){
+  r.outlet = r.outlet ? "" : String(S.settings.outlet2 || "").trim();
+  if(!r.outlet) delete r.outlet;
+}
+/* Einsatzorte als Text: "Umami (Tag 1–5), Da Fortunat (Tag 6–10)". Leer, wenn die Person
+   nur im Stammrestaurant war. lg = Sprache des Textes (de, en, zh, th). */
+function placementText(sid, lg){
+  const segs = [];
+  slots().forEach(sl => {
+    const r = (S.days[sl.id] || {})[sid]; if(!r) return;
+    const o = r.outlet || S.settings.outlet || "–";
+    const last = segs[segs.length - 1];
+    if(last && last.o === o) last.to = sl.idx; else segs.push({o: o, from: sl.idx, to: sl.idx});
+  });
+  if(!segs.length) return "";
+  if(segs.length === 1 && segs[0].o === (S.settings.outlet || "–")) return "";
+  const rng = g => g.from === g.to ? String(g.from) : (g.from + "–" + g.to);
+  const fmtR = g => (lg === "zh") ? ("第" + rng(g) + "天") : (lg === "en") ? ("Day " + rng(g))
+                  : (lg === "th") ? ("วันที่ " + rng(g)) : ("Tag " + rng(g));
+  return segs.map(g => g.o + " (" + fmtR(g) + ")").join(", ");
+}
+/* Beim Zusammenfuehren: Tage aus einer Datei mit anderem Stammrestaurant behalten ihren Ort. */
+function mitOrt(r, o){
+  const src = String((o && o.meta && o.meta.outlet) || (o && o.settings && o.settings.outlet) || "").trim();
+  if(r && !r.outlet && src && src !== String(S.settings.outlet || "").trim()) return Object.assign({}, r, {outlet: src});
+  return r;
+}
 function openSlot(id){
   S.days[id] = S.days[id] || {};
-  S.students.forEach(s=>{ S.days[id][s.id] = S.days[id][s.id] || {att:"present", obs:[], note:null}; });
+  S.students.forEach(s=>{
+    if(!S.days[id][s.id]){
+      S.days[id][s.id] = {att:"present", obs:[], note:null};
+      const vo = hasOutlet2() ? prevOutlet(id, s.id) : "";
+      if(vo) S.days[id][s.id].outlet = vo;
+    }
+  });
   const sl = slotById(id);
   const m = S.dayMeta[id] || {};
   if(!m.teacher) m.teacher = teacherForWd(sl && sl.wd);
@@ -783,7 +837,8 @@ function absenceList(id){
     const person = [s.nachname || s.name || "", s.vorname || ""].filter(Boolean).join(", ")
                  + (s.nick ? " \u00ab" + s.nick + "\u00bb" : "");
     const kg = [klasseOf(s), gruppeOf(s)].filter(Boolean).join(" \u00b7 ");
-    out.push(person + (kg ? "   \u00b7   " + kg : "") + "   \u2014   " + k);
+    const ort = (hasOutlet2() || r.outlet) ? outletOfDay(id, s.id) : "";
+    out.push(person + (kg ? "   \u00b7   " + kg : "") + (ort ? "   \u00b7   " + ort : "") + "   \u2014   " + k);
   });
   return out;
 }
@@ -875,7 +930,8 @@ function renderDay(){
     b.appendChild(el("span",{class:"nm"},[
       el("span",{}),
       document.createTextNode(s.name),
-      el("div",{class:"sub",text:t(r.att||"present") + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))})
+      el("div",{class:"sub",text:t(r.att||"present") + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))
+        + (r.outlet ? " · \u21c4 " + r.outlet : "")})
     ]));
     if(n) b.appendChild(el("span",{class:"pill on",text:String(n)}));
     b.appendChild(el("span",{class:"chev",text:"›"}));
@@ -902,6 +958,14 @@ function openSheet(student){
     el("div",{class:"nm",text:student.name}),
     el("div",{class:"sb",text:slotLabel(slotById(curSlot))})
   ]));
+  if(hasOutlet2()){
+    const rr = dayRec(curSlot, student.id);
+    const ob = el("button",{class:"opill"+(rr.outlet?" alt":""),title:t("switchTitle"),
+      text:"\u21c4 " + (rr.outlet || S.settings.outlet || "\u2013")});
+    ob.addEventListener("click", ()=>{ toggleOutlet(rr); persist();
+      ob.className = "opill" + (rr.outlet ? " alt" : ""); ob.textContent = "\u21c4 " + (rr.outlet || S.settings.outlet || "\u2013"); });
+    hd.appendChild(ob);
+  }
   hd.appendChild(el("button",{class:"hbtn",text:"✕","aria-label":t("done"),onclick:close}));
   sh.appendChild(hd);
   const body = el("div",{class:"sheet-b"});
@@ -1052,6 +1116,9 @@ function renderSet(){
   g.appendChild(sf("mTeam",  t("team"),  "team",  GRUPPEN));
   c1.appendChild(g);
   c1.appendChild(tf("mOutlet",  t("outlet"),  "outlet"));
+  const fO2 = tf("mOutlet2", t("outlet2"), "outlet2");
+  fO2.appendChild(el("span",{class:"muted",text:t("outlet2Hint")}));
+  c1.appendChild(fO2);
   c1.appendChild(tf("mTeacher", t("teacher"), "teacher"));
 
   const fv = el("div",{class:"field"});

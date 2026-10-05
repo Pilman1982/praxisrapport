@@ -26,7 +26,7 @@ Alles andere bleibt gleich.
   mobile_build.py     baut die iPhone-Dateien    ->  python3 mobile_build.py 10T
 
 Ohne Argument bauen beide Skripte alle drei Varianten (10T, 4T, 5T).
-Im Einsatz sind nur 10T und die mobile 10T-Datei.
+Im Einsatz sind alle drei Varianten fuer Laptop und Mobil (seit 05.10.2026).
 Die Dateien landen im Ordner "dist" neben diesem Ordner und muessen danach
 nach "01 Programm" kopiert werden.
 
@@ -66,3 +66,14 @@ Feste Regeln, die nicht ueber die Oberflaeche aenderbar sind:
     Diese beiden Funktionen sind in Kueche und Service identisch und muessen es bleiben.
 
 Nach jeder Aenderung: Datei oeffnen, Reiter Eintragen, Knopf "Selbsttest ausfuehren".
+
+
+RESTAURANTWECHSEL (seit 05.10.2026)
+-----------------------------------
+Reiter Eintragen: Feld "Zweites Restaurant (Wechsel)". Ist es ausgefuellt, erscheint beim
+Erfassen pro Person ein Umschalter. Er gilt pro Person und Einsatztag; ein neuer Tag uebernimmt
+den Ort des Vortags. Gespeichert wird r.outlet im Tagesdatensatz (leer = Stammrestaurant).
+Sichtbar in Absenzmeldung, Beurteilungstext, Druck-PDF ("Einsatzorte") und Excel
+(Spalte "Einsatzorte", im Beobachtungsnachweis der Ort pro Tag).
+Beim Zusammenfuehren behalten Tage aus einer Datei mit anderem Stammrestaurant ihren Ort.
+Startlink: #outlet=Umami&outlet2=Da%20Fortunat
