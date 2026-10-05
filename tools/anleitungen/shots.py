@@ -22,17 +22,17 @@ def studs(einsatz_fn):
         out.append({"nr":str(9100+i),"nachname":n,"vorname":v,"nickname":nick,"klasse":"HFD" if i%2 else "HFE1","gruppe":"Gruppe 1 Team A","sprache":"de","einsaetze":[einsatz_fn(i)]})
     return out
 SETS={
- "k_de":(dict(name="Lars",bereich="kueche",outlets=["Patisserie"],sprache="de"),
+ "k_de":(dict(name="Muster Koch",bereich="kueche",outlets=["Patisserie"],sprache="de"),
          lambda i:{"bereich":"kueche","outlet":"Patisserie","von":D4[0],"bis":EX,"variante":"4T","block":"Zyklus 2.1","exam":EX,"tage":[T(d,"Patisserie",i==3 and d==D4[1]) for d in D4]}),
- "k_th":(dict(name="Q",bereich="kueche",outlets=["Umami"],sprache="th"),
+ "k_th":(dict(name="Muster Koch",bereich="kueche",outlets=["Umami"],sprache="th"),
          lambda i:{"bereich":"kueche","outlet":"Umami","von":D4[0],"bis":EX,"variante":"4T","block":"Zyklus 2.1","exam":EX,"tage":[T(d,"Umami",i==3 and d==D4[1]) for d in D4]}),
- "s_de2":(dict(name="Sybille / Laura",bereich="service",outlets=["Da Fortunat","Umami"],sprache="de",plan={"mo":"Sybille","tu":"Sybille","we":"Laura","th":"Laura"}),
+ "s_de2":(dict(name="Muster A / Muster B",bereich="service",outlets=["Da Fortunat","Umami"],sprache="de",plan={"mo":"Muster A","tu":"Muster A","we":"Muster B","th":"Muster B"}),
          lambda i:{"bereich":"service","outlet":"Da Fortunat","von":D4[0],"bis":EX,"variante":"4T","block":"Zyklus 2.1","exam":EX,"tage":[T(d,"Umami" if (i+j)%2 else "Da Fortunat") for j,d in enumerate(D4)]}),
- "s_de":(dict(name="Andre",bereich="service",outlets=["Campigiana"],sprache="de"),
+ "s_de":(dict(name="Muster Service",bereich="service",outlets=["Campigiana"],sprache="de"),
          lambda i:{"bereich":"service","outlet":"Campigiana","von":D4[0],"bis":EX,"variante":"4T","block":"Zyklus 2.1","exam":EX,"tage":[T(d,"Campigiana") for d in D4]}),
- "s_en":(dict(name="Martin",bereich="service",outlets=["The Essence"],sprache="en"),
+ "s_en":(dict(name="Sample Lecturer",bereich="service",outlets=["The Essence"],sprache="en"),
          lambda i:{"bereich":"service","outlet":"The Essence","von":D9[0],"bis":EX,"variante":"10T","block":"Zyklus 2.1","exam":EX,"tage":[T(d,"The Essence") for d in D9]}),
- "k_de10":(dict(name="Michael Pilman",bereich="kueche",outlets=["The Essence"],sprache="de"),
+ "k_de10":(dict(name="Muster Koch",bereich="kueche",outlets=["The Essence"],sprache="de"),
          lambda i:{"bereich":"kueche","outlet":"The Essence","von":D9[0],"bis":EX,"variante":"10T","block":"Zyklus 2.1","exam":EX,"tage":[T(d,"The Essence") for d in D9]}),
 }
 with sync_playwright() as p:

@@ -75,17 +75,9 @@ def qr(url):
 def dmy(iso): return iso[8:10] + "." + iso[5:7] + "."
 
 # --------------------------------------------------------------------------- Personen
-PEOPLE = [
-  dict(key="Michael-Pilman_The-Essence", name="Michael Pilman", first="Michael", lang="de", area="kueche", outlet="The Essence", set="k_de10", lead=True),
-  dict(key="Lars_Patisserie", name="Lars", first="Lars", lang="de", area="kueche", outlet="Patisserie", set="k_de"),
-  dict(key="Q_Umami", name="Q", first="Q", lang="th", area="kueche", outlet="Umami", set="k_th"),
-  dict(key="Mirco_Da-Fortunat", name="Mirco", first="Mirco", lang="de", area="kueche", outlet="Da Fortunat", set="k_de"),
-  dict(key="Michael_Campigiana", name="Michael", first="Michael", fname="Michael-Campigiana", lang="de", area="kueche", outlet="Campigiana", set="k_de"),
-  dict(key="Martin_The-Essence", name="Martin", first="Martin", lang="en", area="service", outlet="The Essence", set="s_en"),
-  dict(key="Sybille-Laura_Da-Fortunat-Umami", name="Sybille", first="Sybille", lang="de", area="service", outlet="Da Fortunat ⇄ Umami", set="s_de2", shared="Laura", days="Montag und Dienstag", odays="Mittwoch und Donnerstag"),
-  dict(key="Sybille-Laura_Da-Fortunat-Umami", name="Laura", first="Laura", lang="de", area="service", outlet="Da Fortunat ⇄ Umami", set="s_de2", shared="Sybille", days="Mittwoch und Donnerstag", odays="Montag und Dienstag"),
-  dict(key="Andre_Campigiana", name="Andre", first="Andre", lang="de", area="service", outlet="Campigiana", set="s_de"),
-]
+# Personenliste liegt NICHT im Repository (Namen der Dozierenden): Pfad als erstes Argument, sonst personen_HS26.json daneben
+import sys
+PEOPLE = json.loads(pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else pathlib.Path(__file__).with_name("personen_HS26.json")).read_text(encoding="utf-8"))
 
 # --------------------------------------------------------------------------- Texte
 TX = {}
@@ -98,7 +90,7 @@ TX["de"] = dict(
   glance_note10="Pro Zyklus haben Sie <b>ein</b> Paket: 9 Einsatztage und den Exam Day.",
   glance_note54="Pro Zyklus haben Sie <b>zwei</b> Pakete: zuerst 5 Tage, danach 4 Tage + Exam Day mit anderen Studierenden. Die Startseite wechselt automatisch zum richtigen Paket.",
   s1="Einmal einrichten (5 Minuten, einmal pro Semester)",
-  s1l=["Michael schickt Ihnen per E-Mail diese Anleitung und die Datei <b>«Semesterpaket_HS26_{key}.json»</b>. Auf dem iPad in der Mail die Datei antippen, dann Teilen <span class='k'>⬆</span> → <b>«In Dateien sichern»</b>.",
+  s1l=["Michael Pilman schickt Ihnen per E-Mail diese Anleitung und die Datei <b>«Semesterpaket_HS26_{key}.json»</b>. Auf dem iPad in der Mail die Datei antippen, dann Teilen <span class='k'>⬆</span> → <b>«In Dateien sichern»</b>.",
        "In <b>Safari</b> die Startseite öffnen: QR-Code oben rechts mit der Kamera scannen oder <b>pilman1982.github.io/praxisrapport/mein.html</b> eintippen.",
        "Teilen <span class='k'>⬆</span> → <b>«Zum Home-Bildschirm»</b> → Name «Mein Rapport» → Hinzufügen. Safari schliessen.",
        "Das neue Symbol <b>«Mein Rapport»</b> auf dem Home-Bildschirm öffnen → <span class='k'>Semesterpaket laden</span> → Datei aus «Dateien» wählen. Ab jetzt starten Sie immer über dieses Symbol."],
@@ -129,21 +121,21 @@ TX["de"] = dict(
   s4l=["<span class='k'>✉ Tag senden</span> → <b>«Mail»</b> → an <b>michael.pilman@ehl.ch</b> senden. Beim ersten Mal die Adresse eintippen, danach schlägt das iPad sie vor. Die Absenzen des Tages stehen schon im Mailtext.",
        "<span class='k'>✉ Absenzen</span> öffnet eine fertige Mail an die Kursleitung. Am besten gleich, sobald klar ist, wer fehlt.",
        "<span class='k'>⤓ Sichern</span> → <b>«In Dateien sichern»</b>: Ihre eigene Sicherung auf dem iPad. Wiederherstellen im Zahnrad <span class='k'>⚙</span> mit <span class='k'>⤒ Sicherung laden</span>."],
-  s4box="Täglich senden. Geht das iPad verloren oder werden die Website-Daten gelöscht, sind nur die gesendeten Tage bei Michael und Ihre Sicherungen in «Dateien» erhalten.",
+  s4box="Täglich senden. Geht das iPad verloren oder werden die Website-Daten gelöscht, sind nur die gesendeten Tage bei Michael Pilman und Ihre Sicherungen in «Dateien» erhalten.",
   s5="Ende des Einsatzes und neuer Zyklus",
   s5p="<b>Feedback an die Studierenden:</b> Am letzten Tag Ihres Einsatzes oben <span class='k'>Ø</span> antippen, dann bei jeder Person <span class='k'>✉ Feedback</span>. Die App schlägt eine freundliche Mail vor: was gut lief, wo die Person sich verbessern kann, mit Tipp. Sprache automatisch: Deutsch für HFD, Englisch für HFE. Text bei Bedarf anpassen, <span class='k'>In Mail öffnen</span>, senden. Gesendete Mails sind mit ✓ markiert.</p><p><b>Neuer Zyklus:</b> Sie müssen nichts tun. Die Startseite zeigt immer den aktuellen Einsatz unter «Jetzt», danach «Als Nächstes». Öffnen Sie ein neues Paket, obwohl in derselben Datei noch Tage vom letzten Paket liegen, fragt die App zuerst nach. Haben Sie die Tage geteilt, bestätigen Sie mit OK.",
   s6="Wenn etwas nicht klappt",
   faq=[("Falsche Personen oder alter Zyklus","Startseite öffnen und in der Liste «Alle Einsätze im Semester» den richtigen Einsatz antippen."),
-       ("Foto fehlt","Statt des Fotos stehen die Initialen. Schickt Michael ein neues Semesterpaket: «Anderes Semesterpaket laden» und den Rapport öffnen. Fotos erscheinen, Erfasstes bleibt."),
-       ("Person fehlt oder ist zu viel","Michael Bescheid geben. Sie bekommen ein neues Semesterpaket, eingetragene Tage bleiben erhalten."),
+       ("Foto fehlt","Statt des Fotos stehen die Initialen. Schickt Michael Pilman ein neues Semesterpaket: «Anderes Semesterpaket laden» und den Rapport öffnen. Fotos erscheinen, Erfasstes bleibt."),
+       ("Person fehlt oder ist zu viel","Michael Pilman Bescheid geben. Sie bekommen ein neues Semesterpaket, eingetragene Tage bleiben erhalten."),
        ("Sprache ändern","Knopf <span class='k'>文</span> oben rechts."),
        ("Symbol zeigt «Semesterpaket laden»","Das Paket wurde in Safari statt im Symbol geladen. Im Symbol nochmals laden, einmalig."),
-       ("Neues iPad oder Daten weg","Einrichten wie oben, dann im Zahnrad ⚙ «⤒ Sicherung laden» und Ihre letzte Sicherung wählen. Gesendete Tage hat Michael ohnehin.")],
+       ("Neues iPad oder Daten weg","Einrichten wie oben, dann im Zahnrad ⚙ «⤒ Sicherung laden» und Ihre letzte Sicherung wählen. Gesendete Tage hat Michael Pilman ohnehin.")],
   contact="Fragen: Michael Pilman · michael.pilman@ehl.ch",
   foot="EHL Hotelfachschule Passugg · Praxisrapport Noten 2.0 · Stand {date} · Die Bildschirmfotos zeigen erfundene Namen.",
   shared="<b>Geteiltes iPad mit {other}.</b> Sie arbeiten am {days}, {other} am {odays}. Die App trägt die richtige Person als Dozent/in automatisch pro Tag ein. Sie müssen nichts umstellen.",
   switch="<b>Zwei Restaurants.</b> Bei jeder Person steht oben im Blatt das Restaurant des Tages, z. B. <span class='k'>⇄ Umami</span>. Es ist aus dem Einsatzplan vorbelegt. Arbeitet jemand ausnahmsweise im anderen Restaurant, tippen Sie den Knopf an. Das Restaurant erscheint später im Rapport und in der Absenzmeldung.",
-  campi="Ihr voller Name fehlt noch im Plan. Bitte Michael mitteilen, dann erscheint er im Rapport.",
+  campi="Ihr voller Name fehlt noch im Plan. Bitte Michael Pilman mitteilen, dann erscheint er im Rapport.",
   L1="Kursleitung: Semester vorbereiten und abschliessen",
   L1l=["<b>Cockpit</b> öffnen: pilman1982.github.io/praxisrapport/cockpit.html (am Laptop).",
        "<b>1 · Turnusplan laden</b>: turnusplan_HS26.json wählen.",
@@ -169,7 +161,7 @@ TX["en"] = dict(
   glance_note10="Per cycle you have <b>one</b> package: 9 shift days and the Exam Day.",
   glance_note54="Per cycle you have <b>two</b> packages: first 5 days, then 4 days + Exam Day with other students. The start page switches to the right package automatically.",
   s1="Set up once (5 minutes, once per semester)",
-  s1l=["Michael e-mails you this guide and the file <b>«Semesterpaket_HS26_{key}.json»</b>. On the iPad, tap the file in the e-mail, then Share <span class='k'>⬆</span> → <b>«Save to Files»</b>.",
+  s1l=["Michael Pilman e-mails you this guide and the file <b>«Semesterpaket_HS26_{key}.json»</b>. On the iPad, tap the file in the e-mail, then Share <span class='k'>⬆</span> → <b>«Save to Files»</b>.",
        "Open the start page in <b>Safari</b>: scan the QR code at the top right with the camera, or type <b>pilman1982.github.io/praxisrapport/mein.html</b>.",
        "Share <span class='k'>⬆</span> → <b>«Add to Home Screen»</b> → name it «My report» → Add. Close Safari.",
        "Open the new <b>«My report»</b> icon on the home screen → <span class='k'>Load semester package</span> → choose the file from «Files». From now on, always start with this icon."],
@@ -200,16 +192,16 @@ TX["en"] = dict(
   s4l=["<span class='k'>✉ Send the day</span> → <b>«Mail»</b> → send to <b>michael.pilman@ehl.ch</b>. Type the address the first time; after that the iPad suggests it. The day's absences are already in the e-mail text.",
        "<span class='k'>✉ Absences</span> opens a ready-made e-mail to the course lead. Best right away, as soon as you know who is missing.",
        "<span class='k'>⤓ Back up</span> → <b>«Save to Files»</b>: your own backup on the iPad. Restore it under the gear <span class='k'>⚙</span> with <span class='k'>⤒ Load backup</span>."],
-  s4box="Send every day. If the iPad is lost or website data is cleared, only the days sent to Michael and your backups in «Files» remain.",
+  s4box="Send every day. If the iPad is lost or website data is cleared, only the days sent to Michael Pilman and your backups in «Files» remain.",
   s5="End of your assignment and new cycle",
   s5p="<b>Feedback to the students:</b> On the last day of your assignment, tap <span class='k'>Ø</span> at the top, then <span class='k'>✉ Feedback</span> for each student. The app suggests a friendly e-mail: what went well, where the student can improve, with a tip. Language is automatic: German for HFD, English for HFE. Adjust the text if you like, tap <span class='k'>Open in Mail</span> and send. Sent e-mails are marked with ✓.</p><p><b>New cycle:</b> You do not need to do anything. The start page always shows the current assignment under «Now», then «Next». If you open a new package while the same file still holds days from the previous package, the app asks first. If you have shared those days, confirm with OK.",
   s6="If something does not work",
   faq=[("Wrong students or old cycle","Open the start page and tap the right assignment in the list «All assignments this semester»."),
-       ("Photo missing","Initials are shown instead. When Michael sends a new semester package: «Load another semester package», then open the report. Photos appear, recorded data stays."),
-       ("Student missing or extra","Tell Michael. You will get a new semester package; recorded days are kept."),
+       ("Photo missing","Initials are shown instead. When Michael Pilman sends a new semester package: «Load another semester package», then open the report. Photos appear, recorded data stays."),
+       ("Student missing or extra","Tell Michael Pilman. You will get a new semester package; recorded days are kept."),
        ("Change language","Button <span class='k'>文</span> at the top right."),
        ("Icon asks to load the package","The package was loaded in Safari instead of the icon. Load it once more inside the icon."),
-       ("New iPad or data gone","Set up as above, then under the gear ⚙ tap «⤒ Load backup» and choose your latest backup. Michael has all days you sent anyway.")],
+       ("New iPad or data gone","Set up as above, then under the gear ⚙ tap «⤒ Load backup» and choose your latest backup. Michael Pilman has all days you sent anyway.")],
   contact="Questions: Michael Pilman · michael.pilman@ehl.ch",
   foot="EHL Hotelfachschule Passugg · Practical report Noten 2.0 · as of {date} · Screenshots show invented names.",
 )
@@ -222,7 +214,7 @@ TX["th"] = dict(
   glance_note10="ในแต่ละ Zyklus คุณมีชุดข้อมูล <b>หนึ่ง</b> ชุด: 9 วันทำงานและวันสอบ",
   glance_note54="ในแต่ละ Zyklus คุณมีชุดข้อมูล <b>สอง</b> ชุด: 5 วันแรก แล้วตามด้วย 4 วัน + วันสอบ กับนักศึกษากลุ่มอื่น หน้าเริ่มต้นจะเปลี่ยนไปยังชุดที่ถูกต้องให้อัตโนมัติ",
   s1="ตั้งค่าครั้งเดียว (5 นาที ครั้งเดียวต่อภาคเรียน)",
-  s1l=["Michael จะส่งคู่มือนี้และไฟล์ <b>«Semesterpaket_HS26_{key}.json»</b> ให้ทางอีเมล บน iPad ให้แตะไฟล์ในอีเมล แล้วแตะ แชร์ <span class='k'>⬆</span> → <b>«บันทึกไปยังแอปไฟล์»</b>",
+  s1l=["Michael Pilman จะส่งคู่มือนี้และไฟล์ <b>«Semesterpaket_HS26_{key}.json»</b> ให้ทางอีเมล บน iPad ให้แตะไฟล์ในอีเมล แล้วแตะ แชร์ <span class='k'>⬆</span> → <b>«บันทึกไปยังแอปไฟล์»</b>",
        "เปิดหน้าเริ่มต้นใน <b>Safari</b>: สแกน QR code มุมขวาบนด้วยกล้อง หรือพิมพ์ <b>pilman1982.github.io/praxisrapport/mein.html</b>",
        "แตะ แชร์ <span class='k'>⬆</span> → <b>«เพิ่มไปยังหน้าจอโฮม»</b> → ตั้งชื่อ «รายงานของฉัน» → เพิ่ม แล้วปิด Safari",
        "เปิดไอคอนใหม่ <b>«รายงานของฉัน»</b> บนหน้าจอโฮม → <span class='k'>โหลดชุดข้อมูลภาคเรียน</span> → เลือกไฟล์จาก «ไฟล์» ต่อจากนี้ให้เริ่มจากไอคอนนี้ทุกครั้ง"],
@@ -253,16 +245,16 @@ TX["th"] = dict(
   s4l=["<span class='k'>✉ ส่งข้อมูลของวันนี้</span> → <b>«Mail»</b> → ส่งถึง <b>michael.pilman@ehl.ch</b> ครั้งแรกให้พิมพ์ที่อยู่ ครั้งต่อไป iPad จะเสนอให้เอง การขาดของวันนี้อยู่ในข้อความอีเมลแล้ว",
        "<span class='k'>✉ การขาด</span> เปิดอีเมลที่เขียนไว้แล้วถึงผู้รับผิดชอบหลักสูตร ส่งทันทีที่รู้ว่าใครไม่มา",
        "<span class='k'>⤓ สำรองข้อมูล</span> → <b>«บันทึกไปยังแอปไฟล์»</b>: ไฟล์สำรองของคุณเองบน iPad กู้คืนได้ที่ปุ่มฟันเฟือง <span class='k'>⚙</span> ด้วย <span class='k'>⤒ โหลดไฟล์สำรอง</span>"],
-  s4box="ส่งทุกวัน ถ้า iPad หายหรือข้อมูลเว็บไซต์ถูกลบ จะเหลือเฉพาะวันที่ส่งให้ Michael แล้ว และไฟล์สำรองใน «ไฟล์»",
+  s4box="ส่งทุกวัน ถ้า iPad หายหรือข้อมูลเว็บไซต์ถูกลบ จะเหลือเฉพาะวันที่ส่งให้ Michael Pilman แล้ว และไฟล์สำรองใน «ไฟล์»",
   s5="จบการฝึกและ Zyklus ใหม่",
   s5p="<b>ข้อเสนอแนะถึงนักศึกษา:</b> ในวันสุดท้ายของการฝึก แตะ <span class='k'>Ø</span> ด้านบน แล้วแตะ <span class='k'>✉ ข้อเสนอแนะ</span> ที่นักศึกษาแต่ละคน แอปจะเสนออีเมลที่เป็นมิตร: สิ่งที่ทำได้ดี สิ่งที่ควรพัฒนา พร้อมเคล็ดลับ ภาษาเลือกให้อัตโนมัติ: ภาษาเยอรมันสำหรับ HFD ภาษาอังกฤษสำหรับ HFE แก้ไขข้อความได้ตามต้องการ แตะ <span class='k'>เปิดในแอปเมล</span> แล้วส่ง อีเมลที่ส่งแล้วจะมีเครื่องหมาย ✓</p><p><b>Zyklus ใหม่:</b> คุณไม่ต้องทำอะไร หน้าเริ่มต้นจะแสดงการฝึกปัจจุบันใต้ «ตอนนี้» และถัดไปใต้ «ถัดไป» ถ้าเปิดชุดข้อมูลใหม่ในขณะที่ไฟล์เดียวกันยังมีวันจากชุดก่อนหน้า แอปจะถามก่อน ถ้าคุณแชร์วันเหล่านั้นแล้ว ให้กด OK",
   s6="ถ้ามีปัญหา",
   faq=[("นักศึกษาไม่ถูกต้อง หรือเป็น Zyklus เก่า","เปิดหน้าเริ่มต้น แล้วแตะการฝึกที่ถูกต้องในรายการ «การฝึกทั้งหมดในภาคเรียน»"),
-       ("ไม่มีรูปถ่าย","จะแสดงอักษรย่อแทน เมื่อ Michael ส่งชุดข้อมูลภาคเรียนใหม่: «โหลดชุดข้อมูลภาคเรียนอื่น» แล้วเปิดรายงาน รูปจะปรากฏ ข้อมูลที่บันทึกไว้ยังอยู่"),
-       ("ขาดนักศึกษาหรือมีเกิน","แจ้ง Michael คุณจะได้รับชุดข้อมูลภาคเรียนใหม่ วันที่บันทึกไว้ยังอยู่"),
+       ("ไม่มีรูปถ่าย","จะแสดงอักษรย่อแทน เมื่อ Michael Pilman ส่งชุดข้อมูลภาคเรียนใหม่: «โหลดชุดข้อมูลภาคเรียนอื่น» แล้วเปิดรายงาน รูปจะปรากฏ ข้อมูลที่บันทึกไว้ยังอยู่"),
+       ("ขาดนักศึกษาหรือมีเกิน","แจ้ง Michael Pilman คุณจะได้รับชุดข้อมูลภาคเรียนใหม่ วันที่บันทึกไว้ยังอยู่"),
        ("เปลี่ยนภาษา","ปุ่ม <span class='k'>文</span> มุมขวาบน"),
        ("ไอคอนขอให้โหลดชุดข้อมูล","ชุดข้อมูลถูกโหลดใน Safari แทนที่จะโหลดในไอคอน ให้โหลดอีกครั้งในไอคอน ครั้งเดียว"),
-       ("iPad เครื่องใหม่หรือข้อมูลหาย","ตั้งค่าตามข้างบน แล้วแตะปุ่มฟันเฟือง ⚙ «⤒ โหลดไฟล์สำรอง» และเลือกไฟล์สำรองล่าสุด วันที่ส่งแล้ว Michael มีอยู่แล้ว")],
+       ("iPad เครื่องใหม่หรือข้อมูลหาย","ตั้งค่าตามข้างบน แล้วแตะปุ่มฟันเฟือง ⚙ «⤒ โหลดไฟล์สำรอง» และเลือกไฟล์สำรองล่าสุด วันที่ส่งแล้ว Michael Pilman มีอยู่แล้ว")],
   contact="สอบถาม: Michael Pilman · michael.pilman@ehl.ch",
   foot="EHL Hotelfachschule Passugg · Praxisrapport Noten 2.0 · ฉบับวันที่ {date} · ภาพหน้าจอใช้ชื่อสมมติ",
 )
@@ -343,7 +335,7 @@ with sync_playwright() as pw:
     for P in PEOPLE:
         h = guide(P); f = G / ("g_" + P["name"].replace(" ", "_") + ".html"); f.write_text(h, encoding="utf-8")
         pg.goto(f.as_uri()); pg.wait_for_timeout(500)
-        nm = P.get("fname") or P["name"].replace(" ", "-").replace("ü", "ue")
+        nm = P["name"].replace(" ", "-").replace("ü", "ue")
         out = OUT / NAMES[P["lang"]].format(n=nm)
         pg.pdf(path=str(out), format="A4", print_background=True, margin={"top":"14mm","bottom":"13mm","left":"15mm","right":"15mm"})
         print(out.name)

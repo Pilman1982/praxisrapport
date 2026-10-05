@@ -6,3 +6,4 @@ __pycache__/
 *.xlsx
 *.json
 !testdaten/*.json
+tools/anleitungen/personen_*.json
