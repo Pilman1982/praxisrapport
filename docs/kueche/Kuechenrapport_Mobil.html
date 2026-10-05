@@ -101,6 +101,7 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
   min-height:62px;padding:9px 13px;background:transparent;border:0;text-align:left;color:var(--ink);
 }
 .srow:active{background:var(--surf2)}
+.ava{border-radius:50%;object-fit:cover;flex:0 0 auto;background:#ddd;vertical-align:middle}
 .srow .nm{flex:1;min-width:0;font-size:16.5px;font-weight:600;
           overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .srow .sub{font-size:12.5px;color:var(--ink3);font-weight:400;margin-top:1px;
@@ -736,6 +737,15 @@ function dayRec(id, sid){
   S.days[id][sid] = S.days[id][sid] || {att:"present", obs:[], note:null};
   return S.days[id][sid];
 }
+
+/* Foto und Nickname fuer die Erfassung (Noten 2.0). foto ist ein kleines JPEG aus dem Cockpit. */
+function avatar(s, size){
+  const px = (size || 32) + "px";
+  if(s && typeof s.foto === "string" && s.foto.indexOf("data:image/") === 0)
+    return el("img",{class:"ava",src:s.foto,alt:"",style:"width:"+px+";height:"+px});
+  return null;
+}
+const nickTag = s => (s && s.nick) ? " «" + s.nick + "»" : "";
 function openSlot(id){
   S.days[id] = S.days[id] || {};
   S.students.forEach(s=>{ S.days[id][s.id] = S.days[id][s.id] || {att:"present", obs:[], note:null}; });
@@ -887,9 +897,10 @@ function renderDay(){
     const li = el("li");
     const b = el("button",{class:"srow",onclick:()=>openSheet(s)});
     b.appendChild(el("span",{class:"dot "+attOf(r)}));
+    const av = avatar(s, 34); if(av) b.appendChild(av);
     b.appendChild(el("span",{class:"nm"},[
       el("span",{html:""}),
-      document.createTextNode(dispName(s)),
+      document.createTextNode(dispName(s) + nickTag(s)),
       el("div",{class:"sub",text:t(attOf(r)) + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))})
     ]));
     if(n) b.appendChild(el("span",{class:"pill on",text:String(n)}));
@@ -912,7 +923,7 @@ function openSheet(student){
   const sh = el("div",{class:"sheet"});
   const hd = el("div",{class:"sheet-h"});
   hd.appendChild(el("div",{style:"min-width:0;flex:1"},[
-    el("div",{class:"nm",text:dispName(student)}),
+    el("div",{class:"nm",text:dispName(student) + nickTag(student)}),
     el("div",{class:"sb",text:slotLabel(slotById(curSlot))})
   ]));
   hd.appendChild(el("button",{class:"hbtn",text:"✕","aria-label":t("done"),onclick:close}));

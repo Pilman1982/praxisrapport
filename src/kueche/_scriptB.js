@@ -592,6 +592,15 @@ const sortName = s => [s && s.last, s && s.first].filter(Boolean).join(", ") || 
 const klasseOf = s => (s && s.klasse) || S.settings.group || "";
 const gruppeOf = s => (s && s.gruppe) || S.settings.team  || "";
 /* Vollform fuer die Meldung: Nachname, Vorname «Nickname» */
+
+/* Foto und Nickname fuer die Erfassung (Noten 2.0). foto ist ein kleines JPEG aus dem Cockpit. */
+function avatar(s, size){
+  const px = (size || 32) + "px";
+  if(s && typeof s.foto === "string" && s.foto.indexOf("data:image/") === 0)
+    return el("img",{class:"ava",src:s.foto,alt:"",style:"width:"+px+";height:"+px});
+  return null;
+}
+const nickTag = s => (s && s.nick) ? " «" + s.nick + "»" : "";
 const longName = s => sortName(s) + (s && s.nick ? " \u00ab" + s.nick + "\u00bb" : "");
 /* Alte Dateien tragen nur "name". Nachname und Vorname daraus ableiten. */
 function normalizeStudents(){
@@ -933,7 +942,7 @@ function renderDay(){
     const r = dayRec(curSlot, s.id);
     const tot = dayTotal(curSlot, s.id);
     const card = el("article",{class:"stud"+(r.att==="excused"||r.att==="unexcused"||r.att==="tm"?" absent":"")});
-    const head = el("div",{class:"stud-h"},[el("div",{class:"nm",text:s.name})]);
+    const head = el("div",{class:"stud-h"},[avatar(s, 34), el("div",{class:"nm",text:s.name + nickTag(s)})]);
     head.appendChild(el("div",{class:"grade num "+gradeClass(tot),text: tot==null ? t("excused") : fmt(tot)}));
     card.appendChild(head);
     const seg = el("div",{class:"seg"+(sl.exam?" two":" five")});
@@ -1787,11 +1796,12 @@ async function onMerge(e){
         if(!ex){
           ex = {id:"m"+Math.random().toString(36).slice(2,8), name:st.name||"",
                 last:st.last||"", first:st.first||"", nick:st.nick||"",
+                nr:st.nr||"", foto:st.foto||"",
                 mail:st.mail||"", lang:st.lang||"",
                 klasse:st.klasse||"", gruppe:st.gruppe||""};
           S.students.push(ex); addedS++;
         } else {                       // bestehende Person: fehlende Angaben nachtragen
-          ["last","first","nick","mail","lang","klasse","gruppe"].forEach(k=>{
+          ["last","first","nick","mail","lang","klasse","gruppe","nr","foto"].forEach(k=>{
             if(!ex[k] && st[k]) ex[k] = st[k];
           });
         }

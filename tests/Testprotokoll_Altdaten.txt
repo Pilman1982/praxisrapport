@@ -1,0 +1,10 @@
+PRUEFUNG ALTE RAPPORTE 05.10.2026
+
+OK      Kueche: alter Rapport, 3 Personen uebernommen                  {'n': 3, 'filled': 4, 'nick': 'Lulu', 'late': True, 'vdb': True}
+OK      Kueche: alle erfassten Tage und Verspaetung uebernommen        [4, 4]
+OK      Kueche: Nickname und mehrteiliger Nachname bleiben             {'n': 3, 'filled': 4, 'nick': 'Lulu', 'late': True, 'vdb': True}
+OK      Kueche: keine JavaScript-Fehler                                []
+OK      Service: alter Rapport, 3 Personen uebernommen                 {'n': 3, 'filled': 4, 'nick': 'Lulu', 'late': True, 'vdb': True}
+OK      Service: alle erfassten Tage und Verspaetung uebernommen       [4, 4]
+OK      Service: Nickname und mehrteiliger Nachname bleiben            {'n': 3, 'filled': 4, 'nick': 'Lulu', 'late': True, 'vdb': True}
+OK      Service: keine JavaScript-Fehler                               []
