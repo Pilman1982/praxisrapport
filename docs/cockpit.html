@@ -98,7 +98,7 @@ img.ava{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#cc
 <section class="card">
   <h2><span class="n">5</span>Pakete und Startlinks</h2>
   <p class="muted small" style="margin-top:0">Ein Paket pro Outlet und Einsatz. Die Dozierenden laden es in der App mit «Sicherung laden» (iPhone/iPad) oder «Sicherung einlesen» (Laptop). Danach sind Namen, Nicknames, Fotos, Klasse, Gruppe und Turnusstart drin.</p>
-  <div class="row"><button class="pri" id="btnZip" disabled>Alle Pakete als ZIP</button><span id="zipStat" class="small muted"></span></div>
+  <div class="row"><button class="pri" id="btnZip" disabled>Pakete der Auswahl als ZIP</button><span class="small muted">Auswahl über Bereich und Block in Schritt 4</span><span id="zipStat" class="small muted"></span></div>
   <div id="packs" style="margin-top:10px"></div>
 </section>
 
@@ -134,7 +134,9 @@ const BER_LABEL = {kueche:"Küche", service:"Service"};
 const norm = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
 const nameKey = (a, b) => norm(a + " " + b).split(" ").filter(Boolean).sort().join(" ");
 const klasseNorm = v => { const m = String(v||"").trim().match(/^hf\s*([a-z])\s*(\d?)$/i); return m ? ("HF"+m[1]+m[2]).toUpperCase() : String(v||"").trim(); };
-const gruppeNorm = v => { const m = String(v||"").trim().match(/^(gruppe|grp|group|team)\s*(\d+)$/i); return m ? ((/^t/i.test(m[1])?"Team ":"Gruppe ")+m[2]) : String(v||"").trim(); };
+const gruppeNorm = v => { const s = String(v||"").trim(); const e = s.match(/^(?:gruppe|grp|gr|group)\s*(\d+)\s*(?:team\s*)?([a-z])$/i);
+  if(e) return "Gruppe " + e[1] + " Team " + e[2].toUpperCase();
+  const m = s.match(/^(gruppe|grp|group|team)\s*(\d+)$/i); return m ? ((/^t/i.test(m[1])?"Team ":"Gruppe ")+m[2]) : s; };
 const pDate = s => { const m = String(s||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return null; const d = new Date(+m[1], +m[2]-1, +m[3], 12); return isNaN(d) ? null : d; };
 const fDate = d => d ? String(d.getDate()).padStart(2,"0") + "." + String(d.getMonth()+1).padStart(2,"0") + "." : "–";
 const iso = d => d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
@@ -147,7 +149,9 @@ function workDays(von, bis, wdays){
 const fileSafe = s => String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,"");
 
 /* ================= Zustand ================= */
-let PLAN = null, PACKS = [], ISSUES = [], FOTOS = {byNr:{}, byName:{}, n:0}, TAB = "alle";
+let PLAN = null, PACKS = [], ISSUES = [], FOTOS = {byNr:{}, byName:{}, n:0}, TAB = "alle", BLK = "alle";
+/* Auswahl in Übersicht und Paketliste: Bereich (Tabs) und Block */
+const visiblePacks = () => PACKS.filter(p => (TAB === "alle" || p.ber === TAB) && (BLK === "alle" || (p.block || iso(p.von)) === BLK));
 
 /* ================= 1 · Plan laden und prüfen ================= */
 function parsePlan(txt){
@@ -213,16 +217,21 @@ function build(){
       if(bis < von){ err(who + ", Einsatz " + (k+1) + ": «bis» liegt vor «von»."); return; }
       if(!e.outlet){ err(who + ", Einsatz " + (k+1) + ": Outlet fehlt."); return; }
       const days = workDays(von, bis, wdays);
+      /* Tagesplan (freiwillig): Liste der Einsatztage mit Ort und Team Market */
+      const tageList = Array.isArray(e.tage) ? e.tage.filter(t => pDate(t && t.datum)).sort((a, b) => String(a.datum).localeCompare(String(b.datum))) : null;
+      const praxisSlots = VARS[v].n - (VARS[v].exam ? 1 : 0);
       if(!wdays.includes(WD[von.getDay()])) aggAdd("wd|" + e.outlet + iso(von), e.outlet + ": Beginn " + fDate(von) + " ist ein " + ["So","Mo","Di","Mi","Do","Fr","Sa"][von.getDay()] + ", kein Einsatztag", who);
-      if(days.length !== VARS[v].n) aggAdd("dc|" + e.outlet + v + iso(von) + iso(bis), e.outlet + " " + v + ": " + days.length + " Einsatztage zwischen " + fDate(von) + " und " + fDate(bis) + " (erwartet " + VARS[v].n + "). Study Week oder Feiertag? Sonst Daten prüfen", who);
-      spans.forEach(sp => { if(von <= sp.bis && sp.von <= bis) err(who + ": Einsätze überschneiden sich (" + sp.o + " und " + e.outlet + ")."); });
-      spans.push({von, bis, o:e.outlet});
+      if(tageList){
+        if(tageList.length > praxisSlots) aggAdd("ov|" + e.outlet + v + (e.block||""), e.outlet + " " + v + (e.block ? " (" + e.block + ")" : "") + ": mehr als " + praxisSlots + " Einsatztage, die überzähligen fehlen in der App", who);
+      } else if(days.length !== VARS[v].n) aggAdd("dc|" + e.outlet + v + iso(von) + iso(bis), e.outlet + " " + v + ": " + days.length + " Einsatztage zwischen " + fDate(von) + " und " + fDate(bis) + " (erwartet " + VARS[v].n + "). Study Week oder Feiertag? Sonst Daten prüfen", who);
+      spans.forEach(sp => { if(!(e.block && sp.block === e.block) && von <= sp.bis && sp.von <= bis) err(who + ": Einsätze überschneiden sich (" + sp.o + " und " + e.outlet + ")."); });
+      spans.push({von, bis, o:e.outlet, block:e.block || ""});
       /* Dozierende finden: gleicher Bereich, Outlet in der Liste */
       const d = doz.find(x => String(x.bereich||"").toLowerCase().replace("ü","ue").replace("patisserie","kueche") === ber
                     && (x.outlets || []).some(o => norm(o) === norm(e.outlet)))
              || (e.wechsel && doz.find(x => String(x.bereich||"").toLowerCase() === ber && (x.outlets||[]).some(o => norm(o) === norm(e.wechsel.outlet))));
       const homeOutlet = d ? d.outlets[0] : e.outlet;
-      const key = [ber, d ? d.name : e.outlet, v, iso(von)].join("|");
+      const key = [ber, d ? d.name : e.outlet, v, e.block || iso(von)].join("|");
       let p = packMap[key];
       if(!p){
         p = packMap[key] = {key, ber, v, von, bis, doz:d || null, outlet:homeOutlet,
@@ -230,6 +239,8 @@ function build(){
         if(!d) warn("Kein Dozent für " + BER_LABEL[ber] + " " + e.outlet + " eingetragen.");
       }
       if(bis > p.bis) p.bis = bis;
+      if(von < p.von) p.von = von;
+      if(e.block) p.block = e.block;
       let wAb = 0, wOut = "";
       if(e.wechsel && e.wechsel.outlet){
         const ab = pDate(e.wechsel.ab);
@@ -239,7 +250,13 @@ function build(){
       }
       /* Ein Einsatz im zweiten Restaurant einer Service-Gruppe: ganzer Einsatz dort */
       if(ber === "service" && p.outlet2 && norm(e.outlet) === norm(p.outlet2) && !wOut){ wAb = 1; wOut = p.outlet2; }
-      p.studs.push({s, e, wAb, wOut, days: days.length});
+      let ortPlan = null, tmTage = [];
+      if(tageList){
+        ortPlan = tageList.slice(0, praxisSlots).map(t => (t.outlet && norm(t.outlet) !== norm(p.outlet)) ? t.outlet : "");
+        tageList.slice(0, praxisSlots).forEach((t, k) => { if(t.market) tmTage.push(k + 1); });
+        if(!ortPlan.some(Boolean)) ortPlan = null;
+      }
+      p.studs.push({s, e, wAb, wOut, ortPlan, tmTage, days: tageList ? tageList.length + (VARS[v].exam ? 1 : 0) : days.length});
     });
   });
   Object.values(agg).forEach(a => warn(a.text + ": " + (a.who.length > 4 ? a.who.length + " Personen" : a.who.join(", ")) + "."));
@@ -249,7 +266,7 @@ function build(){
     const sd = WD[p.von.getDay()];
     p.startIdx = Math.max(0, wdays.indexOf(sd));
     if(p.studs.length > 14) warn(BER_LABEL[p.ber] + " " + p.outlet + " " + p.v + ": " + p.studs.length + " Personen in einem Paket. Stimmt das?");
-    p.file = ["Paket", {kueche:"Kueche", service:"Service"}[p.ber], fileSafe(p.outlet + (p.outlet2 ? "-" + p.outlet2 : "")), p.v, iso(p.von)].join("_") + ".json";
+    p.file = ["Paket", p.block || "", {kueche:"Kueche", service:"Service"}[p.ber], fileSafe(p.outlet + (p.outlet2 ? "-" + p.outlet2 : "")), p.v, iso(p.von)].filter(Boolean).join("_") + ".json";
   });
 }
 
@@ -266,6 +283,8 @@ function packageJSON(p){
     if(s.nr) o.nr = String(s.nr);
     const f = fotoFor(s); if(f) o.foto = f;
     if(x.wAb && x.wOut){ o.wechselAb = x.wAb; o.wechselOutlet = x.wOut; }
+    if(x.ortPlan) o.ortPlan = x.ortPlan;
+    if(x.tmTage && x.tmTage.length) o.tmTage = x.tmTage;
     return o;
   });
   const teacher = p.doz ? p.doz.name : "";
@@ -298,13 +317,14 @@ function download(name, text){
 $("btnZip").onclick = async () => {
   if(!window.JSZip){ $("zipStat").textContent = "ZIP nicht verfügbar (offline). Bitte Pakete einzeln speichern."; return; }
   const z = new JSZip();
-  PACKS.forEach(p => z.file(p.file, JSON.stringify(packageJSON(p), null, 1)));
-  z.file("Startlinks.txt", PACKS.map(p => BER_LABEL[p.ber] + " · " + p.outlet + (p.outlet2 ? " + " + p.outlet2 : "") + " · " + p.v + " · ab " + fDate(p.von)
+  const sel = visiblePacks();
+  sel.forEach(p => z.file(p.file, JSON.stringify(packageJSON(p), null, 1)));
+  z.file("Startlinks.txt", sel.map(p => BER_LABEL[p.ber] + " · " + p.outlet + (p.outlet2 ? " + " + p.outlet2 : "") + " · " + p.v + " · ab " + fDate(p.von)
     + " · " + (p.doz ? p.doz.name : "ohne Dozent") + "\n" + startLink(p) + "\n").join("\n"));
   const blob = await z.generateAsync({type:"blob"});
-  const a = el("a",{href:URL.createObjectURL(blob), download:"Pakete_" + fileSafe(PLAN.semester||"") + "_" + fileSafe(PLAN.bezeichnung||"Turnus") + ".zip"});
+  const a = el("a",{href:URL.createObjectURL(blob), download:"Pakete_" + fileSafe(PLAN.semester||"") + "_" + (BLK === "alle" ? "alle" : fileSafe(BLK)) + (TAB === "alle" ? "" : "_" + TAB) + ".zip"});
   document.body.appendChild(a); a.click(); setTimeout(()=>a.remove(), 500);
-  $("zipStat").textContent = PACKS.length + " Pakete und Startlinks.txt gespeichert.";
+  $("zipStat").textContent = sel.length + " Pakete und Startlinks.txt gespeichert.";
 };
 
 /* ================= 2 · Fotos aus der PDF ================= */
@@ -458,6 +478,15 @@ function render(){
   const tabs = $("tabs"); tabs.innerHTML = "";
   [["alle","Alle"],["kueche","Küche"],["service","Service"]].forEach(([k, l]) =>
     tabs.appendChild(el("button",{"aria-pressed":String(TAB === k), text:l, onclick:()=>{ TAB = k; render(); }})));
+  const blocks = {}; PACKS.forEach(p => { const k = p.block || iso(p.von); if(!blocks[k] || p.von < blocks[k].von) blocks[k] = {von:p.von, bis:p.bis}; else if(p.bis > blocks[k].bis) blocks[k].bis = p.bis; });
+  if(Object.keys(blocks).length > 1){
+    const sel = el("select",{id:"blk", style:"font:inherit;padding:8px;border-radius:9px;border:1px solid var(--line);background:var(--field);color:inherit",
+      onchange:e=>{ BLK = e.target.value; render(); }});
+    sel.appendChild(el("option",{value:"alle", text:"Alle Blöcke", selected: BLK === "alle"}));
+    Object.keys(blocks).sort((a, b) => blocks[a].von - blocks[b].von).forEach(k =>
+      sel.appendChild(el("option",{value:k, text:(/^\d/.test(k) ? "" : k + " · ") + fDate(blocks[k].von) + " bis " + fDate(blocks[k].bis), selected: BLK === k})));
+    tabs.appendChild(sel);
+  }
   renderOverview();
   renderPacks();
   $("btnZip").disabled = !PACKS.length;
@@ -474,7 +503,7 @@ function arrived(p){
 function renderOverview(){
   const host = $("overview"); host.innerHTML = ""; host.classList.remove("muted");
   const q = norm($("search").value);
-  const list = PACKS.filter(p => TAB === "alle" || p.ber === TAB);
+  const list = visiblePacks();
   if(!list.length){ host.textContent = "Keine Einsätze."; return; }
   list.forEach(p => {
     const rows = p.studs.filter(x => !q || norm([x.s.nachname, x.s.vorname, x.s.nickname, x.s.nr].join(" ")).includes(q));
@@ -489,14 +518,16 @@ function renderOverview(){
         rep ? el("span",{class:"chip ok",text:"Rapport da · " + rep.filled + " Tage"}) : null])
     ]));
     const tb = el("table");
-    tb.appendChild(el("tr",{},["","Name","Nickname","Klasse","Gruppe","Nr.","Einsatz","Tage","Wechsel"].map(h => el("th",{text:h}))));
+    tb.appendChild(el("tr",{},["","Name","Nickname","Klasse","Gruppe","Nr.","Einsatz","Tage","Plan"].map(h => el("th",{text:h}))));
     rows.forEach(x => {
       const s = x.s;
       tb.appendChild(el("tr",{class: q ? "hit" : ""},[avatarCell(s), el("td",{text:(s.nachname||"") + " " + (s.vorname||"")}),
         el("td",{text:s.nickname || ""}), el("td",{text:s.klasse || ""}), el("td",{text:s.gruppe || ""}), el("td",{class:"muted",text:s.nr || ""}),
         el("td",{text:x.e.outlet + " · " + fDate(pDate(x.e.von)) + "–" + fDate(pDate(x.e.bis))}),
         el("td",{class: x.days !== VARS[p.v].n ? "warn" : "", text:String(x.days)}),
-        el("td",{text: x.wOut ? "ab Tag " + x.wAb + " " + x.wOut : ""})]));
+        el("td",{text: [x.wOut ? "ab Tag " + x.wAb + " " + x.wOut : "",
+          x.ortPlan ? Array.from(new Set(x.ortPlan.filter(Boolean))).map(o => o + ": Tag " + x.ortPlan.map((v, i) => v === o ? i + 1 : 0).filter(Boolean).join(", ")).join(" · ") : "",
+          x.tmTage && x.tmTage.length ? "Market: Tag " + x.tmTage.join(", ") : ""].filter(Boolean).join(" · ")})]));
     });
     box.appendChild(el("div",{class:"tw"}, tb));
     host.appendChild(box);
@@ -508,7 +539,7 @@ function renderPacks(){
   if(!PACKS.length) return;
   const tb = el("table");
   tb.appendChild(el("tr",{},["Paket","Dozent/in","Pers.","Startlink","",""].map(h => el("th",{text:h}))));
-  PACKS.forEach(p => {
+  visiblePacks().forEach(p => {
     const link = startLink(p);
     tb.appendChild(el("tr",{},[
       el("td",{},[el("div",{text:BER_LABEL[p.ber] + " · " + p.outlet + (p.outlet2 ? " ⇄ " + p.outlet2 : "") + " · " + p.v}),

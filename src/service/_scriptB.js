@@ -463,7 +463,11 @@ function erkenneKlasse(v){
   return m ? ("HF" + m[1] + m[2]).toUpperCase() : "";
 }
 function erkenneGruppe(v){
-  const m = String(v || "").trim().match(/^(gruppe|grp|group|team)\s*(\d+)$/i);
+  const s = String(v || "").trim();
+  /* EHL-Einteilung: "Gruppe 1 Team A", auch "Gruppe 1A", "Gr1 A" */
+  const e = s.match(/^(?:gruppe|grp|gr|group)\s*(\d+)\s*(?:team\s*)?([a-z])$/i);
+  if(e) return "Gruppe " + e[1] + " Team " + e[2].toUpperCase();
+  const m = s.match(/^(gruppe|grp|group|team)\s*(\d+)$/i);
   return m ? ((/^t/i.test(m[1]) ? "Team " : "Gruppe ") + m[2]) : "";
 }
 /* Klasse und Gruppe pro Person; leer = Vorgabe aus der Kopfzeile (wie im Kuechenrapport). */
@@ -526,6 +530,8 @@ function saubereStudierende(list){
       if(s.nr) o.nr = String(s.nr).trim();
       if(typeof s.foto === "string" && s.foto.indexOf("data:image/") === 0) o.foto = s.foto;
       if(s.wechselAb && s.wechselOutlet){ o.wechselAb = parseInt(s.wechselAb, 10) || 0; o.wechselOutlet = String(s.wechselOutlet); }
+      if(Array.isArray(s.ortPlan)) o.ortPlan = s.ortPlan.map(x => String(x || ""));
+      if(Array.isArray(s.tmTage)) o.tmTage = s.tmTage.map(x => parseInt(x, 10)).filter(x => x > 0);
       o.name = anzeigeName(o);
       return o;
     })
@@ -656,8 +662,10 @@ function openSlot(id){
   S.days[id] = S.days[id] || {};
   S.students.forEach(s=>{
     if(!S.days[id][s.id]){
-      S.days[id][s.id] = {att:"present", obs:[], note:null};
-      const vo = planOutlet(s, id) || (hasOutlet2() ? prevOutlet(id, s.id) : "");
+      S.days[id][s.id] = {att: planTM(s, id) ? "tm" : "present", obs:[], note:null};
+      /* Mit Tagesplan gilt nur der Plan (leer = Stammrestaurant); sonst Ort vom Vortag */
+      const vo = Array.isArray(s.ortPlan) ? planOutlet(s, id)
+               : (planOutlet(s, id) || (hasOutlet2() ? prevOutlet(id, s.id) : ""));
       if(vo) S.days[id][s.id].outlet = vo;
     }
   });
@@ -706,8 +714,20 @@ function prevOutlet(slotId, sid){
 /* Wechselplan aus dem Cockpit: ab Einsatztag n im zweiten Restaurant */
 function planOutlet(s, slotId){
   const sl = slots().find(x => x.id === slotId);
-  return (s && s.wechselAb && s.wechselOutlet && sl && sl.idx >= s.wechselAb) ? s.wechselOutlet : "";
+  if(!s || !sl) return "";
+  /* Tagesplan aus dem Cockpit: Restaurant pro Einsatztag */
+  if(Array.isArray(s.ortPlan)){
+    const o = String(s.ortPlan[sl.idx - 1] || "").trim();
+    return (o && o !== String(S.settings.outlet || "").trim()) ? o : "";
+  }
+  return (s.wechselAb && s.wechselOutlet && sl.idx >= s.wechselAb) ? s.wechselOutlet : "";
 }
+/* Tagesplan aus dem Cockpit: Team Market an diesem Einsatztag? */
+function planTM(s, slotId){
+  const sl = slots().find(x => x.id === slotId);
+  return !!(s && Array.isArray(s.tmTage) && sl && s.tmTage.indexOf(sl.idx) >= 0);
+}
+
 function toggleOutlet(r){
   r.outlet = r.outlet ? "" : String(S.settings.outlet2 || "").trim();
   if(!r.outlet) delete r.outlet;
