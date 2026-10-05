@@ -1,0 +1,8 @@
+src/dist/
+__pycache__/
+*.pyc
+# Niemals echte Studierendendaten ins Repository:
+*.xls
+*.xlsx
+*.json
+!testdaten/*.json

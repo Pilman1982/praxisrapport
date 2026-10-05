@@ -1,0 +1,30 @@
+Ammann; Lea; ; lea.ammann@beispiel.ch; de; HFD; Gruppe 1
+Bürgi; Nino; ; nino.burgi@beispiel.ch; de; HFD; Gruppe 1
+Caflisch; Seraina; Sera; seraina.caflisch@beispiel.ch; de; HFD; Gruppe 1
+Da Silva; Rui Miguel; Rui; rui.dasilva@beispiel.ch; de; HFD; Gruppe 2
+Egger; Jana; ; jana.egger@beispiel.ch; de; HFD; Gruppe 2
+Frei; Luca; ; luca.frei@beispiel.ch; de; HFD; Gruppe 2
+Gisler; Timo; Timi; timo.gisler@beispiel.ch; de; HFD; Team 1
+Hösli; Anja; ; anja.hosli@beispiel.ch; de; HFD; Team 1
+Imhof; Dario; ; dario.imhof@beispiel.ch; de; HFD; Team 2
+Jenny; Selina; ; selina.jenny@beispiel.ch; de; HFD; Team 2
+Chen; Yuxuan; Ethan; yuxuan.chen@beispiel.ch; en; HFE1; Gruppe 1
+Liu; Mengqi; Mia; mengqi.liu@beispiel.ch; zh; HFE2; Gruppe 1
+Wang; Haoran; Henry; haoran.wang@beispiel.ch; en; HFE1; Gruppe 1
+Zhang; Xinyi; Cindy; xinyi.zhang@beispiel.ch; zh; HFE2; Gruppe 1
+Nguyen; Thi Lan; Lan; thi.nguyen@beispiel.ch; en; HFE1; Gruppe 1
+Sharma; Aarav; ; aarav.sharma@beispiel.ch; en; HFE2; Gruppe 2
+Li; Jiahao; Jack; jiahao.li@beispiel.ch; en; HFE1; Gruppe 2
+Zhao; Yiran; Eve; yiran.zhao@beispiel.ch; zh; HFE2; Gruppe 2
+Kim; Minji; ; minji.kim@beispiel.ch; en; HFE1; Gruppe 2
+Okafor; Chidi; ; chidi.okafor@beispiel.ch; en; HFE2; Gruppe 2
+Huang; Zihan; Leo; zihan.huang@beispiel.ch; en; HFE1; Team 1
+Sun; Ruoxi; Rose; ruoxi.sun@beispiel.ch; zh; HFE2; Team 1
+Pereira; Ana Clara; Ana; ana.pereira@beispiel.ch; en; HFE1; Team 1
+Wu; Junjie; Jason; junjie.wu@beispiel.ch; en; HFE2; Team 1
+Lin; Shuting; Sophie; shuting.lin@beispiel.ch; en; HFE1; Team 2
+Tan; Wei Ming; William; wei.tan@beispiel.ch; en; HFE2; Team 2
+van der Berg; Sanne; ; sanne.vanderberg@beispiel.ch; en; HFE1; Team 2
+Xu; Boyang; Bob; boyang.xu@beispiel.ch; zh; HFE2; Team 2
+Ma; Yutong; Tina; yutong.ma@beispiel.ch; en; HFE1; Team 2
+Gao; Zeyu; Zack; zeyu.gao@beispiel.ch; en; HFE2; Team 2
