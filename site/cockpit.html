@@ -324,7 +324,7 @@ function semesterPackages(){
   const by = {};
   PACKS.forEach(p => { const k = p.doz ? p.doz.name : ("ohne Dozent " + p.outlet); (by[k] = by[k] || {doz:p.doz, list:[]}).list.push(p); });
   return Object.keys(by).sort().map(name => { const o = by[name];
-    return {name, file: "Semesterpaket_" + [fileSafe(PLAN.semester||""), fileSafe(name)].filter(Boolean).join("_") + ".json",
+    return {name, file: "Semesterpaket_" + [fileSafe(PLAN.semester||""), fileSafe(name), fileSafe((o.doz && o.doz.outlets || [o.list[0].outlet]).join("-"))].filter(Boolean).join("_") + ".json",
       link: BASE + "mein.html" + (o.doz && o.doz.sprache ? "#lang=" + o.doz.sprache : ""),
       data: {format:"praxisrapport-semesterpaket", version:1, semester:PLAN.semester||"", erstellt:new Date().toISOString(),
         dozent:{name, sprache:(o.doz && o.doz.sprache) || "de", bereich:o.list[0].ber, outlets:o.doz ? o.doz.outlets : [o.list[0].outlet], plan:(o.doz && o.doz.plan) || null},

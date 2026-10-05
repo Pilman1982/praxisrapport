@@ -8,7 +8,7 @@ OK      4T: slotDates = 4 Einsatztage + Exam Day                               [
 OK      4T: paketId gesetzt, gleich der Paket-ID                               Paket_Zyklus-1-1_Kueche_Patisserie_4T_2026-08-25
 OK      4T: beide Personen mit Foto                                            2
 OK      Ziel-Dateien: Mobil und Laptop passend zur Variante                    kueche/Kuechenrapport_Mobil_4Tage_Exam.html
-OK      Startseiten-Link zeigt auf mein.html                                   http://127.0.0.1:41779/mein.html#lang=de
+OK      Startseiten-Link zeigt auf mein.html                                   http://127.0.0.1:49287/mein.html#lang=de
 OK      Cockpit: Liste der Semesterpakete sichtbar                             4
 OK      Cockpit: ZIP mit Semesterpaketen                                       Semesterpakete_TEST.zip
 OK      Cockpit: keine JavaScript-Fehler                                       []
@@ -16,7 +16,7 @@ OK      mein.html: ohne Paket Hinweis zum Laden
 OK      mein.html: Paket bleibt nach Neuladen (IndexedDB)                      Koch Pat · Patisserie · TEST
 OK      mein.html: beide Pakete in der Liste                                   2
 OK      mein.html: Semesterpaket nicht im localStorage                         
-OK      Uebergabe: richtige Datei geoeffnet (Mobil 4T)                         http://127.0.0.1:41779/kueche/Kuechenrapport_Mobil_4Tage_Exam.html#lang=de&outlet=Patisserie&dozent=Koch%20Pat
+OK      Uebergabe: richtige Datei geoeffnet (Mobil 4T)                         http://127.0.0.1:49287/kueche/Kuechenrapport_Mobil_4Tage_Exam.html#lang=de&outlet=Patisserie&dozent=Koch%20Pat
 OK      Uebergabe: zwei Personen geladen, paketId gesetzt                      {'n': 2, 'id': 'Paket_Zyklus-1-1_Kueche_Patisserie_4T_2026-08-25', 'lab': ['Dienstag 25.08.', 'Mittwoch 26.08.', 'Donnerstag 27.08
 OK      Uebergabe: Uebergabe-Eintrag danach geloescht                          
 OK      Mobil: Wochentag + Datum statt Woche                                   ['Dienstag 25.08.', 'Mittwoch 26.08.', 'Donnerstag 27.08.', 'Montag 31.08.', 'Exam Day 01.09.']

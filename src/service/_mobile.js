@@ -25,12 +25,12 @@ de:{
   obs:"Beobachtungen", noObs:"nichts erfasst", showAll:"Alle Bausteine zeigen",
   showLess:"Nur die häufigsten", note:"Freitext", notePh:"Was kein Baustein abdeckt …",
   noteHint:"Der Freitext wirkt nicht auf die Note. Details erfassen Sie am Laptop.",
-  quick:"Häufig", share:"Tag teilen", absMail:"Absenzen",
+  quick:"Häufig", share:"Tag senden", absMail:"Absenzen",
   varFixed:"Fest eingestellt, wie in der Laptop-Datei.",
   loadPartial:"Andere Variante: nur Gruppe, Team, Outlet und die Studierenden übernommen, keine Einsatztage.",
   absNone:"Keine Absenzen und keine Verspätungen an diesem Tag.",
   absSubj:"Absenzen Servicepraxis", absSent:"E-Mail vorbereitet",
-  shared:"Geteilt", saved:"Gespeichert",
+  shared:"Gesendet", backup:"Sichern", backupPrefix:"Sicherung", backupTip:"Im Menü «In Dateien sichern» wählen", dayMailSubj:"Tagesrapport", dayMailTo:"An:", saved:"Gespeichert",
   group:"Klasse", team:"Gruppe", outlet:"Outlet / Abteilung", teacher:"Dozent/in",
   variant:"Variante", v10:"9 Einsatztage + Exam Day", v4:"4 Einsatztage + Exam Day",
   v5:"5 Einsatztage ohne Exam",
@@ -42,7 +42,7 @@ de:{
   loadBtn:"⤒ Sicherung laden", loadArm:"Ersetzt alles, nochmals tippen",
   loadDone:"Sicherung geladen", loadBad:"Datei nicht lesbar oder keine Servicerapport-Sicherung",
   saveBackup:"Sicherung sichern", saveBtn:"⤓ Als JSON sichern",
-  shareHint:"«Tag teilen» schickt die JSON über das Teilen-Menü an den Laptop, per AirDrop, Mail oder Teams. Dort mit «Rapporte zusammenführen» einlesen.",
+  shareHint:"«Tag senden» öffnet das Teilen-Menü: «Mail» wählen und an michael.pilman@ehl.ch senden. Die Absenzen des Tages stehen schon im Mailtext. «⤓ Sichern» legt eine eigene Sicherung in «Dateien» ab.",
   examDay:"Exam Day", week:"W", light:"leicht", medium:"mittel", heavy:"schwer", ko:"K.-o.",
   langTitle:"Sprache", setupDone:"Setup gespeichert",
   homeHint:"Tipp: über das Teilen-Symbol in Safari «Zum Home-Bildschirm» wählen, dann startet der Rapport wie eine App.",
@@ -62,12 +62,12 @@ en:{
   showLess:"Only the most used",
   note:"Free text", notePh:"Anything no building block covers …",
   noteHint:"Free text does not change the grade. Record the details on the laptop.",
-  quick:"Frequent", share:"Share the day", absMail:"Absences",
+  quick:"Frequent", share:"Send the day", absMail:"Absences",
   varFixed:"Fixed, exactly as in the laptop file.",
   loadPartial:"Different variant: only group, team, outlet and the students were taken over, no shift days.",
   absNone:"No absences and no lateness on this day.",
   absSubj:"Absences service practice", absSent:"E-mail prepared",
-  shared:"Shared", saved:"Saved",
+  shared:"Sent", backup:"Back up", backupPrefix:"Backup", backupTip:"Choose «Save to Files» in the menu", dayMailSubj:"Day report", dayMailTo:"To:", saved:"Saved",
   group:"Class", team:"Group", outlet:"Outlet / department", teacher:"Lecturer",
   variant:"Variant", v10:"9 shift days + Exam Day", v4:"4 shift days + Exam Day",
   v5:"5 shift days without exam",
@@ -79,7 +79,7 @@ en:{
   loadBtn:"⤒ Load backup", loadArm:"Replaces everything, tap again",
   loadDone:"Backup loaded", loadBad:"File unreadable or not a service report backup",
   saveBackup:"Save a backup", saveBtn:"⤓ Save as JSON",
-  shareHint:"“Share the day” sends the JSON to the laptop through the share sheet, by AirDrop, mail or Teams. Read it there with “Merge reports”.",
+  shareHint:"“Send the day” opens the share sheet: choose «Mail» and send it to michael.pilman@ehl.ch. The day's absences are already in the e-mail text. «⤓ Back up» saves your own backup in «Files».",
   examDay:"Exam Day", week:"W", light:"light", medium:"medium", heavy:"heavy", ko:"K.O.",
   langTitle:"Language", setupDone:"Setup saved",
   homeHint:"Tip: use the share icon in Safari and choose “Add to Home Screen”, then the report starts like an app.",
@@ -99,12 +99,12 @@ th:{
   showLess:"แสดงเฉพาะที่ใช้บ่อย",
   note:"ข้อความอิสระ", notePh:"สิ่งที่ไม่มีข้อความสำเร็จรูปครอบคลุม …",
   noteHint:"ข้อความอิสระไม่มีผลต่อคะแนน ให้บันทึกรายละเอียดที่แล็ปท็อป",
-  quick:"ใช้บ่อย", share:"แชร์ข้อมูลของวันนี้", absMail:"การขาด",
+  quick:"ใช้บ่อย", share:"ส่งข้อมูลของวันนี้", absMail:"การขาด",
   varFixed:"กำหนดตายตัว เช่นเดียวกับไฟล์บนแล็ปท็อป",
   loadPartial:"คนละรูปแบบ: รับมาเฉพาะกลุ่ม ทีม เอาต์เล็ต และรายชื่อนักศึกษา ไม่รวมวันฝึก",
   absNone:"วันนี้ไม่มีผู้ขาดและไม่มีผู้มาสาย",
   absSubj:"การขาดเรียน การปฏิบัติงานบริการ", absSent:"เตรียมอีเมลแล้ว",
-  shared:"แชร์แล้ว", saved:"บันทึกแล้ว",
+  shared:"ส่งแล้ว", backup:"สำรองข้อมูล", backupPrefix:"Backup", backupTip:"เลือก «บันทึกไปยังแอปไฟล์» ในเมนู", dayMailSubj:"Tagesrapport", dayMailTo:"ถึง:", saved:"บันทึกแล้ว",
   group:"ชั้นเรียน", team:"กลุ่ม", outlet:"เอาต์เล็ต / แผนก", teacher:"ผู้สอน",
   variant:"รูปแบบ", v10:"9 วันฝึก + วันสอบ", v4:"4 วันฝึก + วันสอบ",
   v5:"5 วันฝึก ไม่มีวันสอบ",
@@ -116,7 +116,7 @@ th:{
   loadBtn:"⤒ โหลดไฟล์สำรอง", loadArm:"จะแทนที่ทั้งหมด แตะอีกครั้ง",
   loadDone:"โหลดไฟล์สำรองแล้ว", loadBad:"อ่านไฟล์ไม่ได้ หรือไม่ใช่ไฟล์สำรองของรายงานบริการ",
   saveBackup:"บันทึกไฟล์สำรอง", saveBtn:"⤓ บันทึกเป็น JSON",
-  shareHint:"«แชร์ข้อมูลของวันนี้» จะส่งไฟล์ JSON ไปยังแล็ปท็อปผ่านเมนูแชร์ ทาง AirDrop อีเมล หรือ Teams แล้วอ่านเข้าที่นั่นด้วย «รวมรายงาน»",
+  shareHint:"«ส่งข้อมูลของวันนี้» เปิดเมนูแชร์: เลือก «Mail» แล้วส่งถึง michael.pilman@ehl.ch การขาดของวันนี้อยู่ในข้อความอีเมลแล้ว «⤓ สำรองข้อมูล» บันทึกไฟล์สำรองของคุณไว้ใน «ไฟล์»",
   examDay:"วันสอบ", week:"สัปดาห์", light:"เบา", medium:"กลาง", heavy:"หนัก", ko:"ตัดสิทธิ์",
   langTitle:"ภาษา", setupDone:"บันทึกการตั้งค่าแล้ว",
   homeHint:"เคล็ดลับ: ใน Safari กดไอคอนแชร์ แล้วเลือก «เพิ่มไปยังโฮมสกรีน» จะเปิดใช้งานเหมือนแอป",
@@ -456,13 +456,33 @@ function jsonBlob(){
   return new Blob([JSON.stringify(snapshot(), null, 1)], {type:"application/json"});
 }
 async function shareDay(){
+  /* Noten 2.0: per E-Mail an die Kursleitung. Teilen-Menü → «Mail»; Absenzen des Tages stehen im Mailtext. */
   const name = fileStem() + ".json";
+  const blob = jsonBlob();
+  const sl = slotById(curSlot);
+  const subj = t("dayMailSubj") + " – " + [S.settings.outlet, S.settings.teacher, slotLabel(sl)].filter(Boolean).join(" · ");
+  const abs = absenceList(curSlot);
+  const text = [subj, "", t("absMail") + ":"].concat(abs.length ? abs.map(x => "- " + x) : [t("absNone")])
+    .concat(["", t("dayMailTo") + " " + ABS_MAIL]).join("\n");
+  try{
+    const file = new File([blob], name, {type:"application/json"});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], title:subj, text});
+      toast(t("shared")); return;
+    }
+  }catch(e){ if(e && e.name === "AbortError") return; }
+  downloadBlob(blob, name);
+}
+/* Noten 2.0: eigene Sicherung in «Dateien» (iPad) bzw. Downloads (Laptop) */
+async function backupSave(){
+  const name = t("backupPrefix") + "_" + fileStem() + ".json";
   const blob = jsonBlob();
   try{
     const file = new File([blob], name, {type:"application/json"});
     if(navigator.canShare && navigator.canShare({files:[file]})){
+      toast(t("backupTip"));
       await navigator.share({files:[file], title:name});
-      toast(t("shared")); return;
+      return;
     }
   }catch(e){ if(e && e.name === "AbortError") return; }
   downloadBlob(blob, name);
@@ -827,7 +847,7 @@ function renderSet(){
   c2.appendChild(el("div",{class:"row"},[
     el("button",{class:"btn",text:t("saveBtn"),
       onclick:()=>downloadBlob(jsonBlob(), fileStem()+".json")}),
-    el("button",{class:"btn",text:"⇪ "+t("share"),onclick:shareDay})
+    el("button",{class:"btn",text:"✉ "+t("share"),onclick:shareDay})
   ]));
   c2.appendChild(el("p",{class:"muted",style:"margin:11px 0 0",text:fileStem()+".json"}));
   root.appendChild(c2);
@@ -913,8 +933,9 @@ function renderBar(){
       onclick:()=>{ view = "day"; render(); }}));
     return;
   }
-  bar.appendChild(el("button",{class:"btn pri",text:"⇪ "+t("share"),onclick:shareDay}));
+  bar.appendChild(el("button",{class:"btn pri",text:"✉ "+t("share"),onclick:shareDay}));
   bar.appendChild(el("button",{class:"btn",text:"✉ "+t("absMail"),onclick:absenceMail}));
+  bar.appendChild(el("button",{class:"btn",text:"⤓ "+t("backup"),onclick:backupSave}));
 }
 
 /* ---------- Sprache ---------- */
