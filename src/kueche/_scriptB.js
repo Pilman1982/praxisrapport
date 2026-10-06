@@ -1017,10 +1017,6 @@ function renderDay(){
     box.appendChild(el("p",{class:"muted",style:"margin:0 0 10px",text:t("absMailNone")}));
   }
   const foot = el("div",{class:"row",style:"align-items:center"});
-  foot.appendChild(el("button",{class:"btn pri",text:"⤓ "+t("saveDay"),
-    onclick:()=>saveFile(fileStem()+".json", JSON.stringify(snapshot(),null,1), "application/json")}));
-  foot.appendChild(el("button",{class:"btn pri",style:"background:var(--petrol);border-color:var(--petrol)",
-    text:"✉ "+t("absMailBtn"), onclick:()=>openAbsenceMail(curSlot)}));
   foot.appendChild(el("button",{class:"btn sm",text:t("dropDay"),
     onclick:()=>{ delete S.days[curSlot]; persist(); renderDay(); }}));
   box.appendChild(foot);
@@ -1030,8 +1026,9 @@ function renderDay(){
   pr.appendChild(el("button",{class:"btn sm",text:"\u2399 "+t("sheetSingle"),onclick:()=>printSheets("single")}));
   box.appendChild(pr);
   box.appendChild(el("p",{class:"muted",style:"margin:10px 0 0",
-    text:t("saveDayHint") + " " + t("absMailHint") + " " + ABS_MAIL + "."}));
+    text:t("absMailHint") + " " + ABS_MAIL + "."}));
   root.appendChild(box);
+  root.appendChild(n2LapBar());
 }
 
 /* ---------- Erfassungsblaetter fuer die Kueche ---------- */
@@ -1233,6 +1230,49 @@ function openOverviewMail(){
   if(!S.students.some(s=>summary(s.id, repMode).counted)){ toast(t("ovMailNone")); return; }
   location.href = overviewMailHref();
   toast(t("ovMailSent"));
+}
+/* ---- Noten 2.0: Tagesabschluss am Laptop wie auf dem Tablet (06.10.2026) ----
+   «Tag senden»: öffnet die fertige Mail an die Kursleitung (Absenzen im Text, Dateiname genannt)
+   und gleichzeitig «Speichern unter» für die Tagesdatei. Eine Webseite darf keine Datei selbst
+   an eine Mail hängen: die eben gespeicherte Datei wird in die Mail gezogen.
+   Reihenfolge bewusst: zuerst die Mail (braucht den Klick), dann der Speichern-Dialog. */
+const N2LAP = {
+  de:{send:"Tag senden", abs:"Absenzen", backup:"Sichern", subj:"Tagesrapport", absHead:"Absenzen:", none:"Keine Absenzen.",
+      att:"Anhang: {f}", attHint:"Die Datei wurde eben gespeichert (Ordner «Downloads» oder der gewählte Ordner). Bitte an diese Mail anhängen.",
+      bar:"«Tag senden» speichert die Tagesdatei und öffnet die Mail an {m}: Datei anhängen, senden. «Sichern» legt eine eigene Sicherung ab."},
+  en:{send:"Send the day", abs:"Absences", backup:"Back up", subj:"Day report", absHead:"Absences:", none:"No absences.",
+      att:"Attachment: {f}", attHint:"The file has just been saved (Downloads or the folder you chose). Please attach it to this e-mail.",
+      bar:"«Send the day» saves the day file and opens the e-mail to {m}: attach the file, send. «Back up» saves your own backup."},
+  th:{send:"ส่งข้อมูลของวันนี้", abs:"การขาด", backup:"สำรองข้อมูล", subj:"Tagesrapport", absHead:"การขาด:", none:"ไม่มีการขาด",
+      att:"ไฟล์แนบ: {f}", attHint:"บันทึกไฟล์แล้ว (โฟลเดอร์ Downloads หรือโฟลเดอร์ที่เลือก) กรุณาแนบไฟล์กับอีเมลนี้",
+      bar:"«ส่งข้อมูลของวันนี้» บันทึกไฟล์ของวันและเปิดอีเมลถึง {m}: แนบไฟล์แล้วส่ง «สำรองข้อมูล» บันทึกไฟล์สำรองของคุณเอง"}
+};
+const n2l = k => ((N2LAP[S.settings.uiLang] || N2LAP.de)[k] || N2LAP.de[k]);
+function n2LapDayMailHref(slotId, fname){
+  const sl = slotById(slotId), list = absenceList(slotId);
+  const head = [S.settings.group, S.settings.outlet, S.settings.teacher].filter(Boolean).join(" · ");
+  const subj = n2l("subj") + " – " + [S.settings.outlet, S.settings.teacher, slotLabel(sl)].filter(Boolean).join(" · ");
+  const body = [head, slotLabel(sl) + " · " + VARIANT, "", n2l("absHead")]
+    .concat(list.length ? list.map(absenceLine) : [n2l("none")])
+    .concat(["", n2l("att").replace("{f}", fname), n2l("attHint")]).join("\n");
+  return "mailto:" + ABS_MAIL + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body);
+}
+function n2LapSendDay(){
+  const fname = fileStem() + ".json";
+  const a = el("a",{href:n2LapDayMailHref(curSlot, fname), target:"_blank", rel:"noopener", style:"display:none"});
+  document.body.appendChild(a); a.click(); a.remove();
+  saveFile(fname, JSON.stringify(snapshot(), null, 1), "application/json");
+}
+function n2LapBackup(){
+  saveFile("Sicherung_" + fileStem() + ".json", JSON.stringify(snapshot(), null, 1), "application/json");
+}
+function n2LapBar(){
+  const bar = el("div",{class:"n2bar"});
+  bar.appendChild(el("button",{class:"btn pri",text:"✉ " + n2l("send"),onclick:n2LapSendDay}));
+  bar.appendChild(el("button",{class:"btn",text:"✉ " + n2l("abs"),onclick:()=>openAbsenceMail(curSlot)}));
+  bar.appendChild(el("button",{class:"btn",text:"⤓ " + n2l("backup"),onclick:n2LapBackup}));
+  bar.appendChild(el("span",{class:"muted n2hint",text:n2l("bar").replace("{m}", ABS_MAIL)}));
+  return bar;
 }
 function openAbsenceMail(slotId){
   const a = el("a",{href:absenceMailHref(slotId), target:"_blank", rel:"noopener", style:"display:none"});

@@ -17,4 +17,7 @@ OK      Tablet -> Laptop: Personen, Beobachtung und Verspätung übernommen     
 OK      Tablet -> Laptop: Datum und gleiche Note                               ('Dienstag 29.09.', 4.875, 4.875)
 OK      Laptop -> Tablet: zurück in der Mobil-Datei                            /kueche/Kuechenrapport_Mobil_4Tage_Exam.html
 OK      Laptop -> Tablet: Erfassung von beiden Seiten vorhanden                {'u': '/kueche/Kuechenrapport_Mobil_4Tage_Exam.html', 'a': {'att': 'present', 'obs': ['hyg-n1'], 'note': None}, 'b': {'att': 'pres
+OK      Laptop: Knöpfe Tag senden, Absenzen, Sichern                           ['✉ Tag senden', '✉ Absenzen', '⤓ Sichern']
+OK      Tag senden: Mail an michael.pilman@ehl.ch mit Absenzen und Dateiname   mailto:michael.pilman@ehl.ch?subject=Tagesrapport – Patisserie · Muster Koch · Dienstag 29.09.&body=HFD · Patisserie · Muster Koch
+OK      Tag senden: Speichern unter mit ganzem Stand, Sichern mit eigenem Namen [['Muster-Koch_HFD_Patisserie_4T_2026-10-06.json', 'ok'], ['Sicherung_Muster-Koch_HFD_Patisserie_4T_2026-10-06.json', 'ok']]
 OK      Wechsel: keine JavaScript-Fehler                                       []

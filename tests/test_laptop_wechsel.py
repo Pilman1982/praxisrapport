@@ -52,6 +52,20 @@ with sync_playwright() as p:
     r = pg.evaluate("()=>({u:location.pathname, a:(S.days[slots()[0].id]||{})[S.students[0].id], b:(S.days[slots()[1].id]||{})[S.students[2].id], view:document.getElementById('view').innerHTML.length})")
     ok("Laptop -> Tablet: zurück in der Mobil-Datei", r["u"].endswith("/kueche/Kuechenrapport_Mobil_4Tage_Exam.html"), r["u"])
     ok("Laptop -> Tablet: Erfassung von beiden Seiten vorhanden", r["a"] and r["a"].get("obs") == ["hyg-n1"] and r["b"] and r["b"].get("obs") == ["hyg-n2"] and r["view"] > 200, r)
+    # 3 · Laptop: Tagesabschluss wie auf dem Tablet
+    pg.click("#btnSwitch"); pg.wait_for_load_state(); pg.wait_for_timeout(800)
+    pg.evaluate("()=>{ curSlot = slots()[0].id; render(); }"); pg.wait_for_timeout(200)
+    btns = pg.evaluate("()=>[...document.querySelectorAll('.n2bar button')].map(b=>b.textContent)")
+    ok("Laptop: Knöpfe Tag senden, Absenzen, Sichern", btns == ["✉ Tag senden", "✉ Absenzen", "⤓ Sichern"], btns)
+    r = pg.evaluate("""async ()=>{ const out = {mail:[], saved:[]};
+        const oc = HTMLAnchorElement.prototype.click; HTMLAnchorElement.prototype.click = function(){ if(this.href.startsWith('mailto:')) out.mail.push(this.href); else oc.call(this); };
+        window.saveFile = async (n, d) => { out.saved.push([n, JSON.parse(d).days ? 'ok' : 'x']); return true; };
+        document.querySelector('.n2bar .btn.pri').click(); await new Promise(r => setTimeout(r, 100));
+        document.querySelectorAll('.n2bar button')[2].click(); await new Promise(r => setTimeout(r, 100));
+        HTMLAnchorElement.prototype.click = oc; return out; }""")
+    mail = __import__("urllib.parse").parse.unquote(r["mail"][0]) if r["mail"] else ""
+    ok("Tag senden: Mail an michael.pilman@ehl.ch mit Absenzen und Dateiname", mail.startswith("mailto:michael.pilman@ehl.ch?subject=Tagesrapport") and "Verspätet" in mail and "Anhang: " in mail and ".json" in mail, mail[:160])
+    ok("Tag senden: Speichern unter mit ganzem Stand, Sichern mit eigenem Namen", len(r["saved"]) == 2 and r["saved"][0][1] == "ok" and r["saved"][1][0].startswith("Sicherung_"), r["saved"])
     ok("Wechsel: keine JavaScript-Fehler", not errs, errs[:2]); c.close()
     b.close()
 srv.shutdown()
