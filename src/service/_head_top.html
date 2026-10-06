@@ -77,6 +77,8 @@ header.top{position:sticky;top:0;z-index:40;background:var(--surf);border-bottom
 .vbadge{flex:0 0 auto;font-size:10.5px;font-weight:600;letter-spacing:.05em;color:var(--petrol);
   border:1px solid var(--petrol);border-radius:999px;padding:2px 9px;white-space:nowrap}
 .langs{display:flex;gap:6px;align-items:center}
+.swbtn{font:inherit;font-size:12.5px;font-weight:600;border:1px solid var(--line);background:#fff;color:var(--ink,#1a1f2b);border-radius:8px;padding:5px 10px;margin-right:10px;cursor:pointer}
+.swbtn:hover{border-color:#005779}
 .langs label{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3)}
 select.mini{background:var(--surf2);border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:12.5px}
 nav.tabs{max-width:980px;margin:0 auto;padding:0 10px;display:flex;gap:2px;overflow-x:auto}
@@ -314,6 +316,7 @@ details.exp>div{padding:0 14px 14px;border-top:1px solid var(--line);padding-top
       <span class="vbadge" id="brandVar"></span>
     </div>
     <div class="langs">
+      <button type="button" class="swbtn" id="btnSwitch" title="Tablet-Ansicht · Tablet view">📱 Tablet</button>
       <label for="uiLang">UI</label>
       <select class="mini" id="uiLang"></select>
       <label for="outLang">→</label>
@@ -327,7 +330,7 @@ details.exp>div{padding:0 14px 14px;border-top:1px solid var(--line);padding-top
   <div class="alert" id="storeAlert" hidden><span>■</span><div id="storeAlertTxt"></div></div>
   <div class="banner" id="protoBanner">
     <span>⚠︎</span>
-    <div><b>Prototyp.</b> <span id="bannerTxt"></span></div>
+    <div><b>Info:</b> <span id="bannerTxt"></span></div>
   </div>
   <section id="v-day"></section>
   <section id="v-week" hidden></section>

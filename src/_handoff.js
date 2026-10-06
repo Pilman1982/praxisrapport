@@ -13,6 +13,11 @@ function n2Handoff(load){
   try{ localStorage.removeItem("praxisrapport.handoff"); }catch(e){}
   if(Date.now() - (h.at || 0) > 10 * 60 * 1000) return;          // nur frische Übergaben
   const id = String(h.id || "");
+  if(h.mode === "switch"){                                          // Wechsel Tablet <-> Laptop: Stand 1:1 übernehmen
+    const p = JSON.parse(JSON.stringify(h.paket));
+    Promise.resolve(load(p)).then(() => { view = "day"; render(); toast(h.titel || "✓"); });
+    return;
+  }
   if(id && S.settings.paketId === id && S.students.length){        // dieses Paket ist schon da:
     if(n2Refresh(h.paket.students)){ persist(); render(); }          // nur Fotos, Nicknames usw. nachführen
     return;
@@ -61,3 +66,20 @@ function n2Refresh(list){
   else if(ch && typeof saubereStudierende === "function") S.students = saubereStudierende(S.students);
   return ch;
 }
+/* Ansicht wechseln: gleiche Variante als Tablet- bzw. Laptop-Fassung öffnen, mit dem aktuellen Stand */
+function n2SwitchTarget(){
+  let me = ""; try{ me = decodeURIComponent((location.pathname || "").split("/").pop() || ""); }catch(e){}
+  if(/_Mobil/.test(me)) return me.replace("_Mobil", "");
+  return me.replace(/^(Kuechenrapport|Servicerapport)/, "$1_Mobil");
+}
+function n2SwitchView(){
+  const target = n2SwitchTarget(); if(!target) return;
+  const toLaptop = !/_Mobil/.test(target);
+  const lg = (S.settings.uiLang || "de");
+  const msg = {de:toLaptop ? "Laptop-Ansicht" : "Tablet-Ansicht", en:toLaptop ? "Laptop view" : "Tablet view", th:toLaptop ? "มุมมองแล็ปท็อป" : "มุมมองแท็บเล็ต"}[lg] || "";
+  try{
+    localStorage.setItem("praxisrapport.handoff", JSON.stringify({target, id:S.settings.paketId || "", titel:"✓ " + msg, at:Date.now(), mode:"switch", paket:snapshot()}));
+  }catch(e){ try{ toast("Speicher voll"); }catch(_){} return; }
+  location.href = target;
+}
+{ const sw = document.getElementById("btnSwitch"); if(sw) sw.addEventListener("click", n2SwitchView); }

@@ -1,0 +1,20 @@
+PRUEFUNG LAPTOP UND WECHSEL TABLET/LAPTOP 06.10.2026
+
+OK      kueche/Kuechenrapport: startet, Inhalt sichtbar, Umschalter da         (1455, 1, [])
+OK      kueche/Kuechenrapport_Mobil: startet, Inhalt sichtbar, Umschalter da   (2267, 1, [])
+OK      kueche/Kuechenrapport_4Tage_Exam: startet, Inhalt sichtbar, Umschalter da (894, 1, [])
+OK      kueche/Kuechenrapport_Mobil_4Tage_Exam: startet, Inhalt sichtbar, Umschalter da (2266, 1, [])
+OK      kueche/Kuechenrapport_5Tage_ohneExam: startet, Inhalt sichtbar, Umschalter da (872, 1, [])
+OK      kueche/Kuechenrapport_Mobil_5Tage_ohneExam: startet, Inhalt sichtbar, Umschalter da (2265, 1, [])
+OK      service/Servicerapport: startet, Inhalt sichtbar, Umschalter da        (1455, 1, [])
+OK      service/Servicerapport_Mobil: startet, Inhalt sichtbar, Umschalter da  (3334, 1, [])
+OK      service/Servicerapport_4Tage_Exam: startet, Inhalt sichtbar, Umschalter da (894, 1, [])
+OK      service/Servicerapport_Mobil_4Tage_Exam: startet, Inhalt sichtbar, Umschalter da (3333, 1, [])
+OK      service/Servicerapport_5Tage_ohneExam: startet, Inhalt sichtbar, Umschalter da (872, 1, [])
+OK      service/Servicerapport_Mobil_5Tage_ohneExam: startet, Inhalt sichtbar, Umschalter da (3332, 1, [])
+OK      Tablet -> Laptop: richtige Datei (4 Tage + Exam)                       /kueche/Kuechenrapport_4Tage_Exam.html
+OK      Tablet -> Laptop: Personen, Beobachtung und Verspätung übernommen      {'u': '/kueche/Kuechenrapport_4Tage_Exam.html', 'n': 3, 'obs': {'att': 'present', 'obs': ['hyg-n1'], 'note': None}, 'att': 'late',
+OK      Tablet -> Laptop: Datum und gleiche Note                               ('Dienstag 29.09.', 4.875, 4.875)
+OK      Laptop -> Tablet: zurück in der Mobil-Datei                            /kueche/Kuechenrapport_Mobil_4Tage_Exam.html
+OK      Laptop -> Tablet: Erfassung von beiden Seiten vorhanden                {'u': '/kueche/Kuechenrapport_Mobil_4Tage_Exam.html', 'a': {'att': 'present', 'obs': ['hyg-n1'], 'note': None}, 'b': {'att': 'pres
+OK      Wechsel: keine JavaScript-Fehler                                       []
