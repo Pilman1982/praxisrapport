@@ -40,7 +40,7 @@ de:{
   apply:"Übernehmen", loadBackup:"Sicherung vom Laptop laden",
   loadHint:"Legen Sie die JSON aus dem Laptop-Rapport in «Dateien» oder iCloud ab und laden Sie sie hier. Damit sind Gruppe, Team, Outlet, Dozent, Turnus und alle Studierenden mit E-Mail-Adresse sofort da.",
   loadBtn:"⤒ Sicherung laden", loadArm:"Ersetzt alles, nochmals tippen",
-  loadDone:"Sicherung geladen", loadBad:"Datei nicht lesbar oder keine Servicerapport-Sicherung",
+  loadDone:"Sicherung geladen", loadBad:"Datei nicht lesbar oder keine Servicerapport-Sicherung", storeWarn:"Achtung: Dieses Gerät speichert gerade nichts (privater Modus oder Speicher voll). Bitte jetzt «⤓ Sichern» tippen und den Tag sofort senden.", loadSem:"Das ist Ihr Semesterpaket. Bitte auf Ihrer persönlichen Startseite laden (Symbol auf dem Home-Bildschirm), nicht hier.",
   saveBackup:"Sicherung sichern", saveBtn:"⤓ Als JSON sichern",
   shareHint:"«Tag senden» öffnet das Teilen-Menü: «Mail» wählen und an michael.pilman@ehl.ch senden. Die Absenzen des Tages stehen schon im Mailtext. «⤓ Sichern» legt eine eigene Sicherung in «Dateien» ab.",
   examDay:"Exam Day", week:"W", light:"leicht", medium:"mittel", heavy:"schwer", ko:"K.-o.",
@@ -77,7 +77,7 @@ en:{
   apply:"Apply", loadBackup:"Load a backup from the laptop",
   loadHint:"Put the JSON from the laptop report into Files or iCloud and load it here. Group, team, outlet, lecturer, rotation and all students with their e-mail addresses are then in place.",
   loadBtn:"⤒ Load backup", loadArm:"Replaces everything, tap again",
-  loadDone:"Backup loaded", loadBad:"File unreadable or not a service report backup",
+  loadDone:"Backup loaded", loadBad:"File unreadable or not a service report backup", storeWarn:"Warning: this device is not saving anything right now (private mode or storage full). Tap «⤓ Back up» now and send the day straight away.", loadSem:"This is your semester package. Please load it on your personal start page (icon on the Home Screen), not here.",
   saveBackup:"Save a backup", saveBtn:"⤓ Save as JSON",
   shareHint:"“Send the day” opens the share sheet: choose «Mail» and send it to michael.pilman@ehl.ch. The day's absences are already in the e-mail text. «⤓ Back up» saves your own backup in «Files».",
   examDay:"Exam Day", week:"W", light:"light", medium:"medium", heavy:"heavy", ko:"K.O.",
@@ -114,7 +114,7 @@ th:{
   apply:"ยืนยัน", loadBackup:"โหลดไฟล์สำรองจากแล็ปท็อป",
   loadHint:"นำไฟล์ JSON จากรายงานในแล็ปท็อปไปไว้ใน Files หรือ iCloud แล้วโหลดที่นี่ จะได้กลุ่ม ทีม เอาต์เล็ต ผู้สอน รอบฝึก และรายชื่อนักศึกษาพร้อมอีเมลทันที",
   loadBtn:"⤒ โหลดไฟล์สำรอง", loadArm:"จะแทนที่ทั้งหมด แตะอีกครั้ง",
-  loadDone:"โหลดไฟล์สำรองแล้ว", loadBad:"อ่านไฟล์ไม่ได้ หรือไม่ใช่ไฟล์สำรองของรายงานบริการ",
+  loadDone:"โหลดไฟล์สำรองแล้ว", loadBad:"อ่านไฟล์ไม่ได้ หรือไม่ใช่ไฟล์สำรองของรายงานบริการ", storeWarn:"คำเตือน: อุปกรณ์นี้ไม่ได้บันทึกข้อมูลอยู่ในขณะนี้ (โหมดส่วนตัวหรือพื้นที่เต็ม) กรุณากด «⤓ สำรองข้อมูล» ทันที และส่งข้อมูลของวันนี้เลย", loadSem:"นี่คือชุดข้อมูลภาคเรียนของคุณ กรุณาโหลดในหน้าเริ่มต้นส่วนตัว (ไอคอนบนหน้าจอโฮม) ไม่ใช่ที่นี่",
   saveBackup:"บันทึกไฟล์สำรอง", saveBtn:"⤓ บันทึกเป็น JSON",
   shareHint:"«ส่งข้อมูลของวันนี้» เปิดเมนูแชร์: เลือก «Mail» แล้วส่งถึง michael.pilman@ehl.ch การขาดของวันนี้อยู่ในข้อความอีเมลแล้ว «⤓ สำรองข้อมูล» บันทึกไฟล์สำรองของคุณไว้ใน «ไฟล์»",
   examDay:"วันสอบ", week:"สัปดาห์", light:"เบา", medium:"กลาง", heavy:"หนัก", ko:"ตัดสิทธิ์",
@@ -267,7 +267,10 @@ const STARTLINK = (function(){
 /* Bewertende Person eines Einsatztags: Plan nach Wochentag, sonst die Dozentin der Datei. */
 const teacherForWd = wd => (S.settings.teacherPlan && S.settings.teacherPlan[wd]) || S.settings.teacher || "";
 try{ localStorage.setItem("kr.probe","1"); localStorage.removeItem("kr.probe"); }catch(e){ storeOK = false; }
-function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ storeOK = false; } }
+function persist(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch(e){ if(storeOK){ storeOK = false; try{ toast(t("storeWarn")); }catch(_){} } }
+}
 
 /* ---------- Turnus ---------- */
 const VDEF = {"10T":{n:10, exam:true}, "4T":{n:5, exam:true}, "5T":{n:5, exam:false}};
@@ -295,6 +298,10 @@ const dayOpen = id => !!S.days[id];
 
 let curSlot = (function(){
   const all = slots();
+  /* Noten 2.0: Ist heute ein Einsatztag des Pakets, immer diesen zeigen. Sonst landen
+     Beobachtungen auf einem falschen Datum (z. B. Kollegin mit eigenem Gerät ab Mittwoch). */
+  { const d = new Date(), td = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    const heute = all.find(s => s.date === td); if(heute) return heute.id; }
   const nx = all.find(s=>!s.exam && !S.days[s.id]);
   if(nx) return nx.id;
   const f = all.filter(s=>S.days[s.id]);
@@ -573,6 +580,7 @@ function renderDay(){
     ]));
     return;
   }
+  if(!storeOK) root.appendChild(el("div",{class:"banner bad",style:"margin-bottom:12px",text:t("storeWarn")}));
   if(!dayOpen(curSlot)){
     root.appendChild(el("div",{class:"card pad"},[
       el("span",{class:"eyebrow",style:"display:block;margin-bottom:6px",text:slotLabel(sl)}),
@@ -741,8 +749,7 @@ let loadArmed = false;
 function renderSet(){
   const root = document.getElementById("view"); root.innerHTML = "";
 
-  if(!storeOK) root.appendChild(el("div",{class:"banner",
-    text:"Dieses Gerät speichert nichts im Browser. Teilen Sie den Tag sofort nach dem Erfassen."}));
+  if(!storeOK) root.appendChild(el("div",{class:"banner bad",text:t("storeWarn")}));
 
   /* Sicherung laden */
   const c0 = el("div",{class:"card pad"});
@@ -885,6 +892,7 @@ async function onLoadBackup(e){
   if(!f) return;
   try{
     const o = JSON.parse(await f.text());
+    if(o && o.format === "praxisrapport-semesterpaket"){ toast(t("loadSem")); return; }
     if(!o || !o.settings || !Array.isArray(o.students)) throw new Error("format");
     const other = o.variant && o.variant !== MVARIANT;
     S = {settings:{...DEF, ...o.settings, variant:MVARIANT},

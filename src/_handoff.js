@@ -19,16 +19,17 @@ function n2Handoff(load){
     return;
   }
   if(id && S.settings.paketId === id && S.students.length){        // dieses Paket ist schon da:
-    if(n2Refresh(h.paket.students)){ persist(); render(); }          // nur Fotos, Nicknames usw. nachführen
+    if(n2Refresh(h.paket.students)) persist();                       // nur Fotos, Nicknames usw. nachführen
+    n2GoToday(); view = "day"; render();                              // und den heutigen Einsatztag zeigen
     return;
   }
   const hatDaten = !S.settings.isSample && Object.keys(S.days || {}).some(k => S.days[k] && Object.keys(S.days[k]).length);
   if(hatDaten && S.settings.paketId !== id){
     const lg = (S.settings.uiLang || "de");
     const msg = {
-      de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag teilen», falls noch nicht geschehen.",
-      en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Share day» first if you have not done so.",
-      th: "โหลดชุดข้อมูลใหม่: " + (h.titel || id) + "?\n\nวันที่บันทึกไว้ในไฟล์นี้จะถูกแทนที่ กรุณากด «แชร์ข้อมูลของวันนี้» ก่อน หากยังไม่ได้ทำ"
+      de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag senden» oder «Sichern», falls noch nicht geschehen.",
+      en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Send the day» or «Back up» first if you have not done so.",
+      th: "โหลดชุดข้อมูลใหม่: " + (h.titel || id) + "?\n\nวันที่บันทึกไว้ในไฟล์นี้จะถูกแทนที่ กรุณากด «ส่งข้อมูลของวันนี้» ก่อน หากยังไม่ได้ทำ"
     }[lg] || "";
     try{ if(!window.confirm(msg)) return; }catch(e){ return; }
   }

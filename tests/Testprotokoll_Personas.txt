@@ -1,0 +1,104 @@
+QA-LOOP MIT VIER PERSONAS 06.10.2026
+
+OK      Kueche · A1 Paket öffnen am Mittwoch: Tag Mittwoch 07.10. vorgewählt       Mittwoch 07.10.
+OK      Kueche · A2 App erneut öffnen (ohne Startseite): wieder der heutige Tag    Mittwoch 07.10.
+OK      Kueche · A3 Gleiches Paket nochmals über Startseite: heutiger Tag          Mittwoch 07.10.
+OK      Kueche · A4 Note im Blatt reagiert sofort, zweiter Tipp nimmt den Baustein zurück ('Tag 5.00  ·  Ø 5.00', 'Tag 4.88  ·  Ø 4.88', 'Tag 5.00  ·  Ø 5.00')
+OK      Kueche · A5 Ganzer Tag (5 Personen, 4 Einträge) mit wenigen Tipps          11 Tipps
+OK      Kueche · A6 Verspätung zieht automatisch ab, Note unter 5.00               ['late', 0, 4.9375]
+OK      Kueche · A7 Tag senden: Datei + Mailtext mit Verspätung und Adresse        Tagesrapport – Patisserie · Muster Koch · Mittwoch 07.10.
+
+Absenzen:
+- Frei, Anouk   ·   HFD · Gruppe 1 Team A   —   Ver
+OK      Kueche · A8 keine JavaScript-Fehler                                        []
+OK      Kueche · B1 Jeder negative Baustein hat einen Tipp auf DE und EN           []
+OK      Kueche · B2 Sprache: HFD Deutsch, HFE1/HFE2 Englisch                       ('de', 'en', 'en')
+OK      Kueche · B3 DE: Anrede mit Vorname, Lob, ohne Noten (Standard)             Hallo Lea,
+
+vielen Dank für deinen Einsatz bei uns (Patisserie, vom 05.10. bis 12.10.). Ge
+OK      Kueche · B4 EN: Verbesserung mit Tipp, Verspätung, unentschuldigt, Note    Hi Ada,
+
+thank you for your work with us (Patisserie, from 05.10. to 12.10.). He
+OK      Kueche · B5 Höchstens 3 Verbesserungspunkte, jeder mit Tipp                3
+OK      Kueche · B6 Kein Doppelpunkt-Punkt-Fehler und keine leeren Platzhalter     
+OK      Kueche · B7 Person ohne bewerteten Tag: Warnung im Feedback-Blatt          ['Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.']
+OK      Kueche · B8 Lange Feedback-Mail: Link bleibt unter 1900 Zeichen (Outlook Windows) 1685
+OK      Kueche · B9 Zu lang: Text wird kopiert und in der Mail eingefügt (Hinweis) False
+OK      Kueche · B10 iPad: ganzer Text direkt in der Mail                          1685
+OK      Kueche · B11 Thai-Oberfläche: Mail trotzdem Deutsch für HFD                Hallo Lea,
+
+vielen D
+OK      Kueche · B12 keine JavaScript-Fehler                                       []
+OK      Kueche · C1 Entschuldigt zählt nicht, Team Market = 5.00                   {'avg': 5, 'n': 3}
+OK      Kueche · C2 Unentschuldigt = 1.00 an diesem Tag                            {'avg': 4, 'n': 4}
+OK      Kueche · C3 Exam Day entschuldigt = 1.00, Schlussnote 2/3 Praxis + 1/3 Exam (1, 3.6666666666666665)
+OK      Kueche · C4 K.-o. setzt das Kriterium auf 1.00                             (1, 4)
+OK      Kueche · C5 Laptop rechnet dieselben Praxisnoten wie das Tablet            ([[5, 5], [4, 4.333333333333333], [5, 3.6666666666666665], [4.75, 4.833333333333333], [5, 5]], [5, 4, 5, 4.75, 5])
+OK      Kueche · C6 keine JavaScript-Fehler                                        []
+OK      Kueche · C7 Zweites Gerät erfasst am Mittwoch auf Mittwoch (nicht auf Montag) Mittwoch 07.10.
+OK      Kueche · C8 Zusammenführen in neue Laptop-Datei: keine Beispielpersonen    ['Ammann', 'Frei', 'Keller', 'Nguyen', 'Okafor']
+OK      Kueche · C9 Alle Tage beider Geräte vorhanden                              ['d01', 'd02', 'd03']
+OK      Kueche · C10 Korrektur vom Folgetag gewinnt (verspätet -> entschuldigt)    {'att': 'excused', 'obs': [], 'note': None}
+OK      Kueche · C11 Keine Fehlalarme «doppelt erfasst» bei gleichen Einträgen     Beispielinhalt entfernt, Angaben aus der ersten Datei übernommen  ·  +5 Studierende/r · +15 Tage  ·  1 Einträge aktualisiert (neuere Datei)
+OK      Kueche · C12 Daten und Outlet aus den Dateien übernommen                   (['2026-10-05', '2026-10-06', '2026-10-07', '2026-10-08', '2026-10-12'], 'Patisserie')
+OK      Kueche · C13 keine JavaScript-Fehler                                       []
+OK      Kueche · D1 Falsche Dateien: Meldung, nichts geht verloren                 ['Datei nicht lesbar oder keine Küchenrapport-Sicherung', 'Datei nicht lesbar oder keine Küchenrapport-Sicherung']
+OK      Kueche · D2 Semesterpaket in der falschen Seite: Hinweis auf die Startseite Das ist Ihr Semesterpaket. Bitte auf Ihrer persönlichen Startseite laden (Symbol auf dem Home-Bildschirm), nicht hier.
+OK      Kueche · D3 Teilen abgebrochen: kein ungewollter Download, kein Fehler     0
+OK      Kueche · D4 Doppeltipp auf «Tag öffnen»: ein Tag, alle Personen            
+OK      Kueche · D5 Fremdes Paket: Rückfrage nennt «Tag senden», Abbrechen behält Daten ['Neues Paket laden: Zyklus 2.1 · Küche Patisserie · 4 Tage + Exam · ab 05.10.?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt.
+OK      Kueche · D6 keine JavaScript-Fehler                                        []
+OK      Kueche · D7 Speicher gesperrt: Warnung direkt in der Tagesansicht          Achtung: Dieses Gerät speichert gerade nichts (privater Modus oder Speicher voll). Bitte jetzt «⤓ Sichern» tippen und de
+OK      Kueche · D8 keine JavaScript-Fehler                                        []
+OK      Service · A1 Paket öffnen am Mittwoch: Tag Mittwoch 07.10. vorgewählt      Mittwoch 07.10.
+OK      Service · A2 App erneut öffnen (ohne Startseite): wieder der heutige Tag   Mittwoch 07.10.
+OK      Service · A3 Gleiches Paket nochmals über Startseite: heutiger Tag         Mittwoch 07.10.
+OK      Service · A4 Note im Blatt reagiert sofort, zweiter Tipp nimmt den Baustein zurück ('Tag 5.00  ·  Ø 5.00', 'Tag 4.90  ·  Ø 4.90', 'Tag 5.00  ·  Ø 5.00')
+OK      Service · A5 Ganzer Tag (5 Personen, 4 Einträge) mit wenigen Tipps         11 Tipps
+OK      Service · A6 Verspätung zieht automatisch ab, Note unter 5.00              ['late', 0, 4.95]
+OK      Service · A7 Tag senden: Datei + Mailtext mit Verspätung und Adresse       Tagesrapport – Da Fortunat · Muster A / Muster B · Mittwoch 07.10.
+
+Absenzen:
+- Frei, Anouk   ·   HFD · Gruppe 1 Team A 
+OK      Service · A8 keine JavaScript-Fehler                                       []
+OK      Service · B1 Jeder negative Baustein hat einen Tipp auf DE und EN          []
+OK      Service · B2 Sprache: HFD Deutsch, HFE1/HFE2 Englisch                      ('de', 'en', 'en')
+OK      Service · B3 DE: Anrede mit Vorname, Lob, ohne Noten (Standard)            Hallo Lea,
+
+vielen Dank für deinen Einsatz bei uns (Da Fortunat, vom 05.10. bis 12.10.). G
+OK      Service · B4 EN: Verbesserung mit Tipp, Verspätung, unentschuldigt, Note   Hi Ada,
+
+thank you for your work with us (Da Fortunat, from 05.10. to 12.10.). H
+OK      Service · B5 Höchstens 3 Verbesserungspunkte, jeder mit Tipp               3
+OK      Service · B6 Kein Doppelpunkt-Punkt-Fehler und keine leeren Platzhalter    
+OK      Service · B7 Person ohne bewerteten Tag: Warnung im Feedback-Blatt         ['Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.']
+OK      Service · B8 Lange Feedback-Mail: Link bleibt unter 1900 Zeichen (Outlook Windows) 195
+OK      Service · B9 Zu lang: Text wird kopiert und in der Mail eingefügt (Hinweis) True
+OK      Service · B10 iPad: ganzer Text direkt in der Mail                         1978
+OK      Service · B11 Thai-Oberfläche: Mail trotzdem Deutsch für HFD               Hallo Lea,
+
+vielen D
+OK      Service · B12 keine JavaScript-Fehler                                      []
+OK      Service · C1 Entschuldigt zählt nicht, Team Market = 5.00                  {'avg': 5, 'n': 3}
+OK      Service · C2 Unentschuldigt = 1.00 an diesem Tag                           {'avg': 4, 'n': 4}
+OK      Service · C3 Exam Day entschuldigt = 1.00, Schlussnote 2/3 Praxis + 1/3 Exam (1, 3.6666666666666665)
+OK      Service · C4 K.-o. setzt das Kriterium auf 1.00                            (1, 4.2)
+OK      Service · C5 Laptop rechnet dieselben Praxisnoten wie das Tablet           ([[5, 5], [4, 4.333333333333333], [5, 3.6666666666666665], [4.8, 4.866666666666666], [5, 5]], [5, 4, 5, 4.8, 5])
+OK      Service · C6 keine JavaScript-Fehler                                       []
+OK      Service · C7 Zweites Gerät erfasst am Mittwoch auf Mittwoch (nicht auf Montag) Mittwoch 07.10.
+OK      Service · C8 Zusammenführen in neue Laptop-Datei: keine Beispielpersonen   ['Ammann Lea', 'Frei Anouk', 'Keller Timo', 'Nguyen Minh', 'Okafor Ada']
+OK      Service · C9 Alle Tage beider Geräte vorhanden                             ['d01', 'd02', 'd03']
+OK      Service · C10 Korrektur vom Folgetag gewinnt (verspätet -> entschuldigt)   {'att': 'excused', 'obs': [], 'note': None}
+OK      Service · C11 Keine Fehlalarme «doppelt erfasst» bei gleichen Einträgen    Beispielinhalt entfernt, Angaben aus der ersten Datei übernommen  ·  +5 Studierende/r · +15 Tage  ·  1 Einträge aktualisiert (neuere Datei)
+OK      Service · C12 Daten und Outlet aus den Dateien übernommen                  (['2026-10-05', '2026-10-06', '2026-10-07', '2026-10-08', '2026-10-12'], 'Da Fortunat')
+OK      Service · C13 keine JavaScript-Fehler                                      []
+OK      Service · D1 Falsche Dateien: Meldung, nichts geht verloren                ['Datei nicht lesbar oder keine Servicerapport-Sicherung', 'Datei nicht lesbar oder keine Servicerapport-Sicherung']
+OK      Service · D2 Semesterpaket in der falschen Seite: Hinweis auf die Startseite Das ist Ihr Semesterpaket. Bitte auf Ihrer persönlichen Startseite laden (Symbol auf dem Home-Bildschirm), nicht hier.
+OK      Service · D3 Teilen abgebrochen: kein ungewollter Download, kein Fehler    0
+OK      Service · D4 Doppeltipp auf «Tag öffnen»: ein Tag, alle Personen           
+OK      Service · D5 Fremdes Paket: Rückfrage nennt «Tag senden», Abbrechen behält Daten ['Neues Paket laden: Zyklus 2.1 · Service Da Fortunat · 4 Tage + Exam · ab 05.10.?\n\nDie bisher in dieser Datei erfassten Tage werden erset
+OK      Service · D6 keine JavaScript-Fehler                                       []
+OK      Service · D7 Speicher gesperrt: Warnung direkt in der Tagesansicht         Achtung: Dieses Gerät speichert gerade nichts (privater Modus oder Speicher voll). Bitte jetzt «⤓ Sichern» tippen und de
+OK      Service · D8 keine JavaScript-Fehler                                       []
+OK      Kueche · C14 10 Tage aus 5T + 4T: Daten und Tage an der richtigen Stelle   {'d': ['2026-09-21', '2026-09-22', '2026-09-23', '2026-09-24', '2026-09-28', '2026-10-05', '2026-10-06', '2026-10-07', '2026-10-08', '2026-1
+OK      Kueche · C15 keine JavaScript-Fehler                                       []

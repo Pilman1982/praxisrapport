@@ -128,13 +128,19 @@ const N2FB = {
 const N2FBUI = {
   de:{fb:"Feedback", fbTitle:"Feedback-Mail", fbHint:"Am Ende deines Einsatzes: pro Person eine Feedback-Mail. Der Text ist ein Vorschlag, du kannst ihn ändern.",
       withGrades:"Noten mitschicken", open:"In Mail öffnen", copy:"Kopieren", close:"Schliessen", noMail:"Keine E-Mail-Adresse hinterlegt. Text kopieren und selbst senden.",
-      sent:"gesendet", copied:"Kopiert", lang:"Sprache"},
+      sent:"gesendet", copied:"Kopiert", lang:"Sprache",
+      noDays:"Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.",
+      pasted:"Der Text ist lang und wurde kopiert. In der Mail mit Strg+V (Mac: Cmd+V) einfügen.", pasteHere:"(Feedback-Text hier einfügen: Strg+V)"},
   en:{fb:"Feedback", fbTitle:"Feedback e-mail", fbHint:"At the end of your assignment: one feedback e-mail per student. The text is a suggestion; you can change it.",
       withGrades:"Include grades", open:"Open in Mail", copy:"Copy", close:"Close", noMail:"No e-mail address on file. Copy the text and send it yourself.",
-      sent:"sent", copied:"Copied", lang:"Language"},
+      sent:"sent", copied:"Copied", lang:"Language",
+      noDays:"There is no graded day for this student yet (e.g. only absences). Please check the text before sending it.",
+      pasted:"The text is long and has been copied. Paste it into the e-mail with Ctrl+V (Mac: Cmd+V).", pasteHere:"(Paste the feedback text here: Ctrl+V)"},
   th:{fb:"ข้อเสนอแนะ", fbTitle:"อีเมลข้อเสนอแนะ", fbHint:"เมื่อจบการฝึก: ส่งอีเมลข้อเสนอแนะให้นักศึกษาแต่ละคน ข้อความเป็นเพียงข้อเสนอ แก้ไขได้",
       withGrades:"ส่งคะแนนด้วย", open:"เปิดในแอปเมล", copy:"คัดลอก", close:"ปิด", noMail:"ไม่มีที่อยู่อีเมล ให้คัดลอกข้อความแล้วส่งเอง",
-      sent:"ส่งแล้ว", copied:"คัดลอกแล้ว", lang:"ภาษา"}
+      sent:"ส่งแล้ว", copied:"คัดลอกแล้ว", lang:"ภาษา",
+      noDays:"นักศึกษาคนนี้ยังไม่มีวันที่ได้รับการประเมิน (เช่น มีแต่การขาด) กรุณาตรวจข้อความก่อนส่ง",
+      pasted:"ข้อความยาวและถูกคัดลอกแล้ว วางในอีเมลด้วย Ctrl+V (Mac: Cmd+V)", pasteHere:"(วางข้อความข้อเสนอแนะที่นี่: Ctrl+V)"}
 };
 const n2u = k => (N2FBUI[L] && N2FBUI[L][k]) || N2FBUI.de[k];
 function n2FbLang(s){
@@ -185,7 +191,7 @@ function n2FbText(s, lg, withGrades){
     o.push(X.good);
     D.pos.slice(0, 3).forEach(x => o.push("– " + ct(x.c) + (x.n > 1 ? " (" + X.often + ")" : "")));
   } else {
-    const best = CRITS.filter(c => D.crit[c.k] != null && D.crit[c.k] >= 5).map(c => cn(c.k)).slice(0, 3);
+    const best = CRITS.filter(c => D.crit[c.k] != null && D.crit[c.k] >= 5).sort((a, b) => D.crit[b.k] - D.crit[a.k]).map(c => cn(c.k)).slice(0, 3);
     if(best.length) o.push(X.goodNone.replace("{c}", best.join(", ")));
   }
   o.push("");
@@ -207,6 +213,17 @@ function n2FbText(s, lg, withGrades){
   o.push(X.wish, "", X.bye, n2Teacher());
   const subj = X.subj + (outlet ? " – " + outlet : "") + (a ? " " + a + "–" + b : "");
   return {subj, body: o.join("\n").replace(/\n{3,}/g, "\n\n")};
+}
+/* Mail-Link. Outlook unter Windows schneidet Links ab ca. 2000 Zeichen ab (Umlaute zählen dreifach).
+   Am Laptop wird ein langer Text deshalb kopiert und die Mail nur mit Betreff geöffnet.
+   Auf iPad/iPhone gibt es diese Grenze nicht: dort steht der ganze Text in der Mail. */
+const N2_MAILTO_MAX = 1900;
+function n2Touch(){ const u = navigator.userAgent || ""; return /iPad|iPhone|Android/.test(u) || (/Macintosh/.test(u) && (navigator.maxTouchPoints || 0) > 1); }
+function n2FbMailto(s, subj, body, touch){
+  const base = "mailto:" + encodeURIComponent((s && s.mail) || "") + "?subject=" + encodeURIComponent(subj);
+  const full = base + "&body=" + encodeURIComponent(body);
+  if(touch || full.length <= N2_MAILTO_MAX) return {href: full, copy: false};
+  return {href: base + "&body=" + encodeURIComponent(n2u("pasteHere")), copy: true};
 }
 function n2FbSent(sid){ return (S.settings.fbSent && S.settings.fbSent[sid]) || ""; }
 function n2OpenFb(s){
@@ -231,6 +248,7 @@ function n2OpenFb(s){
   row.appendChild(el("label",{},[cb, document.createTextNode(" " + n2u("withGrades"))]));
   body.appendChild(row);
   if(!s.mail) body.appendChild(el("div",{class:"banner",text:n2u("noMail")}));
+  if(!n2FbData(s.id).days) body.appendChild(el("div",{class:"banner bad",text:n2u("noDays")}));
   body.appendChild(ta);
   sh.appendChild(body);
   const ft = el("div",{class:"sheet-f"});
@@ -239,7 +257,12 @@ function n2OpenFb(s){
   ft.appendChild(el("button",{class:"btn pri",text:"✉ " + n2u("open"),onclick:()=>{
     const subj = n2FbText(s, lg, withGrades).subj;
     S.settings.fbSent = S.settings.fbSent || {}; S.settings.fbSent[s.id] = new Date().toISOString().slice(0, 10); persist();
-    location.href = "mailto:" + encodeURIComponent(s.mail || "") + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(ta.value);
+    const m = n2FbMailto(s, subj, ta.value, n2Touch());
+    if(m.copy){                                                      // zu lang für Outlook unter Windows: Text in die Zwischenablage
+      try{ navigator.clipboard.writeText(ta.value); }catch(e){ try{ ta.select(); document.execCommand("copy"); }catch(_){} }
+      toast(n2u("pasted"));
+    }
+    location.href = m.href;
   }}));
   sh.appendChild(ft);
   host.innerHTML = ""; host.appendChild(sh);
@@ -266,16 +289,17 @@ function n2Handoff(load){
     return;
   }
   if(id && S.settings.paketId === id && S.students.length){        // dieses Paket ist schon da:
-    if(n2Refresh(h.paket.students)){ persist(); render(); }          // nur Fotos, Nicknames usw. nachführen
+    if(n2Refresh(h.paket.students)) persist();                       // nur Fotos, Nicknames usw. nachführen
+    n2GoToday(); view = "day"; render();                              // und den heutigen Einsatztag zeigen
     return;
   }
   const hatDaten = !S.settings.isSample && Object.keys(S.days || {}).some(k => S.days[k] && Object.keys(S.days[k]).length);
   if(hatDaten && S.settings.paketId !== id){
     const lg = (S.settings.uiLang || "de");
     const msg = {
-      de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag teilen», falls noch nicht geschehen.",
-      en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Share day» first if you have not done so.",
-      th: "โหลดชุดข้อมูลใหม่: " + (h.titel || id) + "?\n\nวันที่บันทึกไว้ในไฟล์นี้จะถูกแทนที่ กรุณากด «แชร์ข้อมูลของวันนี้» ก่อน หากยังไม่ได้ทำ"
+      de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag senden» oder «Sichern», falls noch nicht geschehen.",
+      en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Send the day» or «Back up» first if you have not done so.",
+      th: "โหลดชุดข้อมูลใหม่: " + (h.titel || id) + "?\n\nวันที่บันทึกไว้ในไฟล์นี้จะถูกแทนที่ กรุณากด «ส่งข้อมูลของวันนี้» ก่อน หากยังไม่ได้ทำ"
     }[lg] || "";
     try{ if(!window.confirm(msg)) return; }catch(e){ return; }
   }
