@@ -26,7 +26,7 @@ const T = {
   grade:"Note",copy:"Kopieren",copyAll:"Alle kopieren",copied:"Kopiert",mail:"E-Mail",
   noData:"Für diesen Zeitraum ist nichts erfasst.",excusedNote:"entschuldigt (zählt nicht)",
   unexcusedNote:"unentschuldigt (Tagesnote 1.0)",
-  banner:"Daten bleiben nur in diesem Browser. Bis die Plattformfrage geklärt ist: mit Testdaten oder Kürzeln arbeiten.",
+  banner:"Die Daten bleiben nur in diesem Browser. Am Tagesende «Tag speichern» und die Datei an michael.pilman@ehl.ch senden. Oben rechts «📱 Tablet» wechselt zur Tablet-Ansicht.",
   hyg2:"Hygiene doppelt gewichten",base:"Basisnote «erfüllt die Erwartungen»",baseShort:"Basisnote",
   teamField:"Team",
   restoreTitle:"Sicherung einlesen",
@@ -127,7 +127,7 @@ const T = {
   grade:"Grade",copy:"Copy",copyAll:"Copy all",copied:"Copied",mail:"E-mail",
   noData:"Nothing recorded for this period.",excusedNote:"excused (not counted)",
   unexcusedNote:"unexcused (daily grade 1.0)",
-  banner:"Data stays in this browser only. Until the platform is decided: use test data or initials.",
+  banner:"Data stays in this browser only. At the end of the day, «Save day» and send the file to michael.pilman@ehl.ch. «📱 Tablet» at the top right switches to the tablet view.",
   hyg2:"Weight hygiene double",base:"Baseline grade “meets expectations”",baseShort:"Baseline grade",
   teamField:"Team",
   restoreTitle:"Load a backup",
@@ -228,7 +228,7 @@ const T = {
   grade:"คะแนน",copy:"คัดลอก",copyAll:"คัดลอกทั้งหมด",copied:"คัดลอกแล้ว",mail:"อีเมล",
   noData:"ไม่มีข้อมูลในช่วงเวลานี้",excusedNote:"ลา (ไม่นับคะแนน)",
   unexcusedNote:"ขาดโดยไม่แจ้ง (คะแนนวันนั้น 1.0)",
-  banner:"ข้อมูลเก็บไว้ในเบราว์เซอร์นี้เท่านั้น ระหว่างนี้ให้ใช้ข้อมูลทดสอบหรือตัวย่อ",
+  banner:"ข้อมูลเก็บไว้ในเบราว์เซอร์นี้เท่านั้น เมื่อจบวันให้บันทึกข้อมูลของวันแล้วส่งไฟล์ถึง michael.pilman@ehl.ch ปุ่ม «📱 Tablet» มุมขวาบนจะเปลี่ยนเป็นมุมมองแท็บเล็ต",
   hyg2:"ให้น้ำหนักสุขอนามัยสองเท่า",base:"คะแนนพื้นฐาน «เป็นไปตามที่คาดหวัง»",baseShort:"คะแนนพื้นฐาน",
   teamField:"ทีม",
   restoreTitle:"โหลดไฟล์สำรอง",
@@ -2096,6 +2096,11 @@ function n2Handoff(load){
   try{ localStorage.removeItem("praxisrapport.handoff"); }catch(e){}
   if(Date.now() - (h.at || 0) > 10 * 60 * 1000) return;          // nur frische Übergaben
   const id = String(h.id || "");
+  if(h.mode === "switch"){                                          // Wechsel Tablet <-> Laptop: Stand 1:1 übernehmen
+    const p = JSON.parse(JSON.stringify(h.paket));
+    Promise.resolve(load(p)).then(() => { view = "day"; render(); toast(h.titel || "✓"); });
+    return;
+  }
   if(id && S.settings.paketId === id && S.students.length){        // dieses Paket ist schon da:
     if(n2Refresh(h.paket.students)){ persist(); render(); }          // nur Fotos, Nicknames usw. nachführen
     return;
@@ -2144,5 +2149,24 @@ function n2Refresh(list){
   else if(ch && typeof saubereStudierende === "function") S.students = saubereStudierende(S.students);
   return ch;
 }
+/* Ansicht wechseln: gleiche Variante als Tablet- bzw. Laptop-Fassung öffnen, mit dem aktuellen Stand */
+function n2SwitchTarget(){
+  let me = ""; try{ me = decodeURIComponent((location.pathname || "").split("/").pop() || ""); }catch(e){}
+  if(/_Mobil/.test(me)) return me.replace("_Mobil", "");
+  return me.replace(/^(Kuechenrapport|Servicerapport)/, "$1_Mobil");
+}
+function n2SwitchView(){
+  const target = n2SwitchTarget(); if(!target) return;
+  const toLaptop = !/_Mobil/.test(target);
+  const lg = (S.settings.uiLang || "de");
+  const msg = {de:toLaptop ? "Laptop-Ansicht" : "Tablet-Ansicht", en:toLaptop ? "Laptop view" : "Tablet view", th:toLaptop ? "มุมมองแล็ปท็อป" : "มุมมองแท็บเล็ต"}[lg] || "";
+  try{
+    localStorage.setItem("praxisrapport.handoff", JSON.stringify({target, id:S.settings.paketId || "", titel:"✓ " + msg, at:Date.now(), mode:"switch", paket:snapshot()}));
+  }catch(e){ try{ toast("Speicher voll"); }catch(_){} return; }
+  location.href = target;
+}
+{ const sw = document.getElementById("btnSwitch"); if(sw) sw.addEventListener("click", n2SwitchView); }
 setTimeout(() => n2Handoff(o => onRestore({target:{files:[new File([JSON.stringify(o)], "paket.json")], value:""}})), 30);
+/* Start: Ansicht zeichnen. Steht bewusst NACH der Übergabe-Zeile, weil tools/sync_handoff.py den Block davor ersetzt. */
+render();
 </script>
