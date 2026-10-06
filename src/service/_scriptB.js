@@ -1538,14 +1538,14 @@ function overviewText(stufe){
     const ex  = withExam ? examSummary(s.id) : null;
     const fin = withExam ? finalGrade(sum.total, ex ? ex.total : null) : sum.total;
     if(stufe === 0){
-      const n = withExam ? [fmt(sum.total), fmt(ex ? ex.total : null), fmt(fin)].join(" / ") : fmt(sum.total);
+      const n = withExam ? [fmt(sum.total), fmt(ex ? ex.total : null), fmt1(fin)].join(" / ") : fmt(sum.total);
       out.push(s.name + ": " + n + " \u00b7 " + sum.counted + " \u00b7 " + absText(sum));
       return;
     }
     const k = [];
     k.push((withExam ? t("praxisGrade") : t("total")) + " " + fmt(sum.total));
     if(withExam){ k.push(t("examShort") + " " + fmt(ex ? ex.total : null));
-                  k.push(t("finalGrade") + " " + fmt(fin)); }
+                  k.push(t("finalGrade") + " " + fmt1(fin)); }
     k.push(sum.counted + " " + t("days"));
     k.push(absText(sum));
     out.push(s.name + "  \u2014  " + k.join("  \u00b7  "));
@@ -1624,7 +1624,7 @@ function renderWeek(){
     if(showFinal){
       const f = finalGrade(sum.total, ex?ex.total:null);
       tr2.appendChild(el("td",{class:"n"},
-        el("span",{class:"grade num "+gradeClass(f),style:"padding:2px 8px;font-size:13.5px;font-weight:600",text:fmt(f)})));
+        el("span",{class:"grade num "+gradeClass(f),style:"padding:2px 8px;font-size:13.5px;font-weight:600",text:fmt1(f),title:fmt(f)})));
     }
     tr2.appendChild(el("td",{class:"n sep",text:String(sum.counted)}));
     const a = [];
@@ -1677,7 +1677,7 @@ function buildReport(s, mode, lg){
       ? fmt(ex.total) + " (" + bandName(ex.total, lg) + ")"
       : P("noData")));
   }
-  if(fin!=null) out.push(P("finalGrade") + ": " + fmt(fin) + " (" + bandName(fin, lg) + ")");
+  if(fin!=null) out.push(P("finalGrade") + ": " + fmt1(fin) + " (" + bandName(fin, lg) + ")");
   out.push("");
   if(!sum.counted && !sum.notes.length){ out.push(P("noData")); return out.join("\n"); }
 
@@ -1864,7 +1864,7 @@ function gradeRows(){
   const head = ["Klasse","Gruppe","Outlet","Einsatzorte","Dozent","Nachname","Vorname","Nickname","E-Mail","Turnus","Tage gewertet","Entschuldigt","Unentschuldigt","Verspaetet","Team Market",
     ...CRITS.map(c=>c.de), withExam?"Praxisnote":"Gesamtnote","Gerundet","Prädikat"]
     .concat(withExam ? [...CRITS.map(c=>"Exam "+c.de), "Prüfungsnote","Exam Anwesenheit"] : [])
-    .concat(withExam ? ["Schlussnote"] : []).concat(["Sprache","Beurteilung"]);
+    .concat(withExam ? ["Schlussnote","Schlussnote gerundet"] : []).concat(["Sprache","Beurteilung"]);
   const rows = S.students.map(s=>{
     const su = summary(s.id, repMode);
     const ex = withExam ? examSummary(s.id) : null;
@@ -1885,7 +1885,7 @@ function gradeRows(){
     }
     if(withExam){
       const fin = finalGrade(su.total, ex?ex.total:null);
-      row = row.concat([fin!=null?Number(fin.toFixed(2)):""]);
+      row = row.concat([fin!=null?Number(fin.toFixed(2)):"", fin!=null?Number(fmt1(fin)):""]);   // Schlussnote auf 0.1 gerundet (Entscheid 06.10.2026)
     }
     row = row.concat([outLangOf(s)]);
     row = row.concat([buildReport(s, repMode, outLangOf(s))]);
