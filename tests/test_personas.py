@@ -121,6 +121,11 @@ with sync_playwright() as p:
         pg.evaluate("()=>{ S.settings.uiLang='th'; render(); }")
         th = pg.evaluate("()=>n2FbText(S.students[0], n2FbLang(S.students[0]), false).body")
         ok(P + "B11 Thai-Oberfläche: Mail trotzdem Deutsch für HFD", th.startswith("Hallo"), th[:20])
+        ex = pg.evaluate("""()=>{ const ex = slots().find(s=>s.exam).id; openSlot(ex); const O = S.students.find(x=>x.last==='Okafor');
+            const c = CHIPS.find(c=>c.d>0 && !(S.days.d01[O.id].obs||[]).includes(c.i)); S.days[ex][O.id].obs = [c.i]; persist();
+            const m = n2FbText(O, 'en', true).body, p = n2Praxis(O.id).avg;
+            return {m, chip: c.t.en, p: (Math.round(p*10)/10).toFixed(1), e: n2Exam(O.id)}; }""")
+        ok(P + "B13 Mail mit Note: nur Praxisnote auf 0.1, kein Exam, keine Exam-Beobachtung", "Exam" not in ex["m"] and ex["chip"] not in ex["m"] and ("practice grade for this assignment: " + ex["p"] + ".") in ex["m"] and "12.10." not in ex["m"], (ex["p"], ex["e"]))
         ok(P + "B12 keine JavaScript-Fehler", not errs, errs[:2]); c.close()
 
         # ================= Persona C: Kursleitung / Prüfungsleitung =================
@@ -142,6 +147,8 @@ with sync_playwright() as p:
         pg.click("#btnSwitch"); pg.wait_for_load_state(); pg.wait_for_timeout(700)
         lap = pg.evaluate("()=>S.students.map(s=>{ const g = gradedSlots().map(x=>dayTotal(x.id, s.id)).filter(v=>v!=null); return g.length ? g.reduce((a,b)=>a+b,0)/g.length : null; })")
         ok(P + "C5 Laptop rechnet dieselben Praxisnoten wie das Tablet", all((a is None and l is None) or abs(a - l) < 1e-9 for (a, _), l in zip(m, lap)), (m, lap))
+        gr = pg.evaluate("()=>{ const g = gradeRows(); const i = g.head.indexOf('Schlussnote gerundet'); return {i, h:g.head[i-1], v:g.rows.map(r=>[r[i-1], r[i]])}; }")
+        ok(P + "C5b Excel: Schlussnote zusätzlich auf 0.1 gerundet", gr["i"] > 0 and gr["h"] == "Schlussnote" and all(b == round(a + 1e-9, 1) for a, b in gr["v"] if a != ""), gr["v"][:3])
         ok(P + "C6 keine JavaScript-Fehler", not errs, errs[:2]); c.close()
 
         # Tägliche Dateien zusammenführen (kumulativ, mit Korrektur, zwei Geräte)

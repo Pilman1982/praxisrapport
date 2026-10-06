@@ -1422,6 +1422,7 @@ function n2Praxis(sid){
 function n2Exam(sid){ const ex = slots().find(s => s.exam); return ex ? n2Day(ex.id, sid) : null; }
 function n2Final(sid){ const p = n2Praxis(sid).avg, e = n2Exam(sid); return (p != null && e != null) ? (2 * p + e) / 3 : null; }
 const n2Fmt = v => v == null ? "–" : v.toFixed(2);
+const n2Fmt1 = v => v == null ? "–" : (Math.round(v * 10) / 10).toFixed(1);   // Schlussnote: auf 0.1 gerundet
 /* Farben wie am Laptop: grün ab 5.25 (über Erwartung), rot unter 4.25, dazwischen neutral */
 const n2Cls = v => v == null ? "g-na" : (v >= 5.25 ? "g-ok" : (v < 4.25 ? "g-bad" : "g-mid"));
 function n2Effect(c){ return c.ko ? "→ 1.0" : ((c.d > 0 ? "+" : "−") + c.w.toFixed(2)); }
@@ -1452,7 +1453,7 @@ function n2RenderGrades(){
     const box = el("span",{class:"gbox"});
     box.appendChild(el("span",{class:"gl",text:n2t("praxis")})); box.appendChild(n2Pill(p.avg));
     if(hasEx){ box.appendChild(el("span",{class:"gl",text:n2t("exam")})); box.appendChild(n2Pill(e));
-               box.appendChild(el("span",{class:"gl",text:n2t("final")})); box.appendChild(n2Pill(f, f != null ? "strong" : "")); }
+               box.appendChild(el("span",{class:"gl",text:n2t("final")})); { const fp = n2Pill(f, f != null ? "strong" : ""); fp.textContent = n2Fmt1(f); if(f != null) fp.title = n2Fmt(f); box.appendChild(fp); } }
     row.appendChild(box);
     const sent = n2FbSent(s.id);
     row.appendChild(el("button",{class:"btn fbbtn" + (sent ? " done" : ""),text:"✉ " + n2u("fb") + (sent ? " ✓" : ""),
@@ -1475,7 +1476,7 @@ const N2FB = {
       good:"Das hat mir besonders gefallen:", goodNone:"Du hast die Erwartungen zuverlässig erfüllt, besonders in diesen Bereichen: {c}.",
       improve:"Hier kannst du dich noch verbessern:", improveNone:"Mir sind keine Punkte aufgefallen, an denen du dringend arbeiten musst. Bleib so dran!",
       tip:"Tipp", often:"mehrmals", late:"Achte bitte auf Pünktlichkeit: Du warst {n}× verspätet.", unex:"Bitte melde Abwesenheiten immer im Voraus: {n} Tag(e) waren nicht entschuldigt.",
-      grades:"Deine Note für diesen Einsatz: Praxis {p}", exam:", Exam Day {e}",
+      grades:"Deine Praxisnote für diesen Einsatz: {p}",
       c1:"Du warst eine echte Stütze im Team. Mach genau so weiter!", c2:"Du bist auf einem guten Weg. Mit den Tipps oben holst du noch mehr heraus.",
       c3:"Die Grundlage stimmt. Nimm dir die Punkte oben Schritt für Schritt vor, dann merkst du schnell Fortschritte.",
       c4:"Ich sehe, dass bei dir noch einiges drin liegt, und ich traue es dir zu. Komm gerne auf mich zu, wenn du Unterstützung möchtest.",
@@ -1484,7 +1485,7 @@ const N2FB = {
       good:"What I particularly liked:", goodNone:"You reliably met expectations, especially in these areas: {c}.",
       improve:"Where you can still improve:", improveNone:"I did not notice anything you urgently need to work on. Keep it up!",
       tip:"Tip", often:"several times", late:"Please watch your punctuality: you were late {n} time(s).", unex:"Please always report absences in advance: {n} day(s) were unexcused.",
-      grades:"Your grade for this assignment: practice {p}", exam:", Exam Day {e}",
+      grades:"Your practice grade for this assignment: {p}",
       c1:"You were a real asset to the team. Keep it up exactly like this!", c2:"You are on a good path. With the tips above you will get even more out of it.",
       c3:"The foundation is there. Work through the points above step by step and you will soon see progress.",
       c4:"I can see there is more in you, and I am confident you can do it. Feel free to come to me if you would like support.",
@@ -1492,17 +1493,17 @@ const N2FB = {
 };
 const N2FBUI = {
   de:{fb:"Feedback", fbTitle:"Feedback-Mail", fbHint:"Am Ende deines Einsatzes: pro Person eine Feedback-Mail. Der Text ist ein Vorschlag, du kannst ihn ändern.",
-      withGrades:"Noten mitschicken", open:"In Mail öffnen", copy:"Kopieren", close:"Schliessen", noMail:"Keine E-Mail-Adresse hinterlegt. Text kopieren und selbst senden.",
+      withGrades:"Praxisnote mitschicken (ohne Exam)", open:"In Mail öffnen", copy:"Kopieren", close:"Schliessen", noMail:"Keine E-Mail-Adresse hinterlegt. Text kopieren und selbst senden.",
       sent:"gesendet", copied:"Kopiert", lang:"Sprache",
       noDays:"Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.",
       pasted:"Der Text ist lang und wurde kopiert. In der Mail mit Strg+V (Mac: Cmd+V) einfügen.", pasteHere:"(Feedback-Text hier einfügen: Strg+V)"},
   en:{fb:"Feedback", fbTitle:"Feedback e-mail", fbHint:"At the end of your assignment: one feedback e-mail per student. The text is a suggestion; you can change it.",
-      withGrades:"Include grades", open:"Open in Mail", copy:"Copy", close:"Close", noMail:"No e-mail address on file. Copy the text and send it yourself.",
+      withGrades:"Include practice grade (no exam)", open:"Open in Mail", copy:"Copy", close:"Close", noMail:"No e-mail address on file. Copy the text and send it yourself.",
       sent:"sent", copied:"Copied", lang:"Language",
       noDays:"There is no graded day for this student yet (e.g. only absences). Please check the text before sending it.",
       pasted:"The text is long and has been copied. Paste it into the e-mail with Ctrl+V (Mac: Cmd+V).", pasteHere:"(Paste the feedback text here: Ctrl+V)"},
   th:{fb:"ข้อเสนอแนะ", fbTitle:"อีเมลข้อเสนอแนะ", fbHint:"เมื่อจบการฝึก: ส่งอีเมลข้อเสนอแนะให้นักศึกษาแต่ละคน ข้อความเป็นเพียงข้อเสนอ แก้ไขได้",
-      withGrades:"ส่งคะแนนด้วย", open:"เปิดในแอปเมล", copy:"คัดลอก", close:"ปิด", noMail:"ไม่มีที่อยู่อีเมล ให้คัดลอกข้อความแล้วส่งเอง",
+      withGrades:"ส่งคะแนนภาคปฏิบัติด้วย (ไม่รวมสอบ)", open:"เปิดในแอปเมล", copy:"คัดลอก", close:"ปิด", noMail:"ไม่มีที่อยู่อีเมล ให้คัดลอกข้อความแล้วส่งเอง",
       sent:"ส่งแล้ว", copied:"คัดลอกแล้ว", lang:"ภาษา",
       noDays:"นักศึกษาคนนี้ยังไม่มีวันที่ได้รับการประเมิน (เช่น มีแต่การขาด) กรุณาตรวจข้อความก่อนส่ง",
       pasted:"ข้อความยาวและถูกคัดลอกแล้ว วางในอีเมลด้วย Ctrl+V (Mac: Cmd+V)", pasteHere:"(วางข้อความข้อเสนอแนะที่นี่: Ctrl+V)"}
@@ -1524,7 +1525,7 @@ function n2Teacher(){
 /* Auswertung pro Person über alle Tage dieses Pakets */
 function n2FbData(sid){
   const tally = {}; let late = 0, unex = 0, days = 0;
-  slots().forEach(sl => {
+  slots().filter(x => !x.exam).forEach(sl => {                    // Exam Day bleibt aus der Mail (noch nicht kommunizierbar)
     const r = (S.days[sl.id] || {})[sid]; if(!r) return;
     const att = r.att || "present";
     if(att === "late") late++;
@@ -1543,7 +1544,7 @@ function n2FbData(sid){
 }
 function n2FbText(s, lg, withGrades){
   const X = N2FB[lg] || N2FB.de, D = n2FbData(s.id);
-  const sl = slots().filter(x => x.date), a = sl.length ? dmy(sl[0].date) : "", b = sl.length ? dmy(sl[sl.length - 1].date) : "";
+  const sl = slots().filter(x => x.date && !x.exam), a = sl.length ? dmy(sl[0].date) : "", b = sl.length ? dmy(sl[sl.length - 1].date) : "";
   const outlet = [S.settings.outlet, S.settings.outlet2].filter(Boolean).join(" / ");
   const first = (s.nick || s.first || String(s.name || "").split(/\s+/).slice(1).join(" ") || s.name || "").trim();
   const cn = k => { const c = CRITS.find(x => x.k === k); return c ? (c[lg] || c.de) : k; };
@@ -1571,8 +1572,10 @@ function n2FbText(s, lg, withGrades){
   if(D.late) o.push(X.late.replace("{n}", D.late));
   if(D.unex) o.push(X.unex.replace("{n}", D.unex));
   if(D.late || D.unex) o.push("");
-  const p = n2Praxis(s.id).avg, e = n2Exam(s.id);
-  if(withGrades && p != null){ o.push(X.grades.replace("{p}", p.toFixed(2)) + (e != null ? X.exam.replace("{e}", e.toFixed(2)) : "") + ".", ""); }
+  /* Entscheid 06.10.2026: nur die Praxisnote (Einsatztage ohne Exam) darf mitgeteilt werden, auf 0.1 gerundet.
+     Exam-Note und Schlussnote werden nie in die Mail geschrieben. */
+  const p = n2Praxis(s.id).avg;
+  if(withGrades && p != null){ o.push(X.grades.replace("{p}", n2Fmt1(p)) + ".", ""); }
   const g = p == null ? 5 : p;
   o.push(g >= 5.25 ? X.c1 : g >= 4.75 ? X.c2 : g >= 4 ? X.c3 : X.c4);
   o.push(X.wish, "", X.bye, n2Teacher());
