@@ -241,6 +241,7 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
   background:rgba(182,99,63,.13);border:1px solid rgba(182,99,63,.4);
   border-radius:12px;padding:11px 13px;font-size:13.5px;color:var(--ink2);margin-bottom:14px;
 }
+.banner.bad{background:rgba(190,40,40,.12);border-color:rgba(190,40,40,.55);color:var(--ink);font-weight:600}
 </style>
 </head>
 <body>
@@ -446,7 +447,7 @@ de:{
   apply:"Übernehmen", loadBackup:"Sicherung vom Laptop laden",
   loadHint:"Legen Sie die JSON aus dem Laptop-Rapport in «Dateien» oder iCloud ab und laden Sie sie hier. Damit sind Gruppe, Team, Outlet, Dozent, Turnus und alle Studierenden mit E-Mail-Adresse sofort da.",
   loadBtn:"⤒ Sicherung laden", loadArm:"Ersetzt alles, nochmals tippen",
-  loadDone:"Sicherung geladen", loadBad:"Datei nicht lesbar oder keine Servicerapport-Sicherung",
+  loadDone:"Sicherung geladen", loadBad:"Datei nicht lesbar oder keine Servicerapport-Sicherung", storeWarn:"Achtung: Dieses Gerät speichert gerade nichts (privater Modus oder Speicher voll). Bitte jetzt «⤓ Sichern» tippen und den Tag sofort senden.", loadSem:"Das ist Ihr Semesterpaket. Bitte auf Ihrer persönlichen Startseite laden (Symbol auf dem Home-Bildschirm), nicht hier.",
   saveBackup:"Sicherung sichern", saveBtn:"⤓ Als JSON sichern",
   shareHint:"«Tag senden» öffnet das Teilen-Menü: «Mail» wählen und an michael.pilman@ehl.ch senden. Die Absenzen des Tages stehen schon im Mailtext. «⤓ Sichern» legt eine eigene Sicherung in «Dateien» ab.",
   examDay:"Exam Day", week:"W", light:"leicht", medium:"mittel", heavy:"schwer", ko:"K.-o.",
@@ -483,7 +484,7 @@ en:{
   apply:"Apply", loadBackup:"Load a backup from the laptop",
   loadHint:"Put the JSON from the laptop report into Files or iCloud and load it here. Group, team, outlet, lecturer, rotation and all students with their e-mail addresses are then in place.",
   loadBtn:"⤒ Load backup", loadArm:"Replaces everything, tap again",
-  loadDone:"Backup loaded", loadBad:"File unreadable or not a service report backup",
+  loadDone:"Backup loaded", loadBad:"File unreadable or not a service report backup", storeWarn:"Warning: this device is not saving anything right now (private mode or storage full). Tap «⤓ Back up» now and send the day straight away.", loadSem:"This is your semester package. Please load it on your personal start page (icon on the Home Screen), not here.",
   saveBackup:"Save a backup", saveBtn:"⤓ Save as JSON",
   shareHint:"“Send the day” opens the share sheet: choose «Mail» and send it to michael.pilman@ehl.ch. The day's absences are already in the e-mail text. «⤓ Back up» saves your own backup in «Files».",
   examDay:"Exam Day", week:"W", light:"light", medium:"medium", heavy:"heavy", ko:"K.O.",
@@ -520,7 +521,7 @@ th:{
   apply:"ยืนยัน", loadBackup:"โหลดไฟล์สำรองจากแล็ปท็อป",
   loadHint:"นำไฟล์ JSON จากรายงานในแล็ปท็อปไปไว้ใน Files หรือ iCloud แล้วโหลดที่นี่ จะได้กลุ่ม ทีม เอาต์เล็ต ผู้สอน รอบฝึก และรายชื่อนักศึกษาพร้อมอีเมลทันที",
   loadBtn:"⤒ โหลดไฟล์สำรอง", loadArm:"จะแทนที่ทั้งหมด แตะอีกครั้ง",
-  loadDone:"โหลดไฟล์สำรองแล้ว", loadBad:"อ่านไฟล์ไม่ได้ หรือไม่ใช่ไฟล์สำรองของรายงานบริการ",
+  loadDone:"โหลดไฟล์สำรองแล้ว", loadBad:"อ่านไฟล์ไม่ได้ หรือไม่ใช่ไฟล์สำรองของรายงานบริการ", storeWarn:"คำเตือน: อุปกรณ์นี้ไม่ได้บันทึกข้อมูลอยู่ในขณะนี้ (โหมดส่วนตัวหรือพื้นที่เต็ม) กรุณากด «⤓ สำรองข้อมูล» ทันที และส่งข้อมูลของวันนี้เลย", loadSem:"นี่คือชุดข้อมูลภาคเรียนของคุณ กรุณาโหลดในหน้าเริ่มต้นส่วนตัว (ไอคอนบนหน้าจอโฮม) ไม่ใช่ที่นี่",
   saveBackup:"บันทึกไฟล์สำรอง", saveBtn:"⤓ บันทึกเป็น JSON",
   shareHint:"«ส่งข้อมูลของวันนี้» เปิดเมนูแชร์: เลือก «Mail» แล้วส่งถึง michael.pilman@ehl.ch การขาดของวันนี้อยู่ในข้อความอีเมลแล้ว «⤓ สำรองข้อมูล» บันทึกไฟล์สำรองของคุณไว้ใน «ไฟล์»",
   examDay:"วันสอบ", week:"สัปดาห์", light:"เบา", medium:"กลาง", heavy:"หนัก", ko:"ตัดสิทธิ์",
@@ -673,7 +674,10 @@ const STARTLINK = (function(){
 /* Bewertende Person eines Einsatztags: Plan nach Wochentag, sonst die Dozentin der Datei. */
 const teacherForWd = wd => (S.settings.teacherPlan && S.settings.teacherPlan[wd]) || S.settings.teacher || "";
 try{ localStorage.setItem("kr.probe","1"); localStorage.removeItem("kr.probe"); }catch(e){ storeOK = false; }
-function persist(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ storeOK = false; } }
+function persist(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch(e){ if(storeOK){ storeOK = false; try{ toast(t("storeWarn")); }catch(_){} } }
+}
 
 /* ---------- Turnus ---------- */
 const VDEF = {"10T":{n:10, exam:true}, "4T":{n:5, exam:true}, "5T":{n:5, exam:false}};
@@ -701,6 +705,10 @@ const dayOpen = id => !!S.days[id];
 
 let curSlot = (function(){
   const all = slots();
+  /* Noten 2.0: Ist heute ein Einsatztag des Pakets, immer diesen zeigen. Sonst landen
+     Beobachtungen auf einem falschen Datum (z. B. Kollegin mit eigenem Gerät ab Mittwoch). */
+  { const d = new Date(), td = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    const heute = all.find(s => s.date === td); if(heute) return heute.id; }
   const nx = all.find(s=>!s.exam && !S.days[s.id]);
   if(nx) return nx.id;
   const f = all.filter(s=>S.days[s.id]);
@@ -979,6 +987,7 @@ function renderDay(){
     ]));
     return;
   }
+  if(!storeOK) root.appendChild(el("div",{class:"banner bad",style:"margin-bottom:12px",text:t("storeWarn")}));
   if(!dayOpen(curSlot)){
     root.appendChild(el("div",{class:"card pad"},[
       el("span",{class:"eyebrow",style:"display:block;margin-bottom:6px",text:slotLabel(sl)}),
@@ -1147,8 +1156,7 @@ let loadArmed = false;
 function renderSet(){
   const root = document.getElementById("view"); root.innerHTML = "";
 
-  if(!storeOK) root.appendChild(el("div",{class:"banner",
-    text:"Dieses Gerät speichert nichts im Browser. Teilen Sie den Tag sofort nach dem Erfassen."}));
+  if(!storeOK) root.appendChild(el("div",{class:"banner bad",text:t("storeWarn")}));
 
   /* Sicherung laden */
   const c0 = el("div",{class:"card pad"});
@@ -1291,6 +1299,7 @@ async function onLoadBackup(e){
   if(!f) return;
   try{
     const o = JSON.parse(await f.text());
+    if(o && o.format === "praxisrapport-semesterpaket"){ toast(t("loadSem")); return; }
     if(!o || !o.settings || !Array.isArray(o.students)) throw new Error("format");
     const other = o.variant && o.variant !== MVARIANT;
     S = {settings:{...DEF, ...o.settings, variant:MVARIANT},
@@ -1484,13 +1493,19 @@ const N2FB = {
 const N2FBUI = {
   de:{fb:"Feedback", fbTitle:"Feedback-Mail", fbHint:"Am Ende deines Einsatzes: pro Person eine Feedback-Mail. Der Text ist ein Vorschlag, du kannst ihn ändern.",
       withGrades:"Noten mitschicken", open:"In Mail öffnen", copy:"Kopieren", close:"Schliessen", noMail:"Keine E-Mail-Adresse hinterlegt. Text kopieren und selbst senden.",
-      sent:"gesendet", copied:"Kopiert", lang:"Sprache"},
+      sent:"gesendet", copied:"Kopiert", lang:"Sprache",
+      noDays:"Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.",
+      pasted:"Der Text ist lang und wurde kopiert. In der Mail mit Strg+V (Mac: Cmd+V) einfügen.", pasteHere:"(Feedback-Text hier einfügen: Strg+V)"},
   en:{fb:"Feedback", fbTitle:"Feedback e-mail", fbHint:"At the end of your assignment: one feedback e-mail per student. The text is a suggestion; you can change it.",
       withGrades:"Include grades", open:"Open in Mail", copy:"Copy", close:"Close", noMail:"No e-mail address on file. Copy the text and send it yourself.",
-      sent:"sent", copied:"Copied", lang:"Language"},
+      sent:"sent", copied:"Copied", lang:"Language",
+      noDays:"There is no graded day for this student yet (e.g. only absences). Please check the text before sending it.",
+      pasted:"The text is long and has been copied. Paste it into the e-mail with Ctrl+V (Mac: Cmd+V).", pasteHere:"(Paste the feedback text here: Ctrl+V)"},
   th:{fb:"ข้อเสนอแนะ", fbTitle:"อีเมลข้อเสนอแนะ", fbHint:"เมื่อจบการฝึก: ส่งอีเมลข้อเสนอแนะให้นักศึกษาแต่ละคน ข้อความเป็นเพียงข้อเสนอ แก้ไขได้",
       withGrades:"ส่งคะแนนด้วย", open:"เปิดในแอปเมล", copy:"คัดลอก", close:"ปิด", noMail:"ไม่มีที่อยู่อีเมล ให้คัดลอกข้อความแล้วส่งเอง",
-      sent:"ส่งแล้ว", copied:"คัดลอกแล้ว", lang:"ภาษา"}
+      sent:"ส่งแล้ว", copied:"คัดลอกแล้ว", lang:"ภาษา",
+      noDays:"นักศึกษาคนนี้ยังไม่มีวันที่ได้รับการประเมิน (เช่น มีแต่การขาด) กรุณาตรวจข้อความก่อนส่ง",
+      pasted:"ข้อความยาวและถูกคัดลอกแล้ว วางในอีเมลด้วย Ctrl+V (Mac: Cmd+V)", pasteHere:"(วางข้อความข้อเสนอแนะที่นี่: Ctrl+V)"}
 };
 const n2u = k => (N2FBUI[L] && N2FBUI[L][k]) || N2FBUI.de[k];
 function n2FbLang(s){
@@ -1541,7 +1556,7 @@ function n2FbText(s, lg, withGrades){
     o.push(X.good);
     D.pos.slice(0, 3).forEach(x => o.push("– " + ct(x.c) + (x.n > 1 ? " (" + X.often + ")" : "")));
   } else {
-    const best = CRITS.filter(c => D.crit[c.k] != null && D.crit[c.k] >= 5).map(c => cn(c.k)).slice(0, 3);
+    const best = CRITS.filter(c => D.crit[c.k] != null && D.crit[c.k] >= 5).sort((a, b) => D.crit[b.k] - D.crit[a.k]).map(c => cn(c.k)).slice(0, 3);
     if(best.length) o.push(X.goodNone.replace("{c}", best.join(", ")));
   }
   o.push("");
@@ -1563,6 +1578,17 @@ function n2FbText(s, lg, withGrades){
   o.push(X.wish, "", X.bye, n2Teacher());
   const subj = X.subj + (outlet ? " – " + outlet : "") + (a ? " " + a + "–" + b : "");
   return {subj, body: o.join("\n").replace(/\n{3,}/g, "\n\n")};
+}
+/* Mail-Link. Outlook unter Windows schneidet Links ab ca. 2000 Zeichen ab (Umlaute zählen dreifach).
+   Am Laptop wird ein langer Text deshalb kopiert und die Mail nur mit Betreff geöffnet.
+   Auf iPad/iPhone gibt es diese Grenze nicht: dort steht der ganze Text in der Mail. */
+const N2_MAILTO_MAX = 1900;
+function n2Touch(){ const u = navigator.userAgent || ""; return /iPad|iPhone|Android/.test(u) || (/Macintosh/.test(u) && (navigator.maxTouchPoints || 0) > 1); }
+function n2FbMailto(s, subj, body, touch){
+  const base = "mailto:" + encodeURIComponent((s && s.mail) || "") + "?subject=" + encodeURIComponent(subj);
+  const full = base + "&body=" + encodeURIComponent(body);
+  if(touch || full.length <= N2_MAILTO_MAX) return {href: full, copy: false};
+  return {href: base + "&body=" + encodeURIComponent(n2u("pasteHere")), copy: true};
 }
 function n2FbSent(sid){ return (S.settings.fbSent && S.settings.fbSent[sid]) || ""; }
 function n2OpenFb(s){
@@ -1587,6 +1613,7 @@ function n2OpenFb(s){
   row.appendChild(el("label",{},[cb, document.createTextNode(" " + n2u("withGrades"))]));
   body.appendChild(row);
   if(!s.mail) body.appendChild(el("div",{class:"banner",text:n2u("noMail")}));
+  if(!n2FbData(s.id).days) body.appendChild(el("div",{class:"banner bad",text:n2u("noDays")}));
   body.appendChild(ta);
   sh.appendChild(body);
   const ft = el("div",{class:"sheet-f"});
@@ -1595,7 +1622,12 @@ function n2OpenFb(s){
   ft.appendChild(el("button",{class:"btn pri",text:"✉ " + n2u("open"),onclick:()=>{
     const subj = n2FbText(s, lg, withGrades).subj;
     S.settings.fbSent = S.settings.fbSent || {}; S.settings.fbSent[s.id] = new Date().toISOString().slice(0, 10); persist();
-    location.href = "mailto:" + encodeURIComponent(s.mail || "") + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(ta.value);
+    const m = n2FbMailto(s, subj, ta.value, n2Touch());
+    if(m.copy){                                                      // zu lang für Outlook unter Windows: Text in die Zwischenablage
+      try{ navigator.clipboard.writeText(ta.value); }catch(e){ try{ ta.select(); document.execCommand("copy"); }catch(_){} }
+      toast(n2u("pasted"));
+    }
+    location.href = m.href;
   }}));
   sh.appendChild(ft);
   host.innerHTML = ""; host.appendChild(sh);
@@ -1622,16 +1654,17 @@ function n2Handoff(load){
     return;
   }
   if(id && S.settings.paketId === id && S.students.length){        // dieses Paket ist schon da:
-    if(n2Refresh(h.paket.students)){ persist(); render(); }          // nur Fotos, Nicknames usw. nachführen
+    if(n2Refresh(h.paket.students)) persist();                       // nur Fotos, Nicknames usw. nachführen
+    n2GoToday(); view = "day"; render();                              // und den heutigen Einsatztag zeigen
     return;
   }
   const hatDaten = !S.settings.isSample && Object.keys(S.days || {}).some(k => S.days[k] && Object.keys(S.days[k]).length);
   if(hatDaten && S.settings.paketId !== id){
     const lg = (S.settings.uiLang || "de");
     const msg = {
-      de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag teilen», falls noch nicht geschehen.",
-      en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Share day» first if you have not done so.",
-      th: "โหลดชุดข้อมูลใหม่: " + (h.titel || id) + "?\n\nวันที่บันทึกไว้ในไฟล์นี้จะถูกแทนที่ กรุณากด «แชร์ข้อมูลของวันนี้» ก่อน หากยังไม่ได้ทำ"
+      de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag senden» oder «Sichern», falls noch nicht geschehen.",
+      en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Send the day» or «Back up» first if you have not done so.",
+      th: "โหลดชุดข้อมูลใหม่: " + (h.titel || id) + "?\n\nวันที่บันทึกไว้ในไฟล์นี้จะถูกแทนที่ กรุณากด «ส่งข้อมูลของวันนี้» ก่อน หากยังไม่ได้ทำ"
     }[lg] || "";
     try{ if(!window.confirm(msg)) return; }catch(e){ return; }
   }

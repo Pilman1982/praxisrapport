@@ -1147,6 +1147,10 @@ const gradedSlots = () => slots().filter(s=>!s.exam);
 let view = "day";
 let curSlot = (function(){
   const all = slots();
+  /* Noten 2.0: Ist heute ein Einsatztag des Pakets, immer diesen zeigen. Sonst landen
+     Beobachtungen auf einem falschen Datum (z. B. Kollegin mit eigenem Gerät ab Mittwoch). */
+  { const d = new Date(), td = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    const heute = all.find(s => s.date === td); if(heute) return heute.id; }
   const nextOpen = all.find(s=>!s.exam && !S.days[s.id]);
   if(nextOpen) return nextOpen.id;
   const filled = all.filter(s=>S.days[s.id]);
@@ -1382,7 +1386,7 @@ const el = (tag, attrs={}, kids=[]) => {
 function toast(msg){
   const h = document.getElementById("toastHost");
   h.innerHTML = ""; h.appendChild(el("div",{class:"toast",text:msg}));
-  setTimeout(()=>{ h.innerHTML=""; }, 2200);
+  clearTimeout(toast._t); toast._t = setTimeout(()=>{ h.innerHTML=""; }, Math.min(9000, 2200 + String(msg).length * 35));
 }
 const gradeClass = g => g==null ? "g-na" : (g>=5.25 ? "g-hi" : (g<4.25 ? "g-lo" : ""));
 const subLine = () => [S.settings.group, S.settings.team, S.settings.outlet].filter(Boolean).join(" · ") || "Servicepraxis";
@@ -1852,13 +1856,13 @@ function absenceMailHref(slotId){
    an eine Mail hängen: die eben gespeicherte Datei wird in die Mail gezogen.
    Reihenfolge bewusst: zuerst die Mail (braucht den Klick), dann der Speichern-Dialog. */
 const N2LAP = {
-  de:{send:"Tag senden", abs:"Absenzen", backup:"Sichern", subj:"Tagesrapport", absHead:"Absenzen:", none:"Keine Absenzen.",
+  de:{mUpd:"{n} Einträge aktualisiert (neuere Datei)", mOld:"{n} Einträge aus älteren Dateien nicht übernommen", mNew:"Beispielinhalt entfernt, Angaben aus der ersten Datei übernommen", sem:"Das ist ein Semesterpaket. Es gehört auf die persönliche Startseite (mein.html), nicht in den Rapport.", send:"Tag senden", abs:"Absenzen", backup:"Sichern", subj:"Tagesrapport", absHead:"Absenzen:", none:"Keine Absenzen.",
       att:"Anhang: {f}", attHint:"Die Datei wurde eben gespeichert (Ordner «Downloads» oder der gewählte Ordner). Bitte an diese Mail anhängen.",
       bar:"«Tag senden» speichert die Tagesdatei und öffnet die Mail an {m}: Datei anhängen, senden. «Sichern» legt eine eigene Sicherung ab."},
-  en:{send:"Send the day", abs:"Absences", backup:"Back up", subj:"Day report", absHead:"Absences:", none:"No absences.",
+  en:{mUpd:"{n} entries updated (newer file)", mOld:"{n} entries from older files not taken over", mNew:"Sample content removed, details taken from the first file", sem:"This is a semester package. It belongs on the personal start page (mein.html), not in the report.", send:"Send the day", abs:"Absences", backup:"Back up", subj:"Day report", absHead:"Absences:", none:"No absences.",
       att:"Attachment: {f}", attHint:"The file has just been saved (Downloads or the folder you chose). Please attach it to this e-mail.",
       bar:"«Send the day» saves the day file and opens the e-mail to {m}: attach the file, send. «Back up» saves your own backup."},
-  th:{send:"ส่งข้อมูลของวันนี้", abs:"การขาด", backup:"สำรองข้อมูล", subj:"Tagesrapport", absHead:"การขาด:", none:"ไม่มีการขาด",
+  th:{mUpd:"อัปเดต {n} รายการ (ไฟล์ใหม่กว่า)", mOld:"ไม่นำ {n} รายการจากไฟล์ที่เก่ากว่ามาใช้", mNew:"ลบข้อมูลตัวอย่างแล้ว ใช้ข้อมูลจากไฟล์แรก", sem:"นี่คือชุดข้อมูลภาคเรียน ใช้ในหน้าเริ่มต้นส่วนตัว (mein.html) ไม่ใช่ในรายงาน", send:"ส่งข้อมูลของวันนี้", abs:"การขาด", backup:"สำรองข้อมูล", subj:"Tagesrapport", absHead:"การขาด:", none:"ไม่มีการขาด",
       att:"ไฟล์แนบ: {f}", attHint:"บันทึกไฟล์แล้ว (โฟลเดอร์ Downloads หรือโฟลเดอร์ที่เลือก) กรุณาแนบไฟล์กับอีเมลนี้",
       bar:"«ส่งข้อมูลของวันนี้» บันทึกไฟล์ของวันและเปิดอีเมลถึง {m}: แนบไฟล์แล้วส่ง «สำรองข้อมูล» บันทึกไฟล์สำรองของคุณเอง"}
 };
@@ -2526,10 +2530,27 @@ function renderData(){
 }
 async function onMerge(e){
   const files = [...e.target.files]; let addedS=0, addedD=0; const clash=[], wrongVar=[], placed=[];
+  /* Noten 2.0 (06.10.2026): Jede Tagesdatei enthält den ganzen Stand bis zu diesem Tag.
+     Darum zuerst alle Dateien lesen und nach Speicherzeit ordnen. Gleiche Einträge werden
+     still übersprungen (früher: Fehlalarm «doppelt erfasst»), bei Abweichungen gewinnt die
+     neuere Datei (Korrekturen vom Folgetag kommen an). In eine neue Datei mit Beispielinhalt
+     wird nicht hineingemischt: Beispielpersonen weg, Angaben aus der ersten Datei. */
+  const docs = [];
   for(const f of files){
+    try{ const o = JSON.parse(await f.text()); if(o && Array.isArray(o.students) && o.days) docs.push({o, f}); }catch(err){}
+  }
+  docs.sort((a, b) => String(a.o.savedAt || "").localeCompare(String(b.o.savedAt || "")));
+  let updD = 0, oldD = 0, fresh = false;
+  if(docs.length && (S.settings.isSample || (!S.students.length && !Object.keys(S.days || {}).some(k => Object.keys(S.days[k] || {}).length)))){
+    const o0 = docs[0].o.settings || {};
+    S.students = []; S.days = {}; S.dayMeta = {};
+    ["group","team","outlet","outlet2","teacher","teacherPlan","paketId","weekdays","startIdx"].forEach(k => { if(o0[k] !== undefined) S.settings[k] = JSON.parse(JSON.stringify(o0[k])); });
+    S.settings.isSample = false; S.settings.slotDates = []; fresh = !!S.settings.outlet;
+  }
+  const sameRec = (a, b) => { const n = r => JSON.stringify([r.att || "present", [...(r.obs || [])].sort(), r.note || null]); return n(a) === n(b); };
+  for(const {o, f} of docs){
     try{
-      const o = JSON.parse(await f.text());
-      if(!o || !o.students || !o.days) continue;
+      const stand = String(o.savedAt || "");
       if(!acceptsVariant(o.variant)){ wrongVar.push(f.name + " (" + o.variant + ")"); continue; }
       if(o.variant && o.variant !== VARIANT) placed.push(o.variant);
       const map = {};
@@ -2554,25 +2575,38 @@ async function onMerge(e){
         }
         map[st.id] = ex.id;
       });
+      /* Daten der Einsatztage nachtragen (auch 5T + 4T in der 10-Tage-Datei) */
+      const sd = Array.isArray(o.settings && o.settings.slotDates) ? o.settings.slotDates : [];
+      if(sd.length){
+        const arr = Array.isArray(S.settings.slotDates) ? S.settings.slotDates.slice() : [];
+        sd.forEach((d, i) => { const slid = mapSlotId(o.variant, "d" + String(i + 1).padStart(2, "0"));
+          if(slid && /^\d{4}-\d{2}-\d{2}$/.test(String(d))){ const n = parseInt(slid.slice(1), 10) - 1; if(!arr[n]) arr[n] = d; } });
+        for(let i = 0; i < arr.length; i++) if(!arr[i]) arr[i] = "";
+        S.settings.slotDates = arr;
+      }
       Object.entries(o.days).forEach(([srcId,recs])=>{
         const slid = mapSlotId(o.variant, srcId);
         if(!slid) return;
         S.days[slid] = S.days[slid] || {};
         if(o.dayMeta && o.dayMeta[srcId] && !S.dayMeta[slid]) S.dayMeta[slid] = o.dayMeta[srcId];
+        const standVorher = String((S.dayMeta[slid] || {}).stand || "");
         Object.entries(recs).forEach(([oldId,r])=>{
           const nid = map[oldId]; if(!nid) return;
-          if(!S.days[slid][nid]){ S.days[slid][nid] = mitOrt(r, o); addedD++; }
-          else{
-            const nm = (S.students.find(x=>x.id===nid)||{}).name || nid;
-            const sl = slots().find(x=>x.id===slid);
-            clash.push(nm + " / " + (sl ? slotLabel(sl) : slid));
-          }
+          const cur = S.days[slid][nid];
+          if(!cur){ S.days[slid][nid] = mitOrt(r, o); addedD++; }
+          else if(sameRec(cur, r)) return;                                 // gleicher Eintrag aus einer späteren Tagesdatei
+          else if(stand >= String((S.dayMeta[slid] || {}).stand || "")){ S.days[slid][nid] = mitOrt(r, o); updD++; }
+          else oldD++;
         });
+        if(stand && stand > standVorher){ S.dayMeta[slid] = S.dayMeta[slid] || {}; S.dayMeta[slid].stand = stand; }
       });
     }catch(err){}
   }
   unseed(); persist();
   let msg = "+"+addedS+" "+t("student")+" · +"+addedD+" "+t("days");
+  if(fresh) msg = n2l("mNew") + "  ·  " + msg;
+  if(updD) msg += "  ·  " + n2l("mUpd").replace("{n}", updD);
+  if(oldD) msg += "  ⚠︎ " + n2l("mOld").replace("{n}", oldD);
   if(clash.length) msg += "  ⚠︎ "+clash.length+"× doppelt erfasst, bestehender Eintrag behalten: "
     + clash.slice(0,3).join(", ") + (clash.length>3 ? " …" : "");
   if(placed.length) msg += "  · " + [...new Set(placed)].join(", ") + " " + t("placedAs");
@@ -2586,6 +2620,7 @@ async function onRestore(e){
   if(!f) return;
   try{
     const o = JSON.parse(await f.text());
+    if(o && o.format === "praxisrapport-semesterpaket"){ toast(n2l("sem")); return; }
     if(!o || !o.settings || !Array.isArray(o.students)) throw new Error("format");
     if(o.variant && o.variant !== VARIANT){ toast(t("wrongVariant") + ": " + o.variant); return; }
     S = { settings:{...sanitizeSettings(o.settings), isSample:false},
@@ -2872,16 +2907,17 @@ function n2Handoff(load){
     return;
   }
   if(id && S.settings.paketId === id && S.students.length){        // dieses Paket ist schon da:
-    if(n2Refresh(h.paket.students)){ persist(); render(); }          // nur Fotos, Nicknames usw. nachführen
+    if(n2Refresh(h.paket.students)) persist();                       // nur Fotos, Nicknames usw. nachführen
+    n2GoToday(); view = "day"; render();                              // und den heutigen Einsatztag zeigen
     return;
   }
   const hatDaten = !S.settings.isSample && Object.keys(S.days || {}).some(k => S.days[k] && Object.keys(S.days[k]).length);
   if(hatDaten && S.settings.paketId !== id){
     const lg = (S.settings.uiLang || "de");
     const msg = {
-      de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag teilen», falls noch nicht geschehen.",
-      en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Share day» first if you have not done so.",
-      th: "โหลดชุดข้อมูลใหม่: " + (h.titel || id) + "?\n\nวันที่บันทึกไว้ในไฟล์นี้จะถูกแทนที่ กรุณากด «แชร์ข้อมูลของวันนี้» ก่อน หากยังไม่ได้ทำ"
+      de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag senden» oder «Sichern», falls noch nicht geschehen.",
+      en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Send the day» or «Back up» first if you have not done so.",
+      th: "โหลดชุดข้อมูลใหม่: " + (h.titel || id) + "?\n\nวันที่บันทึกไว้ในไฟล์นี้จะถูกแทนที่ กรุณากด «ส่งข้อมูลของวันนี้» ก่อน หากยังไม่ได้ทำ"
     }[lg] || "";
     try{ if(!window.confirm(msg)) return; }catch(e){ return; }
   }
