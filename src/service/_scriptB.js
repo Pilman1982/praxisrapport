@@ -22,7 +22,7 @@ const T = {
   ovClipCrit:"E-Mail vorbereitet. Die Werte je Kriterium liegen zusätzlich in der Zwischenablage.",
   ovShortHead:"Praxisnote / Prüfung / Schlussnote · Tage · Absenzen",
   ovMail:"Übersicht an die Kursleitung",ovCopy:"Übersicht kopieren",ovMailHint:"Sendet die Notenuebersicht dieser Gruppe an",ovFoot:"Die Rapportdatei wird separat als JSON abgelegt. Diese Mail enthält keinen Anhang.",ovClip:"Zu lang für die Mail: die ganze Übersicht liegt in der Zwischenablage, bitte einfügen.",ovClipHint:"Die Übersicht liegt in der Zwischenablage. Bitte hier einfügen.",absNone:"keine Absenzen",
-  selfTest:"Selbsttest",selfTestBtn:"Selbsttest ausführen",selfTestHint:"Prüft die Rechenlogik und die Bausteinbibliothek dieser Datei. Die erfassten Tage werden dabei nicht verändert.",selfTestOkN:"bestanden",selfTestBad:"fehlgeschlagen",stChips:"Bausteine eindeutig",stCrit:"Jeder Baustein hat ein gültiges Kriterium",stAction:"Jeder negative Baustein hat eine Massnahme",stLang:"Alle vier Sprachen vorhanden",stLate:"Verlangter Baustein für Verspätung vorhanden",stSlots:"Einsatztage korrekt nummeriert",stBase:"Tag ohne Beobachtung ergibt die Basisnote",stLight:"Leichter Baustein verschiebt um 0.25",stMedium:"Mittlerer Baustein verschiebt um 0.50",stHeavy:"Schwerer Baustein verschiebt um 1.00",stCapDown:"Kappung nach unten bei −1.50",stCapUp:"Kappung nach oben bei +1.00",stKo:"K.-o.-Baustein trifft nur sein Kriterium",stLateEffect:"Verspätet zieht auf Teamfähigkeit ab",stUnexcused:"Unentschuldigt ergibt 1.00",stExcused:"Entschuldigt zählt nicht mit",stTm:"Team Market zählt mit 5.00",stExam:"Abwesenheit am Exam Day ergibt 1.00",stFinal:"Schlussnote zwei Drittel Praxis, ein Drittel Prüfung",stNote:"Freitext wirkt nur mit Kriterium und Wirkung",stStore:"Browserspeicher funktioniert",
+  selfTest:"Selbsttest",selfTestBtn:"Selbsttest ausführen",selfTestHint:"Prüft die Rechenlogik und die Bausteinbibliothek dieser Datei. Die erfassten Tage werden dabei nicht verändert.",selfTestOkN:"bestanden",selfTestBad:"fehlgeschlagen",stChips:"Bausteine eindeutig",stCrit:"Jeder Baustein hat ein gültiges Kriterium",stAction:"Jeder negative Baustein hat eine Massnahme",stLang:"Alle vier Sprachen vorhanden",stLate:"Baustein für Verspätung vorhanden",stSlots:"Einsatztage korrekt nummeriert",stBase:"Tag ohne Beobachtung ergibt die Basisnote",stLight:"Leichter Baustein verschiebt um 0.25",stMedium:"Mittlerer Baustein verschiebt um 0.50",stHeavy:"Schwerer Baustein verschiebt um 1.00",stCapDown:"Kappung nach unten bei −1.50",stCapUp:"Kappung nach oben bei +1.00",stKo:"K.-o.-Baustein trifft nur sein Kriterium",stLateEffect:"Verspätet startet eine Note tiefer (4.00)",stUnexcused:"Unentschuldigt ergibt 1.00",stExcused:"Entschuldigt zählt nicht mit",stTm:"Team Market zählt mit 5.00",stExam:"Abwesenheit am Exam Day ergibt 1.00",stFinal:"Schlussnote zwei Drittel Praxis, ein Drittel Prüfung",stNote:"Freitext wirkt nur mit Kriterium und Wirkung",stStore:"Browserspeicher funktioniert",
 day:"Erfassen",week:"Übersicht",rep:"Beurteilung",data:"Daten",set:"Eintragen",
   present:"Anwesend",late:"Verspätet",excused:"Entschuldigt",unexcused:"Unentschuldigt",
   addObs:"Beobachtung",noObs:"Keine Abweichung – Tag zählt als «wie erwartet».",
@@ -107,7 +107,7 @@ day:"Erfassen",week:"Übersicht",rep:"Beurteilung",data:"Daten",set:"Eintragen",
   resetHint:"Löscht Studierende, alle Einsatztage und die Gruppenangaben und hinterlässt eine leere Datei. Die Spracheinstellung bleibt. Exportieren Sie vorher eine Sicherung.",
   resetDone:"Datei zurückgesetzt",
   storeFile:"Speicher dieser Datei",
-  teamMarket:"Team Market",tmDay:"Team Market, dieser Tag zählt mit 5.00",
+  teamMarket:"Team Market",tmDay:"Team Market, dieser Tag zählt mit 5.00",lateDay:"Verspätet: Der Tag startet eine Note tiefer (4.00 statt 5.00).",
   saveDay:"Tag speichern",savedAs:"Gespeichert",
   saveDayHint:"Zwei getrennte Knöpfe: der erste öffnet «Speichern unter» und legt den ganzen Rapport als JSON ab, Dateiname aus Dozent, Gruppe, Outlet, Variante und heutigem Datum. Der zweite bereitet die Meldung an die Kursleitung vor. Beide gehören zum Tagesabschluss.",
   groupOnly:"Klasse",outletField:"Outlet / Abteilung",absTm:"Absenzen · TM",
@@ -124,7 +124,7 @@ day:"Erfassen",week:"Übersicht",rep:"Beurteilung",data:"Daten",set:"Eintragen",
   ovClipCrit:"E-mail ready. The per-criterion values are also on the clipboard.",
   ovShortHead:"Practice / Exam / Final · days · absences",
   ovMail:"Send overview to the course lead",ovCopy:"Copy overview",ovMailHint:"Sends this group’s grade overview to",ovFoot:"The report file is stored separately as JSON. This e-mail carries no attachment.",ovClip:"Too long for the e-mail: the full overview is on the clipboard, please paste it in.",ovClipHint:"The overview is on the clipboard. Please paste it here.",absNone:"no absences",
-  selfTest:"Self-test",selfTestBtn:"Run self-test",selfTestHint:"Checks the grading logic and the building-block library of this file. Recorded days are not changed.",selfTestOkN:"passed",selfTestBad:"failed",stChips:"Building block IDs unique",stCrit:"Every block has a valid criterion",stAction:"Every negative block has an action",stLang:"All four languages present",stLate:"Required lateness block present",stSlots:"Shift days numbered correctly",stBase:"Day without observation gives the baseline grade",stLight:"Light block shifts by 0.25",stMedium:"Medium block shifts by 0.50",stHeavy:"Heavy block shifts by 1.00",stCapDown:"Capped at −1.50",stCapUp:"Capped at +1.00",stKo:"Knock-out block affects only its criterion",stLateEffect:"Late deducts from teamwork",stUnexcused:"Unexcused gives 1.00",stExcused:"Excused does not count",stTm:"Team Market counts as 5.00",stExam:"Absence on the Exam Day gives 1.00",stFinal:"Final grade two thirds practice, one third exam",stNote:"Free text only counts with criterion and direction",stStore:"Browser storage works",
+  selfTest:"Self-test",selfTestBtn:"Run self-test",selfTestHint:"Checks the grading logic and the building-block library of this file. Recorded days are not changed.",selfTestOkN:"passed",selfTestBad:"failed",stChips:"Building block IDs unique",stCrit:"Every block has a valid criterion",stAction:"Every negative block has an action",stLang:"All four languages present",stLate:"Required lateness block present",stSlots:"Shift days numbered correctly",stBase:"Day without observation gives the baseline grade",stLight:"Light block shifts by 0.25",stMedium:"Medium block shifts by 0.50",stHeavy:"Heavy block shifts by 1.00",stCapDown:"Capped at −1.50",stCapUp:"Capped at +1.00",stKo:"Knock-out block affects only its criterion",stLateEffect:"Late starts one grade lower (4.00)",stUnexcused:"Unexcused gives 1.00",stExcused:"Excused does not count",stTm:"Team Market counts as 5.00",stExam:"Absence on the Exam Day gives 1.00",stFinal:"Final grade two thirds practice, one third exam",stNote:"Free text only counts with criterion and direction",stStore:"Browser storage works",
 day:"Record",week:"Overview",rep:"Feedback",data:"Data",set:"Setup",
   present:"Present",late:"Late",excused:"Excused",unexcused:"Unexcused",
   addObs:"Observation",noObs:"No deviation – day counts as “as expected”.",
@@ -209,7 +209,7 @@ day:"Record",week:"Overview",rep:"Feedback",data:"Data",set:"Setup",
   resetHint:"Deletes students, all shift days and the group details and leaves an empty file. The language setting is kept. Export a backup first.",
   resetDone:"File reset",
   storeFile:"Storage of this file",
-  teamMarket:"Team Market",tmDay:"Team Market, this day counts as 5.00",
+  teamMarket:"Team Market",tmDay:"Team Market, this day counts as 5.00",lateDay:"Late: the day starts one grade lower (4.00 instead of 5.00).",
   saveDay:"Save day",savedAs:"Saved",
   saveDayHint:"Two separate buttons: the first opens “Save as” and stores the whole report as JSON, named after lecturer, group, outlet, variant and today's date. The second prepares the report to the course lead. Both belong to closing the day.",
   groupOnly:"Class",outletField:"Outlet / department",absTm:"Absences · TM",
@@ -226,7 +226,7 @@ day:"Record",week:"Overview",rep:"Feedback",data:"Data",set:"Setup",
   ovClipCrit:"เตรียมอีเมลแล้ว คะแนนแต่ละเกณฑ์อยู่ในคลิปบอร์ดด้วย",
   ovShortHead:"ปฏิบัติ / สอบ / รวม · วัน · การขาด",
   ovMail:"ส่งภาพรวมให้ผู้ดูแลหลักสูตร",ovCopy:"คัดลอกภาพรวม",ovMailHint:"ส่งสรุปคะแนนของกลุ่มนี้ไปที่",ovFoot:"ไฟล์รายงานเก็บแยกเป็น JSON อีเมลนี้ไม่มีไฟล์แนบ",ovClip:"ยาวเกินสำหรับอีเมล ภาพรวมทั้งหมดอยู่ในคลิปบอร์ด กรุณาวาง",ovClipHint:"ภาพรวมอยู่ในคลิปบอร์ด กรุณาวางที่นี่",absNone:"ไม่มีการขาด",
-  selfTest:"การทดสอบระบบ",selfTestBtn:"เริ่มทดสอบ",selfTestHint:"ตรวจสอบการคำนวณคะแนนและคลังหัวข้อสังเกต ข้อมูลที่บันทึกไว้จะไม่ถูกแก้ไข",selfTestOkN:"ผ่าน",selfTestBad:"ไม่ผ่าน",stChips:"รหัสข้อสังเกตไม่ซ้ำ",stCrit:"ทุกข้อมีเกณฑ์ที่ถูกต้อง",stAction:"ข้อเชิงลบทุกข้อมีแนวทางแก้ไข",stLang:"มีครบทั้งสี่ภาษา",stLate:"มีข้อสำหรับการมาสาย",stSlots:"ลำดับวันฝึกถูกต้อง",stBase:"วันที่ไม่มีการบันทึกได้คะแนนพื้นฐาน",stLight:"น้ำหนักเบา 0.25",stMedium:"น้ำหนักกลาง 0.50",stHeavy:"น้ำหนักมาก 1.00",stCapDown:"จำกัดที่ −1.50",stCapUp:"จำกัดที่ +1.00",stKo:"ข้อ K.O. มีผลเฉพาะเกณฑ์ของตัวเอง",stLateEffect:"มาสายหักคะแนนการทำงานเป็นทีม",stUnexcused:"ขาดโดยไม่แจ้งได้ 1.00",stExcused:"ลาไม่นับรวม",stTm:"Team Market นับเป็น 5.00",stExam:"ขาดวันสอบได้ 1.00",stFinal:"คะแนนรวม สองส่วนสามปฏิบัติ หนึ่งส่วนสามสอบ",stNote:"ข้อความอิสระมีผลเมื่อระบุเกณฑ์",stStore:"หน่วยความจำทำงานได้",
+  selfTest:"การทดสอบระบบ",selfTestBtn:"เริ่มทดสอบ",selfTestHint:"ตรวจสอบการคำนวณคะแนนและคลังหัวข้อสังเกต ข้อมูลที่บันทึกไว้จะไม่ถูกแก้ไข",selfTestOkN:"ผ่าน",selfTestBad:"ไม่ผ่าน",stChips:"รหัสข้อสังเกตไม่ซ้ำ",stCrit:"ทุกข้อมีเกณฑ์ที่ถูกต้อง",stAction:"ข้อเชิงลบทุกข้อมีแนวทางแก้ไข",stLang:"มีครบทั้งสี่ภาษา",stLate:"มีข้อสำหรับการมาสาย",stSlots:"ลำดับวันฝึกถูกต้อง",stBase:"วันที่ไม่มีการบันทึกได้คะแนนพื้นฐาน",stLight:"น้ำหนักเบา 0.25",stMedium:"น้ำหนักกลาง 0.50",stHeavy:"น้ำหนักมาก 1.00",stCapDown:"จำกัดที่ −1.50",stCapUp:"จำกัดที่ +1.00",stKo:"ข้อ K.O. มีผลเฉพาะเกณฑ์ของตัวเอง",stLateEffect:"มาสาย เริ่มต่ำลงหนึ่งคะแนน (4.00)",stUnexcused:"ขาดโดยไม่แจ้งได้ 1.00",stExcused:"ลาไม่นับรวม",stTm:"Team Market นับเป็น 5.00",stExam:"ขาดวันสอบได้ 1.00",stFinal:"คะแนนรวม สองส่วนสามปฏิบัติ หนึ่งส่วนสามสอบ",stNote:"ข้อความอิสระมีผลเมื่อระบุเกณฑ์",stStore:"หน่วยความจำทำงานได้",
 day:"บันทึก",week:"ภาพรวม",rep:"ผลประเมิน",data:"ข้อมูล",set:"กรอกข้อมูล",
   present:"มาเรียน",late:"มาสาย",excused:"ลา (แจ้งแล้ว)",unexcused:"ขาด (ไม่แจ้ง)",
   addObs:"ข้อสังเกต",noObs:"ไม่มีข้อสังเกต – นับว่า «เป็นไปตามที่คาดหวัง»",
@@ -311,7 +311,7 @@ day:"บันทึก",week:"ภาพรวม",rep:"ผลประเมิ
   resetHint:"ลบรายชื่อนักศึกษา วันฝึกทั้งหมด และข้อมูลกลุ่ม เหลือไฟล์เปล่า การตั้งค่าภาษาจะยังอยู่ ควรส่งออกสำรองก่อน",
   resetDone:"ล้างข้อมูลแล้ว",
   storeFile:"พื้นที่เก็บของไฟล์นี้",
-  teamMarket:"Team Market",tmDay:"Team Market วันนี้นับเป็น 5.00",
+  teamMarket:"Team Market",tmDay:"Team Market วันนี้นับเป็น 5.00",lateDay:"มาสาย: วันนี้เริ่มต่ำลงหนึ่งคะแนน (4.00 แทน 5.00)",
   saveDay:"บันทึกวันนี้",savedAs:"บันทึกแล้ว",
   saveDayHint:"มีสองปุ่มแยกกัน ปุ่มแรกจะเปิด «บันทึกเป็น» และเก็บรายงานทั้งหมดเป็น JSON ชื่อไฟล์จากผู้สอน กลุ่ม เอาต์เล็ต รูปแบบ และวันที่วันนี้ ปุ่มที่สองเตรียมรายงานถึงผู้ดูแลหลักสูตร ทั้งสองอย่างเป็นส่วนหนึ่งของการปิดวัน",
   groupOnly:"ชั้นเรียน",outletField:"เอาต์เล็ต / แผนก",absTm:"การขาด · TM",
@@ -328,7 +328,7 @@ day:"บันทึก",week:"ภาพรวม",rep:"ผลประเมิ
   sameName:"\u540c\u540d\u4f46\u90ae\u7bb1\u4e0d\u540c",
   ovClipCrit:"邮件已就绪，各标准分值同时已复制到剪贴板。",
   ovMail:"向课程负责人发送总览",ovCopy:"复制总览",ovMailHint:"将本班组的成绩总览发送至",ovFoot:"报告文件单独以 JSON 保存，本邮件不含附件。",ovClip:"内容过长：完整总览已复制到剪贴板，请粘贴。",ovClipHint:"总览已在剪贴板，请在此粘贴。",absNone:"无缺勤",
-  selfTest:"自检",selfTestBtn:"运行自检",selfTestHint:"检查本文件的计分逻辑与构块库，不会改动已记录的日子。",selfTestOkN:"通过",selfTestBad:"未通过",stChips:"构块编号唯一",stCrit:"每个构块都有有效标准",stAction:"每个负向构块都有改进建议",stLang:"四种语言均齐全",stLate:"迟到构块存在",stSlots:"实习日编号正确",stBase:"无观察的一天为基准分",stLight:"轻度构块偏移 0.25",stMedium:"中度构块偏移 0.50",stHeavy:"重度构块偏移 1.00",stCapDown:"下限截断于 −1.50",stCapUp:"上限截断于 +1.00",stKo:"一票否决仅影响自身标准",stLateEffect:"迟到扣减团队合作",stUnexcused:"旷工计 1.00",stExcused:"请假不计入",stTm:"Team Market 计 5.00",stExam:"考核日缺席计 1.00",stFinal:"最终成绩：三分之二实践、三分之一考核",stNote:"自由文本仅在选定标准与方向时生效",stStore:"浏览器存储可用",
+  selfTest:"自检",selfTestBtn:"运行自检",selfTestHint:"检查本文件的计分逻辑与构块库，不会改动已记录的日子。",selfTestOkN:"通过",selfTestBad:"未通过",stChips:"构块编号唯一",stCrit:"每个构块都有有效标准",stAction:"每个负向构块都有改进建议",stLang:"四种语言均齐全",stLate:"迟到构块存在",stSlots:"实习日编号正确",stBase:"无观察的一天为基准分",stLight:"轻度构块偏移 0.25",stMedium:"中度构块偏移 0.50",stHeavy:"重度构块偏移 1.00",stCapDown:"下限截断于 −1.50",stCapUp:"上限截断于 +1.00",stKo:"一票否决仅影响自身标准",stLateEffect:"迟到：起评分降低一分（4.00）",stUnexcused:"旷工计 1.00",stExcused:"请假不计入",stTm:"Team Market 计 5.00",stExam:"考核日缺席计 1.00",stFinal:"最终成绩：三分之二实践、三分之一考核",stNote:"自由文本仅在选定标准与方向时生效",stStore:"浏览器存储可用",
 day:"记录",week:"总览",rep:"评估",data:"数据",set:"设置",
   present:"出勤",late:"迟到",excused:"请假",unexcused:"旷工",absent:"缺席",
   addObs:"观察记录",noObs:"无偏差，本日按「符合预期」计",
@@ -532,6 +532,7 @@ function saubereStudierende(list){
       if(s.wechselAb && s.wechselOutlet){ o.wechselAb = parseInt(s.wechselAb, 10) || 0; o.wechselOutlet = String(s.wechselOutlet); }
       if(Array.isArray(s.ortPlan)) o.ortPlan = s.ortPlan.map(x => String(x || ""));
       if(Array.isArray(s.tmTage)) o.tmTage = s.tmTage.map(x => parseInt(x, 10)).filter(x => x > 0);
+      if(Array.isArray(s.schichtPlan)) o.schichtPlan = s.schichtPlan.map(x => String(x || ""));
       o.name = anzeigeName(o);
       return o;
     })
@@ -795,6 +796,7 @@ function mapSlotId(srcVariant, slid){
 const acceptsVariant = v => !v || v === VARIANT || (VARIANT === "10T" && (v === "4T" || v === "5T"));
 
 /* ---- Notenlogik ---- */
+const LATE_MINUS = 1;   // Verspätung: Start eine Note tiefer
 function critGradesForDay(id, sid){
   const r = (S.days[id]||{})[sid];
   if(!r) return null;
@@ -807,7 +809,8 @@ function critGradesForDay(id, sid){
   const g = {};
   if(r.att === "unexcused" || (isExam && r.att === "excused")){ CRITS.forEach(c=>g[c.k]=1); return g; }
   const obs = (r.obs||[]).map(i=>CHIP[i]).filter(Boolean);
-  if(r.att === "late" && !obs.some(o=>o.i==="tea-lt")) obs.push(CHIP["tea-lt"]);
+  /* Verspätet (Entscheid 08.10.2026): der Tag startet eine Note tiefer, 4.00 statt 5.00. */
+  const b0 = S.settings.base - (r.att === "late" ? LATE_MINUS : 0);
   const nt = r.note;
   CRITS.forEach(c=>{
     const mine = obs.filter(o=>o.c===c.k);
@@ -816,7 +819,7 @@ function critGradesForDay(id, sid){
     mine.forEach(o=>{ d += o.d * o.w; });
     if(nt && nt.crit === c.k && nt.dir && nt.w) d += nt.dir * nt.w;
     d = Math.max(CAP_NEG, Math.min(CAP_POS, d));
-    g[c.k] = Math.max(1, Math.min(6, S.settings.base + d));
+    g[c.k] = Math.max(1, Math.min(6, b0 + d));
   });
   return g;
 }
@@ -1012,7 +1015,7 @@ function selfTest(){
       add(t("stKo"), gg[ko.c] === 1 && CRITS.filter(c=>c.k!==ko.c).every(c=>gg[c.k] === base), critName(ko.c)); }
 
     set(first,{att:"late",obs:[],note:null});
-    add(t("stLateEffect"), g(first)["tea"] < base, fmt(g(first)["tea"]));
+    add(t("stLateEffect"), CRITS.every(c=>g(first)[c.k] === base - 1), fmt(g(first)["tea"]));
     set(first,{att:"unexcused",obs:[],note:null});
     add(t("stUnexcused"), CRITS.every(c=>g(first)[c.k] === 1));
     set(first,{att:"excused",obs:[],note:null});
@@ -1117,7 +1120,10 @@ function renderDay(){
     const r = dayRec(curSlot, s.id);
     const tot = dayTotal(curSlot, s.id);
     const card = el("article",{class:"stud"+(r.att==="excused"||r.att==="unexcused"||r.att==="tm"?" absent":"")});
-    const head = el("div",{class:"stud-h"},[avatar(s, 34), el("div",{class:"nm",text:s.name + nickTag(s)})]);
+    const head = el("div",{class:"stud-h"},[avatar(s, 34), el("div",{class:"nm"},[document.createTextNode(s.name + nickTag(s)), schichtPill(s, curSlot),
+      el("button",{class:"nickbtn",title:"Nickname",text:"✎",onclick:()=>{        // Nickname direkt eintragen (Rückmeldung Pilot 08.10.2026)
+        let v = null; try{ v = window.prompt("Nickname · " + s.name, s.nick || ""); }catch(e){ v = null; }
+        if(v === null) return; s.nick = String(v).trim(); s.nickNeu = new Date().toISOString().slice(0, 10); persist(); render(); }})])]);
     if(hasOutlet2()) head.appendChild(el("button",{class:"opill"+(r.outlet?" alt":""),title:t("switchTitle"),
       text:"⇄ " + (r.outlet || S.settings.outlet || "–"),
       onclick:()=>{ unseed(); toggleOutlet(r); persist(); renderDay(); }}));
@@ -1139,10 +1145,10 @@ function renderDay(){
     if(r.att !== "excused" && r.att !== "unexcused" && r.att !== "tm"){
       const body = el("div",{class:"stud-b"});
       const shown = [...(r.obs||[])];
-      if(r.att==="late" && !shown.includes("tea-n1")) shown.push("tea-n1");
+      if(r.att==="late") body.appendChild(el("span",{class:"emptyhint",text:t("lateDay")}));
       shown.forEach(id=>{
         const c = CHIP[id]; if(!c) return;
-        const auto = (id==="tea-n1" && !(r.obs||[]).includes("tea-n1"));
+        const auto = false;
         const pill = el("span",{class:"obs "+(c.d>0?"p":"m")},
           el("span",{class:"tx",text:(c.ko ? "K.-o. " : (c.d>0?"+":"\u2212") + c.w.toFixed(2).slice(1) + " ") + chipT(c, S.settings.uiLang)}));
         if(!auto) pill.appendChild(el("button",{class:"x",text:"×","aria-label":"x",
@@ -2402,6 +2408,34 @@ document.getElementById("outLang").addEventListener("change", e=>{
    (gleiche Adresse, die Daten verlassen das Gerät nie) und öffnet dann diese Datei.
    Hier wird es geladen. Bereits erfasste Tage eines anderen Pakets werden nur nach
    Rückfrage ersetzt. */
+/* Daily Grades (08.10.2026): Schicht-Kürzel und Weg zurück zur Startseite, gemeinsam für alle Fassungen */
+/* Schicht-Kürzel aus dem Duty Plan (Legende der Einsatzpläne HS26) */
+const SCHICHT_INFO = {
+  S:"Service", SA:"Service Asia (Umami)", SM:"Service «The Market», MeP & Lunch", ST:"Service Tournant", Sv:"Supervisor (Host)",
+  BS:"Bar & Service", CS1:"Chef de Service", CS2:"Assistant Chef de Service", CS2W:"Assistant Chef de Service, Wein",
+  SW1:"Sommelier", SW2:"Wine Waiter / Assistent", OC:"Office & Daily MeP, Stewarding (zählt wie Team Market)",
+  OST:"Office & Daily MeP in Service-Uniform", OTB:"Office, Daily MeP & Buffet Market", OS:"Office & Daily MeP in Service-Uniform",
+  KC:"Chef de Cuisine", KS:"Sous-Chef", Sc:"Saucier", E:"Entremetier", G:"Garde-manger", T:"Tournant", TM:"Tournant «The Market»",
+  K:"Casserolier", TK:"Tournant / Casserolier", K1:"Entremetier", K2:"Saucier", K3:"Garde-manger",
+  A1:"Entremetier Asia", A2:"Saucier Asia", A3:"Garde-manger Asia", TA:"Tournant Asia", P:"Pâtisserie", C:"Küche Campigiana"
+};
+function planSchicht(s, slotId){
+  const sl = slots().find(x => x.id === slotId);
+  if(!s || !sl || !Array.isArray(s.schichtPlan)) return "";
+  return String(s.schichtPlan[sl.idx - 1] || "").trim();
+}
+function schichtPill(s, slotId){
+  const c = planSchicht(s, slotId); if(!c) return null;
+  const info = SCHICHT_INFO[c] || SCHICHT_INFO[c.toUpperCase()] || "";
+  return el("span",{class:"spill" + (c.toUpperCase() === "OC" ? " oc" : ""), title: "Schicht · Shift " + c + (info ? ": " + info : ""), text:c});
+}
+
+/* Zurück zur persönlichen Startseite: liegt eine Ebene höher (…/mein.html) */
+function n2HomeHref(){
+  return /^https?:/.test(location.protocol) ? "../mein.html" : "https://pilman1982.github.io/praxisrapport/mein.html";
+}
+{ const h = document.getElementById("btnHome"); if(h){ h.setAttribute("href", n2HomeHref());  } }
+
 function n2Handoff(load){
   let h = null;
   try{ h = JSON.parse(localStorage.getItem("praxisrapport.handoff") || "null"); }catch(e){ h = null; }
@@ -2448,8 +2482,11 @@ function n2Refresh(list){
   S.students.forEach(s => {
     const n = list.find(x => x && ((s.nr && x.nr && String(x.nr) === String(s.nr)) || (!s.nr && x.id === s.id)));
     if(!n) return;
-    ["foto","nick","klasse","gruppe","email","ortPlan","tmTage"].forEach(k => {
-      if(n[k] !== undefined && JSON.stringify(n[k]) !== JSON.stringify(s[k])){ s[k] = n[k]; ch = true; }
+    ["foto","nick","klasse","gruppe","mail","email","ortPlan","tmTage","schichtPlan"].forEach(k => {
+      if(n[k] === undefined || JSON.stringify(n[k]) === JSON.stringify(s[k])) return;
+      /* Nickname: ein leeres Feld im Paket löscht keinen Nickname, der auf dem Gerät eingetragen wurde */
+      if(k === "nick" && !String(n[k] || "").trim()) return;
+      s[k] = n[k]; ch = true;
     });
   });
   /* neu im Plan: Person ergänzen (niemand wird entfernt, damit keine Erfassung verloren geht) */

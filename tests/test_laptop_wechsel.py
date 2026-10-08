@@ -29,7 +29,7 @@ with sync_playwright() as p:
             c = b.new_context(viewport={"width":1280,"height":800}); pg = c.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
             pg.goto(U + name + ".html"); pg.wait_for_timeout(500)
             if mob: r = pg.evaluate("()=>document.getElementById('view').innerHTML.length")
-            else: r = pg.evaluate("()=>document.getElementById('v-day').innerHTML.length + (document.getElementById('brandLogo').src ? 0 : -99999)")
+            else: r = pg.evaluate("()=>document.getElementById('v-day').innerHTML.length + (document.querySelector('.dgl svg') ? 0 : -99999)")
             sw = pg.locator("#btnSwitch").count()
             ok(name + ": startet, Inhalt sichtbar, Umschalter da", r > 200 and sw == 1 and not errs, (r, sw, errs[:1]))
             c.close()

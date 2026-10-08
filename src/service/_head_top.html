@@ -5,8 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#001436">
-<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Servicerapport 10 Tage · Exam Day</title>
+<style>html{color-scheme:light dark}body{margin:0}img{max-width:100%}[hidden]{display:none!important}/* Daily Grades (08.10.2026) */
+.nickbtn{background:transparent;border:1px solid var(--line);color:inherit;border-radius:7px;font-size:12px;line-height:1;padding:3px 6px;margin-left:8px;cursor:pointer;opacity:.7}
+.nickbtn:hover{opacity:1}
+.dgl svg{width:32px;height:32px;display:block;flex:0 0 auto}
+a.swbtn{text-decoration:none;display:inline-flex;align-items:center}
+.spill{display:inline-block;font-weight:700;font-size:11px;letter-spacing:.02em;border:1px solid var(--line2);border-radius:6px;padding:2px 6px;margin-left:8px;vertical-align:1px}
+.spill.oc{background:var(--petrol,#005779);border-color:var(--petrol,#005779);color:#fff}
+</style>
+<title>Daily Grades · Service</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&display=swap">
@@ -313,12 +320,13 @@ details.exp>div{padding:0 14px 14px;border-top:1px solid var(--line);padding-top
 <header class="top">
   <div class="top-in">
     <div class="brand">
-      <img id="brandLogo" alt="EHL Hotelfachschule Passugg">
+      <span class="dgl" aria-hidden="true">__DG_LOGO__</span>
       <span class="sep"></span>
-      <span class="txt"><b>Servicerapport</b><span class="sub" id="brandSub">Servicepraxis</span></span>
+      <span class="txt"><b>Daily Grades · Service</b><span class="sub" id="brandSub">Servicepraxis</span></span>
       <span class="vbadge" id="brandVar"></span>
     </div>
     <div class="langs">
+      <a class="swbtn" id="btnHome" href="../mein.html" title="Meine Startseite · My start page">⌂ Startseite</a>
       <button type="button" class="swbtn" id="btnSwitch" title="Tablet-Ansicht · Tablet view">📱 Tablet</button>
       <label for="uiLang">UI</label>
       <select class="mini" id="uiLang"></select>

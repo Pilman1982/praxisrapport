@@ -14,9 +14,9 @@ SRC = pathlib.Path(__file__).parent
 OUT = SRC.parent / "dist"; OUT.mkdir(exist_ok=True)
 
 VARIANTS = {
-    "10T": dict(file="Servicerapport_Mobil.html",                   title="Servicerapport Mobil · 10 Tage"),
-    "4T":  dict(file="Servicerapport_Mobil_4Tage_Exam.html",        title="Servicerapport Mobil · 4 Tage + Exam"),
-    "5T":  dict(file="Servicerapport_Mobil_5Tage_ohneExam.html",    title="Servicerapport Mobil · 5 Tage ohne Exam"),
+    "10T": dict(file="Servicerapport_Mobil.html",                   title="Daily Grades · Service · 9 Tage + Exam"),
+    "4T":  dict(file="Servicerapport_Mobil_4Tage_Exam.html",        title="Daily Grades · Service · 4 Tage + Exam"),
+    "5T":  dict(file="Servicerapport_Mobil_5Tage_ohneExam.html",    title="Daily Grades · Service · 5 Tage"),
 }
 
 def read(n): return (SRC / n).read_text(encoding="utf-8")
@@ -27,7 +27,7 @@ def build(variant, only=None):
     head = read("_mobile_head.html") \
         .replace("__LOGO__", read("_logo.txt").strip()) \
         .replace("__ICON__", read("_icon.txt").strip()) \
-        .replace("<title>Servicerapport Mobil · 10 Tage</title>", "<title>" + cfg["title"] + "</title>")
+        .replace("<title>Daily Grades · Service</title>", "<title>" + cfg["title"] + "</title>")
     js = read("_mobile.js")
     # Noten 2.0: gemeinsamer Zusatz fuer beide mobilen Apps (Noten, Daten)
     js = js.replace("/* ---------- Start ---------- */", ((SRC / "_noten2_mobile.js") if (SRC / "_noten2_mobile.js").exists() else (SRC.parent / "_noten2_mobile.js")).read_text(encoding="utf-8") + "\n/* ---------- Start ---------- */", 1)

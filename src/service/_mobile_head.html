@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Rapport">
 <meta name="theme-color" content="#001436">
-<title>Servicerapport Mobil · 10 Tage</title>
+<title>Daily Grades · Service</title>
 <link rel="apple-touch-icon" href="data:image/png;base64,__ICON__">
 <link rel="icon" href="data:image/png;base64,__ICON__">
 <style>
@@ -162,10 +162,11 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
 .att button.tm[aria-pressed="true"]{background:var(--petrol);border-color:var(--petrol)}
 
 /* ---------- Bausteine ---------- */
-.critbar{display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
-.critbar::-webkit-scrollbar{display:none}
+/* Alle Kriterien auf einen Blick, ohne seitliches Scrollen (Rückmeldung Pilot 08.10.2026) */
+.critbar{display:grid;grid-template-columns:repeat(auto-fill,minmax(122px,1fr));gap:7px;padding:2px 0 12px}
 .critbar button{
-  flex:0 0 auto;min-height:40px;padding:8px 13px;border-radius:999px;
+  min-height:42px;padding:7px 11px;border-radius:12px;text-align:left;
+  display:flex;align-items:center;flex-wrap:wrap;gap:0 4px;line-height:1.2;
   border:1px solid var(--line);background:var(--surf2);color:var(--ink2);font-size:14px;font-weight:600;
 }
 .critbar button[aria-current="true"]{background:var(--petrol);border-color:var(--petrol);color:#fff}
@@ -242,15 +243,30 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
   border-radius:12px;padding:11px 13px;font-size:13.5px;color:var(--ink2);margin-bottom:14px;
 }
 .banner.bad{background:rgba(190,40,40,.12);border-color:rgba(190,40,40,.55);color:var(--ink);font-weight:600}
+
+/* ---------- Daily Grades (08.10.2026) ---------- */
+.dgm{width:30px;height:30px;flex:0 0 auto;color:#fff;display:block}
+.dgm svg{width:30px;height:30px;display:block}
+.happ{font-size:11px;color:#9FB0C6;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+a.hbtn{display:grid;place-items:center;text-decoration:none}
+@media (max-width:440px){#btnSwitch,.happ2{display:none}}
+.spill{display:inline-block;font:700 11.5px/1 var(--f-text,inherit);letter-spacing:.02em;border:1px solid var(--line);border-radius:6px;padding:2px 5px;margin:0 6px 0 0;vertical-align:1px;color:var(--ink2);background:var(--surf2)}
+.spill.oc{background:var(--petrol);border-color:var(--petrol);color:#fff}
+.nickbtn{background:transparent;border:1px solid var(--line);color:inherit;border-radius:8px;font-size:14px;line-height:1;padding:4px 7px;margin-left:8px;vertical-align:2px}
+.nickbox{background:var(--surf2);border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:14px}
+.nickbox input{flex:1;min-width:0;font-size:16px;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:var(--surf);color:var(--ink)}
+.sumcard{border:2px solid var(--petrol)}
 </style>
 </head>
 <body>
 <header>
   <div class="hrow">
-    <img id="brandLogo" alt="EHL">
+    <span class="dgm" aria-hidden="true">__DG_MARK__</span>
     <div style="min-width:0;flex:1">
+      <div class="happ" id="brandApp">Daily Grades<span class="happ2"> · Service</span></div>
       <div class="htitle" id="brandSub">Servicepraxis</div>
     </div>
+    <a class="hbtn" id="btnHome" href="../mein.html" aria-label="Meine Startseite" title="Meine Startseite">⌂</a>
     <button class="hbtn" id="btnSwitch" aria-label="Laptop-Ansicht" title="Laptop-Ansicht · Laptop view">💻</button>
     <button class="hbtn" id="btnGrades" aria-label="Noten">Ø</button>
     <button class="hbtn" id="btnLang" aria-label="Sprache">文</button>

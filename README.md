@@ -1,4 +1,4 @@
-# Praxisrapport
+# Daily Grades (Praxisrapport)
 
 Praxisbeurteilung Küche und Service an der EHL Hotelfachschule Passugg.
 Web-App ohne Installation: läuft im Browser auf Windows, iPhone, iPad und Android.
@@ -68,10 +68,11 @@ python3 tests/test_halbturnus.py    # 5T + 4T in die 10T-Datei
 python3 tests/test_wechsel.py       # Service: Restaurantwechsel
 python3 tests/test_cockpit.py       # Cockpit: Plan, Fotos, Pakete, Eingangskontrolle
 python3 tests/test_altdaten.py      # Rapporte aus dem Pilot (alter Programmstand)
+python3 tests/test_daily_grades.py  # Rückmeldungen Pilot 08.10.2026 (Schichten, OC, Verspätung, Nickname, Zusammenfassung)
 git commit -am "…" && git push      # GitHub Pages aktualisiert sich in 1 bis 2 Minuten
 ```
 
-Feste Regeln (Basisnote 5.00, Gewichte, Exam Day, 2/3 Praxis + 1/3 Exam) stehen in
+Feste Regeln (Basisnote 5.00, Verspätung startet bei 4.00, Team Market und OC zählen 5.00, Gewichte, Exam Day, 2/3 Praxis + 1/3 Exam) stehen in
 `src/*/LIESMICH.txt` und werden nicht über die Oberfläche geändert.
 
 ## Fahrplan Noten 2.0
@@ -82,3 +83,14 @@ Feste Regeln (Basisnote 5.00, Gewichte, Exam Day, 2/3 Praxis + 1/3 Exam) stehen 
 3. Nov.: Testlauf mit den Outlets
 4. Dez.: zweiter Testlauf, Kriterien pro Outlet, Anleitungen DE/EN/TH
 5. Jan. 2027: Go-live
+
+## Rückmeldungen aus dem Pilot (08.10.2026)
+
+- Name **Daily Grades**, Logo DG (`src/_brand/`), wird beim Bauen in alle Seiten eingesetzt.
+- Schicht-Kürzel aus dem Duty Plan pro Einsatztag (`tage[].schicht` im Turnusplan → `schichtPlan` im Paket), Anzeige neben dem Namen.
+- OC (Office und Daily MeP) zählt wie Team Market (5.00), wird im Cockpit als Team-Market-Tag vorbelegt.
+- Verspätet: der Tag startet eine Note tiefer (4.00 statt 5.00), kein automatischer Baustein mehr.
+- Kriterien im Tablet-Blatt als Raster, ohne seitliches Scrollen. Freitext wird beim Schliessen immer gespeichert.
+- Nickname im Blatt eintragen (✎); das Cockpit sammelt neue Nicknames aus den Rapporten und übernimmt sie in den Turnusplan.
+- Zusammenfassung an die Kursleitung nach dem Exam (Ø 9 Tage + Exam, Ø 5 Tage, Ø 4 Tage + Exam).
+- Knopf ⌂ zurück zur persönlichen Startseite (mein.html).

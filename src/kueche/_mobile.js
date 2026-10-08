@@ -5,6 +5,7 @@
    ================================================================== */
 
 const ABS_MAIL = "michael.pilman@ehl.ch";
+const APP_AREA = "Küche";   // Daily Grades · Bereich
 
 /* ===== Variante dieser Datei, bewusst nicht einstellbar =====
    Wird beim Erzeugen der Datei gesetzt, wie bei der Laptop-Datei.   */
@@ -586,8 +587,8 @@ function renderDay(){
     b.appendChild(el("span",{class:"nm"},[
       el("span",{html:""}),
       document.createTextNode(dispName(s) + nickTag(s)),
-      el("div",{class:"sub",text:t(attOf(r) === "tm" ? "teamMarket" : attOf(r)) + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))
-        + " · \u00d8 " + n2Fmt(n2Praxis(s.id).avg)})
+      el("div",{class:"sub"},[schichtPill(s, curSlot), document.createTextNode(t(attOf(r) === "tm" ? "teamMarket" : attOf(r)) + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))
+        + " · \u00d8 " + n2Fmt(n2Praxis(s.id).avg))])
     ]));
     if(n) b.appendChild(el("span",{class:"pill on",text:String(n)}));
     b.appendChild(n2Pill(n2Day(curSlot, s.id)));
@@ -597,6 +598,8 @@ function renderDay(){
   root.appendChild(el("div",{class:"card"}, ul));
 
   if(sl.exam) root.appendChild(el("div",{class:"banner",style:"margin-top:14px",text:t("examAbs")}));
+  /* Letzter Tag (Exam Day bzw. Tag 5): Zusammenfassung an die Kursleitung gleich hier anbieten */
+  if(sl.id === slots()[slots().length - 1].id){ const sc = n2SummaryCard(); sc.style.marginTop = "14px"; root.appendChild(sc); }
   root.appendChild(el("p",{class:"muted",style:"margin:14px 2px 0",text:t("shareHint")}));
 }
 
@@ -605,14 +608,18 @@ let sheetCrit = "hyg", sheetAll = false;
 function openSheet(student){
   const host = document.getElementById("sheetHost");
   sheetCrit = "hyg"; sheetAll = false;
-  const close = ()=>{ host.innerHTML = ""; document.body.style.overflow = ""; render(); };
+  let nickOpen = false;
+  /* Vor dem Schliessen das aktive Feld verlassen und speichern: Freitext geht nie verloren, egal wo man schliesst */
+  const sichern = ()=>{ try{ const a = document.activeElement; if(a && a.blur) a.blur(); }catch(e){} persist(); };
+  const close = ()=>{ sichern(); host.innerHTML = ""; document.body.style.overflow = ""; render(); };
   document.body.style.overflow = "hidden";
   const sh = el("div",{class:"sheet"});
   const hd = el("div",{class:"sheet-h"});
   { const av0 = avatar(student, 44); if(av0) hd.appendChild(av0); }
   hd.appendChild(el("div",{style:"min-width:0;flex:1"},[
-    el("div",{class:"nm",text:dispName(student) + nickTag(student)}),
-    el("div",{class:"sb"},[document.createTextNode(slotLabel(slotById(curSlot)) + "  "), el("span",{id:"n2grade",class:"gpill big"})])
+    el("div",{class:"nm"},[document.createTextNode(dispName(student) + nickTag(student)),
+      el("button",{class:"nickbtn",id:"nickBtn",title:n2x("nick"),"aria-label":n2x("nick"),text:"✎",onclick:()=>{ nickOpen = !nickOpen; draw(); }})]),
+    el("div",{class:"sb"},[document.createTextNode(slotLabel(slotById(curSlot)) + "  "), schichtPill(student, curSlot), el("span",{id:"n2grade",class:"gpill big"})])
   ]));
   hd.appendChild(el("button",{class:"hbtn",text:"✕","aria-label":t("done"),onclick:close}));
   sh.appendChild(hd);
@@ -621,10 +628,10 @@ function openSheet(student){
   const ft = el("div",{class:"sheet-f"});
   const ix = S.students.findIndex(x=>x.id===student.id);
   if(ix > 0) ft.appendChild(el("button",{class:"btn",text:"‹",
-    onclick:()=>{ host.innerHTML=""; document.body.style.overflow=""; openSheet(S.students[ix-1]); }}));
+    onclick:()=>{ sichern(); host.innerHTML=""; document.body.style.overflow=""; openSheet(S.students[ix-1]); }}));
   ft.appendChild(el("button",{class:"btn pri",text:t("done"),onclick:close}));
   if(ix < S.students.length-1) ft.appendChild(el("button",{class:"btn",text:"›",
-    onclick:()=>{ host.innerHTML=""; document.body.style.overflow=""; openSheet(S.students[ix+1]); }}));
+    onclick:()=>{ sichern(); host.innerHTML=""; document.body.style.overflow=""; openSheet(S.students[ix+1]); }}));
   sh.appendChild(ft);
   host.innerHTML = ""; host.appendChild(sh);
 
@@ -634,6 +641,8 @@ function openSheet(student){
     n2ShowHead(student.id);
     const n2cg = n2Crit(curSlot, student.id);
 
+    if(nickOpen) body.appendChild(n2NickBox(student, ()=>{ nickOpen = false; const nm0 = sh.querySelector(".sheet-h .nm");
+      if(nm0 && nm0.firstChild) nm0.firstChild.textContent = dispName(student) + nickTag(student); draw(); }));
     /* Anwesenheit */
     body.appendChild(el("span",{class:"eyebrow",style:"display:block;margin-bottom:7px",text:t("attendance")}));
     const att = el("div",{class:"att"});
@@ -644,6 +653,8 @@ function openSheet(student){
           text:t(k), onclick:()=>{ r.att = val; persist(); draw(); }}));
       });
     body.appendChild(att);
+    if(attOf(r) === "late") body.appendChild(el("div",{class:"banner",style:"margin-top:9px",text:n2x("lateDay")}));
+    if(attOf(r) === "tm" && planSchicht(student, curSlot).toUpperCase() === "OC") body.appendChild(el("div",{class:"banner",style:"margin-top:9px",text:n2x("ocDay")}));
 
     /* Kriterien */
     body.appendChild(el("span",{class:"eyebrow",style:"display:block;margin:18px 0 7px",text:t("obs")}));
@@ -655,7 +666,6 @@ function openSheet(student){
       b.appendChild(el("span",{text:critName(c.k)}));
       if(n2cg) b.appendChild(el("span",{class:"cg",text:n2cg[c.k].toFixed(2)}));
       if(n) b.appendChild(el("span",{class:"n",text:"("+n+")"}));
-      if(sheetCrit === c.k) setTimeout(()=>{ try{ b.scrollIntoView({block:"nearest",inline:"center"}); }catch(e){} }, 0);
       bar.appendChild(b);
     });
     bar.appendChild(el("button",{"aria-current":String(sheetCrit==="__note"),
@@ -666,11 +676,13 @@ function openSheet(student){
       const nt = r.note || {txt:""};
       const f = el("div",{class:"field"});
       const ta = el("textarea",{placeholder:t("notePh"),
-        oninput:e=>{ r.note = {txt:e.target.value, crit:"", dir:0, w:0}; persist(); }});
+        oninput:e=>{ r.note = {txt:e.target.value, crit:"", dir:0, w:0}; persist(); const ok = document.getElementById("noteOk"); if(ok) ok.textContent = n2x("saved"); },
+        onblur:()=>persist()});
       ta.value = nt.txt || "";
       f.appendChild(ta);
       body.appendChild(f);
       body.appendChild(el("p",{class:"muted",style:"margin:0",text:t("noteHint")}));
+      body.appendChild(el("p",{class:"muted",id:"noteOk",style:"margin:6px 0 0;font-size:13px;color:var(--plus,#2f7d4f)",text:""}));
       return;
     }
 

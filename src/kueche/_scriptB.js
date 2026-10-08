@@ -106,7 +106,7 @@ const T = {
   resetHint:"Löscht Studierende, alle Einsatztage und die Gruppenangaben und hinterlässt eine leere Datei. Die Spracheinstellung bleibt. Exportieren Sie vorher eine Sicherung.",
   resetDone:"Datei zurückgesetzt",
   storeFile:"Speicher dieser Datei",
-  teamMarket:"Team Market",tmDay:"Team Market, dieser Tag zählt mit 5.00",
+  teamMarket:"Team Market",tmDay:"Team Market, dieser Tag zählt mit 5.00",lateDay:"Verspätet: Der Tag startet eine Note tiefer (4.00 statt 5.00).",
   saveDay:"Tag speichern",savedAs:"Gespeichert",
   saveDayHint:"Zwei getrennte Knöpfe: der erste öffnet «Speichern unter» und legt den ganzen Rapport als JSON ab, Dateiname aus Dozent, Gruppe, Outlet, Variante und heutigem Datum. Der zweite bereitet die Meldung an die Kursleitung vor. Beide gehören zum Tagesabschluss.",
   groupOnly:"Gruppe",outletField:"Outlet / Abteilung",absTm:"Absenzen · TM",
@@ -207,7 +207,7 @@ const T = {
   resetHint:"Deletes students, all shift days and the group details and leaves an empty file. The language setting is kept. Export a backup first.",
   resetDone:"File reset",
   storeFile:"Storage of this file",
-  teamMarket:"Team Market",tmDay:"Team Market, this day counts as 5.00",
+  teamMarket:"Team Market",tmDay:"Team Market, this day counts as 5.00",lateDay:"Late: the day starts one grade lower (4.00 instead of 5.00).",
   saveDay:"Save day",savedAs:"Saved",
   saveDayHint:"Two separate buttons: the first opens “Save as” and stores the whole report as JSON, named after lecturer, group, outlet, variant and today's date. The second prepares the report to the course lead. Both belong to closing the day.",
   groupOnly:"Group",outletField:"Outlet / department",absTm:"Absences · TM",
@@ -308,7 +308,7 @@ const T = {
   resetHint:"ลบรายชื่อนักศึกษา วันฝึกทั้งหมด และข้อมูลกลุ่ม เหลือไฟล์เปล่า การตั้งค่าภาษาจะยังอยู่ ควรส่งออกสำรองก่อน",
   resetDone:"ล้างข้อมูลแล้ว",
   storeFile:"พื้นที่เก็บของไฟล์นี้",
-  teamMarket:"Team Market",tmDay:"Team Market วันนี้นับเป็น 5.00",
+  teamMarket:"Team Market",tmDay:"Team Market วันนี้นับเป็น 5.00",lateDay:"มาสาย: วันนี้เริ่มต่ำลงหนึ่งคะแนน (4.00 แทน 5.00)",
   saveDay:"บันทึกวันนี้",savedAs:"บันทึกแล้ว",
   saveDayHint:"มีสองปุ่มแยกกัน ปุ่มแรกจะเปิด «บันทึกเป็น» และเก็บรายงานทั้งหมดเป็น JSON ชื่อไฟล์จากผู้สอน กลุ่ม เอาต์เล็ต รูปแบบ และวันที่วันนี้ ปุ่มที่สองเตรียมรายงานถึงผู้ดูแลหลักสูตร ทั้งสองอย่างเป็นส่วนหนึ่งของการปิดวัน",
   groupOnly:"กลุ่ม",outletField:"เอาต์เล็ต / แผนก",absTm:"การขาด · TM",
@@ -727,6 +727,7 @@ function mapSlotId(srcVariant, slid){
 const acceptsVariant = v => !v || v === VARIANT || (VARIANT === "10T" && (v === "4T" || v === "5T"));
 
 /* ---- Notenlogik ---- */
+const LATE_MINUS = 1;   // Verspätung: Start eine Note tiefer
 function critGradesForDay(id, sid){
   const r = (S.days[id]||{})[sid];
   if(!r) return null;
@@ -740,7 +741,8 @@ function critGradesForDay(id, sid){
   const g = {};
   if(att === "unexcused" || (isExam && att === "excused")){ CRITS.forEach(c=>g[c.k]=1); return g; }
   const obs = obsOf(r).map(i=>CHIP[i]).filter(Boolean);
-  if(att === "late" && !obs.some(o=>o.i==="tea-n1")) obs.push(CHIP["tea-n1"]);
+  /* Verspätet (Entscheid 08.10.2026): der Tag startet eine Note tiefer, 4.00 statt 5.00. */
+  const b0 = baseNum() - (att === "late" ? LATE_MINUS : 0);
   const nt = r.note;
   CRITS.forEach(c=>{
     const mine = obs.filter(o=>o.c===c.k);
@@ -749,7 +751,7 @@ function critGradesForDay(id, sid){
     mine.forEach(o=>{ d += o.d * o.w; });
     if(nt && nt.crit === c.k && nt.dir && nt.w) d += nt.dir * nt.w;
     d = Math.max(CAP_NEG, Math.min(CAP_POS, d));
-    g[c.k] = Math.max(1, Math.min(6, baseNum() + d));
+    g[c.k] = Math.max(1, Math.min(6, b0 + d));
   });
   return g;
 }
@@ -966,7 +968,10 @@ function renderDay(){
     const r = dayRec(curSlot, s.id);
     const tot = dayTotal(curSlot, s.id);
     const card = el("article",{class:"stud"+(r.att==="excused"||r.att==="unexcused"||r.att==="tm"?" absent":"")});
-    const head = el("div",{class:"stud-h"},[avatar(s, 34), el("div",{class:"nm",text:s.name + nickTag(s)})]);
+    const head = el("div",{class:"stud-h"},[avatar(s, 34), el("div",{class:"nm"},[document.createTextNode(s.name + nickTag(s)), schichtPill(s, curSlot),
+      el("button",{class:"nickbtn",title:"Nickname",text:"✎",onclick:()=>{        // Nickname direkt eintragen (Rückmeldung Pilot 08.10.2026)
+        let v = null; try{ v = window.prompt("Nickname · " + s.name, s.nick || ""); }catch(e){ v = null; }
+        if(v === null) return; s.nick = String(v).trim(); s.nickNeu = new Date().toISOString().slice(0, 10); persist(); render(); }})])]);
     head.appendChild(el("div",{class:"grade num "+gradeClass(tot),text: tot==null ? t("excused") : fmt(tot)}));
     card.appendChild(head);
     const seg = el("div",{class:"seg"+(sl.exam?" two":" five")});
@@ -985,10 +990,10 @@ function renderDay(){
     if(r.att !== "excused" && r.att !== "unexcused" && r.att !== "tm"){
       const body = el("div",{class:"stud-b"});
       const shown = [...obsOf(r)];
-      if(r.att==="late" && !shown.includes("tea-n1")) shown.push("tea-n1");
+      if(r.att==="late") body.appendChild(el("span",{class:"emptyhint",text:t("lateDay")}));
       shown.forEach(id=>{
         const c = CHIP[id]; if(!c) return;
-        const auto = (id==="tea-n1" && !obsOf(r).includes("tea-n1"));
+        const auto = false;
         const pill = el("span",{class:"obs "+(c.d>0?"p":"m")},
           el("span",{class:"tx",text:(c.ko ? "K.-o. " : (c.d>0?"+":"\u2212") + c.w.toFixed(2).slice(1) + " ") + chipT(c, S.settings.uiLang)}));
         if(!auto) pill.appendChild(el("button",{class:"x",text:"×","aria-label":"x",
@@ -2162,6 +2167,34 @@ document.getElementById("outLang").addEventListener("change", e=>{
    (gleiche Adresse, die Daten verlassen das Gerät nie) und öffnet dann diese Datei.
    Hier wird es geladen. Bereits erfasste Tage eines anderen Pakets werden nur nach
    Rückfrage ersetzt. */
+/* Daily Grades (08.10.2026): Schicht-Kürzel und Weg zurück zur Startseite, gemeinsam für alle Fassungen */
+/* Schicht-Kürzel aus dem Duty Plan (Legende der Einsatzpläne HS26) */
+const SCHICHT_INFO = {
+  S:"Service", SA:"Service Asia (Umami)", SM:"Service «The Market», MeP & Lunch", ST:"Service Tournant", Sv:"Supervisor (Host)",
+  BS:"Bar & Service", CS1:"Chef de Service", CS2:"Assistant Chef de Service", CS2W:"Assistant Chef de Service, Wein",
+  SW1:"Sommelier", SW2:"Wine Waiter / Assistent", OC:"Office & Daily MeP, Stewarding (zählt wie Team Market)",
+  OST:"Office & Daily MeP in Service-Uniform", OTB:"Office, Daily MeP & Buffet Market", OS:"Office & Daily MeP in Service-Uniform",
+  KC:"Chef de Cuisine", KS:"Sous-Chef", Sc:"Saucier", E:"Entremetier", G:"Garde-manger", T:"Tournant", TM:"Tournant «The Market»",
+  K:"Casserolier", TK:"Tournant / Casserolier", K1:"Entremetier", K2:"Saucier", K3:"Garde-manger",
+  A1:"Entremetier Asia", A2:"Saucier Asia", A3:"Garde-manger Asia", TA:"Tournant Asia", P:"Pâtisserie", C:"Küche Campigiana"
+};
+function planSchicht(s, slotId){
+  const sl = slots().find(x => x.id === slotId);
+  if(!s || !sl || !Array.isArray(s.schichtPlan)) return "";
+  return String(s.schichtPlan[sl.idx - 1] || "").trim();
+}
+function schichtPill(s, slotId){
+  const c = planSchicht(s, slotId); if(!c) return null;
+  const info = SCHICHT_INFO[c] || SCHICHT_INFO[c.toUpperCase()] || "";
+  return el("span",{class:"spill" + (c.toUpperCase() === "OC" ? " oc" : ""), title: "Schicht · Shift " + c + (info ? ": " + info : ""), text:c});
+}
+
+/* Zurück zur persönlichen Startseite: liegt eine Ebene höher (…/mein.html) */
+function n2HomeHref(){
+  return /^https?:/.test(location.protocol) ? "../mein.html" : "https://pilman1982.github.io/praxisrapport/mein.html";
+}
+{ const h = document.getElementById("btnHome"); if(h){ h.setAttribute("href", n2HomeHref());  } }
+
 function n2Handoff(load){
   let h = null;
   try{ h = JSON.parse(localStorage.getItem("praxisrapport.handoff") || "null"); }catch(e){ h = null; }
@@ -2208,8 +2241,11 @@ function n2Refresh(list){
   S.students.forEach(s => {
     const n = list.find(x => x && ((s.nr && x.nr && String(x.nr) === String(s.nr)) || (!s.nr && x.id === s.id)));
     if(!n) return;
-    ["foto","nick","klasse","gruppe","email","ortPlan","tmTage"].forEach(k => {
-      if(n[k] !== undefined && JSON.stringify(n[k]) !== JSON.stringify(s[k])){ s[k] = n[k]; ch = true; }
+    ["foto","nick","klasse","gruppe","mail","email","ortPlan","tmTage","schichtPlan"].forEach(k => {
+      if(n[k] === undefined || JSON.stringify(n[k]) === JSON.stringify(s[k])) return;
+      /* Nickname: ein leeres Feld im Paket löscht keinen Nickname, der auf dem Gerät eingetragen wurde */
+      if(k === "nick" && !String(n[k] || "").trim()) return;
+      s[k] = n[k]; ch = true;
     });
   });
   /* neu im Plan: Person ergänzen (niemand wird entfernt, damit keine Erfassung verloren geht) */
