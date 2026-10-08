@@ -1,0 +1,66 @@
+PRUEFUNG DAILY GRADES (Rueckmeldungen Pilot) 08.10.2026
+
+OK      Cockpit: Schicht-Kuerzel pro Tag im Paket                              ['CS1', 'S', 'OC', 'S', 'SW2', 'SW1', 'S', 'SM', 'S']
+OK      Cockpit: OC (Tag 3) und Market (Tag 8) als Team-Market-Tage            [3, 8]
+OK      Cockpit: Kueche 5T traegt Kuechen-Kuerzel                              ['K1', 'K2', 'TM', 'K3', 'K1']
+OK      Cockpit: Titel und Logo Daily Grades                                   Daily Grades · Cockpit Kursleitung
+OK      Cockpit: neuer Nickname aus dem Rapport erkannt                        [['12', '', 'Lulu']]
+OK      Cockpit: Nickname im Plan, Turnusplan gespeichert, Pakete neu          [['Lulu', 0, 2], 'turnusplan_TEST_Nicknames_2026-10-08.json']
+OK      Cockpit: neues Paket enthaelt den Nickname                             
+OK      Cockpit: keine JavaScript-Fehler                                       []
+OK      Service Mobil iPad: Schicht-Kuerzel in der Tagesliste (CS1 und S)      ['S', 'CS1']
+OK      Service Mobil iPad: Kopf: Daily Grades, Logo, Knopf Startseite         ['Daily Grades · Service', 1, 'https://pilman1982.github.io/praxisrapport/mein.html']
+OK      Service Mobil iPad: Kopfzeile passt ohne Ueberlauf                     
+OK      Service Mobil iPad: alle 9 Kriterien und Notiz sichtbar, ohne seitliches Scrollen {'n': 10, 'grid': 'grid', 'noScroll': True, 'inside': True}
+OK      Service Mobil iPad: Freitext nach Schliessen mit X gespeichert         Hat heute den Tisch 4 allein betreut
+OK      Service Mobil iPad: Freitext steht im Geraetespeicher                  
+OK      Service Mobil iPad: Nickname im Blatt eingetragen und im Kopf sichtbar ['Lulu', 'Beispiel Lu «Lulu»✎', True]
+OK      Service Mobil iPad: Leeres Paketfeld loescht Nickname nicht, neuer Nickname kommt an ['Lulu', 'Lu Lu']
+OK      Service Mobil iPad: Verspaetet ohne Beobachtung ergibt 4.00 in allen Kriterien [4, True]
+OK      Service Mobil iPad: OC-Tag ist als Team Market vorbelegt und zaehlt 5.00 ['tm', 5, 'OC']
+OK      Service Mobil iPad: Zusammenfassung: Ø 9 Tage und Exam, an die Kursleitung Daily Grades · Zusammenfassung Service
+The Essence · 9 Tage + Exam · 02.11.2026 bis 17.11.2026
+Dozent/in: Martin Test
+Kl
+OK      Service Mobil iPad: Am Exam Day steht die Zusammenfassung in der Tagesansicht 
+OK      Service Mobil iPad: Notenuebersicht zeigt den Knopf Zusammenfassung    
+OK      Service Mobil iPad: keine JavaScript-Fehler                            []
+OK      Service Mobil iPhone: Schicht-Kuerzel in der Tagesliste (CS1 und S)    ['S', 'CS1']
+OK      Service Mobil iPhone: Kopf: Daily Grades, Logo, Knopf Startseite       ['Daily Grades · Service', 1, 'https://pilman1982.github.io/praxisrapport/mein.html']
+OK      Service Mobil iPhone: Kopfzeile passt ohne Ueberlauf                   
+OK      Service Mobil iPhone: alle 9 Kriterien und Notiz sichtbar, ohne seitliches Scrollen {'n': 10, 'grid': 'grid', 'noScroll': True, 'inside': True}
+OK      Service Mobil iPhone: Freitext nach Schliessen mit X gespeichert       Hat heute den Tisch 4 allein betreut
+OK      Service Mobil iPhone: Freitext steht im Geraetespeicher                
+OK      Service Mobil iPhone: Nickname im Blatt eingetragen und im Kopf sichtbar ['Lulu', 'Beispiel Lu «Lulu»✎', True]
+OK      Service Mobil iPhone: Leeres Paketfeld loescht Nickname nicht, neuer Nickname kommt an ['Lulu', 'Lu Lu']
+OK      Service Mobil iPhone: Verspaetet ohne Beobachtung ergibt 4.00 in allen Kriterien [4, True]
+OK      Service Mobil iPhone: OC-Tag ist als Team Market vorbelegt und zaehlt 5.00 ['tm', 5, 'OC']
+OK      Service Mobil iPhone: Zusammenfassung: Ø 9 Tage und Exam, an die Kursleitung Daily Grades · Zusammenfassung Service
+The Essence · 9 Tage + Exam · 02.11.2026 bis 17.11.2026
+Dozent/in: Martin Test
+Kl
+OK      Service Mobil iPhone: Am Exam Day steht die Zusammenfassung in der Tagesansicht 
+OK      Service Mobil iPhone: Notenuebersicht zeigt den Knopf Zusammenfassung  
+OK      Service Mobil iPhone: keine JavaScript-Fehler                          []
+OK      Kueche 5T: Zusammenfassung mit Ø 5 Tage ohne Exam                      Daily Grades · Zusammenfassung · Küche · Da Fortunat · 5T · 18.11.2026
+OK      Kueche 5T: Kuechen-Kuerzel K1 in der Tagesliste                        ['K1']
+OK      Kueche 5T: keine JavaScript-Fehler                                     []
+OK      Service 4T: Zusammenfassung mit Ø 4 Tage und Exam                      Daily Grades · Zusammenfassung · Service · The Essence · 4T · 02.11.2026
+OK      Service 4T: keine JavaScript-Fehler                                    []
+OK      Kueche 4T: Zusammenfassung mit Ø 4 Tage und Exam                       Daily Grades · Zusammenfassung · Küche · The Essence · 4T · 02.11.2026
+OK      Kueche 4T: keine JavaScript-Fehler                                     []
+OK      Laptop Servicerapport.html: Schicht-Kuerzel neben dem Namen            ['S', 'CS1']
+OK      Laptop Servicerapport.html: Nickname-Knopf und Knopf Startseite        
+OK      Laptop Servicerapport.html: Nickname per Knopf eingetragen             Maxi
+OK      Laptop Servicerapport.html: Verspaetet ergibt 4.00 und zeigt den Hinweis [4, True]
+OK      Laptop Servicerapport.html: Titel Daily Grades und Logo                Daily Grades · Service · 9 Tage + Exam (Laptop)
+OK      Laptop Servicerapport.html: Selbsttest ohne Fehler (Verspaetung startet bei 4.00) []
+OK      Laptop Servicerapport.html: keine JavaScript-Fehler                    []
+OK      Laptop Kuechenrapport_5Tage_ohneExam.html: Schicht-Kuerzel neben dem Namen ['K1']
+OK      Laptop Kuechenrapport_5Tage_ohneExam.html: Nickname-Knopf und Knopf Startseite 
+OK      Laptop Kuechenrapport_5Tage_ohneExam.html: Nickname per Knopf eingetragen Maxi
+OK      Laptop Kuechenrapport_5Tage_ohneExam.html: Verspaetet ergibt 4.00 und zeigt den Hinweis [4, True]
+OK      Laptop Kuechenrapport_5Tage_ohneExam.html: Titel Daily Grades und Logo Daily Grades · Küche · 5 Tage · ohne Exam
+OK      Laptop Kuechenrapport_5Tage_ohneExam.html: keine JavaScript-Fehler     []
+OK      mein.html: Titel und Logo Daily Grades                                 Daily Grades
+OK      index.html: Titel Daily Grades                                         Daily Grades

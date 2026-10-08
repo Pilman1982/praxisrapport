@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#001436">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Rapport">
+<meta name="apple-mobile-web-app-title" content="Daily Grades">
+<link rel="icon" href="__DG_ICON__">
+<link rel="apple-touch-icon" href="__DG_ICON__">
 <meta name="robots" content="noindex">
-<title>Mein Rapport</title>
+<title>Daily Grades</title>
 <style>
 :root{--navy:#001436;--petrol:#005779;--salbei:#919388;--terra:#B6633F;--hell:#E3E3E1;--bg:#F4F4F2;--ink:#1a1f2b;--card:#fff;--line:#d9d9d5;--muted:#5b616b}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0c111c;--ink:#e9eaee;--card:#151c2b;--line:#2a3346;--muted:#9aa3b2;--hell:#1d2638}}
@@ -45,7 +47,7 @@ li button{font:inherit;font-weight:600;border:0;border-radius:9px;padding:8px 12
 </head>
 <body>
 <header>
-  <div class="t"><h1 id="ttl">Mein Rapport</h1><div class="who" id="who"></div></div>
+  <span style="width:38px;height:38px;flex:0 0 auto;display:block">__DG_LOGO__</span><div class="t"><h1 id="ttl">Daily Grades</h1><div class="who" id="who"></div></div>
   <button class="hbtn" id="lang" aria-label="Sprache">文</button>
 </header>
 <main id="main"></main>
@@ -54,19 +56,19 @@ li button{font:inherit;font-weight:600;border:0;border-radius:9px;padding:8px 12
 "use strict";
 const KEY = "praxisrapport.semester", LKEY = "praxisrapport.lang";
 const TX = {
-  de:{iosHint:"Zuerst Teilen ⬆ → «Zum Home-Bildschirm» antippen, Safari schliessen und das neue Symbol öffnen. Erst dort das Semesterpaket laden: Das Symbol hat einen eigenen Speicher.", title:"Mein Rapport", load:"Semesterpaket laden", loadHint:"Die Datei «Semesterpaket_….json» von Michael aus der Mail oder aus «Dateien» wählen. Das ist nur einmal pro Semester nötig.",
+  de:{iosHint:"Zuerst Teilen ⬆ → «Zum Home-Bildschirm» antippen, Safari schliessen und das neue Symbol öffnen. Erst dort das Semesterpaket laden: Das Symbol hat einen eigenen Speicher.", title:"Daily Grades", load:"Semesterpaket laden", loadHint:"Die Datei «Semesterpaket_….json» von Michael aus der Mail oder aus «Dateien» wählen. Das ist nur einmal pro Semester nötig.",
       now:"Jetzt", next:"Als Nächstes", open:"Rapport öffnen", laptop:"Laptop-Fassung öffnen", all:"Alle Einsätze im Semester",
       past:"vorbei", soon:"kommt", cur:"jetzt", persons:"Personen", from:"ab", until:"bis", other:"Anderes Semesterpaket laden",
       remove:"Semesterpaket von diesem Gerät entfernen", removeQ:"Semesterpaket von diesem Gerät entfernen? Die erfassten Rapporte bleiben erhalten.",
       privacy:"Alles bleibt auf diesem Gerät. Nichts wird ins Internet geschickt.", bad:"Diese Datei ist kein Semesterpaket.", done:"Semesterpaket geladen",
       homeHint:"Tipp: Diese Seite über Teilen → «Zum Home-Bildschirm» als Symbol ablegen.", none:"Im Moment kein Einsatz geplant."},
-  en:{iosHint:"First tap Share ⬆ → «Add to Home Screen», close Safari and open the new icon. Load the semester package only there: the icon has its own storage.", title:"My report", load:"Load semester package", loadHint:"Choose the file «Semesterpaket_….json» from Michael's e-mail or from «Files». You only need to do this once per semester.",
+  en:{iosHint:"First tap Share ⬆ → «Add to Home Screen», close Safari and open the new icon. Load the semester package only there: the icon has its own storage.", title:"Daily Grades", load:"Load semester package", loadHint:"Choose the file «Semesterpaket_….json» from Michael's e-mail or from «Files». You only need to do this once per semester.",
       now:"Now", next:"Next", open:"Open report", laptop:"Open laptop version", all:"All assignments this semester",
       past:"done", soon:"upcoming", cur:"now", persons:"students", from:"from", until:"to", other:"Load another semester package",
       remove:"Remove semester package from this device", removeQ:"Remove the semester package from this device? Recorded reports are kept.",
       privacy:"Everything stays on this device. Nothing is sent to the internet.", bad:"This file is not a semester package.", done:"Semester package loaded",
       homeHint:"Tip: add this page to your home screen via Share → «Add to Home Screen».", none:"No assignment planned at the moment."},
-  th:{iosHint:"แตะ แชร์ ⬆ → «เพิ่มไปยังหน้าจอโฮม» ก่อน แล้วปิด Safari และเปิดไอคอนใหม่ โหลดชุดข้อมูลภาคเรียนในไอคอนเท่านั้น เพราะไอคอนมีพื้นที่เก็บข้อมูลของตัวเอง", title:"รายงานของฉัน", load:"โหลดชุดข้อมูลภาคเรียน", loadHint:"เลือกไฟล์ «Semesterpaket_….json» ที่ Michael ส่งให้ทางอีเมล หรือจาก «ไฟล์» ทำเพียงครั้งเดียวต่อภาคเรียน",
+  th:{iosHint:"แตะ แชร์ ⬆ → «เพิ่มไปยังหน้าจอโฮม» ก่อน แล้วปิด Safari และเปิดไอคอนใหม่ โหลดชุดข้อมูลภาคเรียนในไอคอนเท่านั้น เพราะไอคอนมีพื้นที่เก็บข้อมูลของตัวเอง", title:"Daily Grades", load:"โหลดชุดข้อมูลภาคเรียน", loadHint:"เลือกไฟล์ «Semesterpaket_….json» ที่ Michael ส่งให้ทางอีเมล หรือจาก «ไฟล์» ทำเพียงครั้งเดียวต่อภาคเรียน",
       now:"ตอนนี้", next:"ถัดไป", open:"เปิดรายงาน", laptop:"เปิดเวอร์ชันแล็ปท็อป", all:"การฝึกทั้งหมดในภาคเรียน",
       past:"ผ่านไปแล้ว", soon:"กำลังจะมา", cur:"ตอนนี้", persons:"คน", from:"ตั้งแต่", until:"ถึง", other:"โหลดชุดข้อมูลภาคเรียนอื่น",
       remove:"ลบชุดข้อมูลภาคเรียนออกจากอุปกรณ์นี้", removeQ:"ลบชุดข้อมูลภาคเรียนออกจากอุปกรณ์นี้หรือไม่ รายงานที่บันทึกไว้จะยังอยู่",

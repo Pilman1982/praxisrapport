@@ -1,11 +1,11 @@
-QA-LOOP MIT VIER PERSONAS 06.10.2026
+QA-LOOP MIT VIER PERSONAS 08.10.2026
 
 OK      Kueche · A1 Paket öffnen am Mittwoch: Tag Mittwoch 07.10. vorgewählt       Mittwoch 07.10.
 OK      Kueche · A2 App erneut öffnen (ohne Startseite): wieder der heutige Tag    Mittwoch 07.10.
 OK      Kueche · A3 Gleiches Paket nochmals über Startseite: heutiger Tag          Mittwoch 07.10.
 OK      Kueche · A4 Note im Blatt reagiert sofort, zweiter Tipp nimmt den Baustein zurück ('Tag 5.00  ·  Ø 5.00', 'Tag 4.88  ·  Ø 4.88', 'Tag 5.00  ·  Ø 5.00')
 OK      Kueche · A5 Ganzer Tag (5 Personen, 4 Einträge) mit wenigen Tipps          11 Tipps
-OK      Kueche · A6 Verspätung zieht automatisch ab, Note unter 5.00               ['late', 0, 4.9375]
+OK      Kueche · A6 Verspätung zieht automatisch ab, Note unter 5.00               ['late', 0, 4]
 OK      Kueche · A7 Tag senden: Datei + Mailtext mit Verspätung und Adresse        Tagesrapport – Patisserie · Muster Koch · Mittwoch 07.10.
 
 Absenzen:
@@ -28,7 +28,7 @@ OK      Kueche · B10 iPad: ganzer Text direkt in der Mail                      
 OK      Kueche · B11 Thai-Oberfläche: Mail trotzdem Deutsch für HFD                Hallo Lea,
 
 vielen D
-OK      Kueche · B13 Mail mit Note: nur Praxisnote auf 0.1, kein Exam, keine Exam-Beobachtung ('3.7', 5.0625)
+OK      Kueche · B13 Mail mit Note: nur Praxisnote auf 0.1, kein Exam, keine Exam-Beobachtung ('3.4', 5.0625)
 OK      Kueche · B12 keine JavaScript-Fehler                                       []
 OK      Kueche · C1 Entschuldigt zählt nicht, Team Market = 5.00                   {'avg': 5, 'n': 3}
 OK      Kueche · C2 Unentschuldigt = 1.00 an diesem Tag                            {'avg': 4, 'n': 4}
@@ -57,7 +57,7 @@ OK      Service · A2 App erneut öffnen (ohne Startseite): wieder der heutige T
 OK      Service · A3 Gleiches Paket nochmals über Startseite: heutiger Tag         Mittwoch 07.10.
 OK      Service · A4 Note im Blatt reagiert sofort, zweiter Tipp nimmt den Baustein zurück ('Tag 5.00  ·  Ø 5.00', 'Tag 4.90  ·  Ø 4.90', 'Tag 5.00  ·  Ø 5.00')
 OK      Service · A5 Ganzer Tag (5 Personen, 4 Einträge) mit wenigen Tipps         11 Tipps
-OK      Service · A6 Verspätung zieht automatisch ab, Note unter 5.00              ['late', 0, 4.95]
+OK      Service · A6 Verspätung zieht automatisch ab, Note unter 5.00              ['late', 0, 4]
 OK      Service · A7 Tag senden: Datei + Mailtext mit Verspätung und Adresse       Tagesrapport – Da Fortunat · Muster A / Muster B · Mittwoch 07.10.
 
 Absenzen:
@@ -80,7 +80,7 @@ OK      Service · B10 iPad: ganzer Text direkt in der Mail                     
 OK      Service · B11 Thai-Oberfläche: Mail trotzdem Deutsch für HFD               Hallo Lea,
 
 vielen D
-OK      Service · B13 Mail mit Note: nur Praxisnote auf 0.1, kein Exam, keine Exam-Beobachtung ('3.8', 5.1)
+OK      Service · B13 Mail mit Note: nur Praxisnote auf 0.1, kein Exam, keine Exam-Beobachtung ('3.5', 5.1)
 OK      Service · B12 keine JavaScript-Fehler                                      []
 OK      Service · C1 Entschuldigt zählt nicht, Team Market = 5.00                  {'avg': 5, 'n': 3}
 OK      Service · C2 Unentschuldigt = 1.00 an diesem Tag                           {'avg': 4, 'n': 4}

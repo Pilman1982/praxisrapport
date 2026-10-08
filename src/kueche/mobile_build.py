@@ -16,14 +16,14 @@ addon = io.open(_ad, encoding="utf-8").read()
 app  = app.replace("/* ---------- Start ---------- */", addon + "\n/* ---------- Start ---------- */", 1)
 
 VARIANTS = [
-  ("Kuechenrapport_Mobil.html",                "10T", "Küchenrapport Mobil · 10 Tage"),
-  ("Kuechenrapport_Mobil_4Tage_Exam.html",     "4T",  "Küchenrapport Mobil · 4 Tage + Exam"),
-  ("Kuechenrapport_Mobil_5Tage_ohneExam.html", "5T",  "Küchenrapport Mobil · 5 Tage"),
+  ("Kuechenrapport_Mobil.html",                "10T", "Daily Grades · Küche · 9 Tage + Exam"),
+  ("Kuechenrapport_Mobil_4Tage_Exam.html",     "4T",  "Daily Grades · Küche · 4 Tage + Exam"),
+  ("Kuechenrapport_Mobil_5Tage_ohneExam.html", "5T",  "Daily Grades · Küche · 5 Tage"),
 ]
 for name, var, title in VARIANTS:
     js = app.replace('const MVARIANT = "10T";', 'const MVARIANT = "%s";' % var, 1)
     hd = head.replace("__ICON__", icon).replace(
-        "<title>Küchenrapport Mobil</title>", "<title>%s</title>" % title)
+        "<title>Daily Grades · Küche</title>", "<title>%s</title>" % title)
     html = hd + "\n" + a + "\n" + chips + "\n" + js + "\n</script>\n</body>\n</html>\n"
     (OUT / name).write_text(html, encoding="utf-8")
     print("%-42s VARIANT=%-4s %d Bytes" % (name, var, len(html.encode("utf-8"))))

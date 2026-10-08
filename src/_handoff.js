@@ -4,6 +4,34 @@
    (gleiche Adresse, die Daten verlassen das Gerät nie) und öffnet dann diese Datei.
    Hier wird es geladen. Bereits erfasste Tage eines anderen Pakets werden nur nach
    Rückfrage ersetzt. */
+/* Daily Grades (08.10.2026): Schicht-Kürzel und Weg zurück zur Startseite, gemeinsam für alle Fassungen */
+/* Schicht-Kürzel aus dem Duty Plan (Legende der Einsatzpläne HS26) */
+const SCHICHT_INFO = {
+  S:"Service", SA:"Service Asia (Umami)", SM:"Service «The Market», MeP & Lunch", ST:"Service Tournant", Sv:"Supervisor (Host)",
+  BS:"Bar & Service", CS1:"Chef de Service", CS2:"Assistant Chef de Service", CS2W:"Assistant Chef de Service, Wein",
+  SW1:"Sommelier", SW2:"Wine Waiter / Assistent", OC:"Office & Daily MeP, Stewarding (zählt wie Team Market)",
+  OST:"Office & Daily MeP in Service-Uniform", OTB:"Office, Daily MeP & Buffet Market", OS:"Office & Daily MeP in Service-Uniform",
+  KC:"Chef de Cuisine", KS:"Sous-Chef", Sc:"Saucier", E:"Entremetier", G:"Garde-manger", T:"Tournant", TM:"Tournant «The Market»",
+  K:"Casserolier", TK:"Tournant / Casserolier", K1:"Entremetier", K2:"Saucier", K3:"Garde-manger",
+  A1:"Entremetier Asia", A2:"Saucier Asia", A3:"Garde-manger Asia", TA:"Tournant Asia", P:"Pâtisserie", C:"Küche Campigiana"
+};
+function planSchicht(s, slotId){
+  const sl = slots().find(x => x.id === slotId);
+  if(!s || !sl || !Array.isArray(s.schichtPlan)) return "";
+  return String(s.schichtPlan[sl.idx - 1] || "").trim();
+}
+function schichtPill(s, slotId){
+  const c = planSchicht(s, slotId); if(!c) return null;
+  const info = SCHICHT_INFO[c] || SCHICHT_INFO[c.toUpperCase()] || "";
+  return el("span",{class:"spill" + (c.toUpperCase() === "OC" ? " oc" : ""), title: "Schicht · Shift " + c + (info ? ": " + info : ""), text:c});
+}
+
+/* Zurück zur persönlichen Startseite: liegt eine Ebene höher (…/mein.html) */
+function n2HomeHref(){
+  return /^https?:/.test(location.protocol) ? "../mein.html" : "https://pilman1982.github.io/praxisrapport/mein.html";
+}
+{ const h = document.getElementById("btnHome"); if(h){ h.setAttribute("href", n2HomeHref());  } }
+
 function n2Handoff(load){
   let h = null;
   try{ h = JSON.parse(localStorage.getItem("praxisrapport.handoff") || "null"); }catch(e){ h = null; }
@@ -50,8 +78,11 @@ function n2Refresh(list){
   S.students.forEach(s => {
     const n = list.find(x => x && ((s.nr && x.nr && String(x.nr) === String(s.nr)) || (!s.nr && x.id === s.id)));
     if(!n) return;
-    ["foto","nick","klasse","gruppe","email","ortPlan","tmTage"].forEach(k => {
-      if(n[k] !== undefined && JSON.stringify(n[k]) !== JSON.stringify(s[k])){ s[k] = n[k]; ch = true; }
+    ["foto","nick","klasse","gruppe","mail","email","ortPlan","tmTage","schichtPlan"].forEach(k => {
+      if(n[k] === undefined || JSON.stringify(n[k]) === JSON.stringify(s[k])) return;
+      /* Nickname: ein leeres Feld im Paket löscht keinen Nickname, der auf dem Gerät eingetragen wurde */
+      if(k === "nick" && !String(n[k] || "").trim()) return;
+      s[k] = n[k]; ch = true;
     });
   });
   /* neu im Plan: Person ergänzen (niemand wird entfernt, damit keine Erfassung verloren geht) */

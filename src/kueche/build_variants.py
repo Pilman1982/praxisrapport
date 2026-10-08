@@ -26,8 +26,8 @@ for fname, vid, slots, hasx, label in VARIANTS:
     v = v.replace('const VARIANT = "10T";',   'const VARIANT = "%s";' % vid, 1)
     v = v.replace('const SLOT_COUNT = 10;',   'const SLOT_COUNT = %d;' % slots, 1)
     v = v.replace('const HAS_EXAM = true;',   'const HAS_EXAM = %s;' % hasx, 1)
-    v = v.replace('<title>Küchenrapport</title>',
-                  '<title>Küchenrapport %s</title>' % label, 1)
+    v = v.replace('<title>Daily Grades · Küche</title>',
+                  '<title>Daily Grades · Küche · %s</title>' % label, 1)
     assert 'const VARIANT = "%s";' % vid in v and 'const SLOT_COUNT = %d;' % slots in v
     full = HEAD + v.replace('\n<header class="top">', '\n</head>\n<body>\n<header class="top">', 1) + '\n</body>\n</html>\n'
     (OUT / fname).write_text(full, encoding='utf-8')

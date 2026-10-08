@@ -32,7 +32,8 @@ function n2Crit(slotId, sid){
   if(att === "excused" && !isExam) return null;
   if(att === "unexcused" || (isExam && att === "excused")){ CRITS.forEach(c => g[c.k] = 1); return g; }
   const obs = n2Obs(r).map(i => CHIP[i]).filter(Boolean);
-  if(att === "late" && !obs.some(o => o.i === N2_LATE) && CHIP[N2_LATE]) obs.push(CHIP[N2_LATE]);
+  /* Verspätet (Entscheid 08.10.2026): der Tag startet eine Note tiefer, 4.00 statt 5.00. */
+  const b0 = n2Base() - (att === "late" ? 1 : 0);
   const nt = r.note;
   CRITS.forEach(c => {
     const mine = obs.filter(o => o.c === c.k);
@@ -40,7 +41,7 @@ function n2Crit(slotId, sid){
     let d = 0; mine.forEach(o => { d += o.d * o.w; });
     if(nt && nt.crit === c.k && nt.dir && nt.w) d += nt.dir * nt.w;
     d = Math.max(CAP_NEG, Math.min(CAP_POS, d));
-    g[c.k] = Math.max(1, Math.min(6, n2Base() + d));
+    g[c.k] = Math.max(1, Math.min(6, b0 + d));
   });
   return g;
 }
@@ -74,7 +75,8 @@ function n2RenderGrades(){
   const root = document.getElementById("view"); root.innerHTML = "";
   const hasEx = slots().some(s => s.exam);
   root.appendChild(el("h2",{class:"sec",text:n2t("grades")}));
-  root.appendChild(el("p",{class:"muted",style:"margin:0 2px 10px",text:n2u("fbHint")}));
+  root.appendChild(n2SummaryCard());
+  root.appendChild(el("p",{class:"muted",style:"margin:14px 2px 10px",text:n2u("fbHint")}));
   const card = el("div",{class:"card"});
   const ul = el("ul",{class:"slist"});
   S.students.forEach(s => {
@@ -272,11 +274,141 @@ function n2OpenFb(s){
   fill();
 }
 
+/* ====================================================================================
+   Daily Grades · Rückmeldungen aus dem Pilot (08.10.2026)
+   - Schicht-Kürzel aus dem Duty Plan neben dem Namen (CS1, SW2, OC, Sc …)
+   - Nickname direkt im Erfassungsblatt eintragen
+   - Zusammenfassung an die Kursleitung nach dem Exam (Ø 9 Tage + Exam, Ø 5 Tage, Ø 4 Tage + Exam)
+   - Knopf zurück zur persönlichen Startseite (mein.html)
+   ==================================================================================== */
+const N2X = {
+  de:{home:"Meine Startseite", nick:"Nickname", nickPh:"z. B. Lulu", nickSave:"Übernehmen", nickDel:"Löschen",
+      nickHint:"Gilt sofort auf diesem Gerät. Mit «Tag senden» geht er an die Kursleitung und kommt mit dem nächsten Paket zu allen.",
+      saved:"✓ gespeichert", lateDay:"Verspätet: Der Tag startet eine Note tiefer (4.00 statt 5.00).",
+      sum:"Zusammenfassung an die Kursleitung", sumHint:"Nach dem Exam: die Durchschnitte aller Personen per Mail an Michael Pilman.",
+      sumHint5:"Nach dem letzten Tag: der Durchschnitt aller Personen per Mail an Michael Pilman.", sumSent:"gesendet am",
+      sumOpen:"Der Exam Day ist noch nicht erfasst. Trotzdem senden?", sumCopy:"Text kopiert. Bitte in die Mail einfügen.",
+      sumNow:"Heute ist der letzte Tag. Danach: Zusammenfassung an die Kursleitung senden.", shift:"Schicht", ocDay:"OC (Office und Daily MeP): zählt wie Team Market mit 5.00."},
+  en:{home:"My start page", nick:"Nickname", nickPh:"e.g. Lulu", nickSave:"Apply", nickDel:"Delete",
+      nickHint:"Applies on this device at once. «Send the day» passes it to the course lead; everyone gets it with the next package.",
+      saved:"✓ saved", lateDay:"Late: the day starts one grade lower (4.00 instead of 5.00).",
+      sum:"Summary to the course lead", sumHint:"After the exam: e-mail the averages of all students to Michael Pilman.",
+      sumHint5:"After the last day: e-mail the average of all students to Michael Pilman.", sumSent:"sent on",
+      sumOpen:"The Exam Day has not been recorded yet. Send anyway?", sumCopy:"Text copied. Please paste it into the e-mail.",
+      sumNow:"Today is the last day. Afterwards: send the summary to the course lead.", shift:"Shift", ocDay:"OC (office and daily MeP): counts like Team Market with 5.00."},
+  th:{home:"หน้าเริ่มต้นของฉัน", nick:"ชื่อเล่น", nickPh:"เช่น Lulu", nickSave:"ใช้", nickDel:"ลบ",
+      nickHint:"ใช้ได้ทันทีบนอุปกรณ์นี้ เมื่อกด «ส่งข้อมูลของวันนี้» ชื่อเล่นจะถูกส่งให้ผู้ประสานงาน และทุกคนจะได้รับในชุดข้อมูลถัดไป",
+      saved:"✓ บันทึกแล้ว", lateDay:"มาสาย: วันนี้เริ่มต่ำลงหนึ่งคะแนน (4.00 แทน 5.00)",
+      sum:"สรุปส่งผู้ประสานงาน", sumHint:"หลังวันสอบ: ส่งคะแนนเฉลี่ยของทุกคนทางอีเมลถึง Michael Pilman",
+      sumHint5:"หลังวันสุดท้าย: ส่งคะแนนเฉลี่ยของทุกคนทางอีเมลถึง Michael Pilman", sumSent:"ส่งแล้วเมื่อ",
+      sumOpen:"ยังไม่ได้บันทึกวันสอบ ต้องการส่งหรือไม่", sumCopy:"คัดลอกข้อความแล้ว กรุณาวางในอีเมล",
+      sumNow:"วันนี้เป็นวันสุดท้าย หลังจากนั้น: ส่งสรุปให้ผู้ประสานงาน", shift:"กะ", ocDay:"OC (งานสำนักงานและเตรียมงาน): นับเหมือน Team Market ที่ 5.00"}
+};
+const n2x = k => (N2X[L] && N2X[L][k]) || N2X.de[k] || k;
+
+/* Nickname im Erfassungsblatt */
+function n2NickBox(student, onDone){
+  const box = el("div",{class:"nickbox"});
+  const inp = el("input",{type:"text",value:student.nick || "",placeholder:n2x("nickPh"),autocapitalize:"words","aria-label":n2x("nick"),maxlength:"30"});
+  const save = v => { student.nick = String(v || "").trim(); student.nickNeu = new Date().toISOString().slice(0, 10); persist(); onDone(); };
+  inp.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); save(inp.value); } });
+  box.appendChild(el("label",{class:"eyebrow",text:n2x("nick")}));
+  box.appendChild(el("div",{class:"row",style:"gap:8px;flex-wrap:nowrap"},[inp,
+    el("button",{class:"btn pri",text:n2x("nickSave"),onclick:()=>save(inp.value)})]));
+  if(student.nick) box.appendChild(el("button",{class:"morebtn",style:"margin-top:6px",text:n2x("nickDel"),onclick:()=>save("")}));
+  box.appendChild(el("p",{class:"muted",style:"margin:6px 0 0;font-size:13px",text:n2x("nickHint")}));
+  setTimeout(() => { try{ inp.focus(); }catch(e){} }, 30);
+  return box;
+}
+
+/* Zusammenfassung an die Kursleitung (nach dem Exam bzw. nach dem letzten Tag) */
+const N2_VAR_LABEL = {"10T":"9 Tage + Exam", "4T":"4 Tage + Exam", "5T":"5 Tage"};
+function n2SumName(s){
+  const n = [s.nachname || s.last || "", s.vorname || s.first || ""].filter(Boolean).join(", ") || s.name || "";
+  return n + (s.nick ? " «" + s.nick + "»" : "");
+}
+function n2SummaryText(){
+  const V = MVARIANT, pr = slots().filter(x => !x.exam), hasEx = slots().some(x => x.exam);
+  const avgLbl = "Ø " + pr.length + " Tage";
+  const st = S.settings || {};
+  const dts = slots().map(x => x.date).filter(Boolean);
+  const fd = d => d ? String(d).slice(8,10) + "." + String(d).slice(5,7) + "." + String(d).slice(0,4) : "";
+  const area = (typeof APP_AREA !== "undefined") ? APP_AREA : "";
+  const head = ["Daily Grades · Zusammenfassung " + area,
+    [st.outlet, N2_VAR_LABEL[V] || V].filter(Boolean).join(" · ") + (dts.length ? " · " + fd(dts[0]) + " bis " + fd(dts[dts.length - 1]) : ""),
+    "Dozent/in: " + (st.teacher || "–"),
+    [st.group ? "Klasse " + st.group : "", st.team || ""].filter(Boolean).join(" · "), ""];
+  const lines = S.students.map(s => {
+    const p = n2Praxis(s.id), e = hasEx ? n2Exam(s.id) : null;
+    const cnt = {excused:0, unexcused:0, late:0, tm:0};
+    slots().forEach(x => { const r = (S.days[x.id] || {})[s.id]; if(r && cnt[r.att] != null) cnt[r.att]++; });
+    const ab = [cnt.excused ? "entsch. " + cnt.excused : "", cnt.unexcused ? "unentsch. " + cnt.unexcused : "",
+                cnt.late ? "verspätet " + cnt.late : "", cnt.tm ? "TM/OC " + cnt.tm : ""].filter(Boolean).join(", ");
+    const kl = [s.klasse || st.group || "", s.gruppe || st.team || ""].filter(Boolean).join(" · ");
+    return n2SumName(s) + (kl ? " · " + kl : "") + "\n   " + avgLbl + ": " + n2Fmt(p.avg) + " (" + p.n + " gewertet)"
+      + (hasEx ? " · Exam: " + n2Fmt(e) : "") + (ab ? " · " + ab : "");
+  });
+  const subj = "Daily Grades · Zusammenfassung · " + [area, st.outlet, V, dts.length ? fd(dts[0]) : ""].filter(Boolean).join(" · ");
+  return {subj, body: head.concat(lines).join("\n") + "\n\n" + (hasEx ? avgLbl + " ohne Exam Day. Exam separat. " : "") + "Durchschnitte auf 0.01, ungerundet."};
+}
+function n2SendSummary(){
+  const ex = slots().find(x => x.exam);
+  const filled = id => !!(S.days[id] && Object.keys(S.days[id]).length);
+  const last = ex || slots()[slots().length - 1];
+  if(last && !filled(last.id)){ try{ if(!window.confirm(n2x("sumOpen"))) return; }catch(e){ return; } }
+  const T = n2SummaryText();
+  const base = "mailto:" + ABS_MAIL + "?subject=" + encodeURIComponent(T.subj);
+  let href = base + "&body=" + encodeURIComponent(T.body);
+  if(!n2Touch() && href.length > N2_MAILTO_MAX){
+    try{ navigator.clipboard.writeText(T.body); }catch(e){}
+    href = base + "&body=" + encodeURIComponent(n2x("sumCopy")); toast(n2x("sumCopy"));
+  }
+  S.settings.sumSent = new Date().toISOString().slice(0, 10); persist();
+  location.href = href;
+}
+function n2SummaryCard(){
+  const c = el("div",{class:"card pad sumcard"});
+  const V = MVARIANT;
+  c.appendChild(el("span",{class:"eyebrow",style:"display:block;margin-bottom:6px",text:n2x("sum")}));
+  c.appendChild(el("p",{class:"muted",style:"margin:0 0 10px",text: V === "5T" ? n2x("sumHint5") : n2x("sumHint")}));
+  c.appendChild(el("button",{class:"btn pri wide",text:"✉ " + n2x("sum") + (S.settings.sumSent ? " ✓" : ""),onclick:n2SendSummary}));
+  if(S.settings.sumSent) c.appendChild(el("p",{class:"muted",style:"margin:8px 0 0;font-size:13px",text:n2x("sumSent") + " " + S.settings.sumSent.split("-").reverse().join(".")}));
+  return c;
+}
+
 /* ---- Noten 2.0: Übergabe von der persönlichen Startseite (mein.html) ----
    Die Startseite legt das passende Paket für genau diese Datei in den Browserspeicher
    (gleiche Adresse, die Daten verlassen das Gerät nie) und öffnet dann diese Datei.
    Hier wird es geladen. Bereits erfasste Tage eines anderen Pakets werden nur nach
    Rückfrage ersetzt. */
+/* Daily Grades (08.10.2026): Schicht-Kürzel und Weg zurück zur Startseite, gemeinsam für alle Fassungen */
+/* Schicht-Kürzel aus dem Duty Plan (Legende der Einsatzpläne HS26) */
+const SCHICHT_INFO = {
+  S:"Service", SA:"Service Asia (Umami)", SM:"Service «The Market», MeP & Lunch", ST:"Service Tournant", Sv:"Supervisor (Host)",
+  BS:"Bar & Service", CS1:"Chef de Service", CS2:"Assistant Chef de Service", CS2W:"Assistant Chef de Service, Wein",
+  SW1:"Sommelier", SW2:"Wine Waiter / Assistent", OC:"Office & Daily MeP, Stewarding (zählt wie Team Market)",
+  OST:"Office & Daily MeP in Service-Uniform", OTB:"Office, Daily MeP & Buffet Market", OS:"Office & Daily MeP in Service-Uniform",
+  KC:"Chef de Cuisine", KS:"Sous-Chef", Sc:"Saucier", E:"Entremetier", G:"Garde-manger", T:"Tournant", TM:"Tournant «The Market»",
+  K:"Casserolier", TK:"Tournant / Casserolier", K1:"Entremetier", K2:"Saucier", K3:"Garde-manger",
+  A1:"Entremetier Asia", A2:"Saucier Asia", A3:"Garde-manger Asia", TA:"Tournant Asia", P:"Pâtisserie", C:"Küche Campigiana"
+};
+function planSchicht(s, slotId){
+  const sl = slots().find(x => x.id === slotId);
+  if(!s || !sl || !Array.isArray(s.schichtPlan)) return "";
+  return String(s.schichtPlan[sl.idx - 1] || "").trim();
+}
+function schichtPill(s, slotId){
+  const c = planSchicht(s, slotId); if(!c) return null;
+  const info = SCHICHT_INFO[c] || SCHICHT_INFO[c.toUpperCase()] || "";
+  return el("span",{class:"spill" + (c.toUpperCase() === "OC" ? " oc" : ""), title: "Schicht · Shift " + c + (info ? ": " + info : ""), text:c});
+}
+
+/* Zurück zur persönlichen Startseite: liegt eine Ebene höher (…/mein.html) */
+function n2HomeHref(){
+  return /^https?:/.test(location.protocol) ? "../mein.html" : "https://pilman1982.github.io/praxisrapport/mein.html";
+}
+{ const h = document.getElementById("btnHome"); if(h){ h.setAttribute("href", n2HomeHref());  } }
+
 function n2Handoff(load){
   let h = null;
   try{ h = JSON.parse(localStorage.getItem("praxisrapport.handoff") || "null"); }catch(e){ h = null; }
@@ -323,8 +455,11 @@ function n2Refresh(list){
   S.students.forEach(s => {
     const n = list.find(x => x && ((s.nr && x.nr && String(x.nr) === String(s.nr)) || (!s.nr && x.id === s.id)));
     if(!n) return;
-    ["foto","nick","klasse","gruppe","email","ortPlan","tmTage"].forEach(k => {
-      if(n[k] !== undefined && JSON.stringify(n[k]) !== JSON.stringify(s[k])){ s[k] = n[k]; ch = true; }
+    ["foto","nick","klasse","gruppe","mail","email","ortPlan","tmTage","schichtPlan"].forEach(k => {
+      if(n[k] === undefined || JSON.stringify(n[k]) === JSON.stringify(s[k])) return;
+      /* Nickname: ein leeres Feld im Paket löscht keinen Nickname, der auf dem Gerät eingetragen wurde */
+      if(k === "nick" && !String(n[k] || "").trim()) return;
+      s[k] = n[k]; ch = true;
     });
   });
   /* neu im Plan: Person ergänzen (niemand wird entfernt, damit keine Erfassung verloren geht) */

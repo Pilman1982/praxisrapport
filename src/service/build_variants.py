@@ -17,11 +17,11 @@ OUT.mkdir(exist_ok=True)
 
 VARIANTS = {
     "10T": dict(file="Servicerapport.html",                    slots=10, exam=True,
-                title="Servicerapport 10 Tage · Exam Day"),
+                title="Daily Grades · Service · 9 Tage + Exam (Laptop)"),
     "4T":  dict(file="Servicerapport_4Tage_Exam.html",         slots=5,  exam=True,
-                title="Servicerapport 4 Tage · Exam Day"),
+                title="Daily Grades · Service · 4 Tage + Exam (Laptop)"),
     "5T":  dict(file="Servicerapport_5Tage_ohneExam.html",     slots=5,  exam=False,
-                title="Servicerapport 5 Tage · ohne Exam"),
+                title="Daily Grades · Service · 5 Tage (Laptop)"),
 }
 
 def read(n): return (SRC / n).read_text(encoding="utf-8")
@@ -31,7 +31,7 @@ def build(variant, only=None):
     cfg = VARIANTS[variant]
     logo = read("_logo.txt").strip()
     head = read("_head_top.html").replace(
-        "<title>Servicerapport 10 Tage · Exam Day</title>",
+        "<title>Daily Grades · Service</title>",
         "<title>" + cfg["title"] + "</title>")
     a = read("_scriptA.js").replace("__LOGO__", logo)
     b = read("_scriptB.js")

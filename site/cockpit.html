@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#001436">
 <meta name="robots" content="noindex">
-<title>Cockpit Kursleitung</title>
+<link rel="icon" href="__DG_ICON__">
+<link rel="apple-touch-icon" href="__DG_ICON__">
+<title>Daily Grades · Cockpit Kursleitung</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
@@ -59,7 +61,7 @@ img.ava{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#cc
 </head>
 <body>
 <header><div class="in">
-  <h1>Cockpit Kursleitung</h1>
+  <h1>Daily Grades · Cockpit Kursleitung</h1>
   <p>Turnusplan prüfen, Fotos zuordnen, Pakete für die Outlets erzeugen, Rapporte kontrollieren. Alles läuft in diesem Browser. Es wird nichts hochgeladen oder gespeichert.</p>
 </div></header>
 <main>
@@ -133,6 +135,7 @@ const APP = {
   service: {app:"Servicerapport", dir:"service", file:{"10T":"Servicerapport","4T":"Servicerapport_4Tage_Exam","5T":"Servicerapport_5Tage_ohneExam"}, mobil:{"10T":"Servicerapport_Mobil","4T":"Servicerapport_Mobil_4Tage_Exam","5T":"Servicerapport_Mobil_5Tage_ohneExam"}, w2:"gas2"}
 };
 const BER_LABEL = {kueche:"Küche", service:"Service"};
+const TM_CODES = ["OC"];   // Schichten ohne Bewertung: zählen wie Team Market (5.00)
 const norm = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
 const nameKey = (a, b) => norm(a + " " + b).split(" ").filter(Boolean).sort().join(" ");
 const klasseNorm = v => { const m = String(v||"").trim().match(/^hf\s*([a-z])\s*(\d?)$/i); return m ? ("HF"+m[1]+m[2]).toUpperCase() : String(v||"").trim(); };
@@ -252,13 +255,17 @@ function build(){
       }
       /* Ein Einsatz im zweiten Restaurant einer Service-Gruppe: ganzer Einsatz dort */
       if(ber === "service" && p.outlet2 && norm(e.outlet) === norm(p.outlet2) && !wOut){ wAb = 1; wOut = p.outlet2; }
-      let ortPlan = null, tmTage = [];
+      let ortPlan = null, tmTage = [], schichtPlan = null;
       if(tageList){
         ortPlan = tageList.slice(0, praxisSlots).map(t => (t.outlet && norm(t.outlet) !== norm(p.outlet)) ? t.outlet : "");
-        tageList.slice(0, praxisSlots).forEach((t, k) => { if(t.market) tmTage.push(k + 1); });
+        /* Team Market und OC (Office und Daily MeP) zählen gleich: fester Tag mit 5.00 (Entscheid 08.10.2026) */
+        tageList.slice(0, praxisSlots).forEach((t, k) => { if(t.market || TM_CODES.includes(String(t.schicht || "").toUpperCase())) tmTage.push(k + 1); });
         if(!ortPlan.some(Boolean)) ortPlan = null;
+        /* Schicht-Kürzel aus dem Duty Plan (CS1, SW2, OC, Sc …), pro Einsatztag */
+        schichtPlan = tageList.slice(0, praxisSlots).map(t => String(t.schicht || "").trim());
+        if(!schichtPlan.some(Boolean)) schichtPlan = null;
       }
-      p.studs.push({s, e, wAb, wOut, ortPlan, tmTage, days: tageList ? tageList.length + (VARS[v].exam ? 1 : 0) : days.length,
+      p.studs.push({s, e, wAb, wOut, ortPlan, tmTage, schichtPlan, days: tageList ? tageList.length + (VARS[v].exam ? 1 : 0) : days.length,
         dates: tageList ? tageList.map(t => String(t.datum)) : null, exam: e.exam || (VARS[v].exam ? iso(bis) : null)});
     });
   });
@@ -288,6 +295,7 @@ function packageJSON(p){
     if(x.wAb && x.wOut){ o.wechselAb = x.wAb; o.wechselOutlet = x.wOut; }
     if(x.ortPlan) o.ortPlan = x.ortPlan;
     if(x.tmTage && x.tmTage.length) o.tmTage = x.tmTage;
+    if(x.schichtPlan) o.schichtPlan = x.schichtPlan;
     return o;
   });
   const teacher = p.doz ? p.doz.name : "";
@@ -481,7 +489,9 @@ async function onReports(files){
       const app = o.app || (/service/i.test(f.name) ? "Servicerapport" : /kuech|kitchen/i.test(f.name) ? "Kuechenrapport" : "?");
       REPS.push({file:f.name, app, variant:o.variant || "10T", outlet:m.outlet || st.outlet || "", teacher:m.teacher || st.teacher || "",
         saved:o.savedAt ? new Date(o.savedAt) : null, n:o.students.length, filled, e, u, l, tm, obs, source:o.source || "",
-        students:o.students.map(s => nameKey(s.nachname || s.last || (s.name||"").split(" ")[0], s.vorname || s.first || (s.name||"").split(" ").slice(1).join(" ")))});
+        students:o.students.map(s => nameKey(s.nachname || s.last || (s.name||"").split(" ")[0], s.vorname || s.first || (s.name||"").split(" ").slice(1).join(" "))),
+        nicks:o.students.filter(s => String(s.nick || "").trim()).map(s => ({nr:s.nr ? String(s.nr) : "", nick:String(s.nick).trim(), neu:s.nickNeu || "",
+          key:nameKey(s.nachname || s.last || (s.name||"").split(" ")[0], s.vorname || s.first || (s.name||"").split(" ").slice(1).join(" "))}))});
     }catch(err){ REPS.push({file:f.name, bad:true}); }
   }
   renderReports(); if(PLAN) render();
@@ -501,6 +511,39 @@ function renderReports(){
       el("td",{text:String(r.l)}), el("td",{text:String(r.obs)})]));
   });
   host.appendChild(el("div",{class:"tw"}, tb));
+  renderNicks(host);
+}
+/* Nicknames aus den Rapporten (Rückmeldung Pilot 08.10.2026): jede/r Dozierende kann einen Nickname eintragen.
+   Hier werden neue oder geänderte Nicknames gesammelt und in den Turnusplan übernommen.
+   Danach Pakete neu erzeugen: so sehen ihn alle. Ein leerer Nickname löscht nie einen bestehenden. */
+function nickChanges(){
+  if(!PLAN) return [];
+  const out = {}, studs = PLAN.studierende || [];
+  REPS.filter(r => !r.bad).sort((a, b) => (a.saved || 0) - (b.saved || 0)).forEach(r => (r.nicks || []).forEach(n => {
+    const s = studs.find(x => (n.nr && String(x.nr) === n.nr) || nameKey(x.nachname, x.vorname) === n.key); if(!s) return;
+    const id = s.nr || nameKey(s.nachname, s.vorname);
+    if(String(s.nickname || "").trim() === n.nick){ delete out[id]; return; }
+    out[id] = {s, alt:s.nickname || "", neu:n.nick, von:r.teacher || r.file};
+  }));
+  return Object.values(out);
+}
+function renderNicks(host){
+  const ch = nickChanges(); if(!ch.length) return;
+  const box = el("div",{style:"margin-top:14px"});
+  box.appendChild(el("h3",{text:"Neue Nicknames aus den Rapporten (" + ch.length + ")"}));
+  const tb = el("table");
+  tb.appendChild(el("tr",{},["Name","bisher","neu","von"].map(h => el("th",{text:h}))));
+  ch.forEach(x => tb.appendChild(el("tr",{},[el("td",{text:x.s.nachname + " " + x.s.vorname}), el("td",{class:"muted",text:x.alt || "–"}),
+    el("td",{text:x.neu}), el("td",{class:"muted",text:x.von})])));
+  box.appendChild(el("div",{class:"tw"}, tb));
+  box.appendChild(el("div",{class:"row",style:"margin-top:8px"},[
+    el("button",{class:"pri",id:"btnNicks",text:"Nicknames übernehmen und Turnusplan speichern",onclick:()=>{
+      ch.forEach(x => { x.s.nickname = x.neu; });
+      download("turnusplan_" + fileSafe(PLAN.semester || "") + "_Nicknames_" + iso(new Date()) + ".json", JSON.stringify(PLAN, null, 1));
+      build(); render(); renderReports();
+    }}),
+    el("span",{class:"small muted",text:"Danach Semesterpakete neu erzeugen und verschicken, dann sehen alle die Nicknames."})]));
+  host.appendChild(box);
 }
 $("repFile").onchange = e => { onReports([...e.target.files]); e.target.value = ""; };
 dropZone("repDrop", files => onReports(files.filter(f => /json$/i.test(f.name))));
@@ -586,7 +629,7 @@ function renderOverview(){
         el("td",{class: x.days !== VARS[p.v].n ? "warn" : "", text:String(x.days)}),
         el("td",{text: [x.wOut ? "ab Tag " + x.wAb + " " + x.wOut : "",
           x.ortPlan ? Array.from(new Set(x.ortPlan.filter(Boolean))).map(o => o + ": Tag " + x.ortPlan.map((v, i) => v === o ? i + 1 : 0).filter(Boolean).join(", ")).join(" · ") : "",
-          x.tmTage && x.tmTage.length ? "Market: Tag " + x.tmTage.join(", ") : ""].filter(Boolean).join(" · ")})]));
+          x.tmTage && x.tmTage.length ? "Market/OC: Tag " + x.tmTage.join(", ") : ""].filter(Boolean).join(" · ")})]));
     });
     box.appendChild(el("div",{class:"tw"}, tb));
     host.appendChild(box);
