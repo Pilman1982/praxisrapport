@@ -1414,11 +1414,17 @@ function n2FbLang(s){
   if(/^HFE/.test(k)) return "en";
   return (S.settings.outLang === "en") ? "en" : "de";
 }
-function n2Teacher(){
-  const wds = ["su","mo","tu","we","th","fr","sa"], wd = wds[new Date().getDay()];
+/* Unterschrift der Feedback-Mail. Geteiltes Gerät (z. B. Umami und Da Fortunat): beide unterschreiben
+   gemeinsam, «Laura Arcuri und Sybille Geiser» (Entscheid 08.10.2026), nicht nur die Person des Tages. */
+function n2Teacher(lg){
   const p = S.settings.teacherPlan;
-  if(p && typeof p === "object" && p[wd]) return p[wd];
-  return S.settings.teacher || "";
+  let names = [];
+  if(p && typeof p === "object") names = Object.values(p).map(x => String(x || "").trim()).filter(Boolean);
+  if(!names.length) names = String(S.settings.teacher || "").split(/\s*(?:\/|,|&|\bund\b|\band\b)\s*/).map(x => x.trim()).filter(Boolean);
+  names = Array.from(new Set(names)).sort((a, b) => a.localeCompare(b, "de"));
+  if(names.length < 2) return names[0] || S.settings.teacher || "";
+  const und = (lg || (typeof L !== "undefined" ? L : "de")) === "en" ? " and " : " und ";
+  return names.slice(0, -1).join(", ") + und + names[names.length - 1];
 }
 /* Auswertung pro Person über alle Tage dieses Pakets */
 function n2FbData(sid){
@@ -1476,7 +1482,7 @@ function n2FbText(s, lg, withGrades){
   if(withGrades && p != null){ o.push(X.grades.replace("{p}", n2Fmt1(p)) + ".", ""); }
   const g = p == null ? 5 : p;
   o.push(g >= 5.25 ? X.c1 : g >= 4.75 ? X.c2 : g >= 4 ? X.c3 : X.c4);
-  o.push(X.wish, "", X.bye, n2Teacher());
+  o.push(X.wish, "", X.bye, n2Teacher(lg));
   const subj = X.subj + (outlet ? " – " + outlet : "") + (a ? " " + a + "–" + b : "");
   return {subj, body: o.join("\n").replace(/\n{3,}/g, "\n\n")};
 }

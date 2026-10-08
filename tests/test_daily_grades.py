@@ -154,3 +154,30 @@ with sync_playwright() as p:
     c.close(); b.close()
 print("\n".join(res)); print(sum(x.startswith("OK") for x in res), "von", len(res))
 (R/"tests"/"Testprotokoll_DailyGrades.txt").write_text("PRUEFUNG DAILY GRADES (Rueckmeldungen Pilot) 08.10.2026\n\n" + "\n".join(res) + "\n", encoding="utf-8")
+
+# ---- Nachtrag 08.10.2026: Unterschrift geteiltes Gerät, Service immer 9 Tage + Exam ----
+res2 = []
+def ok2(n, c, i=""): res2.append(("OK      " if c else "FEHLER  ") + "%-70s %s" % (n, str(i)[:120]))
+plan2 = {"format":"praxisrapport-turnusplan","version":1,"semester":"T2","wochentage":["mo","tu","we","th"],
+ "dozierende":[{"name":"Sybille Geiser / Laura Arcuri","bereich":"service","outlets":["Da Fortunat","Umami"],"sprache":"de",
+                "plan":{"mo":"Sybille Geiser","tu":"Sybille Geiser","we":"Laura Arcuri","th":"Laura Arcuri"}}],
+ "studierende":[{"nr":"21","nachname":"Test","vorname":"Ada","klasse":"HFD","gruppe":"Gruppe 2 Team A","sprache":"de","einsaetze":[
+   {"bereich":"service","outlet":"Da Fortunat","von":"2026-11-02","bis":"2026-11-17","variante":"10T","block":"Zyklus 3.1","exam":"2026-11-17",
+    "tage":[T(d,o,"S") for d,o in [("2026-11-02","Da Fortunat"),("2026-11-03","Umami"),("2026-11-04","Da Fortunat"),("2026-11-05","Da Fortunat"),
+      ("2026-11-09","Umami"),("2026-11-10","Umami"),("2026-11-11","Da Fortunat"),("2026-11-12","Da Fortunat"),("2026-11-16","Umami")]]}]}]}
+with sync_playwright() as p:
+    b = p.chromium.launch(); c = b.new_context(); c.route("https://cdnjs.cloudflare.com/**", lambda r: r.abort()); pg = c.new_page()
+    pg.goto((D/"cockpit.html").as_uri()); pg.fill("#planText", json.dumps(plan2)); pg.click("#btnPlan"); pg.wait_for_timeout(300)
+    r = pg.evaluate("()=>({err:ISSUES.filter(i=>i.lv==='err').map(i=>i.m), pk:PACKS.map(p=>[p.v,p.outlet,p.outlet2,p.studs.length])})")
+    ok2("Service Umami + Da Fortunat: ein Paket 9 Tage + Exam mit zweitem Restaurant", not r["err"] and r["pk"] == [["10T","Da Fortunat","Umami",1]], r)
+    pkg = pg.evaluate("()=>packageJSON(PACKS[0])"); c.close()
+    c = b.new_context(); pg = c.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
+    pg.goto((D/"service/Servicerapport_Mobil.html").as_uri()); pg.wait_for_timeout(300)
+    pg.evaluate(LOAD, pkg)
+    sig = pg.evaluate("()=>[n2FbText(S.students[0],'de',false).body.trim().split('\\n').pop(), n2FbText(S.students[0],'en',false).body.trim().split('\\n').pop()]")
+    ok2("Feedback-Mail: Laura und Sybille unterschreiben gemeinsam", sig == ["Laura Arcuri und Sybille Geiser", "Laura Arcuri and Sybille Geiser"], sig)
+    ort = pg.evaluate("()=>slots().filter(x=>!x.exam).map(x=>S.days[x.id][S.students[0].id].outlet||'')")
+    ok2("10 Tage im Paket, Umami-Tage markiert", [i+1 for i, o in enumerate(ort) if o == "Umami"] == [2, 5, 6, 9], ort)
+    ok2("keine JavaScript-Fehler", not errs, errs); c.close(); b.close()
+print("\n".join(res2)); print(sum(x.startswith("OK") for x in res2), "von", len(res2))
+with open(R/"tests"/"Testprotokoll_DailyGrades.txt", "a", encoding="utf-8") as f: f.write("\nNachtrag 08.10.2026\n" + "\n".join(res2) + "\n")

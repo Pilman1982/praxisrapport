@@ -93,4 +93,6 @@ Feste Regeln (Basisnote 5.00, Verspätung startet bei 4.00, Team Market und OC z
 - Kriterien im Tablet-Blatt als Raster, ohne seitliches Scrollen. Freitext wird beim Schliessen immer gespeichert.
 - Nickname im Blatt eintragen (✎); das Cockpit sammelt neue Nicknames aus den Rapporten und übernimmt sie in den Turnusplan.
 - Zusammenfassung an die Kursleitung nach dem Exam (Ø 9 Tage + Exam, Ø 5 Tage, Ø 4 Tage + Exam).
+- Service immer 9 Tage + Exam in derselben Abteilung (Umami und Da Fortunat = eine Abteilung); 5 + 4 Tage nur noch in der Küche (ausser The Essence).
+- Feedback-Mail vom geteilten Gerät: beide unterschreiben («Laura Arcuri und Sybille Geiser»).
 - Knopf ⌂ zurück zur persönlichen Startseite (mein.html).

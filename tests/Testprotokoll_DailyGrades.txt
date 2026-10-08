@@ -64,3 +64,9 @@ OK      Laptop Kuechenrapport_5Tage_ohneExam.html: Titel Daily Grades und Logo D
 OK      Laptop Kuechenrapport_5Tage_ohneExam.html: keine JavaScript-Fehler     []
 OK      mein.html: Titel und Logo Daily Grades                                 Daily Grades
 OK      index.html: Titel Daily Grades                                         Daily Grades
+
+Nachtrag 08.10.2026
+OK      Service Umami + Da Fortunat: ein Paket 9 Tage + Exam mit zweitem Restaurant {'err': [], 'pk': [['10T', 'Da Fortunat', 'Umami', 1]]}
+OK      Feedback-Mail: Laura und Sybille unterschreiben gemeinsam              ['Laura Arcuri und Sybille Geiser', 'Laura Arcuri and Sybille Geiser']
+OK      10 Tage im Paket, Umami-Tage markiert                                  ['', 'Umami', '', '', 'Umami', 'Umami', '', '', 'Umami']
+OK      keine JavaScript-Fehler                                                []

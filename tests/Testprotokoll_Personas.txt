@@ -76,7 +76,7 @@ OK      Service · B6 Kein Doppelpunkt-Punkt-Fehler und keine leeren Platzhalter
 OK      Service · B7 Person ohne bewerteten Tag: Warnung im Feedback-Blatt         ['Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.']
 OK      Service · B8 Lange Feedback-Mail: Link bleibt unter 1900 Zeichen (Outlook Windows) 195
 OK      Service · B9 Zu lang: Text wird kopiert und in der Mail eingefügt (Hinweis) True
-OK      Service · B10 iPad: ganzer Text direkt in der Mail                         1977
+OK      Service · B10 iPad: ganzer Text direkt in der Mail                         1996
 OK      Service · B11 Thai-Oberfläche: Mail trotzdem Deutsch für HFD               Hallo Lea,
 
 vielen D
