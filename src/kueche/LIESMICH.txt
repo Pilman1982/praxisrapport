@@ -68,3 +68,16 @@ PRUEFUNG
 Testprotokoll_Harmonisierung.txt: 83 Pruefungen nach der Angleichung an den
 Servicerapport vom 05.10.2026 (Namensliste, Klassen, Meldezeile, Zusammenfuehren,
 Auswahlfelder mobil).
+
+
+REGELN AB 11.10.2026 (fest im Code, nicht ueber die Oberflaeche aenderbar)
+--------------------------------------------------------------------------
+- Basisnote 4.50 (BASE_NOTE in _scriptB.js, N2_BASE in src/_noten2_mobile.js). Alte Dateien mit 5.00
+  werden beim Oeffnen auf 4.50 gesetzt.
+- Verspaetet: Start eine Note tiefer (LATE_MINUS = 1), also 3.50.
+- Team Market und OC: fest 5.00 (TM_NOTE). Team Market verspaetet: Anwesenheit "tml", fest 4.00.
+  Bedienung: Knoepfe "Team Market" und "Verspaetet" lassen sich kombinieren (attClick / n2AttClick).
+- Farben: gruen ab 4.75, rot unter 4.00. Schlusssaetze relativ zur Basis.
+- Studierende werden auf Deutsch gesiezt (Feedback-Mail, Beurteilung, Massnahmentexte). Neue
+  Massnahmentexte in _chips.js deshalb immer in der Sie-Form oder neutral (Infinitiv) schreiben.
+- Hinweis: "tea-lt" setzt "Verspaetet" seit 08.10.2026 nicht mehr automatisch.

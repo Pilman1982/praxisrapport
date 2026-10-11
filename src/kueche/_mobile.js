@@ -154,7 +154,7 @@ const FILEID = (function(){
 const KEY = "kuechenrapport.mobil.v1" + FILEID;
 
 const DEF = {group:"", team:"", outlet:"", teacher:"", uiLang:"de",
-             variant:MVARIANT, weekdays:["mo","tu","we","th"], startIdx:0, base:5, hyg2:true};
+             variant:MVARIANT, weekdays:["mo","tu","we","th"], startIdx:0, base:4.5, hyg2:true};
 let S, storeOK = true;
 try{
   const raw = localStorage.getItem(KEY);
@@ -206,7 +206,7 @@ const teacherForWd = wd => (S.settings.teacherPlan && S.settings.teacherPlan[wd]
 
 /* Beobachtungen immer als Liste lesen, auch wenn die Datei etwas anderes enthaelt. */
 const obsOf = r => (r && Array.isArray(r.obs)) ? r.obs : [];
-const ATT_OK = ["present","late","excused","unexcused","tm"];
+const ATT_OK = ["present","late","excused","unexcused","tm","tml"];
 const attOf = r => (r && ATT_OK.includes(r.att)) ? r.att : "present";
 /* ---- Personendaten: Nachname, Vorname, Nickname, Klasse, Gruppe ---- */
 const KLASSEN = ["HFD","HFE1","HFE2"];
@@ -272,7 +272,7 @@ const studentLine = st => [st.last, st.first, st.nick, st.mail, st.lang, st.klas
 /* Typen erzwingen, damit eine fremde JSON die App nicht verbiegt. */
 function normalizeSettings(){
   const num = (v,d)=>{ const n = parseFloat(v); return Number.isFinite(n) ? n : d; };
-  S.settings.base     = num(S.settings.base, 5);
+  S.settings.base     = 4.5;   // fest seit 11.10.2026
   S.settings.startIdx = Math.max(0, Math.trunc(num(S.settings.startIdx, 0)));
   S.settings.hyg2     = !!S.settings.hyg2;
   if(!Array.isArray(S.settings.weekdays) || !S.settings.weekdays.length)
@@ -495,9 +495,9 @@ function absenceList(id){
   S.students.forEach(st=>{
     const r = d[st.id]; if(!r) return;
     const a = attOf(r);
-    if(a === "late" || a === "excused" || a === "unexcused"){
+    if(a === "late" || a === "tml" || a === "excused" || a === "unexcused"){
       const kg = [klasseOf(st), gruppeOf(st)].filter(Boolean).join(" \u00b7 ");
-      out.push(longName(st) + (kg ? "   \u00b7   " + kg : "") + "   \u2014   " + t(a));
+      out.push(longName(st) + (kg ? "   \u00b7   " + kg : "") + "   \u2014   " + (a === "tml" ? t("late") + " (" + t("teamMarket") + ")" : t(a)));
     }
   });
   return out;
@@ -587,7 +587,7 @@ function renderDay(){
     b.appendChild(el("span",{class:"nm"},[
       el("span",{html:""}),
       document.createTextNode(dispName(s) + nickTag(s)),
-      el("div",{class:"sub"},[schichtPill(s, curSlot), document.createTextNode(t(attOf(r) === "tm" ? "teamMarket" : attOf(r)) + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))
+      el("div",{class:"sub"},[schichtPill(s, curSlot), document.createTextNode(n2AttLabel(attOf(r)) + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))
         + " · \u00d8 " + n2Fmt(n2Praxis(s.id).avg))])
     ]));
     if(n) b.appendChild(el("span",{class:"pill on",text:String(n)}));
@@ -649,11 +649,12 @@ function openSheet(student){
     [["present",""],["late","warn"],["excused",""],["unexcused","bad"],["teamMarket","tm"]]
       .forEach(([k,cls],i)=>{
         const val = (k === "teamMarket") ? "tm" : k;
-        att.appendChild(el("button",{class:cls,"aria-pressed":String(attOf(r)===val),
-          text:t(k), onclick:()=>{ r.att = val; persist(); draw(); }}));
+        att.appendChild(el("button",{class:cls,"aria-pressed":String(n2AttPressed(attOf(r), val)),
+          text:t(k), onclick:()=>{ r.att = n2AttClick(attOf(r), val); persist(); draw(); }}));
       });
     body.appendChild(att);
     if(attOf(r) === "late") body.appendChild(el("div",{class:"banner",style:"margin-top:9px",text:n2x("lateDay")}));
+    if(attOf(r) === "tml") body.appendChild(el("div",{class:"banner",style:"margin-top:9px",text:n2x("tmLateDay")}));
     if(attOf(r) === "tm" && planSchicht(student, curSlot).toUpperCase() === "OC") body.appendChild(el("div",{class:"banner",style:"margin-top:9px",text:n2x("ocDay")}));
 
     /* Kriterien */

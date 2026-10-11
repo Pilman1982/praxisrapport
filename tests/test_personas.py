@@ -80,7 +80,7 @@ with sync_playwright() as p:
         pg.locator(".sheet-f .btn.pri").click(); clicks += 1; pg.wait_for_timeout(100)
         ok(P + "A5 Ganzer Tag (5 Personen, 4 Einträge) mit wenigen Tipps", clicks <= 12, "%d Tipps" % clicks)
         st = pg.evaluate("()=>{ const d = S.days[curSlot]; return S.students.map(s => [d[s.id].att, d[s.id].obs.length, n2Day(curSlot, s.id)]); }")
-        ok(P + "A6 Verspätung zieht automatisch ab, Note unter 5.00", st[1][0] == "late" and st[1][2] < 5, st[1])
+        ok(P + "A6 Verspätung zieht automatisch ab, Note unter 4.50", st[1][0] == "late" and st[1][2] < 4.5, st[1])
         sh = pg.evaluate("""async ()=>{ let got = null; navigator.canShare = () => true; navigator.share = async (o) => { got = {t:o.text, n:o.files[0].name, j:JSON.parse(await o.files[0].text())}; };
             await shareDay(); return got; }""")
         ok(P + "A7 Tag senden: Datei + Mailtext mit Verspätung und Adresse", sh and "michael.pilman@ehl.ch" in sh["t"] and "Frei" in sh["t"] and sh["n"].endswith(".json") and sh["j"]["days"], sh and sh["t"][:120])
@@ -102,9 +102,9 @@ with sync_playwright() as p:
             de: n2FbText(A, n2FbLang(A), false), en: n2FbText(O, n2FbLang(O), true),
             lgA: n2FbLang(A), lgO: n2FbLang(O), lgN: n2FbLang(N) }; }""")
         ok(P + "B2 Sprache: HFD Deutsch, HFE1/HFE2 Englisch", (fb["lgA"], fb["lgO"], fb["lgN"]) == ("de", "en", "en"), (fb["lgA"], fb["lgO"], fb["lgN"]))
-        ok(P + "B3 DE: Anrede mit Vorname, Lob, ohne Noten (Standard)", fb["de"]["body"].startswith("Hallo Lea,") and "besonders gefallen" in fb["de"]["body"] and "Note" not in fb["de"]["body"], fb["de"]["body"][:90])
+        ok(P + "B3 DE: Anrede «Guten Tag Vorname» (Sie), Lob, ohne Noten (Standard)", fb["de"]["body"].startswith("Guten Tag Lea,") and "besonders gefallen" in fb["de"]["body"] and "Note" not in fb["de"]["body"], fb["de"]["body"][:90])
         e = fb["en"]["body"]
-        ok(P + "B4 EN: Verbesserung mit Tipp, Verspätung, unentschuldigt, Note", e.startswith("Hi Ada,") and "Where you can still improve" in e and "Tip:" in e and "late 1 time" in e and "unexcused" in e and "practice" in e, e[:80])
+        ok(P + "B4 EN: Verbesserung mit Tipp, Verspätung, unentschuldigt, Note", e.startswith("Dear Ada,") and "Where you can still improve" in e and "Tip:" in e and "late 1 time" in e and "unexcused" in e and "practice" in e, e[:80])
         imp = e.split("Where you can still improve:")[-1].split("\n\n")[0]
         ok(P + "B5 Höchstens 3 Verbesserungspunkte, jeder mit Tipp", imp.count("\n– ") == 3 and imp.count("Tip:") == 3, imp.count("\n– "))
         ok(P + "B6 Kein Doppelpunkt-Punkt-Fehler und keine leeren Platzhalter", "{" not in e and ".." not in e and ": ." not in e, "")
@@ -120,7 +120,7 @@ with sync_playwright() as p:
         ok(P + "B10 iPad: ganzer Text direkt in der Mail", not ios["copy"] and "Where%20you%20can" in ios["href"], len(ios["href"]))
         pg.evaluate("()=>{ S.settings.uiLang='th'; render(); }")
         th = pg.evaluate("()=>n2FbText(S.students[0], n2FbLang(S.students[0]), false).body")
-        ok(P + "B11 Thai-Oberfläche: Mail trotzdem Deutsch für HFD", th.startswith("Hallo"), th[:20])
+        ok(P + "B11 Thai-Oberfläche: Mail trotzdem Deutsch für HFD", th.startswith("Guten Tag"), th[:20])
         ex = pg.evaluate("""()=>{ const ex = slots().find(s=>s.exam).id; openSlot(ex); const O = S.students.find(x=>x.last==='Okafor');
             const c = CHIPS.find(c=>c.d>0 && !(S.days.d01[O.id].obs||[]).includes(c.i)); S.days[ex][O.id].obs = [c.i]; persist();
             const m = n2FbText(O, 'en', true).body, p = n2Praxis(O.id).avg;
@@ -138,8 +138,8 @@ with sync_playwright() as p:
             const ko = CHIPS.find(c=>c.ko); S.days[d[2]][o].obs = [ko.i];
             persist();
             return {pa: n2Praxis(a), pf: n2Praxis(f), ek: n2Exam(k), fk: n2Final(k), pk: n2Praxis(k).avg, ko: n2Crit(d[2], o)[ko.c], dko: n2Day(d[2], o), crits: CRITS.map(c=>c.k)}; }""")
-        ok(P + "C1 Entschuldigt zählt nicht, Team Market = 5.00", r["pa"]["n"] == 3 and abs(r["pa"]["avg"] - 5) < 1e-9, r["pa"])
-        ok(P + "C2 Unentschuldigt = 1.00 an diesem Tag", abs(r["pf"]["avg"] - (1 + 5 * 3) / 4) < 1e-9, r["pf"])
+        ok(P + "C1 Entschuldigt zählt nicht, Team Market = 5.00, sonst Basis 4.50", r["pa"]["n"] == 3 and abs(r["pa"]["avg"] - (5 + 4.5 * 2) / 3) < 1e-9, r["pa"])
+        ok(P + "C2 Unentschuldigt = 1.00 an diesem Tag", abs(r["pf"]["avg"] - (1 + 4.5 * 3) / 4) < 1e-9, r["pf"])
         ok(P + "C3 Exam Day entschuldigt = 1.00, Schlussnote 2/3 Praxis + 1/3 Exam", r["ek"] == 1 and abs(r["fk"] - (2 * r["pk"] + 1) / 3) < 1e-9, (r["ek"], r["fk"]))
         ok(P + "C4 K.-o. setzt das Kriterium auf 1.00", r["ko"] == 1 and r["dko"] < 5, (r["ko"], r["dko"]))
         # Laptop: gleiche Zahlen wie Tablet

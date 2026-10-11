@@ -1,0 +1,51 @@
+OK      Cockpit: Pakete mit Basisnote 4.50                                         (4.5, 4.5)
+OK      Cockpit: Eingangskontrolle zaehlt Team Market verspaetet als Verspaetung und Market [[1, 1]]
+OK      Cockpit: keine JavaScript-Fehler                                           []
+OK      Laptop Servicerapport.html: alte Datei mit 5.00: Basis wird 4.50, Tag ohne Beobachtung 4.50, Auswahl gesperrt [4.5, 4.5, True, 1]
+OK      Laptop Servicerapport.html: verspaetet: 3.50                               3.5
+OK      Laptop Servicerapport.html: OC bzw. Team Market vorbelegt: 5.00            ['tm', 5]
+OK      Laptop Servicerapport.html: Market + Verspaetet: 4.00, beide Knoepfe aktiv, Hinweis 4.00 ['tml', 4, 'true', 'true', True]
+OK      Laptop Servicerapport.html: Meldung: Team Market verspaetet erscheint als Verspaetung ['Verspätet (Team Market)']
+OK      Laptop Servicerapport.html: Verspaetet erneut tippen: zurueck auf Team Market 5.00 ['tm', 5]
+OK      Laptop Servicerapport.html: Zusammenfassung: 2x verspaetet, 1x Market, davon 1x verspaetet [2, 1, 1]
+OK      Laptop Servicerapport.html: Beurteilung nennt Team Market verspaetet (4.00) ['Team Market: 1 × (5.00), davon verspätet 1 × (4.00)']
+OK      Laptop Servicerapport.html: Beurteilung Deutsch ohne Du-Form               []
+OK      Laptop Servicerapport.html: Farben: gruen ab 4.75, neutral 4.50, rot unter 4.00 ['g-hi', '', 'g-lo']
+OK      Laptop Servicerapport.html: Selbsttest Rechenlogik ohne Fehler             []
+OK      Laptop Servicerapport.html: keine JavaScript-Fehler                        []
+OK      Laptop Kuechenrapport.html: alte Datei mit 5.00: Basis wird 4.50, Tag ohne Beobachtung 4.50, Auswahl gesperrt [4.5, 4.5, True, 1]
+OK      Laptop Kuechenrapport.html: verspaetet: 3.50                               3.5
+OK      Laptop Kuechenrapport.html: OC bzw. Team Market vorbelegt: 5.00            ['tm', 5]
+OK      Laptop Kuechenrapport.html: Market + Verspaetet: 4.00, beide Knoepfe aktiv, Hinweis 4.00 ['tml', 4, 'true', 'true', True]
+OK      Laptop Kuechenrapport.html: Meldung: Team Market verspaetet erscheint als Verspaetung ['Verspätet (Team Market)']
+OK      Laptop Kuechenrapport.html: Verspaetet erneut tippen: zurueck auf Team Market 5.00 ['tm', 5]
+OK      Laptop Kuechenrapport.html: Zusammenfassung: 2x verspaetet, 1x Market, davon 1x verspaetet [2, 1, 1]
+OK      Laptop Kuechenrapport.html: Beurteilung nennt Team Market verspaetet (4.00) ['Team Market: 1 × (5.00), davon verspätet 1 × (4.00)']
+OK      Laptop Kuechenrapport.html: Beurteilung Deutsch ohne Du-Form               []
+OK      Laptop Kuechenrapport.html: Farben: gruen ab 4.75, neutral 4.50, rot unter 4.00 ['g-hi', '', 'g-lo']
+OK      Laptop Kuechenrapport.html: keine JavaScript-Fehler                        []
+OK      Mobil Servicerapport_Mobil.html: Basis 4.50 (alte Datei 5.00), verspaetet 3.50, Market 5.00 [4.5, 4.5, 3.5, 'tm', 5]
+OK      Mobil Servicerapport_Mobil.html: Market + Verspaetet im Blatt: 4.00, beide Knoepfe aktiv, Hinweis ['tml', 4, 'true', 'true', True]
+OK      Mobil Servicerapport_Mobil.html: Absenzmeldung nennt Team Market verspaetet ["Muster, Max   ·   HFD · Gruppe 1 Team A   —   Verspätet (Team Market)"]
+OK      Mobil Servicerapport_Mobil.html: Mail Deutsch beginnt mit «Guten Tag Max,» Guten Tag Max,
+
+vielen Dank für Ihren Ei
+OK      Mobil Servicerapport_Mobil.html: Mail Deutsch in Sie-Form, ohne du/dich/dein []
+OK      Mobil Servicerapport_Mobil.html: Mail Deutsch: Betreff «Ihr Feedback», Gruss «Freundliche Grüsse» Ihr Feedback aus der Praxis – Campigiana 02.11.–16.11.
+OK      Mobil Servicerapport_Mobil.html: Mail Deutsch: Verspaetung inkl. Market gezaehlt (2x) ['Bitte achten Sie auf Pünktlichkeit: Sie waren 2× verspätet.']
+OK      Mobil Servicerapport_Mobil.html: Mail Englisch beginnt mit «Dear Emma,»    Dear Emma,
+
+thank you for your
+OK      Mobil Servicerapport_Mobil.html: keine JavaScript-Fehler                   []
+OK      Mobil Kuechenrapport_Mobil.html: Basis 4.50 (alte Datei 5.00), verspaetet 3.50, Market 5.00 [4.5, 4.5, 3.5, 'tm', 5]
+OK      Mobil Kuechenrapport_Mobil.html: Market + Verspaetet im Blatt: 4.00, beide Knoepfe aktiv, Hinweis ['tml', 4, 'true', 'true', True]
+OK      Mobil Kuechenrapport_Mobil.html: Absenzmeldung nennt Team Market verspaetet ["Muster, Max   ·   HFD · Gruppe 1 Team A   —   Verspätet (Team Market)"]
+OK      Mobil Kuechenrapport_Mobil.html: Mail Deutsch beginnt mit «Guten Tag Max,» Guten Tag Max,
+
+vielen Dank für Ihren Ei
+OK      Mobil Kuechenrapport_Mobil.html: Mail Deutsch in Sie-Form, ohne du/dich/dein []
+OK      Mobil Kuechenrapport_Mobil.html: Mail Deutsch: Betreff «Ihr Feedback», Gruss «Freundliche Grüsse» Ihr Feedback aus der Praxis – The Essence 18.11.–01.12.
+OK      Mobil Kuechenrapport_Mobil.html: Mail Deutsch: Verspaetung inkl. Market gezaehlt (2x) ['Bitte achten Sie auf Pünktlichkeit: Sie waren 2× verspätet.']
+OK      Mobil Kuechenrapport_Mobil.html: keine JavaScript-Fehler                   []
+
+43 von 43
