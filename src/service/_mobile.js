@@ -205,7 +205,7 @@ const FILEID = (function(){
 const KEY = "servicerapport.mobil.v1" + FILEID;
 
 const DEF = {group:"", team:"", outlet:"", teacher:"", uiLang:"de",
-             variant:MVARIANT, weekdays:["mo","tu","we","th"], startIdx:0, base:5, gas2:true};
+             variant:MVARIANT, weekdays:["mo","tu","we","th"], startIdx:0, base:4.5, gas2:true};
 let S, storeOK = true;
 try{
   const raw = localStorage.getItem(KEY);
@@ -213,6 +213,7 @@ try{
 }catch(e){ S = null; }
 if(!S || !S.settings) S = {settings:{...DEF}, students:[], days:{}, dayMeta:{}};
 S.settings = {...DEF, ...S.settings};
+S.settings.base = 4.5;   // Basisnote fest seit 11.10.2026, auch für alte Dateien
 /* Altbestand aufteilen: fruehere Dateien kannten nur ein Namensfeld. */
 S.students = (S.students || []).map(s=>{
   if(!s) return null;
@@ -509,6 +510,7 @@ function absenceList(id){
   S.students.forEach(s=>{
     const r = d[s.id]; if(!r) return;
     const k = r.att === "late" ? t("late")
+            : r.att === "tml" ? t("late") + " (" + t("teamMarket") + ")"
             : r.att === "excused" ? t("excused")
             : r.att === "unexcused" ? t("unexcused") : null;
     if(!k) return;
@@ -611,7 +613,7 @@ function renderDay(){
     b.appendChild(el("span",{class:"nm"},[
       el("span",{}),
       document.createTextNode(s.name + nickTag(s)),
-      el("div",{class:"sub"},[schichtPill(s, curSlot), document.createTextNode(t((r.att||"present") === "tm" ? "teamMarket" : (r.att||"present")) + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))
+      el("div",{class:"sub"},[schichtPill(s, curSlot), document.createTextNode(n2AttLabel(r.att||"present") + (n ? " · " + n + " " + t("obs") : " · " + t("noObs"))
         + " · \u00d8 " + n2Fmt(n2Praxis(s.id).avg)
         + (r.outlet ? " · \u21c4 " + r.outlet : ""))])
     ]));
@@ -684,11 +686,12 @@ function openSheet(student){
     [["present",""],["late","warn"],["excused",""],["unexcused","bad"],["teamMarket","tm"]]
       .forEach(([k,cls],i)=>{
         const val = (k === "teamMarket") ? "tm" : k;
-        att.appendChild(el("button",{class:cls,"aria-pressed":String((r.att||"present")===val),
-          text:t(k), onclick:()=>{ r.att = val; persist(); draw(); }}));
+        att.appendChild(el("button",{class:cls,"aria-pressed":String(n2AttPressed(r.att||"present", val)),
+          text:t(k), onclick:()=>{ r.att = n2AttClick(r.att||"present", val); persist(); draw(); }}));
       });
     body.appendChild(att);
     if((r.att||"present") === "late") body.appendChild(el("div",{class:"banner",style:"margin-top:9px",text:n2x("lateDay")}));
+    if((r.att||"present") === "tml") body.appendChild(el("div",{class:"banner",style:"margin-top:9px",text:n2x("tmLateDay")}));
     if((r.att||"present") === "tm" && planSchicht(student, curSlot).toUpperCase() === "OC") body.appendChild(el("div",{class:"banner",style:"margin-top:9px",text:n2x("ocDay")}));
 
     /* Kriterien */

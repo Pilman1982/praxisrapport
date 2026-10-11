@@ -69,11 +69,12 @@ python3 tests/test_wechsel.py       # Service: Restaurantwechsel
 python3 tests/test_cockpit.py       # Cockpit: Plan, Fotos, Pakete, Eingangskontrolle
 python3 tests/test_altdaten.py      # Rapporte aus dem Pilot (alter Programmstand)
 python3 tests/test_daily_grades.py  # Rückmeldungen Pilot 08.10.2026 (Schichten, OC, Verspätung, Nickname, Zusammenfassung)
+python3 tests/test_regeln_2026_10_11.py  # Basis 4.50, Team Market verspätet 4.00, Sie-Form
 git commit -am "…" && git push      # GitHub Pages aktualisiert sich in 1 bis 2 Minuten
 ```
 
-Feste Regeln (Basisnote 5.00, Verspätung startet bei 4.00, Team Market und OC zählen 5.00, Gewichte, Exam Day, 2/3 Praxis + 1/3 Exam) stehen in
-`src/*/LIESMICH.txt` und werden nicht über die Oberfläche geändert.
+Feste Regeln (Basisnote 4.50, Verspätung startet eine Note tiefer bei 3.50, Team Market und OC zählen 5.00, Team Market verspätet 4.00,
+Gewichte, Exam Day, 2/3 Praxis + 1/3 Exam) stehen in `src/*/LIESMICH.txt` und werden nicht über die Oberfläche geändert.
 
 ## Fahrplan Noten 2.0
 
@@ -96,3 +97,15 @@ Feste Regeln (Basisnote 5.00, Verspätung startet bei 4.00, Team Market und OC z
 - Service immer 9 Tage + Exam in derselben Abteilung (Umami und Da Fortunat = eine Abteilung); 5 + 4 Tage nur noch in der Küche (ausser The Essence).
 - Feedback-Mail vom geteilten Gerät: beide unterschreiben («Laura Arcuri und Sybille Geiser»).
 - Knopf ⌂ zurück zur persönlichen Startseite (mein.html).
+
+## Regeln ab 11.10.2026
+
+- **Basisnote 4.50** («erfüllt die Erwartungen») in Küche und Service, Laptop und Mobil. Fest eingebaut:
+  auch ältere Dateien und Sicherungen mit 5.00 rechnen beim nächsten Öffnen mit 4.50 (die Auswahl am Laptop ist gesperrt).
+- **Verspätet**: der Tag startet eine Note tiefer, 3.50.
+- **Team Market und OC**: fester Tag mit 5.00; **verspätet** 4.00. Bedienung: «Team Market» und «Verspätet» antippen
+  (beide Knöpfe aktiv). Gespeichert als Anwesenheit `tml`; zählt in Meldung, Zusammenfassung und Excel als Verspätung.
+- Farben: grün ab 4.75 (über der Erwartung), rot unter 4.00 (ungenügend). Schlusssätze in Mail und Beurteilung
+  relativ zur Basis (ab 4.75, ab 4.25, ab 4.00, darunter).
+- **Sie-Form**: Feedback-Mail Deutsch «Guten Tag Vorname» mit Sie, «Freundliche Grüsse»; Englisch «Dear …».
+  Auch die Beurteilung am Laptop und die Massnahmentexte (Tipps) der Service-Bausteine sind in der Sie-Form.

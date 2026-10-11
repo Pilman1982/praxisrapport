@@ -93,8 +93,8 @@ with sync_playwright() as p:
         const cg = [...document.querySelectorAll('.critbar .cg')].map(x=>x.textContent);
         const w = [...document.querySelectorAll('.sheet .w')].map(x=>x.textContent).find(x=>x.includes('−0.50'));
         return {day:n2Day(s1, sid), pill: pill && pill.textContent, head, ava, cg, w, crit:n2Crit(s1, sid), n:CRITS.length}; }""")
-    k = g["n"]; exp = (2*4.5 + (k-1)*5) / (k+1)
-    ok("Mobil: Tagesnote mit Hygiene doppelt (4.50 bei −0.50)", abs(g["day"] - exp) < 1e-9 and g["crit"]["hyg"] == 4.5, (g["day"], exp))
+    k = g["n"]; exp = (2*4.0 + (k-1)*4.5) / (k+1)   # Basis 4.50 (seit 11.10.2026), hyg-n1 = -0.50
+    ok("Mobil: Tagesnote mit Hygiene doppelt (4.00 bei −0.50)", abs(g["day"] - exp) < 1e-9 and g["crit"]["hyg"] == 4.0, (g["day"], exp))
     ok("Mobil: Note in der Liste sichtbar", g["pill"] == "%.2f" % exp, g["pill"])
     ok("Mobil: Note im Kopf des Erfassungsblatts", g["head"].startswith("Tag %.2f" % exp), g["head"])
     ok("Mobil: Foto im Erfassungsblatt", g["ava"])
@@ -110,9 +110,9 @@ with sync_playwright() as p:
     pg.locator("#view .fbbtn").first.click(); pg.wait_for_timeout(150)
     fb = pg.evaluate("()=>({txt:document.getElementById('n2fbtext').value, mail:S.students[0].mail, lg:n2FbLang(S.students[0]), lg2:n2FbLang(S.students[1]), de:n2FbText(S.students[1],'de',true).body})")
     ok("Feedback: Sprache nach Klasse (HFE1 Englisch, HFD Deutsch)", fb["lg"] == "en" and fb["lg2"] == "de", (fb["lg"], fb["lg2"]))
-    ok("Feedback: englischer Text mit Verbesserung und Tipp", fb["txt"].startswith("Hi ") and "Where you can still improve:" in fb["txt"] and "Tip:" in fb["txt"] and "Uniform" in fb["txt"], fb["txt"][:160])
+    ok("Feedback: englischer Text mit Verbesserung und Tipp", fb["txt"].startswith("Dear ") and "Where you can still improve:" in fb["txt"] and "Tip:" in fb["txt"] and "Uniform" in fb["txt"], fb["txt"][:160])
     ok("Feedback: ohne Noten, solange nicht angekreuzt", "grade" not in fb["txt"].split("Where")[0] and "practice grade" not in fb["txt"], "")
-    ok("Feedback: deutscher Text sympathisch mit Gruss und Noten auf Wunsch", fb["de"].startswith("Hallo ") and "Herzliche Grüsse" in fb["de"] and "Deine Praxisnote" in fb["de"] and "Exam" not in fb["de"], fb["de"][:120])
+    ok("Feedback: deutscher Text in Sie-Form mit Gruss und Noten auf Wunsch", fb["de"].startswith("Guten Tag ") and "Freundliche Grüsse" in fb["de"] and "Ihre Praxisnote" in fb["de"] and "Exam" not in fb["de"], fb["de"][:120])
     pg.evaluate("()=>{ const t=document.getElementById('n2fbtext'); t.value = t.value + '\\nPS: Danke!'; }")
     pg.locator(".sheet-f .btn.pri").click(); pg.wait_for_timeout(200)
     ok("Feedback: nach dem Senden als gesendet markiert", bool(pg.evaluate("()=>n2FbSent(S.students[0].id)")))
@@ -167,7 +167,7 @@ with sync_playwright() as p:
     ok("Service: Mobil 10T geoeffnet", g["u"].endswith("Servicerapport_Mobil.html"), g["u"])
     ok("Service: Mittwoch 02.09. statt Woche", g["lab"] == "Mittwoch 02.09.", g["lab"])
     ok("Service: Foto im Erfassungsblatt", g["ava"])
-    ok("Service: Tagesnote 5.00 im Kopf, Kriteriennoten sichtbar", g["head"].startswith("Tag 5.00") and g["cg"] == g["n"], g)
+    ok("Service: Tagesnote 4.50 im Kopf, Kriteriennoten sichtbar", g["head"].startswith("Tag 4.50") and g["cg"] == g["n"], g)
     ok("Service: Gastgeberhaltung doppelt gewichtet", g["dbl"] == "gas", g["dbl"])
     ok("Service: keine JavaScript-Fehler", not errs, errs); c.close()
     b.close()

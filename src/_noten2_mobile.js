@@ -20,20 +20,31 @@ const N2T = {
       crit:"เฉลี่ยตามเกณฑ์", abs:"ขาด/ลา"}
 };
 const n2t = k => (N2T[L] && N2T[L][k]) || N2T.de[k] || k;
-function n2Base(){ const b = parseFloat(S.settings.base); return isFinite(b) ? b : 5; }
+/* Basisnote (Entscheid 11.10.2026): fest 4.50 «erfüllt die Erwartungen», auch für alte Dateien mit 5.00.
+   Team Market und OC zählen fest 5.00; verspätet startet der Tag eine Note tiefer (3.50 bzw. 4.00). */
+const N2_BASE = 4.5, N2_TM = 5, N2_LATE_MINUS = 1;
+function n2Base(){ return N2_BASE; }
+/* Anwesenheit "tml" = Team Market und verspätet. «Verspätet» und «Team Market» lassen sich kombinieren. */
+function n2AttPressed(a, k){ return k === "late" ? (a === "late" || a === "tml") : k === "tm" ? (a === "tm" || a === "tml") : a === k; }
+function n2AttClick(a, k){
+  if(k === "late") return a === "tm" ? "tml" : a === "tml" ? "tm" : "late";
+  if(k === "tm")   return (a === "late" || a === "tml") ? "tml" : "tm";
+  return k;
+}
+function n2AttLabel(a){ return a === "tml" ? t("teamMarket") + " · " + t("late") : t(a === "tm" ? "teamMarket" : a); }
 function n2Obs(r){ return (r && Array.isArray(r.obs)) ? r.obs : []; }
 /* Kriteriennoten eines Tages, wie critGradesForDay am Laptop */
 function n2Crit(slotId, sid){
   const r = (S.days[slotId] || {})[sid]; if(!r) return null;
   const sl = slots().find(x => x.id === slotId); const isExam = !!(sl && sl.exam);
-  const att = ["present","late","excused","unexcused","tm"].indexOf(r.att) >= 0 ? r.att : "present";
+  const att = ["present","late","excused","unexcused","tm","tml"].indexOf(r.att) >= 0 ? r.att : "present";
   const g = {};
-  if(att === "tm"){ CRITS.forEach(c => g[c.k] = 5); return g; }
+  if(att === "tm" || att === "tml"){ CRITS.forEach(c => g[c.k] = N2_TM - (att === "tml" ? N2_LATE_MINUS : 0)); return g; }
   if(att === "excused" && !isExam) return null;
   if(att === "unexcused" || (isExam && att === "excused")){ CRITS.forEach(c => g[c.k] = 1); return g; }
   const obs = n2Obs(r).map(i => CHIP[i]).filter(Boolean);
-  /* Verspätet (Entscheid 08.10.2026): der Tag startet eine Note tiefer, 4.00 statt 5.00. */
-  const b0 = n2Base() - (att === "late" ? 1 : 0);
+  /* Verspätet: der Tag startet eine Note tiefer, 3.50 statt 4.50. */
+  const b0 = n2Base() - (att === "late" ? N2_LATE_MINUS : 0);
   const nt = r.note;
   CRITS.forEach(c => {
     const mine = obs.filter(o => o.c === c.k);
@@ -59,8 +70,8 @@ function n2Exam(sid){ const ex = slots().find(s => s.exam); return ex ? n2Day(ex
 function n2Final(sid){ const p = n2Praxis(sid).avg, e = n2Exam(sid); return (p != null && e != null) ? (2 * p + e) / 3 : null; }
 const n2Fmt = v => v == null ? "–" : v.toFixed(2);
 const n2Fmt1 = v => v == null ? "–" : (Math.round(v * 10) / 10).toFixed(1);   // Schlussnote: auf 0.1 gerundet
-/* Farben wie am Laptop: grün ab 5.25 (über Erwartung), rot unter 4.25, dazwischen neutral */
-const n2Cls = v => v == null ? "g-na" : (v >= 5.25 ? "g-ok" : (v < 4.25 ? "g-bad" : "g-mid"));
+/* Farben wie am Laptop: grün ab Basis + 0.25 (über Erwartung), rot unter 4.00 (ungenügend), dazwischen neutral */
+const n2Cls = v => v == null ? "g-na" : (v >= N2_BASE + 0.25 ? "g-ok" : (v < 4 ? "g-bad" : "g-mid"));
 function n2Effect(c){ return c.ko ? "→ 1.0" : ((c.d > 0 ? "+" : "−") + c.w.toFixed(2)); }
 function n2Pill(v, extra){ return el("span",{class:"gpill " + n2Cls(v) + (extra ? " " + extra : ""), text: n2Fmt(v)}); }
 /* Kopf des Erfassungsblatts: Tagesnote und Praxisdurchschnitt, laufend aktualisiert */
@@ -106,19 +117,20 @@ function n2RenderGrades(){
    Jede/r Dozierende löst sie am Ende ihres/seines Einsatzes selbst aus (Notenübersicht Ø).
    Sprache: Deutsch für HFD, Englisch für HFE1/HFE2 (oder die Sprache aus der Klassenliste).
    Inhalt: was gut lief, wo die Person sich verbessern kann (mit Tipp), freundlicher Abschluss.
+   Form (Entscheid 11.10.2026): förmlich, Deutsch «Guten Tag Vorname» mit Sie, Englisch «Dear first name».
    Der Text ist im Blatt frei bearbeitbar und geht über die Mail-App der Dozierenden hinaus.
    ==================================================================================== */
 const N2FB = {
-  de:{subj:"Dein Feedback aus der Praxis", hi:"Hallo", thanks:"vielen Dank für deinen Einsatz bei uns", period:"vom {a} bis {b}", intro:"Gerne gebe ich dir ein kurzes Feedback.",
-      good:"Das hat mir besonders gefallen:", goodNone:"Du hast die Erwartungen zuverlässig erfüllt, besonders in diesen Bereichen: {c}.",
-      improve:"Hier kannst du dich noch verbessern:", improveNone:"Mir sind keine Punkte aufgefallen, an denen du dringend arbeiten musst. Bleib so dran!",
-      tip:"Tipp", often:"mehrmals", late:"Achte bitte auf Pünktlichkeit: Du warst {n}× verspätet.", unex:"Bitte melde Abwesenheiten immer im Voraus: {n} Tag(e) waren nicht entschuldigt.",
-      grades:"Deine Praxisnote für diesen Einsatz: {p}",
-      c1:"Du warst eine echte Stütze im Team. Mach genau so weiter!", c2:"Du bist auf einem guten Weg. Mit den Tipps oben holst du noch mehr heraus.",
-      c3:"Die Grundlage stimmt. Nimm dir die Punkte oben Schritt für Schritt vor, dann merkst du schnell Fortschritte.",
-      c4:"Ich sehe, dass bei dir noch einiges drin liegt, und ich traue es dir zu. Komm gerne auf mich zu, wenn du Unterstützung möchtest.",
-      wish:"Ich wünsche dir viel Erfolg und Freude im nächsten Einsatz.", bye:"Herzliche Grüsse"},
-  en:{subj:"Your feedback from practical training", hi:"Hi", thanks:"thank you for your work with us", period:"from {a} to {b}", intro:"Here is some short feedback from me.",
+  de:{subj:"Ihr Feedback aus der Praxis", hi:"Guten Tag", thanks:"vielen Dank für Ihren Einsatz bei uns", period:"vom {a} bis {b}", intro:"Gerne gebe ich Ihnen ein kurzes Feedback.",
+      good:"Das hat mir besonders gefallen:", goodNone:"Sie haben die Erwartungen zuverlässig erfüllt, besonders in diesen Bereichen: {c}.",
+      improve:"Hier können Sie sich noch verbessern:", improveNone:"Mir sind keine Punkte aufgefallen, an denen Sie dringend arbeiten müssen. Bleiben Sie dran!",
+      tip:"Tipp", often:"mehrmals", late:"Bitte achten Sie auf Pünktlichkeit: Sie waren {n}× verspätet.", unex:"Bitte melden Sie Abwesenheiten immer im Voraus: {n} Tag(e) waren nicht entschuldigt.",
+      grades:"Ihre Praxisnote für diesen Einsatz: {p}",
+      c1:"Sie waren eine echte Stütze im Team. Machen Sie genau so weiter!", c2:"Sie sind auf einem guten Weg. Mit den Tipps oben holen Sie noch mehr heraus.",
+      c3:"Die Grundlage stimmt. Nehmen Sie sich die Punkte oben Schritt für Schritt vor, dann merken Sie schnell Fortschritte.",
+      c4:"Ich sehe, dass bei Ihnen noch einiges drin liegt, und ich traue es Ihnen zu. Kommen Sie gerne auf mich zu, wenn Sie Unterstützung möchten.",
+      wish:"Ich wünsche Ihnen viel Erfolg und Freude im nächsten Einsatz.", bye:"Freundliche Grüsse"},
+  en:{subj:"Your feedback from practical training", hi:"Dear", thanks:"thank you for your work with us", period:"from {a} to {b}", intro:"Here is some short feedback from me.",
       good:"What I particularly liked:", goodNone:"You reliably met expectations, especially in these areas: {c}.",
       improve:"Where you can still improve:", improveNone:"I did not notice anything you urgently need to work on. Keep it up!",
       tip:"Tip", often:"several times", late:"Please watch your punctuality: you were late {n} time(s).", unex:"Please always report absences in advance: {n} day(s) were unexcused.",
@@ -171,9 +183,9 @@ function n2FbData(sid){
   slots().filter(x => !x.exam).forEach(sl => {                    // Exam Day bleibt aus der Mail (noch nicht kommunizierbar)
     const r = (S.days[sl.id] || {})[sid]; if(!r) return;
     const att = r.att || "present";
-    if(att === "late") late++;
+    if(att === "late" || att === "tml") late++;
     if(att === "unexcused") unex++;
-    if(att === "excused" || att === "unexcused" || att === "tm") return;
+    if(att === "excused" || att === "unexcused" || att === "tm" || att === "tml") return;
     days++;
     n2Obs(r).forEach(i => { tally[i] = (tally[i] || 0) + 1; });
   });
@@ -200,7 +212,7 @@ function n2FbText(s, lg, withGrades){
     o.push(X.good);
     D.pos.slice(0, 3).forEach(x => o.push("– " + ct(x.c) + (x.n > 1 ? " (" + X.often + ")" : "")));
   } else {
-    const best = CRITS.filter(c => D.crit[c.k] != null && D.crit[c.k] >= 5).sort((a, b) => D.crit[b.k] - D.crit[a.k]).map(c => cn(c.k)).slice(0, 3);
+    const best = CRITS.filter(c => D.crit[c.k] != null && D.crit[c.k] >= N2_BASE).sort((a, b) => D.crit[b.k] - D.crit[a.k]).map(c => cn(c.k)).slice(0, 3);
     if(best.length) o.push(X.goodNone.replace("{c}", best.join(", ")));
   }
   o.push("");
@@ -219,8 +231,8 @@ function n2FbText(s, lg, withGrades){
      Exam-Note und Schlussnote werden nie in die Mail geschrieben. */
   const p = n2Praxis(s.id).avg;
   if(withGrades && p != null){ o.push(X.grades.replace("{p}", n2Fmt1(p)) + ".", ""); }
-  const g = p == null ? 5 : p;
-  o.push(g >= 5.25 ? X.c1 : g >= 4.75 ? X.c2 : g >= 4 ? X.c3 : X.c4);
+  const g = p == null ? N2_BASE : p;
+  o.push(g >= N2_BASE + 0.25 ? X.c1 : g >= N2_BASE - 0.25 ? X.c2 : g >= 4 ? X.c3 : X.c4);
   o.push(X.wish, "", X.bye, n2Teacher(lg));
   const subj = X.subj + (outlet ? " – " + outlet : "") + (a ? " " + a + "–" + b : "");
   return {subj, body: o.join("\n").replace(/\n{3,}/g, "\n\n")};
@@ -290,21 +302,21 @@ function n2OpenFb(s){
 const N2X = {
   de:{home:"Meine Startseite", nick:"Nickname", nickPh:"z. B. Lulu", nickSave:"Übernehmen", nickDel:"Löschen",
       nickHint:"Gilt sofort auf diesem Gerät. Mit «Tag senden» geht er an die Kursleitung und kommt mit dem nächsten Paket zu allen.",
-      saved:"✓ gespeichert", lateDay:"Verspätet: Der Tag startet eine Note tiefer (4.00 statt 5.00).",
+      saved:"✓ gespeichert", lateDay:"Verspätet: Der Tag startet eine Note tiefer (3.50 statt 4.50).", tmLateDay:"Team Market, verspätet: dieser Tag zählt mit 4.00 (eine Note tiefer).",
       sum:"Zusammenfassung an die Kursleitung", sumHint:"Nach dem Exam: die Durchschnitte aller Personen per Mail an Michael Pilman.",
       sumHint5:"Nach dem letzten Tag: der Durchschnitt aller Personen per Mail an Michael Pilman.", sumSent:"gesendet am",
       sumOpen:"Der Exam Day ist noch nicht erfasst. Trotzdem senden?", sumCopy:"Text kopiert. Bitte in die Mail einfügen.",
-      sumNow:"Heute ist der letzte Tag. Danach: Zusammenfassung an die Kursleitung senden.", shift:"Schicht", ocDay:"OC (Office und Daily MeP): zählt wie Team Market mit 5.00."},
+      sumNow:"Heute ist der letzte Tag. Danach: Zusammenfassung an die Kursleitung senden.", shift:"Schicht", ocDay:"OC (Office und Daily MeP): zählt wie Team Market mit 5.00, verspätet 4.00."},
   en:{home:"My start page", nick:"Nickname", nickPh:"e.g. Lulu", nickSave:"Apply", nickDel:"Delete",
       nickHint:"Applies on this device at once. «Send the day» passes it to the course lead; everyone gets it with the next package.",
-      saved:"✓ saved", lateDay:"Late: the day starts one grade lower (4.00 instead of 5.00).",
+      saved:"✓ saved", lateDay:"Late: the day starts one grade lower (3.50 instead of 4.50).", tmLateDay:"Team Market, late: this day counts as 4.00 (one grade lower).",
       sum:"Summary to the course lead", sumHint:"After the exam: e-mail the averages of all students to Michael Pilman.",
       sumHint5:"After the last day: e-mail the average of all students to Michael Pilman.", sumSent:"sent on",
       sumOpen:"The Exam Day has not been recorded yet. Send anyway?", sumCopy:"Text copied. Please paste it into the e-mail.",
-      sumNow:"Today is the last day. Afterwards: send the summary to the course lead.", shift:"Shift", ocDay:"OC (office and daily MeP): counts like Team Market with 5.00."},
+      sumNow:"Today is the last day. Afterwards: send the summary to the course lead.", shift:"Shift", ocDay:"OC (office and daily MeP): counts like Team Market with 5.00, late 4.00."},
   th:{home:"หน้าเริ่มต้นของฉัน", nick:"ชื่อเล่น", nickPh:"เช่น Lulu", nickSave:"ใช้", nickDel:"ลบ",
       nickHint:"ใช้ได้ทันทีบนอุปกรณ์นี้ เมื่อกด «ส่งข้อมูลของวันนี้» ชื่อเล่นจะถูกส่งให้ผู้ประสานงาน และทุกคนจะได้รับในชุดข้อมูลถัดไป",
-      saved:"✓ บันทึกแล้ว", lateDay:"มาสาย: วันนี้เริ่มต่ำลงหนึ่งคะแนน (4.00 แทน 5.00)",
+      saved:"✓ บันทึกแล้ว", lateDay:"มาสาย: วันนี้เริ่มต่ำลงหนึ่งคะแนน (3.50 แทน 4.50)", tmLateDay:"Team Market มาสาย: วันนี้นับเป็น 4.00 (ต่ำลงหนึ่งคะแนน)",
       sum:"สรุปส่งผู้ประสานงาน", sumHint:"หลังวันสอบ: ส่งคะแนนเฉลี่ยของทุกคนทางอีเมลถึง Michael Pilman",
       sumHint5:"หลังวันสุดท้าย: ส่งคะแนนเฉลี่ยของทุกคนทางอีเมลถึง Michael Pilman", sumSent:"ส่งแล้วเมื่อ",
       sumOpen:"ยังไม่ได้บันทึกวันสอบ ต้องการส่งหรือไม่", sumCopy:"คัดลอกข้อความแล้ว กรุณาวางในอีเมล",

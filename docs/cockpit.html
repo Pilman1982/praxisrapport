@@ -301,7 +301,7 @@ function packageJSON(p){
   const teacher = p.doz ? p.doz.name : "";
   const settings = {group: same(p.studs.map(x=>x.s.klasse)), team: same(p.studs.map(x=>x.s.gruppe)),
     outlet:p.outlet, teacher, uiLang: p.doz && ["de","en","th"].includes(p.doz.sprache) ? p.doz.sprache : "de",
-    outLang:"de", weekdays:PLAN._wd.slice(), startIdx:p.startIdx, base:5, isSample:false};
+    outLang:"de", weekdays:PLAN._wd.slice(), startIdx:p.startIdx, base:4.5, isSample:false};
   settings[A.w2] = true;
   /* Datum pro Einsatztag: das häufigste Datum aller Personen an dieser Stelle */
   const pick = arr => { const c = {}; arr.filter(Boolean).forEach(d => c[d] = (c[d] || 0) + 1);
@@ -484,7 +484,7 @@ async function onReports(files){
       const filled = Object.keys(days).filter(k => days[k] && Object.keys(days[k]).length).length;
       let e = 0, u = 0, l = 0, tm = 0, obs = 0;
       Object.values(days).forEach(d => Object.values(d || {}).forEach(r => {
-        if(!r) return; if(r.att === "excused") e++; else if(r.att === "unexcused") u++; else if(r.att === "late") l++; else if(r.att === "tm") tm++;
+        if(!r) return; if(r.att === "excused") e++; else if(r.att === "unexcused") u++; else if(r.att === "late") l++; else if(r.att === "tm") tm++; else if(r.att === "tml"){ tm++; l++; }
         if(Array.isArray(r.obs)) obs += r.obs.length; }));
       const app = o.app || (/service/i.test(f.name) ? "Servicerapport" : /kuech|kitchen/i.test(f.name) ? "Kuechenrapport" : "?");
       REPS.push({file:f.name, app, variant:o.variant || "10T", outlet:m.outlet || st.outlet || "", teacher:m.teacher || st.teacher || "",

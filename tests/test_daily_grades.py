@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Daily Grades: Rueckmeldungen aus dem Pilot (08.10.2026).
-Schicht-Kuerzel, OC wie Market, Verspaetung startet bei 4.00, Kriterien ohne Scrollen,
+Schicht-Kuerzel, OC wie Market, Verspaetung startet eine Note tiefer (3.50, Basis 4.50 seit 11.10.2026), Kriterien ohne Scrollen,
 Freitext wird beim Schliessen gespeichert, Nickname im Blatt, Zusammenfassung an die Kursleitung,
 Knopf zur Startseite, Nicknames im Cockpit uebernehmen."""
 import pathlib, json
@@ -90,10 +90,10 @@ with sync_playwright() as p:
         r = pg.evaluate("""()=>{ const s = S.students.find(x=>x.nr==='12');
             n2Refresh([{nr:'12', nick:'', name:s.name}]); const a = s.nick; n2Refresh([{nr:'12', nick:'Lu Lu', name:s.name}]); return [a, s.nick]; }""")
         ok(P + "Leeres Paketfeld loescht Nickname nicht, neuer Nickname kommt an", r == ["Lulu", "Lu Lu"], r)
-        # Verspaetung: Start bei 4.00
+        # Verspaetung: Start eine Note unter der Basis 4.50 = 3.50
         late = pg.evaluate("""()=>{ const s = S.students[0]; const id = slots()[1].id; S.days[id][s.id] = {att:'late', obs:[], note:null};
-            const g = n2Crit(id, s.id); return [n2Day(id, s.id), Object.values(g).every(v=>v===4)]; }""")
-        ok(P + "Verspaetet ohne Beobachtung ergibt 4.00 in allen Kriterien", late == [4, True], late)
+            const g = n2Crit(id, s.id); return [n2Day(id, s.id), Object.values(g).every(v=>v===3.5)]; }""")
+        ok(P + "Verspaetet ohne Beobachtung ergibt 3.50 in allen Kriterien", late == [3.5, True], late)
         # OC-Tag ist Team Market (5.00)
         oc = pg.evaluate("""()=>{ const s = S.students.find(x=>x.nr==='11'); const id = slots()[2].id; return [S.days[id][s.id].att, n2Day(id, s.id), planSchicht(s, id)]; }""")
         ok(P + "OC-Tag ist als Team Market vorbelegt und zaehlt 5.00", oc == ["tm", 5, "OC"], oc)
@@ -137,12 +137,12 @@ with sync_playwright() as p:
         pg.locator(".stud-h .nickbtn").first.click(); pg.wait_for_timeout(120)
         ok(L + "Nickname per Knopf eingetragen", pg.evaluate("()=>S.students[0].nick") == "Maxi", pg.evaluate("()=>S.students[0].nick"))
         late = pg.evaluate("""()=>{ const s = S.students[0]; const id = slots()[1].id; S.days[id][s.id] = {att:'late', obs:[], note:null};
-            curSlot = id; render(); return [dayTotal(id, s.id), /4\\.00 (statt|instead of) 5\\.00/.test(document.body.innerText)]; }""")
-        ok(L + "Verspaetet ergibt 4.00 und zeigt den Hinweis", late == [4, True], late)
+            curSlot = id; render(); return [dayTotal(id, s.id), /3\\.50 (statt|instead of) 4\\.50/.test(document.body.innerText)]; }""")
+        ok(L + "Verspaetet ergibt 3.50 und zeigt den Hinweis", late == [3.5, True], late)
         ok(L + "Titel Daily Grades und Logo", pg.title().startswith("Daily Grades") and pg.locator(".dgl svg").count() == 1, pg.title())
         if "service" in app:
             st = pg.evaluate("()=>{ const r = selfTest(); return r.filter(x=>!x.ok).map(x=>x.name); }")
-            ok(L + "Selbsttest ohne Fehler (Verspaetung startet bei 4.00)", not st, st)
+            ok(L + "Selbsttest ohne Fehler (Basis 4.50, Verspaetung 3.50)", not st, st)
         ok(L + "keine JavaScript-Fehler", not errs, errs); c.close()
 
     # Startseite und mein.html
