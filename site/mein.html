@@ -58,7 +58,7 @@ const KEY = "praxisrapport.semester", LKEY = "praxisrapport.lang";
 const TX = {
   de:{iosHint:"Zuerst Teilen ⬆ → «Zum Home-Bildschirm» antippen, Safari schliessen und das neue Symbol öffnen. Erst dort das Semesterpaket laden: Das Symbol hat einen eigenen Speicher.", title:"Daily Grades", load:"Semesterpaket laden", loadHint:"Die Datei «Semesterpaket_….json» von Michael aus der Mail oder aus «Dateien» wählen. Das ist nur einmal pro Semester nötig.",
       now:"Jetzt", next:"Als Nächstes", open:"Rapport öffnen", laptop:"Laptop-Fassung öffnen", all:"Alle Einsätze im Semester",
-      past:"vorbei", soon:"kommt", cur:"jetzt", persons:"Personen", from:"ab", until:"bis", other:"Anderes Semesterpaket laden",
+      past:"vorbei", soon:"kommt", cur:"jetzt", persons:"Personen", person:"Person", from:"ab", until:"bis", other:"Anderes Semesterpaket laden",
       remove:"Semesterpaket von diesem Gerät entfernen", removeQ:"Semesterpaket von diesem Gerät entfernen? Die erfassten Rapporte bleiben erhalten.",
       privacy:"Alles bleibt auf diesem Gerät. Nichts wird ins Internet geschickt.", bad:"Diese Datei ist kein Semesterpaket.", done:"Semesterpaket geladen",
       homeHint:"Tipp: Diese Seite über Teilen → «Zum Home-Bildschirm» als Symbol ablegen.", none:"Im Moment kein Einsatz geplant.",
@@ -66,7 +66,7 @@ const TX = {
       broken:"Ein Teil des Semesterpakets ist unvollständig. Bitte fordere bei Michael ein neues Semesterpaket an."},
   en:{iosHint:"First tap Share ⬆ → «Add to Home Screen», close Safari and open the new icon. Load the semester package only there: the icon has its own storage.", title:"Daily Grades", load:"Load semester package", loadHint:"Choose the file «Semesterpaket_….json» from Michael's e-mail or from «Files». You only need to do this once per semester.",
       now:"Now", next:"Next", open:"Open report", laptop:"Open laptop version", all:"All assignments this semester",
-      past:"done", soon:"upcoming", cur:"now", persons:"students", from:"from", until:"to", other:"Load another semester package",
+      past:"done", soon:"upcoming", cur:"now", persons:"students", person:"student", from:"from", until:"to", other:"Load another semester package",
       remove:"Remove semester package from this device", removeQ:"Remove the semester package from this device? Recorded reports are kept.",
       privacy:"Everything stays on this device. Nothing is sent to the internet.", bad:"This file is not a semester package.", done:"Semester package loaded",
       homeHint:"Tip: add this page to your home screen via Share → «Add to Home Screen».", none:"No assignment planned at the moment.",
@@ -74,7 +74,7 @@ const TX = {
       broken:"Part of the semester package is incomplete. Please ask Michael for a new semester package."},
   th:{iosHint:"แตะ แชร์ ⬆ → «เพิ่มไปยังหน้าจอโฮม» ก่อน แล้วปิด Safari และเปิดไอคอนใหม่ โหลดชุดข้อมูลภาคเรียนในไอคอนเท่านั้น เพราะไอคอนมีพื้นที่เก็บข้อมูลของตัวเอง", title:"Daily Grades", load:"โหลดชุดข้อมูลภาคเรียน", loadHint:"เลือกไฟล์ «Semesterpaket_….json» ที่ Michael ส่งให้ทางอีเมล หรือจาก «ไฟล์» ทำเพียงครั้งเดียวต่อภาคเรียน",
       now:"ตอนนี้", next:"ถัดไป", open:"เปิดรายงาน", laptop:"เปิดเวอร์ชันแล็ปท็อป", all:"การฝึกทั้งหมดในภาคเรียน",
-      past:"ผ่านไปแล้ว", soon:"กำลังจะมา", cur:"ตอนนี้", persons:"คน", from:"ตั้งแต่", until:"ถึง", other:"โหลดชุดข้อมูลภาคเรียนอื่น",
+      past:"ผ่านไปแล้ว", soon:"กำลังจะมา", cur:"ตอนนี้", persons:"คน", person:"คน", from:"ตั้งแต่", until:"ถึง", other:"โหลดชุดข้อมูลภาคเรียนอื่น",
       remove:"ลบชุดข้อมูลภาคเรียนออกจากอุปกรณ์นี้", removeQ:"ลบชุดข้อมูลภาคเรียนออกจากอุปกรณ์นี้หรือไม่ รายงานที่บันทึกไว้จะยังอยู่",
       privacy:"ข้อมูลทั้งหมดอยู่บนอุปกรณ์นี้เท่านั้น ไม่มีการส่งขึ้นอินเทอร์เน็ต", bad:"ไฟล์นี้ไม่ใช่ชุดข้อมูลภาคเรียน", done:"โหลดชุดข้อมูลภาคเรียนแล้ว",
       homeHint:"เคล็ดลับ: เพิ่มหน้านี้ไปยังหน้าจอโฮมผ่าน แชร์ → «เพิ่มไปยังหน้าจอโฮม»", none:"ขณะนี้ไม่มีการฝึกตามแผน",
@@ -125,14 +125,15 @@ function status(p){
   if(!v && !b) return "past";
   return (v && d < v) ? "soon" : ((b && d > b) ? "past" : "cur");
 }
+/* Laufende Pakete (es können zwei gleichzeitig laufen, z. B. 5 Tage und 4 Tage + Exam zweier Gruppen), sonst das nächste */
 function current(){
-  const ps = pakete(); if(!ps.length) return null;
-  const now = ps.filter(p => status(p) === "cur");
-  if(now.length) return {p: now[0], kind:"now"};
+  const ps = pakete(); if(!ps.length) return [];
+  const now = ps.filter(p => status(p) === "cur").sort((a, b) => vonOf(a).localeCompare(vonOf(b)));
+  if(now.length) return now.map(p => ({p, kind:"now"}));
   const next = ps.filter(p => status(p) === "soon").sort((a, b) => vonOf(a).localeCompare(vonOf(b)))[0];
-  return next ? {p: next, kind:"next"} : null;
+  return next ? [{p: next, kind:"next"}] : [];
 }
-const meta = p => dmy(p.von) + " " + t("until") + " " + dmy(p.bis) + (txt(p.personen) ? " · " + txt(p.personen) + " " + t("persons") : "");
+const meta = p => dmy(p.von) + " " + t("until") + " " + dmy(p.bis) + (txt(p.personen) ? " · " + txt(p.personen) + " " + (String(txt(p.personen)) === "1" ? t("person") : t("persons")) : "");
 /* Nur Rapporte dieser Seite öffnen: kueche/… oder service/…html, nichts anderes (z. B. javascript:) */
 const TARGET_OK = /^(kueche|service)\/[A-Za-z0-9_]+\.html$/;
 /* Paket an die richtige App übergeben (gleiche Adresse, bleibt im Browser) und App öffnen */
@@ -175,8 +176,8 @@ function render(msg){
     return;
   }
   try{
-    const c = current();
-    if(c){
+    const cs = current();
+    cs.forEach(c => {
       const p = c.p;
       m.appendChild(el("div",{class:"card now"},[
         el("div",{class:"eyebrow",text:c.kind === "now" ? t("now") : t("next")}),
@@ -184,7 +185,8 @@ function render(msg){
         el("div",{class:"meta",text:meta(p)}),
         el("button",{class:"btn pri",text:t("open"),onclick:()=>openPack(p, false)}),
         el("button",{class:"lnk",text:t("laptop"),onclick:()=>openPack(p, true)})]));
-    } else m.appendChild(el("div",{class:"card meta",text:t("none")}));
+    });
+    if(!cs.length) m.appendChild(el("div",{class:"card meta",text:t("none")}));
     const ul = el("ul");
     pakete().slice().sort((a, b) => vonOf(a).localeCompare(vonOf(b))).forEach(p => {
       const st = status(p);

@@ -776,7 +776,8 @@ function openSlot(id){
   S.days[id] = S.days[id] || {};
   S.students.forEach(s=>{ if(!S.days[id][s.id]) S.days[id][s.id] = defaultRec(s, id); });
   const _m = S.dayMeta[id] || {};
-  if(!_m.teacher) _m.teacher = S.settings.teacher || "";
+  if(!_m.teacher){ const _sw = slots().find(x=>x.id===id);   /* geteiltes Gerät: Person laut Wochentagsplan, wie am Tablet */
+    _m.teacher = (S.settings.teacherPlan && _sw && S.settings.teacherPlan[_sw.wd]) || S.settings.teacher || ""; }
   if(!_m.group)   _m.group   = S.settings.group   || "";
   if(!_m.team)    _m.team    = S.settings.team    || "";
   if(!_m.outlet)  _m.outlet  = S.settings.outlet  || "";
@@ -2704,7 +2705,9 @@ function n2Handoff(load){
     }
     Promise.resolve(load(p)).then(ok => {
       if(ok === false) return;                                      // nicht geladen: die Ladefunktion meldet den Grund
-      n2GoToday(); view = "day"; render();                          // heutigen Einsatztag zeigen, nicht Tag 1
+      /* den Tag weiter zeigen, an dem gerade gearbeitet wurde (Abnahme 31.10.2026); ohne Angabe den heutigen */
+      if(h.slot && slots().some(x => x.id === h.slot)) curSlot = h.slot; else n2GoToday();
+      view = "day"; render();
       if(ok === true) toast(h.titel || "✓");
     });
     return;
@@ -2815,7 +2818,7 @@ function n2SwitchView(){
   const lg = (S.settings.uiLang || "de");
   const msg = {de:toLaptop ? "Laptop-Ansicht" : "Tablet-Ansicht", en:toLaptop ? "Laptop view" : "Tablet view", th:toLaptop ? "มุมมองแล็ปท็อป" : "มุมมองแท็บเล็ต"}[lg] || "";
   try{
-    localStorage.setItem("praxisrapport.handoff", JSON.stringify({target, id:S.settings.paketId || "", titel:"✓ " + msg, at:Date.now(), mode:"switch", paket:snapshot()}));
+    localStorage.setItem("praxisrapport.handoff", JSON.stringify({target, id:S.settings.paketId || "", titel:"✓ " + msg, at:Date.now(), mode:"switch", slot:(typeof curSlot === "string" ? curSlot : ""), paket:snapshot()}));
   }catch(e){ try{ toast("Speicher voll"); }catch(_){} return; }
   location.href = target;
 }

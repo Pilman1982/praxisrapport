@@ -242,14 +242,14 @@ with sync_playwright() as p:
             n2Shown = '2000-01-01'; document.dispatchEvent(new Event('visibilitychange'));
             return [ohne, curSlot, !!document.getElementById('n2grade'), document.querySelector('.slot[aria-current=true] .sw').textContent]; }""")
         ok(B + "M4 neuer Kalendertag: heutiger Einsatztag, offenes Blatt geschlossen", r[0] == "d01" and r[1] == "d05" and r[2] is False, r)
-        # M4: Wechsel Tablet -> Laptop -> Tablet landet auf heute
+        # M4 (Abnahme 31.10.2026): Wechsel Tablet -> Laptop -> Tablet bleibt auf dem Tag, an dem gearbeitet wurde
         pg.evaluate("()=>{ curSlot = 'd02'; render(); }")
         pg.click("#btnSwitch"); pg.wait_for_url("**/" + laptop.split("/")[1]); pg.wait_for_timeout(800)
         r1 = pg.evaluate("()=>curSlot")
         pg.evaluate("()=>{ curSlot = 'd02'; render(); }")
         pg.click("#btnSwitch"); pg.wait_for_url("**/" + fname); pg.wait_for_timeout(800)
         r2 = pg.evaluate("()=>[curSlot, S.days.d01[S.students[0].id].obs.length]")
-        ok(B + "M4 nach dem Wechsel Laptop und zurück: heutiger Einsatztag", r1 == "d05" and r2 == ["d05", 1], (r1, r2))
+        ok(B + "M4 nach dem Wechsel Laptop und zurück: gleicher Einsatztag wie vorher", r1 == "d02" and r2 == ["d02", 1], (r1, r2))
         # M6: gleiches Paket neu ausgestellt
         s2 = copy.deepcopy(SEM[area]); pk = s2["pakete"][0]["paket"]["settings"]
         neuEx = (TODAY + datetime.timedelta(days=6)).isoformat()

@@ -75,6 +75,7 @@ python3 tests/test_notenzentrale.py      # Regeln 31.10.2026 (6.00 erreichbar, H
 python3 tests/test_fixes_kueche.py       # Fehlerkorrekturen 31.10.2026 Küche Laptop
 python3 tests/test_fixes_service.py      # Fehlerkorrekturen 31.10.2026 Service Laptop
 python3 tests/test_fixes_mobil.py        # Fehlerkorrekturen 31.10.2026 Mobil und Startseite
+python3 tests/test_abnahme_2026_10_31.py # Befunde der unabhängigen Abnahme 31.10.2026
 git commit -am "…" && git push      # GitHub Pages aktualisiert sich in 1 bis 2 Minuten
 ```
 
@@ -155,3 +156,6 @@ Die Seite speichert keine Daten; in Chrome und Edge merkt sie sich nur den gewä
 - Wechsel Tablet/Laptop: landet auf dem heutigen Tag, fragt vor dem Überschreiben; neu ausgestellte Pakete übernehmen Daten, Plan, Zyklus.
 - Zusammenfassung zählt «Team Market verspätet» richtig; Anrede mit Vorname; Startlinks mit Komma im Namen; mein.html robust gegen fehlerhafte Pakete.
 - Cockpit: Restaurantwechsel und Tagesplan nach Datum statt Position, Wechseldatum an Einsatztagen, Nicknames nur bei echter Änderung, doppelte Namen und Dozierende ohne Namen erkannt.
+- Abnahme: Plan ohne Tagesplan bekommt Einsatzdaten aus von/bis; Wechsel Tablet/Laptop bleibt auf dem bearbeiteten Tag;
+  Tablet lehnt Dateien aus dem anderen Bereich ab; Laptop übernimmt die bewertende Person pro Wochentag; mein.html zeigt
+  alle gleichzeitig laufenden Pakete; Notenzentrale verbindet 5T + 4T auch ohne Zyklusangabe und zählt den alten Baustein «Verspätet».

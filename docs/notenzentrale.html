@@ -377,6 +377,9 @@ const VARS = {"10T":{n:10, exam:true, prax:9, label:"9 Tage + Exam"}, "4T":{n:5,
 const ATT = ["present","late","excused","unexcused","tm","tml"];
 const ATT_TXT = {present:"anwesend", late:"verspätet", excused:"entschuldigt", unexcused:"unentschuldigt", tm:"Team Market / OC", tml:"Team Market, verspätet"};
 const ATT_SHORT = {late:"v", excused:"e", unexcused:"u", tm:"TM", tml:"TM v"};
+/* alter Baustein «Verspätet zum Dienst erschienen» (vor dem 08.10.2026 statt des Knopfs): zählt als Verspätung */
+const LEGACY_LATE = {kueche:"tea-n1", service:"tea-lt"};
+const lateChip = (area, rec) => Array.isArray(rec.obs) && rec.obs.indexOf(LEGACY_LATE[area]) >= 0;
 const WD = ["su","mo","tu","we","th","fr","sa"];
 const WD_DE = {mo:"Mo", tu:"Di", we:"Mi", th:"Do", fr:"Fr", sa:"Sa", su:"So"};
 
@@ -676,12 +679,23 @@ function rebuild(){
   buildEinsaetze();
   buildIssues();
 }
+/* Zyklus eines Pakets für eine Person. Ohne Zyklusangabe (Plan ohne «block», Pilotdateien) gehört ein 4T-Paket
+   zum 5T-Paket derselben Person und desselben Bereichs, das höchstens 10 Tage vorher endet (Küche 5 + 4 Tage = ein Einsatz). */
+const dayDiff = (a, b) => Math.round((new Date(b + "T12:00:00") - new Date(a + "T12:00:00")) / 864e5);
+function cycleFor(p, k, byPerson){
+  if(p.block || p.variant !== "4T" || !p.von) return {cycle:p.cycle, sort:p.cycleSort};
+  const prev = (byPerson.get(k) || []).filter(q => q !== p && !q.block && q.area === p.area && q.variant === "5T" && q.bis && q.bis < p.von && dayDiff(q.bis, p.von) <= 10)
+    .sort((a, b) => b.bis.localeCompare(a.bis))[0];
+  return prev ? {cycle:prev.cycle, sort:prev.cycleSort} : {cycle:p.cycle, sort:p.cycleSort};
+}
 function buildEinsaetze(){
-  const map = new Map();
+  const map = new Map(), byPerson = new Map();
+  PKGS.forEach(p => p.studs.forEach((s, k) => { (byPerson.get(k) || byPerson.set(k, []).get(k)).push(p); }));
   PKGS.forEach(p => p.studs.forEach((s, k) => {
-    const key = [k, p.area, p.semester, p.cycle].join("|");
+    const cy = cycleFor(p, k, byPerson);
+    const key = [k, p.area, p.semester, cy.cycle].join("|");
     let e = map.get(key);
-    if(!e){ e = {key, pk:k, area:p.area, semester:p.semester, cycle:p.cycle, cycleSort:p.cycleSort, parts:[]}; map.set(key, e); }
+    if(!e){ e = {key, pk:k, area:p.area, semester:p.semester, cycle:cy.cycle, cycleSort:cy.sort, parts:[]}; map.set(key, e); }
     e.parts.push(p);
   }));
   EINS = [...map.values()];
@@ -713,7 +727,8 @@ function buildEinsaetze(){
     e.partAvg = e.parts.map(p => ({p, avg: mean(e.days.filter(d => d.p === p && !d.sl.exam && d.total != null).map(d => d.total)),
       n: e.days.filter(d => d.p === p && !d.sl.exam && d.total != null).length}));
     const cnt = a => e.days.filter(d => d.att === a).length;
-    e.abs = {e: cnt("excused"), u: cnt("unexcused"), v: cnt("late") + cnt("tml"), tm: cnt("tm") + cnt("tml")};
+    const oldLate = e.days.filter(d => d.att === "present" && lateChip(e.area, d.rec)).length;
+    e.abs = {e: cnt("excused"), u: cnt("unexcused"), v: cnt("late") + cnt("tml") + oldLate, tm: cnt("tm") + cnt("tml")};
     e.outlets = [...new Set(e.days.map(d => d.outlet).concat(e.parts.map(p => p.outlet)).filter(Boolean))];
     e.teachers = [...new Set(e.parts.map(p => p.teacher).filter(Boolean))];
     e.fb = e.parts.map(p => p.fb[e.pk]).filter(Boolean);
@@ -1007,14 +1022,15 @@ function renderPerson(v){
 }
 function absRows(){
   const out = [];
-  EINS.filter(passE).forEach(e => e.days.forEach(d => { if(["late", "tml", "excused", "unexcused"].includes(d.att)) out.push({e, d}); }));
+  EINS.filter(passE).forEach(e => e.days.forEach(d => {
+    if(["late", "tml", "excused", "unexcused"].includes(d.att) || (d.att === "present" && lateChip(e.area, d.rec))) out.push({e, d}); }));
   return out.sort((a, b) => (b.d.date || "").localeCompare(a.d.date || ""));
 }
 function renderAbsences(v){
   const rows = absRows();
   if(!rows.length){ v.appendChild(el("div", {class:"empty", text:"Keine Absenzen und Verspätungen für diese Auswahl."})); return; }
   const cnt = k => rows.filter(x => x.d.att === k).length;
-  v.appendChild(el("div", {class:"kv"}, [["entschuldigt", cnt("excused")], ["unentschuldigt", cnt("unexcused")], ["verspätet", cnt("late") + cnt("tml")]]
+  v.appendChild(el("div", {class:"kv"}, [["entschuldigt", cnt("excused")], ["unentschuldigt", cnt("unexcused")], ["verspätet", cnt("late") + cnt("tml") + cnt("present")]]
     .map(([a, b]) => el("div", {}, [el("b", {text:a}), el("span", {text:String(b)})]))));
   const tb = el("table");
   tb.appendChild(el("thead", {}, el("tr", {}, ["Datum", "Person", "Klasse", "Ort", "Dozent/in", "Art", "Notiz"].map(h => el("th", {text:h})))));
@@ -1024,7 +1040,7 @@ function renderAbsences(v){
     body.appendChild(el("tr", {}, [el("td", {class:"nw", text: dmyy(d.date) + (d.sl.exam ? " (Exam)" : "")}), personCell(e.person),
       el("td", {class:"nw", text:[e.person.klasse, e.person.gruppe].filter(Boolean).join(" · ")}),
       el("td", {class:"nw", text: AREA[e.area] + " " + d.outlet}), el("td", {class:"nw", text: d.by || "–"}),
-      el("td", {class:"nw" + (d.att === "unexcused" ? " " : ""), style: d.att === "unexcused" ? "color:var(--err);font-weight:600" : "", text: ATT_TXT[d.att]}),
+      el("td", {class:"nw", style: d.att === "unexcused" ? "color:var(--err);font-weight:600" : "", text: d.att === "present" ? "verspätet (alter Baustein)" : ATT_TXT[d.att]}),
       el("td", {class:"small", text: nt})]));
   });
   tb.appendChild(body);
@@ -1095,7 +1111,7 @@ function pkgRows(){
 }
 function absExportRows(){
   return absRows().map(({e, d}) => ({"Datum":dmyy(d.date), "Exam":d.sl.exam ? "ja" : "", "Nachname":e.person.last || "", "Vorname":e.person.first || "", "N°":e.person.nr || "",
-    "Klasse":e.person.klasse || "", "Gruppe":e.person.gruppe || "", "Bereich":AREA[e.area], "Outlet":d.outlet, "Dozent/in":d.by || "", "Art":ATT_TXT[d.att],
+    "Klasse":e.person.klasse || "", "Gruppe":e.person.gruppe || "", "Bereich":AREA[e.area], "Outlet":d.outlet, "Dozent/in":d.by || "", "Art":d.att === "present" ? "verspätet (alter Baustein)" : ATT_TXT[d.att],
     "Notiz":d.rec.note && d.rec.note.txt ? d.rec.note.txt : ""}));
 }
 function sheet(rows, cols){

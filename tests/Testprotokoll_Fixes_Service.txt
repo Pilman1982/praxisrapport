@@ -31,7 +31,7 @@ OK      D3 keine JavaScript-Fehler                                              
 OK      D4 Liste zeigt die Studierendennummer mit #                                      ['Amman; Lea; lea@beispiel.ch; #1000000001']
 OK      D4 Namenskorrektur mit Nummer: gleiche Id, Nummer, Foto und Plan bleiben         [['p1', 'Ammann', 'Lea', '1000000001', True, '[2]', 'lea@beispiel.ch']]
 OK      D4 Namenskorrektur mit gleicher E-Mail: gleiche Id                               [['p2', 'Keller', 'Tim', '', False, 'null', 'timo@beispiel.ch']]
-OK      D4 gleicher Name, zwei E-Mail-Adressen: zwei Personen                            [['p3', 'Muster', 'Max', '', False, 'null', 'max1@beispiel.ch'], ['s1lxlxs', 'Muster', 'Max', '', False, 'null', 'max2@beispiel.ch']]
+OK      D4 gleicher Name, zwei E-Mail-Adressen: zwei Personen                            [['p3', 'Muster', 'Max', '', False, 'null', 'max1@beispiel.ch'], ['sgjh7br', 'Muster', 'Max', '', False, 'null', 'max2@beispiel.ch']]
 OK      D4 erfasste Tage bleiben bei der Person                                          (1, [])
 OK      D4 Wegfall mit Einträgen: Rückfrage, Abbrechen ändert nichts                     ['Diese Personen haben schon Einträge und fallen aus der Liste: Ammann Lea. Deren Einträge werden danach nicht mehr angezeigt. Trotzdem übernehmen?']
 OK      D4 Wegfall bestätigt: Person entfernt                                            ['Keller Tim', 'Muster Max', 'Muster Max']

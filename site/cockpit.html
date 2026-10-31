@@ -276,7 +276,10 @@ function build(){
         if(!schichtPlan.some(Boolean)) schichtPlan = null;
       }
       p.studs.push({s, e, wAb, wOut, ortPlan, tmTage, schichtPlan, days: tageList ? tageList.length + (VARS[v].exam ? 1 : 0) : days.length,
-        dates: tageList ? tageList.map(t => String(t.datum)) : null, tage: tageList, wAbDate, exam: e.exam || (VARS[v].exam ? iso(bis) : null)});
+        /* ohne Tagesplan (Abnahme 31.10.2026): Daten aus von/bis und den Wochentagen, wenn die Zahl der Einsatztage stimmt;
+           sonst fehlen die Daten in der App (Montag 1/10 …) und die Notenzentrale datiert nach dem Erfassungstag */
+        dates: tageList ? tageList.map(t => String(t.datum)) : (days.length === VARS[v].n ? days.slice(0, praxisSlots).map(iso) : null),
+        tage: tageList, wAbDate, exam: e.exam || (VARS[v].exam ? iso(bis) : null)});
     });
   });
   Object.values(agg).forEach(a => warn(a.text + ": " + (a.who.length > 4 ? a.who.length + " Personen" : a.who.join(", ")) + "."));

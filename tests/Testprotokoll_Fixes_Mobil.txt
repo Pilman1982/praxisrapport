@@ -82,7 +82,7 @@ OK      Mobil service: Startlink-Plan: alter Link, ganz verschlüsselt          
 OK      Mobil service: Startlink-Plan: alter Link mit +                                {'mo': 'Sybille Geiser', 'tu': 'Laura'}
 OK      Übergabe kueche: mein.html: heutiger Einsatztag (Tag 5) und Erfolgsmeldung     ['d05', '2026-10-31', 2, '✓ Zyklus 4.2 · Küche The Essence · 9 Tage + Exam · ab 27.10.']
 OK      Übergabe kueche: M4 neuer Kalendertag: heutiger Einsatztag, offenes Blatt geschlossen ['d01', 'd05', False, '31.10.']
-OK      Übergabe kueche: M4 nach dem Wechsel Laptop und zurück: heutiger Einsatztag    ('d05', ['d05', 1])
+OK      Übergabe kueche: M4 nach dem Wechsel Laptop und zurück: gleicher Einsatztag wie vorher ('d02', ['d02', 1])
 OK      Übergabe kueche: M6 neu ausgestelltes Paket: Exam-Datum, Plan, Zyklus, Semester, 2. Restaurant übernommen ['2026-11-06', '2026-11-06', {'mo': 'Laura Arcuri', 'tu': 'Sybille Geiser'}, 'Zyklus 9.9', 'FS27', 'Umami']
 OK      Übergabe kueche: M6 erfasste Tage bleiben                                      1
 OK      Übergabe kueche: M6 abgelehntes Paket: keine Erfolgsmeldung, Daten unverändert ['Datei nicht lesbar oder keine Küchenrapport-Sicherung', 2]
@@ -91,7 +91,7 @@ OK      Übergabe kueche: M6 Wechsel bestätigt: Stand übernommen              
 OK      Übergabe kueche: keine JavaScript-Fehler                                       []
 OK      Übergabe service: mein.html: heutiger Einsatztag (Tag 5) und Erfolgsmeldung    ['d05', '2026-10-31', 2, '✓ Zyklus 4.1 · Service Campigiana · 9 Tage + Exam · ab 27.10.']
 OK      Übergabe service: M4 neuer Kalendertag: heutiger Einsatztag, offenes Blatt geschlossen ['d01', 'd05', False, '31.10.']
-OK      Übergabe service: M4 nach dem Wechsel Laptop und zurück: heutiger Einsatztag   ('d05', ['d05', 1])
+OK      Übergabe service: M4 nach dem Wechsel Laptop und zurück: gleicher Einsatztag wie vorher ('d02', ['d02', 1])
 OK      Übergabe service: M6 neu ausgestelltes Paket: Exam-Datum, Plan, Zyklus, Semester, 2. Restaurant übernommen ['2026-11-06', '2026-11-06', {'mo': 'Laura Arcuri', 'tu': 'Sybille Geiser'}, 'Zyklus 9.9', 'FS27', 'Umami']
 OK      Übergabe service: M6 erfasste Tage bleiben                                     1
 OK      Übergabe service: M6 abgelehntes Paket: keine Erfolgsmeldung, Daten unverändert ['Datei nicht lesbar oder keine Servicerapport-Sicherung', 2]
@@ -99,7 +99,7 @@ OK      Übergabe service: M6 Wechsel: Rückfrage bei fehlenden Tagen, Abbrechen
 OK      Übergabe service: M6 Wechsel bestätigt: Stand übernommen                       False
 OK      Übergabe service: keine JavaScript-Fehler                                      []
 OK      mein.html: Paket ohne «von», leere Felder, kein Array: keine Fehler            []
-OK      mein.html: «Anderes Semesterpaket laden» und «entfernen» immer da              ['Open report', 'Open laptop version', '›', '›', '›', 'Load another semester package', 'Remove semester package from this device']
+OK      mein.html: «Anderes Semesterpaket laden» und «entfernen» immer da              ['Open report', 'Open laptop version', 'Open report', 'Open laptop version', 'Open report', 'Open laptop version', '›', '›', '›', 'Load another semest
 OK      mein.html: fremdes Ziel (javascript:) abgelehnt, Meldung in der Seitensprache  ('Daily Grades', ['This package does not point to a valid report. Please ask Michael for a new semester package.'])
 OK      mein.html: Paket ohne Inhalt abgelehnt (Englisch)                              ['Part of the semester package is incomplete. Please ask Michael for a new semester package.']
 OK      mein.html: keine JavaScript-Fehler                                             []
