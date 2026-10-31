@@ -1,0 +1,107 @@
+PRUEFUNG KORREKTUREN MOBIL UND STARTSEITE 31.10.2026
+
+OK      Mobil kueche: Sicherung laden meldet true/false (kaputt, Semesterpaket, gültig) [False, False, True, 2]
+OK      Mobil kueche: M1 Freitext ändern: Kriterium, Wirkung, intern und Tagesnote bleiben (4.5625, [4.5625, {'crit': 'sel', 'dir': 1, 'w': 0.5, 'internal': True, 'txt': 'Hat den Posten übernommen.'}])
+OK      Mobil kueche: M1 Blatt zeigt die Laptop-Zuordnung und «intern»                 0
+✎ Freitext
+
+Am Laptop zugeordnet: Selbständigkeit +0.50. Bleibt erhalten, auch wenn du den Text änderst.
+
+🔒 Interne Notiz: erscheint nicht in der Be
+OK      Mobil kueche: M2 nach dem Neuladen bleibt die Notiz intern                     {'txt': 'Hat den Posten übernommen.', 'crit': 'sel', 'dir': 1, 'w': 0.5, 'internal': True}
+OK      Mobil kueche: M2 Sicherung laden behält «intern»                               True
+OK      Mobil kueche: D6 Liste und Blatt ansehen legt nichts an, Tippen schon          [False, False, False, 'late']
+OK      Mobil kueche: M7 «Verspätet» weder in Häufig noch in «alle zeigen»             (5, 9, 'Verspätet zum Dienst erschienen')
+OK      Mobil kueche: M7 gesetzter alter Baustein bleibt sichtbar und lässt sich entfernen [True, False, False]
+OK      Mobil kueche: M7 Tage mit altem Baustein zählen als Verspätung (2×), kein Verbesserungspunkt ['Bitte achten Sie auf Pünktlichkeit: Sie waren 2× verspätet.']
+OK      Mobil kueche: D11 Beobachtungen von Team-Market- und entschuldigten Tagen nicht in der Mail ('Arbeitsplatz vorbildlich eingerichtet', 'Unterstützt das Team bei Engpässen nicht')
+OK      Mobil kueche: M8 Anrede mit Vorname, nicht mit Nickname                        ('Guten Tag Rui,\n\nviel', 'Guten Tag Rui,')
+OK      Mobil kueche: M14 Englisch: «Thank you» gross                                  Dear Emma,
+
+Thank you for your work with us (The Essence, from 27.10. 
+OK      Mobil kueche: M5 Zusammenfassung: tml zählt als Verspätung und TM/OC              Ø 9 Tage: 4.42 (8 gewertet) · Exam: 4.50 · entsch. 1, verspätet 1, TM/OC 1 | Muster, Emma · HFE1 · Gruppe 1 Team A |    Ø 9 Tage: 4.33 (9 gewertet)
+OK      Mobil kueche: D1 4.15 aus einer Rechnung (4.1499…) ergibt 4.2                  [True, '4.2']
+OK      Mobil kueche: D1 Praxisnote 3.96 → «4.0», Schlusssatz und Farbe wie 4.0        [True, False, True, '4.0', 'gpill g-mid strong']
+OK      Mobil kueche: M9 Setup-Hinweis: Rapport über das Symbol «Daily Grades» öffnen (DE/EN/TH) Tipp: Öffne den Rapport immer über das Symbol «Daily Grades» (deine persönliche 
+OK      Mobil kueche: M10 ohne Teilen-Menü: Datei geladen, dann Mail an die Kursleitung ('Lehrer-Kueche_The-Essence_10T_2026-10-31.json', 'mailto:michael.pilman@ehl.ch?subject=Tagesrapport – The Essence · Lehrer Kueche ')
+OK      Mobil kueche: M10 Mail mit Absenzen und Bitte, die Datei anzuhängen            n:
+- Muster, Emma   ·   HFE1 · Gruppe 1 Team A   —   Verspätet
+
+Anhang: Lehrer-Kueche_The-Essence_10T_2026-10-31.json
+Bitte hänge die eben heruntergel
+OK      Mobil kueche: M13 nach dem Laden bleibt die Tagesansicht (kein Setup nach 6 s) ['day', False, False]
+OK      Mobil kueche: M13 scharf geschaltet und weggewechselt: kein Setup in der Tagesansicht ['day', False]
+OK      Mobil kueche: M3 Namensliste schreibt die Nummer mit (#21)                     Da Silva; Rui; Zé; rui@beispiel.ch; de; HFD; Gruppe 1 Team A; #21 | Muster; Emma; ; emma@beispiel.ch; en; HFE1; Gruppe 1 Team A; #22
+OK      Mobil kueche: M3 Namenskorrektur: gleiche Person (ID, Nr., Foto, Schichtplan, Tage) [True, 'Rui Pedro', 'Da Silva', '21', True, True, 4.486111111111111]
+OK      Mobil kueche: M3 gleicher Name, andere E-Mail: zwei Personen                   [3, [[True, 'emma@beispiel.ch'], [False, 'emma.zwei@beispiel.ch']]]
+OK      Mobil kueche: M3 Entfernen mit erfassten Tagen: Rückfrage, Abbrechen ändert nichts (['Diese Personen fehlen in der neuen Liste, haben aber schon erfasste Tage:\n– Muster, Emma\n\nWenn du übernimmst, werden ihre Einträge gelöscht. Tro
+OK      Mobil kueche: M3 bestätigt: Person und ihre Tage entfernt (keine verwaisten Datensätze) [2, False, False]
+OK      Mobil kueche: keine JavaScript-Fehler                                          []
+OK      Mobil kueche: Startlink-Plan: Komma im Namen                                   {'mo': 'Geiser, Sybille', 'we': 'Laura Arcuri'}
+OK      Mobil kueche: Startlink-Plan: alter Link, ganz verschlüsselt                   {'mo': 'Sybille', 'we': 'Laura'}
+OK      Mobil kueche: Startlink-Plan: alter Link mit +                                 {'mo': 'Sybille Geiser', 'tu': 'Laura'}
+OK      Mobil service: Sicherung laden meldet true/false (kaputt, Semesterpaket, gültig) [False, False, True, 2]
+OK      Mobil service: M1 Freitext ändern: Kriterium, Wirkung, intern und Tagesnote bleiben (4.545454545454546, [4.545454545454546, {'crit': 'sel', 'dir': 1, 'w': 0.5, 'internal': True, 'txt': 'Hat den Posten übernommen.'}])
+OK      Mobil service: M1 Blatt zeigt die Laptop-Zuordnung und «intern»                0
+✎ Freitext
+
+Am Laptop zugeordnet: Selbständigkeit +0.50. Bleibt erhalten, auch wenn du den Text änderst.
+
+🔒 Interne Notiz: erscheint nicht in der Be
+OK      Mobil service: M2 nach dem Neuladen bleibt die Notiz intern                    {'crit': 'sel', 'dir': 1, 'w': 0.5, 'internal': True, 'txt': 'Hat den Posten übernommen.'}
+OK      Mobil service: M2 Sicherung laden behält «intern»                              True
+OK      Mobil service: D6 Liste und Blatt ansehen legt nichts an, Tippen schon         [False, False, False, 'late']
+OK      Mobil service: M7 «Verspätet» weder in Häufig noch in «alle zeigen»            (5, 10, 'Verspätet zum Dienst erschienen')
+OK      Mobil service: M7 gesetzter alter Baustein bleibt sichtbar und lässt sich entfernen [True, False, False]
+OK      Mobil service: M7 Tage mit altem Baustein zählen als Verspätung (2×), kein Verbesserungspunkt ['Bitte achten Sie auf Pünktlichkeit: Sie waren 2× verspätet.']
+OK      Mobil service: D11 Beobachtungen von Team-Market- und entschuldigten Tagen nicht in der Mail ('Station vor Serviceanfang vollständig vorbereitet und kontrolliert', 'Unsichere Tragetechnik, Gefahr für Gast oder Material')
+OK      Mobil service: M8 Anrede mit Vorname, nicht mit Nickname                       ('Guten Tag Rui,\n\nviel', 'Guten Tag Rui,')
+OK      Mobil service: M14 Englisch: «Thank you» gross                                 Dear Emma,
+
+Thank you for your work with us (Campigiana, from 27.10. t
+OK      Mobil service: M5 Zusammenfassung: tml zählt als Verspätung und TM/OC             Ø 9 Tage: 4.43 (8 gewertet) · Exam: 4.50 · entsch. 1, verspätet 1, TM/OC 1 | Muster, Emma · HFE1 · Gruppe 1 Team A |    Ø 9 Tage: 4.33 (9 gewertet)
+OK      Mobil service: D1 4.15 aus einer Rechnung (4.1499…) ergibt 4.2                 [True, '4.2']
+OK      Mobil service: D1 Praxisnote 3.96 → «4.0», Schlusssatz und Farbe wie 4.0       [True, False, True, '4.0', 'gpill g-mid strong']
+OK      Mobil service: M9 Setup-Hinweis: Rapport über das Symbol «Daily Grades» öffnen (DE/EN/TH) Tipp: Öffne den Rapport immer über das Symbol «Daily Grades» (deine persönliche 
+OK      Mobil service: M10 ohne Teilen-Menü: Datei geladen, dann Mail an die Kursleitung ('Lehrer-Service_Campigiana_10T_2026-10-31.json', 'mailto:michael.pilman@ehl.ch?subject=Tagesrapport – Campigiana · Lehrer Service ')
+OK      Mobil service: M10 Mail mit Absenzen und Bitte, die Datei anzuhängen           n:
+- Muster, Emma   ·   HFE1 · Gruppe 1 Team A   —   Verspätet
+
+Anhang: Lehrer-Service_Campigiana_10T_2026-10-31.json
+Bitte hänge die eben heruntergel
+OK      Mobil service: M13 nach dem Laden bleibt die Tagesansicht (kein Setup nach 6 s) ['day', False, False]
+OK      Mobil service: M13 scharf geschaltet und weggewechselt: kein Setup in der Tagesansicht ['day', False]
+OK      Mobil service: M3 Namensliste schreibt die Nummer mit (#21)                    Da Silva; Rui; Zé; rui@beispiel.ch; de; HFD; Gruppe 1 Team A; #21 | Muster; Emma; emma@beispiel.ch; en; HFE1; Gruppe 1 Team A; #22
+OK      Mobil service: M3 Namenskorrektur: gleiche Person (ID, Nr., Foto, Schichtplan, Tage) [True, 'Rui', 'Da Silva Costa', '21', True, True, 4.48989898989899]
+OK      Mobil service: M3 gleicher Name, andere E-Mail: zwei Personen                  [3, [[True, 'emma@beispiel.ch'], [False, 'emma.zwei@beispiel.ch']]]
+OK      Mobil service: M3 Entfernen mit erfassten Tagen: Rückfrage, Abbrechen ändert nichts (['Diese Personen fehlen in der neuen Liste, haben aber schon erfasste Tage:\n– Muster, Emma\n\nWenn du übernimmst, werden ihre Einträge gelöscht. Tro
+OK      Mobil service: M3 bestätigt: Person und ihre Tage entfernt (keine verwaisten Datensätze) [2, False, False]
+OK      Mobil service: keine JavaScript-Fehler                                         []
+OK      Mobil service: Startlink-Plan: Komma im Namen                                  {'mo': 'Geiser, Sybille', 'we': 'Laura Arcuri'}
+OK      Mobil service: Startlink-Plan: alter Link, ganz verschlüsselt                  {'mo': 'Sybille', 'we': 'Laura'}
+OK      Mobil service: Startlink-Plan: alter Link mit +                                {'mo': 'Sybille Geiser', 'tu': 'Laura'}
+OK      Übergabe kueche: mein.html: heutiger Einsatztag (Tag 5) und Erfolgsmeldung     ['d05', '2026-10-31', 2, '✓ Zyklus 4.2 · Küche The Essence · 9 Tage + Exam · ab 27.10.']
+OK      Übergabe kueche: M4 neuer Kalendertag: heutiger Einsatztag, offenes Blatt geschlossen ['d01', 'd05', False, '31.10.']
+OK      Übergabe kueche: M4 nach dem Wechsel Laptop und zurück: heutiger Einsatztag    ('d05', ['d05', 1])
+OK      Übergabe kueche: M6 neu ausgestelltes Paket: Exam-Datum, Plan, Zyklus, Semester, 2. Restaurant übernommen ['2026-11-06', '2026-11-06', {'mo': 'Laura Arcuri', 'tu': 'Sybille Geiser'}, 'Zyklus 9.9', 'FS27', 'Umami']
+OK      Übergabe kueche: M6 erfasste Tage bleiben                                      1
+OK      Übergabe kueche: M6 abgelehntes Paket: keine Erfolgsmeldung, Daten unverändert ['Datei nicht lesbar oder keine Küchenrapport-Sicherung', 2]
+OK      Übergabe kueche: M6 Wechsel: Rückfrage bei fehlenden Tagen, Abbrechen behält sie (['Ansicht wechseln: Diese Fassung enthält erfasste Tage, die im übernommenen Stand fehlen (Donnerstag 29.10.).\n\nTrotzdem ersetzen? Diese Einträge g
+OK      Übergabe kueche: M6 Wechsel bestätigt: Stand übernommen                        False
+OK      Übergabe kueche: keine JavaScript-Fehler                                       []
+OK      Übergabe service: mein.html: heutiger Einsatztag (Tag 5) und Erfolgsmeldung    ['d05', '2026-10-31', 2, '✓ Zyklus 4.1 · Service Campigiana · 9 Tage + Exam · ab 27.10.']
+OK      Übergabe service: M4 neuer Kalendertag: heutiger Einsatztag, offenes Blatt geschlossen ['d01', 'd05', False, '31.10.']
+OK      Übergabe service: M4 nach dem Wechsel Laptop und zurück: heutiger Einsatztag   ('d05', ['d05', 1])
+OK      Übergabe service: M6 neu ausgestelltes Paket: Exam-Datum, Plan, Zyklus, Semester, 2. Restaurant übernommen ['2026-11-06', '2026-11-06', {'mo': 'Laura Arcuri', 'tu': 'Sybille Geiser'}, 'Zyklus 9.9', 'FS27', 'Umami']
+OK      Übergabe service: M6 erfasste Tage bleiben                                     1
+OK      Übergabe service: M6 abgelehntes Paket: keine Erfolgsmeldung, Daten unverändert ['Datei nicht lesbar oder keine Servicerapport-Sicherung', 2]
+OK      Übergabe service: M6 Wechsel: Rückfrage bei fehlenden Tagen, Abbrechen behält sie (['Ansicht wechseln: Diese Fassung enthält erfasste Tage, die im übernommenen Stand fehlen (Donnerstag 29.10.).\n\nTrotzdem ersetzen? Diese Einträge g
+OK      Übergabe service: M6 Wechsel bestätigt: Stand übernommen                       False
+OK      Übergabe service: keine JavaScript-Fehler                                      []
+OK      mein.html: Paket ohne «von», leere Felder, kein Array: keine Fehler            []
+OK      mein.html: «Anderes Semesterpaket laden» und «entfernen» immer da              ['Open report', 'Open laptop version', '›', '›', '›', 'Load another semester package', 'Remove semester package from this device']
+OK      mein.html: fremdes Ziel (javascript:) abgelehnt, Meldung in der Seitensprache  ('Daily Grades', ['This package does not point to a valid report. Please ask Michael for a new semester package.'])
+OK      mein.html: Paket ohne Inhalt abgelehnt (Englisch)                              ['Part of the semester package is incomplete. Please ask Michael for a new semester package.']
+OK      mein.html: keine JavaScript-Fehler                                             []
+
+81 von 81

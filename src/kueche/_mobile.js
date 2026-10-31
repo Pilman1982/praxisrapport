@@ -34,7 +34,7 @@ de:{
   v5:"5 Einsatztage ohne Exam",
   weekdaysLbl:"Einsatztage pro Woche", startDay:"Turnus startet am",
   studentList:"Studierende, eine Person pro Zeile",
-  studentHint:"Nachname; Vorname; Nickname; E-Mail; Sprache; Klasse; Gruppe. Nur der Nachname ist Pflicht.",
+  studentHint:"Nachname; Vorname; Nickname; E-Mail; Sprache; Klasse; Gruppe; #Nr. Nur der Nachname ist Pflicht. Mit E-Mail oder #Nr. bleiben die erfassten Tage auch nach einer Namenskorrektur bei der Person.",
   klasseField:"Klasse",gruppeField:"Gruppe / Team",
   absCols:"Zeilenaufbau: Nachname, Vorname «Nickname» · Klasse · Gruppe — Grund",
   apply:"Übernehmen", loadBackup:"Sicherung vom Laptop laden",
@@ -45,7 +45,7 @@ de:{
   shareHint:"«Tag senden» öffnet das Teilen-Menü: «Mail» wählen und an michael.pilman@ehl.ch senden. Die Absenzen des Tages stehen schon im Mailtext. «⤓ Sichern» legt eine eigene Sicherung in «Dateien» ab.",
   examDay:"Exam Day", week:"W", light:"leicht", medium:"mittel", heavy:"schwer", ko:"K.-o.",
   langTitle:"Sprache", setupDone:"Setup gespeichert",
-  homeHint:"Tipp: über das Teilen-Symbol in Safari «Zum Home-Bildschirm» wählen, dann startet der Rapport wie eine App.",
+  homeHint:"Tipp: Öffne den Rapport immer über das Symbol «Daily Grades» (deine persönliche Startseite) auf dem Home-Bildschirm. Lege für einzelne Rapporte kein eigenes Symbol an: Jedes Symbol hat auf dem iPad einen eigenen Speicher, deine erfassten Tage wären sonst getrennt.",
   recorded:"erfasst", ofDay:"von", examAbs:"Am Exam Day ergibt jede Abwesenheit die Note 1.00."
 },
 en:{
@@ -70,7 +70,7 @@ en:{
   v5:"5 shift days without exam",
   weekdaysLbl:"Shift days per week", startDay:"Rotation starts on",
   studentList:"Students, one person per line",
-  studentHint:"Last name; First name; Nickname; E-mail; Language; Class; Group. Only the last name is required.",
+  studentHint:"Last name; First name; Nickname; E-mail; Language; Class; Group; #No. Only the last name is required. With an e-mail or #No. the recorded days stay with the person even after a name correction.",
   klasseField:"Class",gruppeField:"Group / Team",
   absCols:"Line format: Last name, First name “Nickname” · Class · Group — Reason",
   apply:"Apply", loadBackup:"Load a backup from the laptop",
@@ -81,7 +81,7 @@ en:{
   shareHint:"“Send the day” opens the share sheet: choose «Mail» and send it to michael.pilman@ehl.ch. The day's absences are already in the e-mail text. «⤓ Back up» saves your own backup in «Files».",
   examDay:"Exam Day", week:"W", light:"light", medium:"medium", heavy:"heavy", ko:"K.O.",
   langTitle:"Language", setupDone:"Setup saved",
-  homeHint:"Tip: use the share icon in Safari and choose “Add to Home Screen”, then the report starts like an app.",
+  homeHint:"Tip: always open the report via the «Daily Grades» icon (your personal start page) on the Home Screen. Do not add a separate icon for a single report: on the iPad every icon has its own storage, so your recorded days would be split.",
   recorded:"recorded", ofDay:"of", examAbs:"On the Exam Day any absence gives the grade 1.00."
 },
 th:{
@@ -106,7 +106,7 @@ th:{
   v5:"5 วันฝึก ไม่มีวันสอบ",
   weekdaysLbl:"วันฝึกต่อสัปดาห์", startDay:"รอบฝึกเริ่มวัน",
   studentList:"รายชื่อนักศึกษา บรรทัดละหนึ่งคน",
-  studentHint:"นามสกุล; ชื่อ; ชื่อเล่น; อีเมล; ภาษา; ชั้นเรียน; กลุ่ม จำเป็นเฉพาะนามสกุล",
+  studentHint:"นามสกุล; ชื่อ; ชื่อเล่น; อีเมล; ภาษา; ชั้นเรียน; กลุ่ม; #เลขประจำตัว จำเป็นเฉพาะนามสกุล หากมีอีเมลหรือ #เลขประจำตัว วันที่บันทึกไว้จะยังอยู่กับคนเดิมแม้แก้ไขชื่อ",
   klasseField:"ชั้นเรียน",gruppeField:"กลุ่ม / ทีม",
   absCols:"รูปแบบบรรทัด: นามสกุล ชื่อ «ชื่อเล่น» · ชั้นเรียน · กลุ่ม — เหตุผล",
   apply:"ยืนยัน", loadBackup:"โหลดไฟล์สำรองจากแล็ปท็อป",
@@ -117,7 +117,7 @@ th:{
   shareHint:"«ส่งข้อมูลของวันนี้» เปิดเมนูแชร์: เลือก «Mail» แล้วส่งถึง michael.pilman@ehl.ch การขาดของวันนี้อยู่ในข้อความอีเมลแล้ว «⤓ สำรองข้อมูล» บันทึกไฟล์สำรองของคุณไว้ใน «ไฟล์»",
   examDay:"วันสอบ", week:"สัปดาห์", light:"เบา", medium:"กลาง", heavy:"หนัก", ko:"ตัดสิทธิ์",
   langTitle:"ภาษา", setupDone:"บันทึกการตั้งค่าแล้ว",
-  homeHint:"เคล็ดลับ: ใน Safari กดไอคอนแชร์ แล้วเลือก «เพิ่มไปยังโฮมสกรีน» จะเปิดใช้งานเหมือนแอป",
+  homeHint:"เคล็ดลับ: เปิดรายงานผ่านไอคอน «Daily Grades» (หน้าเริ่มต้นส่วนตัวของคุณ) บนหน้าจอโฮมเสมอ อย่าสร้างไอคอนแยกสำหรับรายงานแต่ละฉบับ เพราะบน iPad แต่ละไอคอนมีพื้นที่เก็บข้อมูลของตัวเอง วันที่บันทึกไว้จะถูกแยกกัน",
   recorded:"บันทึกแล้ว", ofDay:"จาก", examAbs:"ในวันสอบ การไม่มาไม่ว่าด้วยเหตุใดจะได้คะแนน 1.00"
 }
 };
@@ -131,7 +131,7 @@ const QUICK = {
   hyg:["hyg-n1","hyg-n5","hyg-n8","hyg-p1","hyg-p2"],
   pro:["pro-n1","pro-n3","pro-p1","pro-p2","pro-p3"],
   org:["org-n2","org-n4","org-p1","org-p2","org-p3"],
-  tea:["tea-n1","tea-n2","tea-p1","tea-p2","tea-p3"],
+  tea:["tea-n2","tea-n4","tea-p1","tea-p2","tea-p3"],   // tea-n1 «Verspätet» nicht mehr: Verspätung nur über die Anwesenheit
   sel:["sel-n1","sel-n2","sel-p1","sel-p2","sel-p3"],
   mot:["mot-n1","mot-n3","mot-p1","mot-p2","mot-p5"],
   fac:["fac-n1","fac-n3","fac-p1","fac-p2","fac-p3"]
@@ -172,12 +172,13 @@ S.settings.variant = MVARIANT;   // die Datei bestimmt die Variante, nicht der S
    Schluessel: lang (de/en/th), outlet, dozent, klasse, gruppe,
    plan (Bewertende nach Wochentag, z. B. plan=mo:Sybille,tu:Sybille,we:Laura,th:Laura) */
 const STARTLINK = (function(){
-  const p = {};
+  const p = {}, roh = {};
+  const dec = s => decodeURIComponent(String(s).replace(/\+/g, " ")).trim();
   try{
     String(location.hash || "").replace(/^#/, "").split("&").forEach(kv=>{
       const i = kv.indexOf("="); if(i <= 0) return;
-      p[decodeURIComponent(kv.slice(0, i)).trim().toLowerCase()] =
-        decodeURIComponent(kv.slice(i + 1).replace(/\+/g, " ")).trim();
+      const k = dec(kv.slice(0, i)).toLowerCase();
+      roh[k] = kv.slice(i + 1); p[k] = dec(kv.slice(i + 1));
     });
   }catch(e){ return {}; }
   const st = S.settings; let changed = false;
@@ -188,11 +189,18 @@ const STARTLINK = (function(){
   if(p.klasse) put("group", (typeof erkenneKlasse === "function" && erkenneKlasse(p.klasse)) || p.klasse);
   if(p.gruppe) put("team",  (typeof erkenneGruppe === "function" && erkenneGruppe(p.gruppe)) || p.gruppe);
   if(p.plan){
-    const plan = {};
-    p.plan.split(",").forEach(x=>{
-      const m = x.split(":"); const wd = (m[0] || "").trim().toLowerCase(); const nm = (m[1] || "").trim();
-      if(["mo","tu","we","th","fr","sa","su"].indexOf(wd) >= 0 && nm) plan[wd] = nm;
-    });
+    /* Erst am noch verschlüsselten Wert bei «,» und «:» trennen, dann jeden Teil entschlüsseln: ein Komma oder
+       Doppelpunkt im Namen («Geiser, Sybille» = Geiser%2C%20Sybille) zerreisst den Plan nicht (Entscheid 31.10.2026).
+       Alte Links mit ganz verschlüsseltem Wert (mo%3A…%2C…) werden wie bisher gelesen. */
+    const lies = (txt, teil) => { const plan = {};
+      String(txt || "").split(",").forEach(x=>{
+        const j = x.indexOf(":"); if(j <= 0) return;
+        try{ const wd = teil(x.slice(0, j)).toLowerCase(), nm = teil(x.slice(j + 1));
+             if(["mo","tu","we","th","fr","sa","su"].indexOf(wd) >= 0 && nm) plan[wd] = nm; }catch(e){}
+      });
+      return plan; };
+    let plan = lies(roh.plan, dec);
+    if(!Object.keys(plan).length) plan = lies(p.plan, x => String(x).trim());
     if(Object.keys(plan).length){
       if(JSON.stringify(st.teacherPlan || {}) !== JSON.stringify(plan)){ st.teacherPlan = plan; changed = true; }
       if(!p.dozent) put("teacher", Array.from(new Set(Object.values(plan))).join(" / "));
@@ -252,9 +260,10 @@ function normalizeStudents(){
    E-Mail, Sprache, Klasse und Gruppe werden am Inhalt erkannt. */
 function parseStudentLine(line){
   const parts = line.split(/[;\t]/).map(x=>x.trim());
-  let mail="", lang="", klasse="", gruppe="";
+  let mail="", lang="", klasse="", gruppe="", nr="";
   const rest = [];
   parts.forEach(v=>{
+    if(!nr && /^#\s*\S+$/.test(v)){ nr = v.replace(/^#\s*/, ""); return; }   // Studierendennummer, z. B. #1001
     if(!mail && v.indexOf("@") >= 0){ mail = v; return; }
     if(!lang && /^(de|en|zh)$/i.test(v)){ lang = v.toLowerCase(); return; }
     if(!klasse && erkenneKlasse(v)){ klasse = erkenneKlasse(v); return; }
@@ -265,10 +274,10 @@ function parseStudentLine(line){
   if(last && !first && /\s/.test(last)){
     const q = last.split(/\s+/); last = q.shift(); first = q.join(" ");
   }
-  return {last, first, nick, mail, lang, klasse, gruppe};
+  return {last, first, nick, mail, lang, klasse, gruppe, nr};
 }
 const studentLine = st => [st.last, st.first, st.nick, st.mail, st.lang, st.klasse, st.gruppe]
-  .join("; ").replace(/(?:;\s*)+$/, "");
+  .join("; ").replace(/(?:;\s*)+$/, "") + (st.nr ? "; #" + st.nr : "");
 /* Typen erzwingen, damit eine fremde JSON die App nicht verbiegt. */
 function normalizeSettings(){
   const num = (v,d)=>{ const n = parseFloat(v); return Number.isFinite(n) ? n : d; };
@@ -295,7 +304,8 @@ function sanitizeDays(days){
         obs: Array.isArray(r.obs) ? r.obs.filter(x=>typeof x === "string") : [],
         note: (r.note && typeof r.note === "object" && typeof r.note.txt === "string")
           ? {txt:r.note.txt, crit:String(r.note.crit||""),
-             dir:Number(r.note.dir)||0, w:Number(r.note.w)||0} : null
+             dir:Number(r.note.dir)||0, w:Number(r.note.w)||0,
+             internal:!!r.note.internal} : null          // interne Notiz bleibt intern (wie am Laptop)
       };
     });
   });
@@ -456,8 +466,8 @@ async function shareDay(){
   const sl = slotById(curSlot);
   const subj = t("dayMailSubj") + " – " + [S.settings.outlet, S.settings.teacher, slotLabel(sl)].filter(Boolean).join(" · ");
   const abs = absenceList(curSlot);
-  const text = [subj, "", t("absMail") + ":"].concat(abs.length ? abs.map(x => "- " + x) : [t("absNone")])
-    .concat(["", t("dayMailTo") + " " + ABS_MAIL]).join("\n");
+  const lines = [t("absMail") + ":"].concat(abs.length ? abs.map(x => "- " + x) : [t("absNone")]);
+  const text = [subj, ""].concat(lines).concat(["", t("dayMailTo") + " " + ABS_MAIL]).join("\n");
   try{
     const file = new File([blob], name, {type:"application/json"});
     if(navigator.canShare && navigator.canShare({files:[file]})){
@@ -465,7 +475,9 @@ async function shareDay(){
       toast(t("shared")); return;
     }
   }catch(e){ if(e && e.name === "AbortError") return; }
+  /* Kein Teilen-Menü für Dateien (Android, Windows): Datei herunterladen, dann die Mail an die Kursleitung öffnen */
   downloadBlob(blob, name);
+  n2DayMailFallback(subj, lines, name);
 }
 /* Noten 2.0: eigene Sicherung in «Dateien» (iPad) bzw. Downloads (Laptop) */
 async function backupSave(){
@@ -578,7 +590,7 @@ function renderDay(){
 
   const ul = el("ul",{class:"slist"});
   S.students.forEach(s=>{
-    const r = dayRec(curSlot, s.id);
+    const r = (S.days[curSlot] || {})[s.id] || null;   // nur lesen: Anzeigen legt keinen Tagesdatensatz an
     const n = obsCount(curSlot, s.id);
     const li = el("li");
     const b = el("button",{class:"srow",onclick:()=>openSheet(s)});
@@ -635,9 +647,11 @@ function openSheet(student){
   sh.appendChild(ft);
   host.innerHTML = ""; host.appendChild(sh);
 
+  /* Den Tagesdatensatz erst bei einer Eingabe anlegen: Anschauen allein legt nichts an (Entscheid 31.10.2026) */
+  const rec = () => dayRec(curSlot, student.id);
   function draw(){
     body.innerHTML = "";
-    const r = dayRec(curSlot, student.id);
+    const r = (S.days[curSlot] || {})[student.id] || {att:"present", obs:[], note:null};
     n2ShowHead(student.id);
     const n2cg = n2Crit(curSlot, student.id);
 
@@ -650,7 +664,7 @@ function openSheet(student){
       .forEach(([k,cls],i)=>{
         const val = (k === "teamMarket") ? "tm" : k;
         att.appendChild(el("button",{class:cls,"aria-pressed":String(n2AttPressed(attOf(r), val)),
-          text:t(k), onclick:()=>{ r.att = n2AttClick(attOf(r), val); persist(); draw(); }}));
+          text:t(k), onclick:()=>{ const R = rec(); R.att = n2AttClick(attOf(R), val); persist(); draw(); }}));
       });
     body.appendChild(att);
     if(attOf(r) === "late") body.appendChild(el("div",{class:"banner",style:"margin-top:9px",text:n2x("lateDay")}));
@@ -674,22 +688,32 @@ function openSheet(student){
     body.appendChild(bar);
 
     if(sheetCrit === "__note"){
-      const nt = r.note || {txt:""};
+      const nt = (r.note && typeof r.note === "object") ? r.note : {txt:""};
       const f = el("div",{class:"field"});
+      /* Nur den Text ändern: Kriterium, Wirkung und «intern» vom Laptop bleiben erhalten (Entscheid 31.10.2026) */
       const ta = el("textarea",{placeholder:t("notePh"),
-        oninput:e=>{ r.note = {txt:e.target.value, crit:"", dir:0, w:0}; persist(); const ok = document.getElementById("noteOk"); if(ok) ok.textContent = n2x("saved"); },
+        oninput:e=>{ const R = rec();
+          R.note = Object.assign({crit:"", dir:0, w:0, internal:false}, (R.note && typeof R.note === "object") ? R.note : {}, {txt:e.target.value});
+          persist(); const ok = document.getElementById("noteOk"); if(ok) ok.textContent = n2x("saved"); },
         onblur:()=>persist()});
       ta.value = nt.txt || "";
       f.appendChild(ta);
       body.appendChild(f);
-      body.appendChild(el("p",{class:"muted",style:"margin:0",text:t("noteHint")}));
+      const zug = !!(nt.crit && nt.dir && nt.w);
+      if(zug) body.appendChild(el("p",{class:"muted",style:"margin:0 0 6px",
+        text:n2x("noteLaptop").replace("{c}", critName(nt.crit)).replace("{v}", (nt.dir > 0 ? "+" : "−") + Math.abs(Number(nt.w)).toFixed(2))}));
+      if(nt.internal) body.appendChild(el("p",{class:"muted",style:"margin:0 0 6px",text:n2x("noteIntern")}));
+      if(!zug) body.appendChild(el("p",{class:"muted",style:"margin:0",text:t("noteHint")}));
       body.appendChild(el("p",{class:"muted",id:"noteOk",style:"margin:6px 0 0;font-size:13px;color:var(--plus,#2f7d4f)",text:""}));
       return;
     }
 
     const set = new Set(obsOf(r));
-    const quick = QUICK[sheetCrit] || [];
-    const list = CHIPS.filter(c=>c.c === sheetCrit);
+    /* Alter Baustein «Verspätet» (N2_LATE) wird nicht mehr angeboten, ausser er ist hier gesetzt (zum Entfernen).
+       Verspätung nur über die Anwesenheit (Entscheid 31.10.2026). */
+    const angeboten = id => id !== N2_LATE || set.has(id);
+    const quick = (QUICK[sheetCrit] || []).filter(angeboten);
+    const list = CHIPS.filter(c=>c.c === sheetCrit && angeboten(c.i));
     const shown = sheetAll ? list
       : list.filter(c=>quick.indexOf(c.i) >= 0 || set.has(c.i));
     const order = c => (quick.indexOf(c.i) >= 0 ? quick.indexOf(c.i) : 90) + (c.d > 0 ? 0 : -0.5);
@@ -702,9 +726,9 @@ function openSheet(student){
       const b = el("button",{class:"chip "+(c.d>0?"pos":"neg")+(c.ko?" ko":""),
         "aria-pressed":String(on),
         onclick:()=>{
-          const s2 = new Set(obsOf(r));
+          const R = rec(); const s2 = new Set(obsOf(R));
           if(s2.has(c.i)) s2.delete(c.i); else s2.add(c.i);
-          r.obs = [...s2]; persist(); draw();
+          R.obs = [...s2]; persist(); draw();
         }});
       b.appendChild(el("span",{class:"sg",text: on ? "✓" : (c.d>0 ? "+" : "−")}));
       b.appendChild(el("span",{class:"tx"},[
@@ -723,9 +747,11 @@ function openSheet(student){
 }
 
 /* ---------- Setup ---------- */
-let loadArmed = false;
+let loadArmed = false, loadTimer = null;
 function renderSet(){
   const root = document.getElementById("view"); root.innerHTML = "";
+  /* Jede neue Setup-Ansicht beginnt mit einem nicht scharfen Knopf (Entscheid 31.10.2026) */
+  loadArmed = false; clearTimeout(loadTimer); loadTimer = null;
 
   if(!storeOK) root.appendChild(el("div",{class:"banner bad",text:t("storeWarn")}));
 
@@ -739,9 +765,14 @@ function renderSet(){
     if(hasData && !loadArmed){
       loadArmed = true; lb.textContent = t("loadArm");
       lb.style.background = "var(--minus)"; lb.style.borderColor = "var(--minus)";
-      setTimeout(()=>{ if(loadArmed){ loadArmed = false; renderSet(); } }, 6000);
+      clearTimeout(loadTimer);
+      /* nach 6 s wieder entschärfen, aber nur in der Setup-Ansicht neu zeichnen */
+      loadTimer = setTimeout(()=>{ loadTimer = null; if(loadArmed){ loadArmed = false; if(view === "set") renderSet(); } }, 6000);
       return;
     }
+    /* zweites Tippen: Timer weg, Knopf zurücksetzen, dann die Dateiauswahl öffnen */
+    loadArmed = false; clearTimeout(loadTimer); loadTimer = null;
+    lb.textContent = t("loadBtn"); lb.style.background = ""; lb.style.borderColor = "";
     fin.click();
   }});
   c0.appendChild(lb); c0.appendChild(fin);
@@ -790,18 +821,27 @@ function renderSet(){
   c1.appendChild(f5);
   c1.appendChild(el("button",{class:"btn pri wide",text:t("apply"),onclick:()=>{
     const lines = ta.value.split("\n").map(x=>x.trim()).filter(Boolean);
-    S.students = lines.map(line=>{
-      const f = parseStudentLine(line);
+    const rows = lines.map(parseStudentLine);
+    /* Zuordnung nach #Nr., E-Mail, Name; bei einer Namenskorrektur bleiben ID, Foto, Pläne und Tage (Entscheid 31.10.2026) */
+    const hit = n2MatchRows(rows, S.students, x => ({nr:x.nr, mail:x.mail, last:x.last, first:x.first}));
+    const bleibt = new Set(hit.filter(Boolean).map(x => x.id));
+    const weg = S.students.filter(x => !bleibt.has(x.id) && n2StudentHasData(x.id));
+    if(!n2ConfirmGone(weg, longName)) return;                     // abgebrochen: nichts ändern
+    S.students = rows.map((f, i)=>{
+      const ex = hit[i];
       const nm = [f.last, f.first].filter(Boolean).join(" ");
       const lang = ["de","en","zh"].indexOf(f.lang) >= 0 ? f.lang : "";
-      const ex = S.students.find(x=>dispName(x).trim().toLowerCase() === nm.toLowerCase());
       const base = ex || {id:"m"+Math.random().toString(36).slice(2,8)};
-      return {...base, name:nm, last:f.last, first:f.first,
+      const o = {...base, name:nm, last:f.last, first:f.first,
               nick:   f.nick   || (ex && ex.nick)   || "",
               mail:   f.mail   || (ex && ex.mail)   || "",
               lang:   lang     || (ex && ex.lang)   || "",
               klasse: f.klasse || (ex && ex.klasse) || "",
               gruppe: f.gruppe || (ex && ex.gruppe) || ""};
+      if(f.nr) o.nr = f.nr;
+      if("nachname" in o) o.nachname = o.last;                     // Felder aus dem Paket mitführen (Zusammenfassung)
+      if("vorname" in o) o.vorname = o.first;
+      return o;
     });
     normalizeStudents(); pruneOrphans(); persist(); toast(S.students.length + " " + t("students"));
     view = "day"; render();
@@ -821,14 +861,16 @@ function renderSet(){
 
   root.appendChild(el("p",{class:"muted",style:"margin:16px 2px 0",text:t("homeHint")}));
 }
+/* Sicherung oder Paket laden. Ergebnis (Vertrag mit der Übergabe, wie onRestore am Laptop):
+   true = geladen, false = abgelehnt (nichts geändert). */
 async function onLoadBackup(e){
   const f = e.target.files && e.target.files[0];
   e.target.value = "";
-  if(!f) return;
+  if(!f) return false;
   try{
     const o = JSON.parse(await f.text());
-    if(o && o.format === "praxisrapport-semesterpaket"){ toast(t("loadSem")); return; }
-    if(!o || !o.settings || !Array.isArray(o.students)) throw new Error("format");
+    if(o && o.format === "praxisrapport-semesterpaket"){ toast(t("loadSem")); return false; }
+    if(!o || !o.settings || typeof o.settings !== "object" || !Array.isArray(o.students)) throw new Error("format");
     const other = o.variant && o.variant !== MVARIANT;
     S = {settings:{...DEF, ...o.settings, variant:MVARIANT},
          students:o.students.filter(x=>x && typeof x.name === "string"),
@@ -842,7 +884,8 @@ async function onLoadBackup(e){
     view = "day"; render();
     toast(other ? t("loadPartial")
                 : (t("loadDone") + ": " + S.students.length + " " + t("students")));
-  }catch(err){ toast(t("loadBad")); }
+    return true;
+  }catch(err){ toast(t("loadBad")); return false; }
 }
 
 /* ---------- Fussleiste ---------- */

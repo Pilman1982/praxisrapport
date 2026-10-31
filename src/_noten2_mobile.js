@@ -69,16 +69,20 @@ function n2Praxis(sid){
 function n2Exam(sid){ const ex = slots().find(s => s.exam); return ex ? n2Day(ex.id, sid) : null; }
 function n2Final(sid){ const p = n2Praxis(sid).avg, e = n2Exam(sid); return (p != null && e != null) ? (2 * p + e) / 3 : null; }
 const n2Fmt = v => v == null ? "–" : v.toFixed(2);
-const n2Fmt1 = v => v == null ? "–" : (Math.round(v * 10) / 10).toFixed(1);   // Schlussnote: auf 0.1 gerundet
-/* Farben wie am Laptop: grün ab Basis + 0.25 (über Erwartung), rot unter 4.00 (ungenügend), dazwischen neutral */
+/* Rundung auf 0.1 (Entscheid 31.10.2026): mit kleinem Zuschlag, damit 4.45 aus einer Rechnung (4.4499999…) 4.5 ergibt */
+const n2R1 = v => v == null ? null : Math.round(v * 10 + 1e-9) / 10;
+const n2Fmt1 = v => v == null ? "–" : n2R1(v).toFixed(1);   // Schlussnote: auf 0.1 gerundet
+/* Farben wie am Laptop: grün ab Basis + 0.25 (über Erwartung), rot unter 4.00 (ungenügend), dazwischen neutral.
+   Die Farbe richtet sich nach der angezeigten (gerundeten) Note. */
 const n2Cls = v => v == null ? "g-na" : (v >= N2_BASE + 0.25 ? "g-ok" : (v < 4 ? "g-bad" : "g-mid"));
+const n2Shown2 = v => v == null ? null : Number(v.toFixed(2));
 function n2Effect(c){ return c.ko ? "→ 1.0" : ((c.d > 0 ? "+" : "−") + c.w.toFixed(2)); }
-function n2Pill(v, extra){ return el("span",{class:"gpill " + n2Cls(v) + (extra ? " " + extra : ""), text: n2Fmt(v)}); }
+function n2Pill(v, extra){ return el("span",{class:"gpill " + n2Cls(n2Shown2(v)) + (extra ? " " + extra : ""), text: n2Fmt(v)}); }
 /* Kopf des Erfassungsblatts: Tagesnote und Praxisdurchschnitt, laufend aktualisiert */
 function n2ShowHead(sid){
   const h = document.getElementById("n2grade"); if(!h) return;
   const d = n2Day(curSlot, sid), p = n2Praxis(sid);
-  h.className = "gpill big " + n2Cls(d);
+  h.className = "gpill big " + n2Cls(n2Shown2(d));
   h.textContent = n2t("today") + " " + n2Fmt(d) + "  ·  Ø " + n2Fmt(p.avg);
 }
 /* Notenuebersicht (Knopf Ø oben) */
@@ -101,7 +105,8 @@ function n2RenderGrades(){
     const box = el("span",{class:"gbox"});
     box.appendChild(el("span",{class:"gl",text:n2t("praxis")})); box.appendChild(n2Pill(p.avg));
     if(hasEx){ box.appendChild(el("span",{class:"gl",text:n2t("exam")})); box.appendChild(n2Pill(e));
-               box.appendChild(el("span",{class:"gl",text:n2t("final")})); { const fp = n2Pill(f, f != null ? "strong" : ""); fp.textContent = n2Fmt1(f); if(f != null) fp.title = n2Fmt(f); box.appendChild(fp); } }
+               box.appendChild(el("span",{class:"gl",text:n2t("final")}));
+               { const fp = el("span",{class:"gpill " + n2Cls(n2R1(f)) + (f != null ? " strong" : ""), text:n2Fmt1(f)}); if(f != null) fp.title = n2Fmt(f); box.appendChild(fp); } }
     row.appendChild(box);
     const sent = n2FbSent(s.id);
     row.appendChild(el("button",{class:"btn fbbtn" + (sent ? " done" : ""),text:"✉ " + n2u("fb") + (sent ? " ✓" : ""),
@@ -130,7 +135,7 @@ const N2FB = {
       c3:"Die Grundlage stimmt. Nehmen Sie sich die Punkte oben Schritt für Schritt vor, dann merken Sie schnell Fortschritte.",
       c4:"Ich sehe, dass bei Ihnen noch einiges drin liegt, und ich traue es Ihnen zu. Kommen Sie gerne auf mich zu, wenn Sie Unterstützung möchten.",
       wish:"Ich wünsche Ihnen viel Erfolg und Freude im nächsten Einsatz.", bye:"Freundliche Grüsse"},
-  en:{subj:"Your feedback from practical training", hi:"Dear", thanks:"thank you for your work with us", period:"from {a} to {b}", intro:"Here is some short feedback from me.",
+  en:{subj:"Your feedback from practical training", hi:"Dear", thanks:"Thank you for your work with us", period:"from {a} to {b}", intro:"Here is some short feedback from me.",
       good:"What I particularly liked:", goodNone:"You reliably met expectations, especially in these areas: {c}.",
       improve:"Where you can still improve:", improveNone:"I did not notice anything you urgently need to work on. Keep it up!",
       tip:"Tip", often:"several times", late:"Please watch your punctuality: you were late {n} time(s).", unex:"Please always report absences in advance: {n} day(s) were unexcused.",
@@ -182,12 +187,15 @@ function n2FbData(sid){
   const tally = {}; let late = 0, unex = 0, days = 0;
   slots().filter(x => !x.exam).forEach(sl => {                    // Exam Day bleibt aus der Mail (noch nicht kommunizierbar)
     const r = (S.days[sl.id] || {})[sid]; if(!r) return;
-    const att = r.att || "present";
-    if(att === "late" || att === "tml") late++;
+    const att = ["present","late","excused","unexcused","tm","tml"].indexOf(r.att) >= 0 ? r.att : "present";
+    const obs = n2Obs(r);
     if(att === "unexcused") unex++;
-    if(att === "excused" || att === "unexcused" || att === "tm" || att === "tml") return;
+    if(att === "excused" || att === "unexcused") return;
+    /* Alter Baustein «Verspätet» (Küche tea-n1, Service tea-lt) zählt als Verspätung, nicht als Verbesserungspunkt */
+    if(att === "late" || att === "tml" || obs.indexOf(N2_LATE) >= 0) late++;
+    if(att !== "present" && att !== "late") return;               // Beobachtungen nur aus Tagen «anwesend» oder «verspätet»
     days++;
-    n2Obs(r).forEach(i => { tally[i] = (tally[i] || 0) + 1; });
+    obs.forEach(i => { tally[i] = (tally[i] || 0) + 1; });
   });
   const per = {}; CRITS.forEach(c => per[c.k] = []);
   slots().filter(x => !x.exam).forEach(sl => { const g = n2Crit(sl.id, sid); if(g) CRITS.forEach(c => per[c.k].push(g[c.k])); });
@@ -201,7 +209,8 @@ function n2FbText(s, lg, withGrades){
   const X = N2FB[lg] || N2FB.de, D = n2FbData(s.id);
   const sl = slots().filter(x => x.date && !x.exam), a = sl.length ? dmy(sl[0].date) : "", b = sl.length ? dmy(sl[sl.length - 1].date) : "";
   const outlet = [S.settings.outlet, S.settings.outlet2].filter(Boolean).join(" / ");
-  const first = (s.nick || s.first || String(s.name || "").split(/\s+/).slice(1).join(" ") || s.name || "").trim();
+  /* Anrede mit dem Vornamen («Guten Tag Vorname»), nie mit dem Nickname; Service-Personen kennen nur «vorname» */
+  const first = String(s.first || s.vorname || String(s.name || "").split(/\s+/).slice(1).join(" ") || s.name || "").trim();
   const cn = k => { const c = CRITS.find(x => x.k === k); return c ? (c[lg] || c.de) : k; };
   const ct = c => (c.t && (c.t[lg] || c.t.de)) || "";
   const ca = c => (c.a && (c.a[lg] || c.a.de)) || "";
@@ -231,7 +240,8 @@ function n2FbText(s, lg, withGrades){
      Exam-Note und Schlussnote werden nie in die Mail geschrieben. */
   const p = n2Praxis(s.id).avg;
   if(withGrades && p != null){ o.push(X.grades.replace("{p}", n2Fmt1(p)) + ".", ""); }
-  const g = p == null ? N2_BASE : p;
+  /* Schlusssatz nach der mitgeteilten, auf 0.1 gerundeten Praxisnote (Entscheid 31.10.2026) */
+  const g = p == null ? N2_BASE : n2R1(p);
   o.push(g >= N2_BASE + 0.25 ? X.c1 : g >= N2_BASE - 0.25 ? X.c2 : g >= 4 ? X.c3 : X.c4);
   o.push(X.wish, "", X.bye, n2Teacher(lg));
   const subj = X.subj + (outlet ? " – " + outlet : "") + (a ? " " + a + "–" + b : "");
@@ -306,21 +316,30 @@ const N2X = {
       sum:"Zusammenfassung an die Kursleitung", sumHint:"Nach dem Exam: die Durchschnitte aller Personen per Mail an Michael Pilman.",
       sumHint5:"Nach dem letzten Tag: der Durchschnitt aller Personen per Mail an Michael Pilman.", sumSent:"gesendet am",
       sumOpen:"Der Exam Day ist noch nicht erfasst. Trotzdem senden?", sumCopy:"Text kopiert. Bitte in die Mail einfügen.",
-      sumNow:"Heute ist der letzte Tag. Danach: Zusammenfassung an die Kursleitung senden.", shift:"Schicht", ocDay:"OC (Office und Daily MeP): zählt wie Team Market mit 5.00, verspätet 4.00."},
+      sumNow:"Heute ist der letzte Tag. Danach: Zusammenfassung an die Kursleitung senden.", shift:"Schicht", ocDay:"OC (Office und Daily MeP): zählt wie Team Market mit 5.00, verspätet 4.00.",
+      gone:"Diese Personen fehlen in der neuen Liste, haben aber schon erfasste Tage:\n{n}\n\nWenn du übernimmst, werden ihre Einträge gelöscht. Trotzdem übernehmen?",
+      attach:"Anhang: {f}\nBitte hänge die eben heruntergeladene Datei (Ordner «Downloads») an diese Mail an.",
+      noteLaptop:"Am Laptop zugeordnet: {c} {v}. Bleibt erhalten, auch wenn du den Text änderst.", noteIntern:"🔒 Interne Notiz: erscheint nicht in der Beurteilung."},
   en:{home:"My start page", nick:"Nickname", nickPh:"e.g. Lulu", nickSave:"Apply", nickDel:"Delete",
       nickHint:"Applies on this device at once. «Send the day» passes it to the course lead; everyone gets it with the next package.",
       saved:"✓ saved", lateDay:"Late: the day starts one grade lower (3.50 instead of 4.50).", tmLateDay:"Team Market, late: this day counts as 4.00 (one grade lower).",
       sum:"Summary to the course lead", sumHint:"After the exam: e-mail the averages of all students to Michael Pilman.",
       sumHint5:"After the last day: e-mail the average of all students to Michael Pilman.", sumSent:"sent on",
       sumOpen:"The Exam Day has not been recorded yet. Send anyway?", sumCopy:"Text copied. Please paste it into the e-mail.",
-      sumNow:"Today is the last day. Afterwards: send the summary to the course lead.", shift:"Shift", ocDay:"OC (office and daily MeP): counts like Team Market with 5.00, late 4.00."},
+      sumNow:"Today is the last day. Afterwards: send the summary to the course lead.", shift:"Shift", ocDay:"OC (office and daily MeP): counts like Team Market with 5.00, late 4.00.",
+      gone:"These students are missing from the new list but already have recorded days:\n{n}\n\nIf you apply, their entries will be deleted. Apply anyway?",
+      attach:"Attachment: {f}\nPlease attach the file you just downloaded (Downloads folder) to this e-mail.",
+      noteLaptop:"Assigned on the laptop: {c} {v}. Kept when you edit the text.", noteIntern:"🔒 Internal note: not shown in the feedback."},
   th:{home:"หน้าเริ่มต้นของฉัน", nick:"ชื่อเล่น", nickPh:"เช่น Lulu", nickSave:"ใช้", nickDel:"ลบ",
       nickHint:"ใช้ได้ทันทีบนอุปกรณ์นี้ เมื่อกด «ส่งข้อมูลของวันนี้» ชื่อเล่นจะถูกส่งให้ผู้ประสานงาน และทุกคนจะได้รับในชุดข้อมูลถัดไป",
       saved:"✓ บันทึกแล้ว", lateDay:"มาสาย: วันนี้เริ่มต่ำลงหนึ่งคะแนน (3.50 แทน 4.50)", tmLateDay:"Team Market มาสาย: วันนี้นับเป็น 4.00 (ต่ำลงหนึ่งคะแนน)",
       sum:"สรุปส่งผู้ประสานงาน", sumHint:"หลังวันสอบ: ส่งคะแนนเฉลี่ยของทุกคนทางอีเมลถึง Michael Pilman",
       sumHint5:"หลังวันสุดท้าย: ส่งคะแนนเฉลี่ยของทุกคนทางอีเมลถึง Michael Pilman", sumSent:"ส่งแล้วเมื่อ",
       sumOpen:"ยังไม่ได้บันทึกวันสอบ ต้องการส่งหรือไม่", sumCopy:"คัดลอกข้อความแล้ว กรุณาวางในอีเมล",
-      sumNow:"วันนี้เป็นวันสุดท้าย หลังจากนั้น: ส่งสรุปให้ผู้ประสานงาน", shift:"กะ", ocDay:"OC (งานสำนักงานและเตรียมงาน): นับเหมือน Team Market ที่ 5.00"}
+      sumNow:"วันนี้เป็นวันสุดท้าย หลังจากนั้น: ส่งสรุปให้ผู้ประสานงาน", shift:"กะ", ocDay:"OC (งานสำนักงานและเตรียมงาน): นับเหมือน Team Market ที่ 5.00",
+      gone:"นักศึกษาต่อไปนี้ไม่อยู่ในรายชื่อใหม่ แต่มีวันที่บันทึกไว้แล้ว:\n{n}\n\nหากยืนยัน ข้อมูลของพวกเขาจะถูกลบ ต้องการยืนยันหรือไม่",
+      attach:"ไฟล์แนบ: {f}\nกรุณาแนบไฟล์ที่เพิ่งดาวน์โหลด (โฟลเดอร์ Downloads) กับอีเมลนี้",
+      noteLaptop:"กำหนดไว้บนแล็ปท็อป: {c} {v} จะคงไว้แม้แก้ไขข้อความ", noteIntern:"🔒 บันทึกภายใน: ไม่แสดงในผลประเมิน"}
 };
 const n2x = k => (N2X[L] && N2X[L][k]) || N2X.de[k] || k;
 
@@ -359,7 +378,9 @@ function n2SummaryText(){
   const lines = S.students.map(s => {
     const p = n2Praxis(s.id), e = hasEx ? n2Exam(s.id) : null;
     const cnt = {excused:0, unexcused:0, late:0, tm:0};
-    slots().forEach(x => { const r = (S.days[x.id] || {})[s.id]; if(r && cnt[r.att] != null) cnt[r.att]++; });
+    /* Team Market verspätet (tml) zählt als Verspätung und als TM/OC, wie am Laptop (Entscheid 11.10.2026) */
+    slots().forEach(x => { const r = (S.days[x.id] || {})[s.id]; if(!r) return;
+      if(r.att === "tml"){ cnt.late++; cnt.tm++; } else if(cnt[r.att] != null) cnt[r.att]++; });
     const ab = [cnt.excused ? "entsch. " + cnt.excused : "", cnt.unexcused ? "unentsch. " + cnt.unexcused : "",
                 cnt.late ? "verspätet " + cnt.late : "", cnt.tm ? "TM/OC " + cnt.tm : ""].filter(Boolean).join(", ");
     const kl = [s.klasse || st.group || "", s.gruppe || st.team || ""].filter(Boolean).join(" · ");
@@ -436,19 +457,36 @@ function n2Handoff(load){
   try{ localStorage.removeItem("praxisrapport.handoff"); }catch(e){}
   if(Date.now() - (h.at || 0) > 10 * 60 * 1000) return;          // nur frische Übergaben
   const id = String(h.id || "");
+  const lg = (S.settings.uiLang || "de");
   if(h.mode === "switch"){                                          // Wechsel Tablet <-> Laptop: Stand 1:1 übernehmen
     const p = JSON.parse(JSON.stringify(h.paket));
-    Promise.resolve(load(p)).then(() => { view = "day"; render(); toast(h.titel || "✓"); });
+    /* Entscheid 31.10.2026: Hat diese Fassung erfasste Tage, die im mitgebrachten Stand fehlen, zuerst fragen. */
+    const fehlt = n2SwitchLoss(p);
+    if(fehlt.length){
+      const liste = fehlt.slice(0, 6).join(", ") + (fehlt.length > 6 ? " …" : "");
+      const msg = {
+        de: "Ansicht wechseln: Diese Fassung enthält erfasste Tage, die im übernommenen Stand fehlen (" + liste + ").\n\nTrotzdem ersetzen? Diese Einträge gehen dabei verloren. Wenn du sie noch brauchst: Abbrechen und zuerst «Sichern».",
+        en: "Switch view: this version holds recorded days that are missing from the incoming state (" + liste + ").\n\nReplace anyway? These entries will be lost. If you still need them: cancel and use «Back up» first.",
+        th: "สลับมุมมอง: ไฟล์นี้มีวันที่บันทึกไว้ซึ่งไม่มีในข้อมูลที่นำเข้ามา (" + liste + ")\n\nต้องการแทนที่หรือไม่ ข้อมูลเหล่านี้จะหายไป หากยังต้องใช้ ให้ยกเลิกและกด «สำรองข้อมูล» ก่อน"
+      };
+      try{ if(!window.confirm(msg[lg] || msg.de)) return; }catch(e){ return; }
+    }
+    Promise.resolve(load(p)).then(ok => {
+      if(ok === false) return;                                      // nicht geladen: die Ladefunktion meldet den Grund
+      n2GoToday(); view = "day"; render();                          // heutigen Einsatztag zeigen, nicht Tag 1
+      if(ok === true) toast(h.titel || "✓");
+    });
     return;
   }
   if(id && S.settings.paketId === id && S.students.length){        // dieses Paket ist schon da:
-    if(n2Refresh(h.paket.students)) persist();                       // nur Fotos, Nicknames usw. nachführen
+    const neuP = n2Refresh(h.paket.students);                        // Fotos, Nicknames usw. nachführen
+    const neuE = n2RefreshSettings(h.paket.settings);                // neu ausgestelltes Paket: Daten, Plan, Zyklus übernehmen
+    if(neuP || neuE) persist();
     n2GoToday(); view = "day"; render();                              // und den heutigen Einsatztag zeigen
     return;
   }
   const hatDaten = !S.settings.isSample && Object.keys(S.days || {}).some(k => S.days[k] && Object.keys(S.days[k]).length);
   if(hatDaten && S.settings.paketId !== id){
-    const lg = (S.settings.uiLang || "de");
     const msg = {
       de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag senden» oder «Sichern», falls noch nicht geschehen.",
       en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Send the day» or «Back up» first if you have not done so.",
@@ -458,7 +496,48 @@ function n2Handoff(load){
   }
   const p = JSON.parse(JSON.stringify(h.paket));
   p.settings.paketId = id;
-  Promise.resolve(load(p)).then(() => { n2GoToday(); view = "day"; render(); if(h.titel) toast("✓ " + h.titel); });
+  Promise.resolve(load(p)).then(ok => {
+    if(ok === false) return;                                        // abgelehnt: keine Erfolgsmeldung
+    n2GoToday(); view = "day"; render();
+    if(ok === true && h.titel) toast("✓ " + h.titel);
+  });
+}
+/* Ein Tagesdatensatz mit Inhalt: Anwesenheit nicht «anwesend», Beobachtungen oder Freitext. */
+function n2RecHasData(r){
+  return !!(r && typeof r === "object" && ((r.att && r.att !== "present") || (Array.isArray(r.obs) && r.obs.length)
+    || (r.note && typeof r.note === "object" && String(r.note.txt || "").trim())));
+}
+/* Wechsel Tablet <-> Laptop: Tage dieser Fassung mit Inhalt, die im mitgebrachten Stand fehlen (Bezeichnung des Tages). */
+function n2SwitchLoss(p){
+  if(S.settings.isSample) return [];
+  const inc = (p && p.days && typeof p.days === "object") ? p.days : {};
+  const out = [];
+  Object.keys(S.days || {}).sort().forEach(d => {
+    const recs = S.days[d] || {};
+    if(!Object.keys(recs).some(sid => n2RecHasData(recs[sid]) && !(inc[d] && inc[d][sid]))) return;
+    const sl = slots().find(x => x.id === d);
+    out.push(sl ? slotLabel(sl) : d);
+  });
+  return out;
+}
+/* Gleiches Paket, neu ausgestellt (Entscheid 31.10.2026): Einsatzdaten, Bewertende, zweites Restaurant, Wochentage,
+   Starttag, Zyklus und Semester aus dem neuen Paket übernehmen. Die Slot-IDs bleiben gleich, erfasste Tage bleiben. */
+function n2RefreshSettings(ps){
+  if(!ps || typeof ps !== "object") return false;
+  let ch = false;
+  ["slotDates", "teacherPlan", "outlet2", "weekdays", "startIdx", "block", "semester"].forEach(k => {
+    const v = ps[k];
+    if(v === undefined){
+      if(k === "weekdays" || k === "startIdx") return;              // ohne Angabe bleibt der Turnus, wie er ist
+      if(S.settings[k] !== undefined){ delete S.settings[k]; ch = true; }
+      return;
+    }
+    if(k === "weekdays" && !(Array.isArray(v) && v.length)) return;
+    if(k === "startIdx" && !Number.isFinite(Number(v))) return;
+    if(JSON.stringify(v) === JSON.stringify(S.settings[k])) return;
+    S.settings[k] = JSON.parse(JSON.stringify(v)); ch = true;
+  });
+  return ch;
 }
 /* Heute ein Einsatztag des Pakets? Dann direkt diesen Tag zeigen. */
 function n2GoToday(){
@@ -511,3 +590,63 @@ function n2SwitchView(){
 }
 { const sw = document.getElementById("btnSwitch"); if(sw) sw.addEventListener("click", n2SwitchView); }
 setTimeout(() => n2Handoff(o => onLoadBackup({target:{files:[new File([JSON.stringify(o)], "paket.json")], value:""}})), 30);
+
+/* ====================================================================================
+   Entscheide 31.10.2026 (Mobil): Namensliste, Mail ohne Teilen-Menü, neuer Kalendertag
+   ==================================================================================== */
+/* «Übernehmen» in der Namensliste: Zeilen den bestehenden Personen zuordnen.
+   Reihenfolge: Nummer (#Nr.), E-Mail (ohne Gross/Klein), Nachname + Vorname (normalisiert).
+   Gleicher Name mit anderer E-Mail oder Nummer bleibt eine eigene Person. Jede Person wird höchstens einmal zugeordnet. */
+const n2Norm = s => String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+function n2MatchRows(rows, list, key){
+  const K = list.map(key), used = new Set(), out = rows.map(() => null);
+  const ml = x => String(x || "").trim().toLowerCase(), nr = x => String(x || "").trim();
+  const pass = test => rows.forEach((r, i) => {
+    if(out[i]) return;
+    const j = K.findIndex((k, j2) => !used.has(j2) && test(r, k));
+    if(j >= 0){ out[i] = list[j]; used.add(j); }
+  });
+  pass((r, k) => !!(nr(r.nr) && nr(k.nr)) && nr(r.nr) === nr(k.nr));
+  pass((r, k) => !!(ml(r.mail) && ml(k.mail)) && ml(r.mail) === ml(k.mail));
+  pass((r, k) => {
+    const a = n2Norm(r.last) + "|" + n2Norm(r.first);
+    if(a === "|" || a !== n2Norm(k.last) + "|" + n2Norm(k.first)) return false;
+    if(ml(r.mail) && ml(k.mail) && ml(r.mail) !== ml(k.mail)) return false;
+    return !(nr(r.nr) && nr(k.nr) && nr(r.nr) !== nr(k.nr));
+  });
+  return out;
+}
+function n2StudentHasData(sid){ return Object.keys(S.days || {}).some(d => n2RecHasData((S.days[d] || {})[sid])); }
+/* Personen, die wegfallen und schon erfasste Tage haben: zuerst fragen. false = nichts ändern. */
+function n2ConfirmGone(gone, nameOf){
+  if(!gone.length) return true;
+  try{ return !!window.confirm(n2x("gone").replace("{n}", gone.map(x => "– " + nameOf(x)).join("\n"))); }catch(e){ return false; }
+}
+/* Tagesdatensätze von Personen, die nicht mehr in der Liste stehen, entfernen (nach der Rückfrage oben) */
+function n2PruneOrphans(){
+  const ids = new Set(S.students.map(x => x.id));
+  Object.keys(S.days || {}).forEach(d => { Object.keys(S.days[d] || {}).forEach(k => { if(!ids.has(k)) delete S.days[d][k]; }); });
+}
+/* «Tag senden» ohne Teilen-Menü (Android, Windows): nach dem Herunterladen die Mail an die Kursleitung öffnen */
+function n2Mailto(href){ location.href = href; }
+function n2DayMailFallback(subj, lines, fname){
+  const body = lines.concat(["", n2x("attach").replace("{f}", fname)]).join("\n");
+  setTimeout(() => n2Mailto("mailto:" + ABS_MAIL + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body)), 400);
+}
+/* Neuer Kalendertag, während die Seite offen war (das iPad hält eine Web-App oft über Nacht offen):
+   den heutigen Einsatztag zeigen, falls das Paket einen hat. */
+const n2TodayIso = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+let n2Shown = n2TodayIso();
+function n2OnResume(){
+  if(document.visibilityState === "hidden") return;
+  const td = n2TodayIso(); if(td === n2Shown) return;
+  n2Shown = td;
+  if(!slots().some(x => x.date === td)) return;
+  if(document.getElementById("n2grade")){                         // offenes Erfassungsblatt gehört zum alten Tag: sichern und schliessen
+    try{ const a = document.activeElement; if(a && a.blur) a.blur(); }catch(e){}
+    persist(); document.getElementById("sheetHost").innerHTML = ""; document.body.style.overflow = "";
+  }
+  n2GoToday(); render();
+}
+document.addEventListener("visibilitychange", n2OnResume);
+window.addEventListener("pageshow", n2OnResume);

@@ -18,7 +18,7 @@ OK      Kueche · B3 DE: Anrede «Guten Tag Vorname» (Sie), Lob, ohne Noten (St
 vielen Dank für Ihren Einsatz bei uns (Patisserie, vom 05.10. bis 08.10.).
 OK      Kueche · B4 EN: Verbesserung mit Tipp, Verspätung, unentschuldigt, Note    Dear Ada,
 
-thank you for your work with us (Patisserie, from 05.10. to 08.10.). 
+Thank you for your work with us (Patisserie, from 05.10. to 08.10.). 
 OK      Kueche · B5 Höchstens 3 Verbesserungspunkte, jeder mit Tipp                3
 OK      Kueche · B6 Kein Doppelpunkt-Punkt-Fehler und keine leeren Platzhalter     
 OK      Kueche · B7 Person ohne bewerteten Tag: Warnung im Feedback-Blatt          ['Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.']
@@ -70,7 +70,7 @@ OK      Service · B3 DE: Anrede «Guten Tag Vorname» (Sie), Lob, ohne Noten (S
 vielen Dank für Ihren Einsatz bei uns (Da Fortunat, vom 05.10. bis 08.10.)
 OK      Service · B4 EN: Verbesserung mit Tipp, Verspätung, unentschuldigt, Note   Dear Ada,
 
-thank you for your work with us (Da Fortunat, from 05.10. to 08.10.).
+Thank you for your work with us (Da Fortunat, from 05.10. to 08.10.).
 OK      Service · B5 Höchstens 3 Verbesserungspunkte, jeder mit Tipp               3
 OK      Service · B6 Kein Doppelpunkt-Punkt-Fehler und keine leeren Platzhalter    
 OK      Service · B7 Person ohne bewerteten Tag: Warnung im Feedback-Blatt         ['Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.']

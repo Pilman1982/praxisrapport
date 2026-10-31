@@ -2965,19 +2965,36 @@ function n2Handoff(load){
   try{ localStorage.removeItem("praxisrapport.handoff"); }catch(e){}
   if(Date.now() - (h.at || 0) > 10 * 60 * 1000) return;          // nur frische Übergaben
   const id = String(h.id || "");
+  const lg = (S.settings.uiLang || "de");
   if(h.mode === "switch"){                                          // Wechsel Tablet <-> Laptop: Stand 1:1 übernehmen
     const p = JSON.parse(JSON.stringify(h.paket));
-    Promise.resolve(load(p)).then(() => { view = "day"; render(); toast(h.titel || "✓"); });
+    /* Entscheid 31.10.2026: Hat diese Fassung erfasste Tage, die im mitgebrachten Stand fehlen, zuerst fragen. */
+    const fehlt = n2SwitchLoss(p);
+    if(fehlt.length){
+      const liste = fehlt.slice(0, 6).join(", ") + (fehlt.length > 6 ? " …" : "");
+      const msg = {
+        de: "Ansicht wechseln: Diese Fassung enthält erfasste Tage, die im übernommenen Stand fehlen (" + liste + ").\n\nTrotzdem ersetzen? Diese Einträge gehen dabei verloren. Wenn du sie noch brauchst: Abbrechen und zuerst «Sichern».",
+        en: "Switch view: this version holds recorded days that are missing from the incoming state (" + liste + ").\n\nReplace anyway? These entries will be lost. If you still need them: cancel and use «Back up» first.",
+        th: "สลับมุมมอง: ไฟล์นี้มีวันที่บันทึกไว้ซึ่งไม่มีในข้อมูลที่นำเข้ามา (" + liste + ")\n\nต้องการแทนที่หรือไม่ ข้อมูลเหล่านี้จะหายไป หากยังต้องใช้ ให้ยกเลิกและกด «สำรองข้อมูล» ก่อน"
+      };
+      try{ if(!window.confirm(msg[lg] || msg.de)) return; }catch(e){ return; }
+    }
+    Promise.resolve(load(p)).then(ok => {
+      if(ok === false) return;                                      // nicht geladen: die Ladefunktion meldet den Grund
+      n2GoToday(); view = "day"; render();                          // heutigen Einsatztag zeigen, nicht Tag 1
+      if(ok === true) toast(h.titel || "✓");
+    });
     return;
   }
   if(id && S.settings.paketId === id && S.students.length){        // dieses Paket ist schon da:
-    if(n2Refresh(h.paket.students)) persist();                       // nur Fotos, Nicknames usw. nachführen
+    const neuP = n2Refresh(h.paket.students);                        // Fotos, Nicknames usw. nachführen
+    const neuE = n2RefreshSettings(h.paket.settings);                // neu ausgestelltes Paket: Daten, Plan, Zyklus übernehmen
+    if(neuP || neuE) persist();
     n2GoToday(); view = "day"; render();                              // und den heutigen Einsatztag zeigen
     return;
   }
   const hatDaten = !S.settings.isSample && Object.keys(S.days || {}).some(k => S.days[k] && Object.keys(S.days[k]).length);
   if(hatDaten && S.settings.paketId !== id){
-    const lg = (S.settings.uiLang || "de");
     const msg = {
       de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag senden» oder «Sichern», falls noch nicht geschehen.",
       en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Send the day» or «Back up» first if you have not done so.",
@@ -2987,7 +3004,48 @@ function n2Handoff(load){
   }
   const p = JSON.parse(JSON.stringify(h.paket));
   p.settings.paketId = id;
-  Promise.resolve(load(p)).then(() => { n2GoToday(); view = "day"; render(); if(h.titel) toast("✓ " + h.titel); });
+  Promise.resolve(load(p)).then(ok => {
+    if(ok === false) return;                                        // abgelehnt: keine Erfolgsmeldung
+    n2GoToday(); view = "day"; render();
+    if(ok === true && h.titel) toast("✓ " + h.titel);
+  });
+}
+/* Ein Tagesdatensatz mit Inhalt: Anwesenheit nicht «anwesend», Beobachtungen oder Freitext. */
+function n2RecHasData(r){
+  return !!(r && typeof r === "object" && ((r.att && r.att !== "present") || (Array.isArray(r.obs) && r.obs.length)
+    || (r.note && typeof r.note === "object" && String(r.note.txt || "").trim())));
+}
+/* Wechsel Tablet <-> Laptop: Tage dieser Fassung mit Inhalt, die im mitgebrachten Stand fehlen (Bezeichnung des Tages). */
+function n2SwitchLoss(p){
+  if(S.settings.isSample) return [];
+  const inc = (p && p.days && typeof p.days === "object") ? p.days : {};
+  const out = [];
+  Object.keys(S.days || {}).sort().forEach(d => {
+    const recs = S.days[d] || {};
+    if(!Object.keys(recs).some(sid => n2RecHasData(recs[sid]) && !(inc[d] && inc[d][sid]))) return;
+    const sl = slots().find(x => x.id === d);
+    out.push(sl ? slotLabel(sl) : d);
+  });
+  return out;
+}
+/* Gleiches Paket, neu ausgestellt (Entscheid 31.10.2026): Einsatzdaten, Bewertende, zweites Restaurant, Wochentage,
+   Starttag, Zyklus und Semester aus dem neuen Paket übernehmen. Die Slot-IDs bleiben gleich, erfasste Tage bleiben. */
+function n2RefreshSettings(ps){
+  if(!ps || typeof ps !== "object") return false;
+  let ch = false;
+  ["slotDates", "teacherPlan", "outlet2", "weekdays", "startIdx", "block", "semester"].forEach(k => {
+    const v = ps[k];
+    if(v === undefined){
+      if(k === "weekdays" || k === "startIdx") return;              // ohne Angabe bleibt der Turnus, wie er ist
+      if(S.settings[k] !== undefined){ delete S.settings[k]; ch = true; }
+      return;
+    }
+    if(k === "weekdays" && !(Array.isArray(v) && v.length)) return;
+    if(k === "startIdx" && !Number.isFinite(Number(v))) return;
+    if(JSON.stringify(v) === JSON.stringify(S.settings[k])) return;
+    S.settings[k] = JSON.parse(JSON.stringify(v)); ch = true;
+  });
+  return ch;
 }
 /* Heute ein Einsatztag des Pakets? Dann direkt diesen Tag zeigen. */
 function n2GoToday(){
