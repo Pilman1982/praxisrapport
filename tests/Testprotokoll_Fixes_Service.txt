@@ -1,0 +1,86 @@
+PRUEFUNG KORREKTUREN SERVICERAPPORT LAPTOP 31.10.2026
+
+OK      D0 Tag senden mit Absenzen: Mail mit Verspätung und Anhang-Hinweis               mailto:michael.pilman@ehl.ch?subject=Tagesrapport – Bellavista · M. Pilman · Montag (1)&body=Group 3 · Bellavista · M. P
+OK      D0 Tag senden mit Absenzen: Tagesdatei gespeichert                               [['M-Pilman_Group-3_Bellavista_10T_2026-10-31.json', True]]
+OK      D0 keine JavaScript-Fehler                                                       []
+OK      D1 fmt1/bandName mit Toleranz: 3.9499… -> 4.0 Genügend, nicht rot                ['4.0', 'Genügend', '', '4.4', '4.3', '–']
+OK      D1 Übersicht: exakt 3.95 wird 4.0, nicht rot                                     (3.9499999999999993, '4.0', 'grade num ')
+OK      D1 Beurteilung: «Schlussnote: 4.0 (Genügend)» und Schlusssatz ab 4.00            Schlussnote: 4.0 (Genügend)
+OK      D1 Excel: Schlussnote 3.95, gerundet 4.0                                         [3.95, 4, 4.1]
+OK      D1 PDF: Schlussnote auf 0.1 gerundet mit Prädikat aus dem gerundeten Wert        Schlussnote4.0Genügend
+OK      D1 Übersichtsmail: Schlussnote 4.0                                               Muster Max  —  Praxisnote 4.14  ·  Prüfung 3.57  ·  Schlussnote 4.0  ·  5 Tage  ·  1× Verspätet
+OK      D1 3000 Zufallspersonen: gerundete Schlussnote stimmt mit exakter Rechnung       0
+OK      D1 Tagesnote: Farbe aus der gezeigten Zahl («4.00» nicht rot, «4.75» grün)       [['4.00', 'grade num '], ['4.75', 'grade num g-hi']]
+OK      D1 Übersicht Praxisnote: Farbe aus der gezeigten Zahl                            [['4.00', 'grade num '], ['4.75', 'grade num g-hi']]
+OK      D1 Beurteilung: Prädikat aus der gezeigten Zahl («4.75» = Gut)                   Praxisnote: 4.75 (Gut)
+OK      D1 keine JavaScript-Fehler                                                       []
+OK      D2 finalGrade 10T: ohne Exam oder ohne Praxis null                               [None, None, 5]
+OK      D2 Übersicht und Excel: Schlussnote leer («–» / leer)                            ('–', ['', ''])
+OK      D2 Beurteilung: Praxisnote, Prüfungsnote –, Schlussnote –                        ['Praxisnote: 4.50 (Befriedigend)', 'Prüfungsnote: –', 'Schlussnote: –']
+OK      D2 Übersichtsmail: Schlussnote –                                                 Muster Max  —  Praxisnote 4.50  ·  Prüfung –  ·  Schlussnote –  ·  2 Tage  ·  keine Absenzen
+OK      D2 keine JavaScript-Fehler                                                       []
+OK      D2 5T ohne Exam: Schlussnote = Praxisnote                                        [4.5, False]
+OK      D3 Freitext bleibt nach Schliessen über «Fertig oben»                            {'txt': 'Notiz Fertig oben', 'crit': 'sel', 'dir': -1, 'w': 0.5, 'internal': False}
+OK      D3 Freitext bleibt nach Schliessen über «Esc»                                    {'txt': 'Notiz Esc', 'crit': 'sel', 'dir': -1, 'w': 0.5, 'internal': False}
+OK      D3 Freitext bleibt nach Schliessen über «Klick daneben»                          {'txt': 'Notiz Klick daneben', 'crit': 'sel', 'dir': -1, 'w': 0.5, 'internal': False}
+OK      D3 Reiterwechsel: Freitext sofort übernommen                                     
+OK      D3 Freitext bleibt nach Schliessen über «Reiterwechsel»                          {'txt': 'Notiz Reiterwechsel', 'crit': 'sel', 'dir': -1, 'w': 0.5, 'internal': False}
+OK      D3 Freitext wird auch beim Verlassen der Seite übernommen                        
+OK      D3 leerer Freitext legt keinen Datensatz an                                      
+OK      D3 keine JavaScript-Fehler                                                       []
+OK      D4 Liste zeigt die Studierendennummer mit #                                      ['Amman; Lea; lea@beispiel.ch; #1000000001']
+OK      D4 Namenskorrektur mit Nummer: gleiche Id, Nummer, Foto und Plan bleiben         [['p1', 'Ammann', 'Lea', '1000000001', True, '[2]', 'lea@beispiel.ch']]
+OK      D4 Namenskorrektur mit gleicher E-Mail: gleiche Id                               [['p2', 'Keller', 'Tim', '', False, 'null', 'timo@beispiel.ch']]
+OK      D4 gleicher Name, zwei E-Mail-Adressen: zwei Personen                            [['p3', 'Muster', 'Max', '', False, 'null', 'max1@beispiel.ch'], ['sgjh7br', 'Muster', 'Max', '', False, 'null', 'max2@beispiel.ch']]
+OK      D4 erfasste Tage bleiben bei der Person                                          (1, [])
+OK      D4 Wegfall mit Einträgen: Rückfrage, Abbrechen ändert nichts                     ['Diese Personen haben schon Einträge und fallen aus der Liste: Ammann Lea. Deren Einträge werden danach nicht mehr angezeigt. Trotzdem übernehmen?']
+OK      D4 Wegfall bestätigt: Person entfernt                                            ['Keller Tim', 'Muster Max', 'Muster Max']
+OK      D4 keine JavaScript-Fehler                                                       []
+OK      D5 Zusammenführen: Küchenrapport abgelehnt, keine Tage übernommen                ['+0 Studierende/r · +0 Tage  ⚠︎ Passt nicht in diese Datei: Q_HFD_Campigiana_10T.json (Kuechenrapport)']
+OK      D5 Sicherung einlesen: Küchenrapport abgelehnt, nichts ersetzt                   (False, 'Umami')
+OK      D5 keine JavaScript-Fehler                                                       []
+OK      D6 Tag ansehen legt für spätere Person keinen Datensatz an (auch Exam Day)       {'d01': True, 'd10': True, 'counted': 0, 'ex': None, 'badge': 'offen', 'pressed': 0}
+OK      D6 Person ohne Datensatz erscheint als «offen», keine Anwesenheit gewählt        ('offen', 0)
+OK      D6 Antippen von «Anwesend» legt den Datensatz an                                 ['present', 1]
+OK      D6 keine JavaScript-Fehler                                                       []
+OK      D7 Exam Day: fünf Knöpfe, verspätet erscheint als «Verspätet»                    {'n': 5, 'p': ['Verspätet'], 'g': '3.50'}
+OK      D7 Exam Day: entschuldigt bleibt 1.00                                            {'n': 5, 'p': ['Entschuldigt'], 'g': '1.00'}
+OK      D7 keine JavaScript-Fehler                                                       []
+OK      D8 Feedback-Mail: Link höchstens 1800 Zeichen, mit Hinweis                       181
+OK      D8 Feedback-Mail: ganzer Text in der Zwischenablage, Meldung = Hinweis           (897, 897, 'Der Text ist in der Zwischenablage. Bitte hier mit Strg+V ei')
+OK      D8 Übersichtsmail an die Kursleitung: Link höchstens 1800 Zeichen                [221]
+OK      D8 keine JavaScript-Fehler                                                       []
+OK      D9 «Übernehmen» aus dem Beispiel: Beispieltage und Tagesangaben weg              {'days': [], 'meta': [], 'sample': False, 'cur': 'd01', 'set': ['', '', 'Umami', ''], 'obs': [0, 0]}
+OK      D9 Beispiel-Kopfwerte geleert, eigenes Outlet bleibt, Start bei Tag 1            (['', '', 'Umami', ''], 'd01')
+OK      D9 Zusammenführen in die Beispieldatei: nur Daten der Datei, keine Beispielwerte {'days': ['d02'], 'set': ['', '', 'Da Fortunat', 'R'], 'n': 1, 'cur': 'd01'}
+OK      D9 keine JavaScript-Fehler                                                       []
+OK      D10 Baustein nicht mehr angeboten, nur zum Entfernen sichtbar                    (0, 1, True)
+OK      D10 Note alter Daten unverändert (Team 4.00)                                     4
+OK      D10 Beurteilung: Tag mit dem Baustein zählt als Verspätung                       Absenzen: 2 × Verspätet
+OK      D10 Einzelblatt ohne den alten Baustein                                          False
+OK      D10 keine JavaScript-Fehler                                                      []
+OK      D11 Beurteilung: Bausteine nur von Tagen anwesend/verspätet                      [False, False, True, True]
+OK      D11 keine JavaScript-Fehler                                                      []
+OK      D12 Wochentage DE                                                                ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
+OK      D12 Wochentage EN                                                                ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+OK      D12 Wochentage TH unterscheidbar                                                 ['จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.', 'อา.']
+OK      D12 keine JavaScript-Fehler                                                      []
+OK      D13 Korrektur nur des Restaurants kommt an                                       Da Fortunat
+OK      D13 leerer Standardeintrag ersetzt keinen Eintrag mit Inhalt, Meldung            Beispielinhalt entfernt, Angaben aus der ersten Datei übernommen  ·  +2 Studierende/r · +2 Tage  ·  1 Einträge aktualisiert (neuere Datei)  ·  1 Eintr
+OK      D13 keine JavaScript-Fehler                                                      []
+OK      D14 kaputte Sicherung: eingelesen, Werte bereinigt                               {'w': 0.5, 'd': 1, 'obs': [], 'att': 'present', 'keys': ['d01'], 'sel': 5}
+OK      D14 Erfassen, Übersicht, Beurteilung, Daten ohne JavaScript-Fehler               []
+OK      D15 4T in 10T: Tage eingeordnet, Pläne der Halbdatei entfernt                    {'keys': ['d06', 'd07', 'd08', 'd09', 'd10'], 'plan': [], 'd07': 'tm'}
+OK      D15 ZH: Team Market verspätet auf Chinesisch                                     ['Team Market: 1 × (5.00), 其中迟到 1 × (4.00)']
+OK      D15 keine JavaScript-Fehler                                                      []
+OK      D16 Einteiliger Name: letztes Wort ist der Vorname; #Nummer erkannt              [['Da Silva', 'Rui', ''], ['van der Berg', 'Sanne', ''], ['Muster', 'Max', '21']]
+OK      Nummer: Tablet-Zeile mit #21 am Schluss richtig gelesen                          ['Muster', 'Max', '', 'max@x.ch', 'de', 'HFD', 'Gruppe 1 Team A', '21']
+OK      Nummer: #21 auch vorne gelesen, leeres # ignoriert                               (['Muster', 'Max', '', '', '', 'HFD', '', '21'], ['Muster', 'Max', '', '', '', '', '', ''])
+OK      Nummer: Liste schreibt #21 als letztes Feld                                      Muster; Max; max@x.ch; de; HFD; Gruppe 1 Team A; #21
+OK      D17 onRestore: false bei Variante, App, kaputt, Semesterpaket; true beim Paket   [False, False, False, False, True, 'P1']
+OK      D17 keine JavaScript-Fehler                                                      []
+OK      Servicerapport.html: Selbsttest und alle Reiter ohne Fehler                      ([], [])
+OK      Servicerapport_4Tage_Exam.html: Selbsttest und alle Reiter ohne Fehler           ([], [])
+OK      Servicerapport_5Tage_ohneExam.html: Selbsttest und alle Reiter ohne Fehler       ([], [])
+
+82 von 82 bestanden.

@@ -88,6 +88,8 @@ with sync_playwright() as p:
             ok(label+": 'Turnus startet am' zeigt Montag", v == "0", v)
         # Selbsttest Service
         if app == "service" and kind == "browser":
+            # Seit 31.10.2026 raeumt «Übernehmen» die Beispiel-Kopfzeile (Gruppe 3, Team A) weg; Klasse und Gruppe hier wie im Betrieb setzen
+            pg.evaluate("() => { S.settings.group = S.settings.group || 'HFD'; S.settings.team = S.settings.team || 'Gruppe 1'; persist(); }")
             st_res = pg.evaluate("() => selfTest()")
             bad = [x for x in st_res if not x["ok"]]
             ok(label+": eingebauter Selbsttest", not bad, bad or "%d Pruefungen" % len(st_res))

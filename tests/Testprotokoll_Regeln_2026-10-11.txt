@@ -35,7 +35,7 @@ OK      Mobil Servicerapport_Mobil.html: Mail Deutsch: Betreff «Ihr Feedback»,
 OK      Mobil Servicerapport_Mobil.html: Mail Deutsch: Verspaetung inkl. Market gezaehlt (2x) ['Bitte achten Sie auf Pünktlichkeit: Sie waren 2× verspätet.']
 OK      Mobil Servicerapport_Mobil.html: Mail Englisch beginnt mit «Dear Emma,»    Dear Emma,
 
-thank you for your
+Thank you for your
 OK      Mobil Servicerapport_Mobil.html: keine JavaScript-Fehler                   []
 OK      Mobil Kuechenrapport_Mobil.html: Basis 4.50 (alte Datei 5.00), verspaetet 3.50, Market 5.00 [4.5, 4.5, 3.5, 'tm', 5]
 OK      Mobil Kuechenrapport_Mobil.html: Market + Verspaetet im Blatt: 4.00, beide Knoepfe aktiv, Hinweis ['tml', 4, 'true', 'true', True]

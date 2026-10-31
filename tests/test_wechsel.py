@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Service: Restaurantwechsel pro Person und Einsatztag."""
 import pathlib
+import tempfile as _tf; OUT = _tf.mkdtemp(prefix="dg_test_")
 from playwright.sync_api import sync_playwright
 R = pathlib.Path(__file__).parent.parent
 LIST = (R/"testdaten/Testklasse_ANONYM.txt").read_text(encoding="utf-8")
@@ -39,7 +40,7 @@ with sync_playwright() as p:
     ok("Laptop: Umschalter pro Person sichtbar (30), 1 im zweiten Restaurant", n_pill == 30 and n_alt == 1, [n_pill, n_alt])
     pg.locator(".opill").first.click()
     ok("Laptop: Klick auf Umschalter wechselt", pg.locator(".opill.alt").count() == 2)
-    pg.screenshot(path="/tmp/claude-0/wechsel_laptop.png")
+    pg.screenshot(path=OUT + "/wechsel_laptop.png")
     # Ohne zweites Restaurant: keine Umschalter
     pg.evaluate("()=>{ S.settings.outlet2=''; render(); }")
     ok("Laptop: ohne zweites Restaurant keine Umschalter", pg.locator(".opill").count() == 0)
@@ -73,7 +74,7 @@ with sync_playwright() as p:
     ok("Mobil: Liste zeigt den Wechsel", pg.locator("text=⇄ Da Fortunat").count() >= 1)
     pg.locator(".srow").nth(10).click(); pg.wait_for_timeout(200)
     ok("Mobil: Umschalter im Erfassungsblatt", pg.locator(".sheet .opill").count() == 1)
-    pg.screenshot(path="/tmp/claude-0/wechsel_mobil.png")
+    pg.screenshot(path=OUT + "/wechsel_mobil.png")
     ok("Mobil: keine JavaScript-Fehler", not errs, errs)
     c.close(); b.close()
 print("\n".join(res)); n = sum(x.startswith("OK") for x in res); print(n, "von", len(res))
