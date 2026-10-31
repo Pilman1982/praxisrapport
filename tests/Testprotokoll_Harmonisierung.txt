@@ -114,9 +114,3 @@ OK      Kueche: Zusammenfuehren [30, True, 'HFE1', 'Gruppe 1', 'Ethan', 'yuxuan.
 OK      Kueche: JS-Fehler []
 OK      Service: Zusammenfuehren [30, True, 'HFE1', 'Gruppe 1', 'Ethan', 'yuxuan.chen@beispiel.ch']
 OK      Service: JS-Fehler []
-
-ZUSAMMENFUEHREN (Rapport A -> leere Datei B)
-OK      Kueche: Zusammenfuehren [30, True, 'HFE1', 'Gruppe 1', 'Ethan', 'yuxuan.chen@beispiel.ch']
-OK      Kueche: JS-Fehler []
-OK      Service: Zusammenfuehren [30, True, 'HFE1', 'Gruppe 1', 'Ethan', 'yuxuan.chen@beispiel.ch']
-OK      Service: JS-Fehler []

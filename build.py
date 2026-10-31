@@ -5,7 +5,8 @@
 
 1. Baut Kuechen- und Servicerapport aus src/kueche und src/service (nach src/dist)
 2. Kopiert die benoetigten Programme nach docs/kueche und docs/service
-3. Kopiert Startseite und Startlink-Generator aus site/ nach docs/
+3. Kopiert Startseite, Startlink-Generator, Cockpit und Notenzentrale aus site/ nach docs/
+   (in die Notenzentrale wird dabei das Notenmodell der Apps eingesetzt)
 Danach committen und pushen; GitHub Pages veroeffentlicht docs/ automatisch.
 """
 import pathlib, shutil, subprocess, sys
@@ -39,6 +40,26 @@ def brand(path):
     if s2 != s: path.write_text(s2, encoding="utf-8")
 for f in DIST.glob("*.html"): brand(f)
 
+# Notenzentrale (31.10.2026): das Notenmodell der Apps unverändert einsetzen, damit die Noten identisch gerechnet werden
+import re
+CW = "const critWeight = k => DOUBLE_CRITS.includes(k) ? 2 : 1;"
+def model_js(area):
+    a = (SRC / area / "_scriptA.js").read_text(encoding="utf-8")
+    chips = (SRC / area / "_chips.js").read_text(encoding="utf-8")
+    i = a.index("const W = "); j = a.index(CW, i) + len(CW)
+    crits = ""
+    if "const CRITS" not in chips:
+        k = a.index("const CRITS = ["); crits = a[k:a.index("\n];", k) + 3]
+    return ("(function(){\n" + a[i:j] + "\n" + crits + "\n" + chips
+            + "\nconst CHIP = {}; CHIPS.forEach(c => CHIP[c.i] = c);"
+            + "\nreturn {CAP_NEG, CAP_POS, DOUBLE_CRITS, critWeight, CRITS, CHIPS, CHIP};\n})()")
+# Gleiche Kappung und Doppelgewichtung in der Service-Laptop- und der Service-Mobil-Fassung
+def regeln(txt):
+    return (re.search(r"const CAP_NEG = (-?[\d.]+), CAP_POS = ([\d.]+);", txt).groups(),
+            re.search(r"const DOUBLE_CRITS = (\[[^\]]*\]);", txt).group(1).replace(" ", ""))
+assert regeln((SRC / "service" / "_scriptA.js").read_text(encoding="utf-8")) == regeln((SRC / "service" / "_mobile_head.html").read_text(encoding="utf-8")), \
+    "Service: Kappung oder Doppelgewichtung in _scriptA.js und _mobile_head.html verschieden"
+
 if DOCS.exists(): shutil.rmtree(DOCS)
 for folder, files in PUBLISH.items():
     (DOCS / folder).mkdir(parents=True)
@@ -46,6 +67,13 @@ for folder, files in PUBLISH.items():
         shutil.copy2(DIST / f, DOCS / folder / f)
 for f in (R / "site").iterdir():
     shutil.copy2(f, DOCS / f.name)
+    if f.name == "notenzentrale.html":
+        t = (DOCS / f.name).read_text(encoding="utf-8")
+        for area in ("kueche", "service"):
+            ph = "/*__MODEL_%s__*/null" % area
+            assert t.count(ph) == 1, ph
+            t = t.replace(ph, model_js(area))
+        (DOCS / f.name).write_text(t, encoding="utf-8")
     if f.suffix == ".html": brand(DOCS / f.name)
 (DOCS / ".nojekyll").write_text("")
 for p in sorted(DOCS.rglob("*.html")):

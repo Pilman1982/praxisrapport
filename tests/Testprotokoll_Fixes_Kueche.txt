@@ -1,0 +1,77 @@
+PRUEFUNG KORREKTUREN KUECHENRAPPORT LAPTOP 31.10.2026
+
+OK      D1 fmt1 rundet x.x5 immer auf (4.45 -> 4.5, auch mit Rundungsfehler)       ['4.5', '4.5', '4.5', '4.0', '–', 4.8]
+OK      D1 Schlussnote 3.958 wird als 4.0 gezeigt, nicht rot                       [5.4375, 3.9583333333333335, '4.0', 'grade num ']
+OK      D1 Beurteilung: «Schlussnote: 4.0 (Genügend)», Schlusssatz aus 4.0 (cl3)   Schlussnote: 4.0 (Genügend)
+OK      D1 PDF: Schlussnote im Kasten auf 0.1 gerundet mit Prädikat                ['5.44|Sehr gut', '1.00|Nicht erbracht', '4.0|Genügend']
+OK      D1 Übersicht: Kriterium 3.958 als 4.0, Farbe aus dem gerundeten Wert (nicht rot) [3.9583333333333335, '4.0', 'grade num ']
+OK      D1 keine JavaScript-Fehler                                                 []
+OK      D1 Zwei Stellen: gezeigte 4.75 (4.7455) ist grün                           [4.745535714285714, '4.75', 'grade num g-hi']
+OK      D1 Zwei Stellen: Prädikat «Gut» in Beurteilung und Excel, Schlusssatz cl1  ['Praxisnote: 4.75 (Gut)', 'Gut', True]
+OK      D1 Zwei Stellen: keine JavaScript-Fehler                                   []
+OK      D2 10T: finalGrade ohne Exam oder ohne Praxis = null                       [None, None, 4.5]
+OK      D2 Übersicht und Excel: Schlussnote leer («–» / leer)                      ['–', '']
+OK      D2 Übersicht-Mail: Exam und Schluss «–»                                    Ammann Lea       1    4.63       –       –
+OK      D2 Beurteilung: Praxisnote, Prüfungsnote –, Schlussnote –                  ['Praxisnote: 4.63 (Befriedigend)', 'Prüfungsnote: –', 'Schlussnote: –']
+OK      D2 keine JavaScript-Fehler                                                 []
+OK      D2 5T: Schlussnote = Praxisnote                                            [4.6, None]
+OK      D3 Freitext bleibt beim Schliessen über «Fertig oben»                      [0, 'Hat den Posten allein geführt (Fertig oben)', True]
+OK      D3 Freitext bleibt beim Schliessen über «Esc»                              [0, 'Hat den Posten allein geführt (Esc)', True]
+OK      D3 Freitext bleibt beim Schliessen über «Hintergrund»                      [0, 'Hat den Posten allein geführt (Hintergrund)', True]
+OK      D3 Freitext bleibt beim Schliessen über «Reiterwechsel»                    [0, 'Hat den Posten allein geführt (Reiterwechsel)', True]
+OK      D3 Unveränderter Freitext bleibt unberührt (auch ungewöhnliche Wirkung)    {'txt': 'Alt', 'crit': 'sel', 'dir': 1, 'w': 0.75, 'internal': False}
+OK      D3 keine JavaScript-Fehler                                                 []
+OK      D4 Liste schreibt die Nummer als #Nr zurück                                Ammann; Lea; ; lea.ammann@stud.ehl.ch; #1001
+OK      D4 Namenskorrektur: Kennung, Foto, Pläne und Einträge bleiben (über #Nr)   ['p1', 'Amman', 'Lea Sophie', True, '[3]', '["K1","K2","K3"]', '["hyg-p2"]']
+OK      D4 Name und E-Mail geändert, gleiche #Nr: gleiche Person                   ['p2', 'Frey', 'anouk.frei@beispiel.ch', 'late']
+OK      D4 Gleicher Name, verschiedene E-Mail: zwei Personen                       ['p1', 'p2', 'p3', 'p4']
+OK      D4 Person mit Einträgen fällt weg: Rückfrage, Abbrechen ändert nichts      ['Diese Personen haben bereits Einträge und werden mit allen Einträgen entfernt:\nFrey Anouk\n\nTrotzdem übernehmen?']
+OK      D4 Bestätigt: Person und Einträge entfernt                                 [['Diese Personen haben bereits Einträge und werden mit allen Einträgen entfernt:\nFrey Anouk\n\nTrotzdem übernehmen?'], [3, True, True]]
+OK      D4 Person ohne Einträge fällt weg: keine Rückfrage                         []
+OK      D4 keine JavaScript-Fehler                                                 []
+OK      D5 Sicherung einlesen: Service-Datei abgelehnt (false, Meldung, nichts geändert) Datei nicht lesbar oder keine Küchenrapport-Sicherung
+OK      D5 Zusammenführen: Service-Datei abgelehnt, auch in leerer Datei           ['+0 Studierende/r · +0 Tage  ⚠︎ Passt nicht in diese Datei: Service.json (Servicerapport)', 0, '']
+OK      D6 Anzeigen von Tag 1, Exam Day und Blatt legt keinen Eintrag an           {'d01': True, 'd10': True, 'ex': None, 'cnt': 0, 'pill': 'offen', 'pressed': 0}
+OK      D6 Person ohne Eintrag erscheint als «offen», kein Knopf gedrückt          {'d01': True, 'd10': True, 'ex': None, 'cnt': 0, 'pill': 'offen', 'pressed': 0}
+OK      D6 Antippen von «Anwesend» legt den Eintrag an                             ['present', 4.5]
+OK      D6 Baustein im Blatt legt den Eintrag an                                   1
+OK      D6 keine JavaScript-Fehler                                                 []
+OK      D7 Exam: verspätet zeigt «Verspätet», nicht «Abwesend»                     ['Anwesend', 'Verspätet*', 'Entschuldigt', 'Unentschuldigt']
+OK      D7 Exam: entschuldigt sichtbar und zählt 1.00                              [['Anwesend', 'Verspätet', 'Entschuldigt*', 'Unentschuldigt'], 1]
+OK      D7 Exam: gespeichertes Team Market sichtbar (tm, tml)                      [['Anwesend', 'Verspätet', 'Entschuldigt', 'Unentschuldigt', 'Team Market*'], ['Anwesend', 'Verspätet*', 'Entschuldigt', 'Unentschuldigt', '
+OK      D7 Exam: Noten unverändert (3.50 / 1.00 / 5.00 / 4.00)                     [3.5, 1, 5, 4]
+OK      D7 Exam: Unentschuldigt antippen ergibt 1.00, Meldung nennt den Grund      ['unexcused', 1, ['Unentschuldigt', 'Entschuldigt', 'Verspätet (Team Market)']]
+OK      D7 keine JavaScript-Fehler                                                 []
+OK      D8 Beurteilungs-Mails: Link nie länger als 1800 Zeichen                    [185, 185, 187, 188]
+OK      D8 Zu lange Beurteilung: Mail mit Hinweis zum Einfügen                     [True, True, True, True]
+OK      D8 Klick: ganzer Text in der Zwischenablage, Hinweis gezeigt               [754, 'Der Text ist in der Zwischenablage. Bitte hier mit Strg+V einfügen.']
+OK      D8 Übersicht-Mail zu lang: kurzer Link, Text in der Zwischenablage         {'len': 227, 'clip': True, 'got': True, 'toast': 'Der Text ist in der Zwischenablage. Bitte hier mit Strg+V einfügen.', 'ab': [None, True]}
+OK      D8 Kurze Mail (Absenzen) bleibt vollständig                                [None, True]
+OK      D8 keine JavaScript-Fehler                                                 []
+OK      D9 Beispiel mit Knopf «Beispieldaten löschen»                              [[True, True, True], 1]
+OK      D9 Echte Liste übernommen: Beispieltage und Tagesangaben weg               {'sample': False, 'days': [], 'meta': [], 'set': ['HFD', '', '', ''], 'names': ['Muster Max', 'Beispiel Lu']}
+OK      D9 Beispielangaben geleert, eigene Eingabe (Klasse HFD) bleibt             ['HFD', '', '', '']
+OK      D9 Zusammenführen nach Herumtippen im Beispiel: keine Beispielpersonen     {'names': ['Ammann Lea', 'Frei Anouk', 'Keller Timo', 'Keller Timo'], 'out': 'Umami', 'team': 'Gruppe 1 Team A', 'sample': False}
+OK      D9 keine JavaScript-Fehler                                                 []
+OK      D10 Blatt: Baustein «Verspätet zum Dienst» nicht mehr angeboten            {'offered': False, 'shownWhenSet': True, 'removable': True, 'paper': False, 'late': 1, 'line': 'Absenzen: 1 × Verspätet'}
+OK      D10 Blatt: schon erfasst bleibt er sichtbar und entfernbar                 {'offered': False, 'shownWhenSet': True, 'removable': True, 'paper': False, 'late': 1, 'line': 'Absenzen: 1 × Verspätet'}
+OK      D10 Papier-Einzelblatt ohne den Baustein                                   {'offered': False, 'shownWhenSet': True, 'removable': True, 'paper': False, 'late': 1, 'line': 'Absenzen: 1 × Verspätet'}
+OK      D10 Beurteilung: Tag mit dem alten Baustein zählt als verspätet            Absenzen: 1 × Verspätet
+OK      D10 keine JavaScript-Fehler                                                []
+OK      D11 Beobachtungen von unentschuldigt, Team Market und entschuldigt fehlen  {'tally': ['org-n2'], 'handy': False, 'umgang': False, 'abschmecken': False, 'arzt': False, 'mise': True}
+OK      D11 Beobachtung vom anwesenden Tag erscheint                               {'tally': ['org-n2'], 'handy': False, 'umgang': False, 'abschmecken': False, 'arzt': False, 'mise': True}
+OK      D12 Thai: จ. อ. พ. พฤ. ศ. ส. อา.                                           ['จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.', 'อา.']
+OK      D12 Deutsch und Englisch: Mo … So, Mon … Sun                               [['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'], ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']]
+OK      D13 Leerer Eintrag aus neuerer Datei ersetzt keine Beobachtung             {'p1': ['hyg-p2'], 'p2': 'excused', 'p3': ['org-n2'], 'toast': 'Beispielinhalt entfernt, Angaben aus der ersten Datei übernommen  ·  +4 Stud
+OK      D13 Neuere Datei mit Inhalt gewinnt weiterhin (verspätet -> entschuldigt, Baustein neu) {'p1': ['hyg-p2'], 'p2': 'excused', 'p3': ['org-n2'], 'toast': 'Beispielinhalt entfernt, Angaben aus der ersten Datei übernommen  ·  +4 Stud
+OK      D13 Meldung nennt die übersprungenen leeren Einträge                       Beispielinhalt entfernt, Angaben aus der ersten Datei übernommen  ·  +4 Studierende/r · +4 Tage  ·  2 Einträge aktualisiert (neuere Datei)  
+OK      D13 keine JavaScript-Fehler                                                []
+OK      D14 Erster Klick: nichts gelöscht, Rückfrage im Knopf                      [True, True]
+OK      D14 Zweiter Klick: Tag und Tagesangaben gelöscht                           [False, False, 'Tag verworfen']
+OK      D15 Thai «วันที่», Chinesisch «其中迟到», neue Texte DE/EN/TH vollständig      ['วันที่', '其中迟到', True]
+OK      D16 «Da Silva Rui» -> Nachname «Da Silva», Vorname «Rui» (auch in der Liste) [[['Da Silva', 'Rui'], ['Ammann', 'Lea'], ['Solo', '']], ['Da Silva', 'Rui']]
+OK      D4 Tablet-Zeile gelesen: Nummer 21, Klasse, Gruppe, E-Mail richtig         {'last': 'Muster', 'first': 'Max', 'nick': '', 'mail': 'max@x.ch', 'lang': 'de', 'klasse': 'HFD', 'gruppe': 'Gruppe 1 Team A', 'nr': '21'}
+OK      D4 Laptop schreibt dieselbe Zeile zurück (#Nr am Schluss)                  Muster; Max; ; max@x.ch; de; HFD; Gruppe 1 Team A; #21
+OK      D4 «#…» an beliebiger Stelle ist Nummer, nie E-Mail oder Name              [{'last': 'Muster', 'first': 'Max', 'nick': '', 'mail': 'max@x.ch', 'lang': '', 'klasse': '', 'gruppe': '', 'nr': '21'}, {'last': 'Muster', 
+OK      D17 onRestore: true geladen, false bei Variante, App, Datei, ohne Datei    [True, False, False, False, False]
+OK      D17 keine JavaScript-Fehler                                                []

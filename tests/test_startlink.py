@@ -1,4 +1,5 @@
 import pathlib
+import tempfile as _tf; OUT = _tf.mkdtemp(prefix="dg_test_")
 from playwright.sync_api import sync_playwright
 R=pathlib.Path(__file__).parent.parent; res=[]
 def ok(n,c,i=""): res.append(("OK      " if c else "FEHLER  ")+"%-60s %s"%(n,i))
@@ -22,7 +23,7 @@ with sync_playwright() as p:
         # Link ohne Hash veraendert nichts, unbekannte Sprache wird ignoriert
         pg.goto((R/"src/dist"/f).as_uri()+"#lang=xx"); pg.wait_for_timeout(200)
         ok(lab+": unbekannte Sprache wird ignoriert",pg.evaluate("()=>S.settings.uiLang")=="th")
-        pg.screenshot(path="/tmp/claude-0/sl_%s.png"%lab.split()[0])
+        pg.screenshot(path=OUT + "/sl_%s.png"%lab.split()[0])
         ok(lab+": keine JavaScript-Fehler",not errs,errs)
         c.close()
     b.close()

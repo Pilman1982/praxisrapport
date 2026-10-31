@@ -1,4 +1,4 @@
-PRUEFUNG NOTEN 2.0 (Datum, Noten, Fotos, Semesterpaket) 11.10.2026
+PRUEFUNG NOTEN 2.0 (Datum, Noten, Fotos, Semesterpaket) 31.10.2026
 
 OK      Cockpit: ein Semesterpaket pro Person                                  ['Chef Essence', 'Koch Pat', 'Service A / Service B']
 OK      Semesterpaket: Format und Dozent                                       {'name': 'Koch Pat', 'sprache': 'de', 'bereich': 'kueche', 'outlets': ['Patisserie'], 'plan': None}
@@ -8,7 +8,7 @@ OK      4T: slotDates = 4 Einsatztage + Exam Day                               [
 OK      4T: paketId gesetzt, gleich der Paket-ID                               Paket_Zyklus-1-1_Kueche_Patisserie_4T_2026-08-25
 OK      4T: beide Personen mit Foto                                            2
 OK      Ziel-Dateien: Mobil und Laptop passend zur Variante                    kueche/Kuechenrapport_Mobil_4Tage_Exam.html
-OK      Startseiten-Link zeigt auf mein.html                                   http://127.0.0.1:40115/mein.html#lang=de
+OK      Startseiten-Link zeigt auf mein.html                                   http://127.0.0.1:57279/mein.html#lang=de
 OK      Cockpit: Liste der Semesterpakete sichtbar                             4
 OK      Cockpit: ZIP mit Semesterpaketen                                       Semesterpakete_TEST.zip
 OK      Cockpit: keine JavaScript-Fehler                                       []
@@ -16,7 +16,7 @@ OK      mein.html: ohne Paket Hinweis zum Laden
 OK      mein.html: Paket bleibt nach Neuladen (IndexedDB)                      Koch Pat · Patisserie · TEST
 OK      mein.html: beide Pakete in der Liste                                   2
 OK      mein.html: Semesterpaket nicht im localStorage                         
-OK      Uebergabe: richtige Datei geoeffnet (Mobil 4T)                         http://127.0.0.1:40115/kueche/Kuechenrapport_Mobil_4Tage_Exam.html#lang=de&outlet=Patisserie&dozent=Koch%20Pat
+OK      Uebergabe: richtige Datei geoeffnet (Mobil 4T)                         http://127.0.0.1:57279/kueche/Kuechenrapport_Mobil_4Tage_Exam.html#lang=de&outlet=Patisserie&dozent=Koch%20Pat
 OK      Uebergabe: zwei Personen geladen, paketId gesetzt                      {'n': 2, 'id': 'Paket_Zyklus-1-1_Kueche_Patisserie_4T_2026-08-25', 'lab': ['Dienstag 25.08.', 'Mittwoch 26.08.', 'Donnerstag 27.08
 OK      Uebergabe: Uebergabe-Eintrag danach geloescht                          
 OK      Mobil: Wochentag + Datum statt Woche                                   ['Dienstag 25.08.', 'Mittwoch 26.08.', 'Donnerstag 27.08.', 'Montag 31.08.', 'Exam Day 01.09.']
@@ -34,11 +34,11 @@ Nach dem Exam: die Durchschnitte aller
 OK      Mobil: Notenuebersicht mit Fotos                                       2
 OK      Feedback: Knopf pro Person in der Notenuebersicht                      2
 OK      Feedback: Sprache nach Klasse (HFE1 Englisch, HFD Deutsch)             ('en', 'de')
-OK      Feedback: englischer Text mit Verbesserung und Tipp                    Dear Maxi,
+OK      Feedback: englischer Text mit Verbesserung und Tipp                    Dear Max,
 
-thank you for your work with us (Patisserie, from 25.08. to 31.08.). Here is some short feedback from me.
+Thank you for your work with us (Patisserie, from 25.08. to 31.08.). Here is some short feedback from me.
 
-You reliabl
+You reliably
 OK      Feedback: ohne Noten, solange nicht angekreuzt                         
 OK      Feedback: deutscher Text in Sie-Form mit Gruss und Noten auf Wunsch    Guten Tag Lea,
 
@@ -57,5 +57,5 @@ OK      Service: Mobil 10T geoeffnet                                           /
 OK      Service: Mittwoch 02.09. statt Woche                                   Mittwoch 02.09.
 OK      Service: Foto im Erfassungsblatt                                       
 OK      Service: Tagesnote 4.50 im Kopf, Kriteriennoten sichtbar               {'u': '/service/Servicerapport_Mobil.html', 'lab': 'Mittwoch 02.09.', 'ava': True, 'head': 'Tag 4.50  ·  Ø 4.50', 'cg': 9, 'n': 9,
-OK      Service: Gastgeberhaltung doppelt gewichtet                            gas
+OK      Service: Gastgeberhaltung und Hygiene doppelt gewichtet (fest seit 31.10.2026) gas+hyg
 OK      Service: keine JavaScript-Fehler                                       []

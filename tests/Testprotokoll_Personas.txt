@@ -1,4 +1,4 @@
-QA-LOOP MIT VIER PERSONAS 11.10.2026
+QA-LOOP MIT VIER PERSONAS 31.10.2026
 
 OK      Kueche · A1 Paket öffnen am Mittwoch: Tag Mittwoch 07.10. vorgewählt       Mittwoch 07.10.
 OK      Kueche · A2 App erneut öffnen (ohne Startseite): wieder der heutige Tag    Mittwoch 07.10.
@@ -18,7 +18,7 @@ OK      Kueche · B3 DE: Anrede «Guten Tag Vorname» (Sie), Lob, ohne Noten (St
 vielen Dank für Ihren Einsatz bei uns (Patisserie, vom 05.10. bis 08.10.).
 OK      Kueche · B4 EN: Verbesserung mit Tipp, Verspätung, unentschuldigt, Note    Dear Ada,
 
-thank you for your work with us (Patisserie, from 05.10. to 08.10.). 
+Thank you for your work with us (Patisserie, from 05.10. to 08.10.). 
 OK      Kueche · B5 Höchstens 3 Verbesserungspunkte, jeder mit Tipp                3
 OK      Kueche · B6 Kein Doppelpunkt-Punkt-Fehler und keine leeren Platzhalter     
 OK      Kueche · B7 Person ohne bewerteten Tag: Warnung im Feedback-Blatt          ['Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.']
@@ -28,7 +28,7 @@ OK      Kueche · B10 iPad: ganzer Text direkt in der Mail                      
 OK      Kueche · B11 Thai-Oberfläche: Mail trotzdem Deutsch für HFD                Guten Tag Lea,
 
 viel
-OK      Kueche · B13 Mail mit Note: nur Praxisnote auf 0.1, kein Exam, keine Exam-Beobachtung ('3.0', 4.5625)
+OK      Kueche · B13 Mail mit Note: nur Praxisnote auf 0.1, kein Exam, keine Exam-Beobachtung ('3.0', 4.625)
 OK      Kueche · B12 keine JavaScript-Fehler                                       []
 OK      Kueche · C1 Entschuldigt zählt nicht, Team Market = 5.00, sonst Basis 4.50 {'avg': 4.666666666666667, 'n': 3}
 OK      Kueche · C2 Unentschuldigt = 1.00 an diesem Tag                            {'avg': 3.625, 'n': 4}
@@ -55,7 +55,7 @@ OK      Kueche · D8 keine JavaScript-Fehler                                    
 OK      Service · A1 Paket öffnen am Mittwoch: Tag Mittwoch 07.10. vorgewählt      Mittwoch 07.10.
 OK      Service · A2 App erneut öffnen (ohne Startseite): wieder der heutige Tag   Mittwoch 07.10.
 OK      Service · A3 Gleiches Paket nochmals über Startseite: heutiger Tag         Mittwoch 07.10.
-OK      Service · A4 Note im Blatt reagiert sofort, zweiter Tipp nimmt den Baustein zurück ('Tag 4.50  ·  Ø 4.50', 'Tag 4.40  ·  Ø 4.40', 'Tag 4.50  ·  Ø 4.50')
+OK      Service · A4 Note im Blatt reagiert sofort, zweiter Tipp nimmt den Baustein zurück ('Tag 4.50  ·  Ø 4.50', 'Tag 4.41  ·  Ø 4.41', 'Tag 4.50  ·  Ø 4.50')
 OK      Service · A5 Ganzer Tag (5 Personen, 4 Einträge) mit wenigen Tipps         11 Tipps
 OK      Service · A6 Verspätung zieht automatisch ab, Note unter 4.50              ['late', 0, 3.5]
 OK      Service · A7 Tag senden: Datei + Mailtext mit Verspätung und Adresse       Tagesrapport – Da Fortunat · Muster A / Muster B · Mittwoch 07.10.
@@ -70,7 +70,7 @@ OK      Service · B3 DE: Anrede «Guten Tag Vorname» (Sie), Lob, ohne Noten (S
 vielen Dank für Ihren Einsatz bei uns (Da Fortunat, vom 05.10. bis 08.10.)
 OK      Service · B4 EN: Verbesserung mit Tipp, Verspätung, unentschuldigt, Note   Dear Ada,
 
-thank you for your work with us (Da Fortunat, from 05.10. to 08.10.).
+Thank you for your work with us (Da Fortunat, from 05.10. to 08.10.).
 OK      Service · B5 Höchstens 3 Verbesserungspunkte, jeder mit Tipp               3
 OK      Service · B6 Kein Doppelpunkt-Punkt-Fehler und keine leeren Platzhalter    
 OK      Service · B7 Person ohne bewerteten Tag: Warnung im Feedback-Blatt         ['Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.']
@@ -80,13 +80,13 @@ OK      Service · B10 iPad: ganzer Text direkt in der Mail                     
 OK      Service · B11 Thai-Oberfläche: Mail trotzdem Deutsch für HFD               Guten Tag Lea,
 
 viel
-OK      Service · B13 Mail mit Note: nur Praxisnote auf 0.1, kein Exam, keine Exam-Beobachtung ('3.2', 4.6)
+OK      Service · B13 Mail mit Note: nur Praxisnote auf 0.1, kein Exam, keine Exam-Beobachtung ('3.2', 4.590909090909091)
 OK      Service · B12 keine JavaScript-Fehler                                      []
 OK      Service · C1 Entschuldigt zählt nicht, Team Market = 5.00, sonst Basis 4.50 {'avg': 4.666666666666667, 'n': 3}
 OK      Service · C2 Unentschuldigt = 1.00 an diesem Tag                           {'avg': 3.625, 'n': 4}
 OK      Service · C3 Exam Day entschuldigt = 1.00, Schlussnote 2/3 Praxis + 1/3 Exam (1, 3.3333333333333335)
-OK      Service · C4 K.-o. setzt das Kriterium auf 1.00                            (1, 3.8)
-OK      Service · C5 Laptop rechnet dieselben Praxisnoten wie das Tablet           ([[4.666666666666667, 4.611111111111112], [3.625, 3.9166666666666665], [4.5, 3.3333333333333335], [4.325, 4.383333333333334], [4.5, 4.5]], [
+OK      Service · C4 K.-o. setzt das Kriterium auf 1.00                            (1, 3.8636363636363638)
+OK      Service · C5 Laptop rechnet dieselben Praxisnoten wie das Tablet           ([[4.666666666666667, 4.611111111111112], [3.625, 3.9166666666666665], [4.5, 3.3333333333333335], [4.340909090909091, 4.393939393939394], [4
 OK      Service · C5b Excel: Schlussnote zusätzlich auf 0.1 gerundet               [[4.61, 4.6], [3.92, 3.9], [3.33, 3.3]]
 OK      Service · C6 keine JavaScript-Fehler                                       []
 OK      Service · C7 Zweites Gerät erfasst am Mittwoch auf Mittwoch (nicht auf Montag) Mittwoch 07.10.

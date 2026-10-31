@@ -1,0 +1,17 @@
+Testprotokoll Daily Grades: Befunde der Abnahme 31.10.2026
+OK      1 Notenzentrale: 5T + 4T ohne Zyklus = ein Einsatz (9 Tage, Exam, Schlussnote) [{'cycle': 'ab 12.10.', 'parts': 2, 'expected': 9, 'done': True, 'praxis': 4.423611111111111, 'exam': 4.5625, 'final': 4.469907407407407, 'late': 2}]
+OK      4 Notenzentrale: alter Baustein «Verspaetet» und Knopf zusammen 2 Verspaetungen [{'cycle': 'ab 12.10.', 'parts': 2, 'expected': 9, 'done': True, 'praxis': 4.423611111111111, 'exam': 4.5625, 'final': 4.469907407407407, 'late': 2}]
+OK      4 Absenzen: alter Baustein als «verspaetet (alter Baustein)» gelistet          ['verspätet', 'verspätet (alter Baustein)']
+OK      Notenzentrale: keine JavaScript-Fehler                                         []
+OK      2 Cockpit: Beispielplan ohne Tagesplan, alle Pakete mit Einsatzdaten           []
+OK      Cockpit: keine JavaScript-Fehler                                               []
+OK      3 Tablet kueche: eigene Datei geladen, fremde abgelehnt, nichts geaendert      [True, False, True, 'Diese Datei gehört zum Servicerapport. Nichts geändert.']
+OK      3 Tablet kueche: keine JavaScript-Fehler                                       []
+OK      3 Tablet service: eigene Datei geladen, fremde abgelehnt, nichts geaendert     [True, False, True, 'Diese Datei gehört zum Küchenrapport. Nichts geändert.']
+OK      3 Tablet service: keine JavaScript-Fehler                                      []
+OK      5 Laptop Service: bewertende Person pro Wochentag laut Plan                    {'we': 'Person B', 'th': 'Person B', 'mo': 'Person A', 'tu': 'Person A'}
+OK      5 Laptop: keine JavaScript-Fehler                                              []
+OK      6 mein.html: beide laufenden Pakete als «Jetzt», «1 Person» in der Einzahl     [2, True, False]
+OK      6 mein.html: keine JavaScript-Fehler                                           []
+
+14 von 14 Pruefungen bestanden

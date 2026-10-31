@@ -37,16 +37,16 @@ de:{
   v5:"5 Einsatztage ohne Exam",
   weekdaysLbl:"Einsatztage pro Woche", startDay:"Turnus startet am",
   studentList:"Studierende, eine Person pro Zeile",
-  studentHint:"Pro Zeile: Nachname; Vorname; Nickname; E-Mail; Sprache; Klasse; Gruppe",
+  studentHint:"Pro Zeile: Nachname; Vorname; Nickname; E-Mail; Sprache; Klasse; Gruppe; #Nr. Mit E-Mail oder #Nr. bleiben die erfassten Tage auch nach einer Namenskorrektur bei der Person.",
   apply:"Übernehmen", loadBackup:"Sicherung vom Laptop laden",
   loadHint:"Legen Sie die JSON aus dem Laptop-Rapport in «Dateien» oder iCloud ab und laden Sie sie hier. Damit sind Gruppe, Team, Outlet, Dozent, Turnus und alle Studierenden mit E-Mail-Adresse sofort da.",
   loadBtn:"⤒ Sicherung laden", loadArm:"Ersetzt alles, nochmals tippen",
-  loadDone:"Sicherung geladen", loadBad:"Datei nicht lesbar oder keine Servicerapport-Sicherung", storeWarn:"Achtung: Dieses Gerät speichert gerade nichts (privater Modus oder Speicher voll). Bitte jetzt «⤓ Sichern» tippen und den Tag sofort senden.", loadSem:"Das ist Ihr Semesterpaket. Bitte auf Ihrer persönlichen Startseite laden (Symbol auf dem Home-Bildschirm), nicht hier.",
+  loadDone:"Sicherung geladen", loadOther:"Diese Datei gehört zum Küchenrapport. Nichts geändert.", loadBad:"Datei nicht lesbar oder keine Servicerapport-Sicherung", storeWarn:"Achtung: Dieses Gerät speichert gerade nichts (privater Modus oder Speicher voll). Bitte jetzt «⤓ Sichern» tippen und den Tag sofort senden.", loadSem:"Das ist Ihr Semesterpaket. Bitte auf Ihrer persönlichen Startseite laden (Symbol auf dem Home-Bildschirm), nicht hier.",
   saveBackup:"Sicherung sichern", saveBtn:"⤓ Als JSON sichern",
   shareHint:"«Tag senden» öffnet das Teilen-Menü: «Mail» wählen und an michael.pilman@ehl.ch senden. Die Absenzen des Tages stehen schon im Mailtext. «⤓ Sichern» legt eine eigene Sicherung in «Dateien» ab.",
   examDay:"Exam Day", week:"W", light:"leicht", medium:"mittel", heavy:"schwer", ko:"K.-o.",
   langTitle:"Sprache", setupDone:"Setup gespeichert",
-  homeHint:"Tipp: über das Teilen-Symbol in Safari «Zum Home-Bildschirm» wählen, dann startet der Rapport wie eine App.",
+  homeHint:"Tipp: Öffne den Rapport immer über das Symbol «Daily Grades» (deine persönliche Startseite) auf dem Home-Bildschirm. Lege für einzelne Rapporte kein eigenes Symbol an: Jedes Symbol hat auf dem iPad einen eigenen Speicher, deine erfassten Tage wären sonst getrennt.",
   recorded:"erfasst", ofDay:"von", examAbs:"Am Exam Day ergibt jede Abwesenheit die Note 1.00."
 },
 en:{
@@ -74,16 +74,16 @@ en:{
   v5:"5 shift days without exam",
   weekdaysLbl:"Shift days per week", startDay:"Rotation starts on",
   studentList:"Students, one person per line",
-  studentHint:"Per line: surname; first name; nickname; e-mail; language; class; group",
+  studentHint:"Per line: surname; first name; nickname; e-mail; language; class; group; #No. With an e-mail or #No. the recorded days stay with the person even after a name correction.",
   apply:"Apply", loadBackup:"Load a backup from the laptop",
   loadHint:"Put the JSON from the laptop report into Files or iCloud and load it here. Group, team, outlet, lecturer, rotation and all students with their e-mail addresses are then in place.",
   loadBtn:"⤒ Load backup", loadArm:"Replaces everything, tap again",
-  loadDone:"Backup loaded", loadBad:"File unreadable or not a service report backup", storeWarn:"Warning: this device is not saving anything right now (private mode or storage full). Tap «⤓ Back up» now and send the day straight away.", loadSem:"This is your semester package. Please load it on your personal start page (icon on the Home Screen), not here.",
+  loadDone:"Backup loaded", loadOther:"This file belongs to the kitchen report. Nothing was changed.", loadBad:"File unreadable or not a service report backup", storeWarn:"Warning: this device is not saving anything right now (private mode or storage full). Tap «⤓ Back up» now and send the day straight away.", loadSem:"This is your semester package. Please load it on your personal start page (icon on the Home Screen), not here.",
   saveBackup:"Save a backup", saveBtn:"⤓ Save as JSON",
   shareHint:"“Send the day” opens the share sheet: choose «Mail» and send it to michael.pilman@ehl.ch. The day's absences are already in the e-mail text. «⤓ Back up» saves your own backup in «Files».",
   examDay:"Exam Day", week:"W", light:"light", medium:"medium", heavy:"heavy", ko:"K.O.",
   langTitle:"Language", setupDone:"Setup saved",
-  homeHint:"Tip: use the share icon in Safari and choose “Add to Home Screen”, then the report starts like an app.",
+  homeHint:"Tip: always open the report via the «Daily Grades» icon (your personal start page) on the Home Screen. Do not add a separate icon for a single report: on the iPad every icon has its own storage, so your recorded days would be split.",
   recorded:"recorded", ofDay:"of", examAbs:"On the Exam Day any absence gives the grade 1.00."
 },
 th:{
@@ -111,16 +111,16 @@ th:{
   v5:"5 วันฝึก ไม่มีวันสอบ",
   weekdaysLbl:"วันฝึกต่อสัปดาห์", startDay:"รอบฝึกเริ่มวัน",
   studentList:"รายชื่อนักศึกษา บรรทัดละหนึ่งคน",
-  studentHint:"ต่อบรรทัด: นามสกุล; ชื่อ; ชื่อเล่น; อีเมล; ภาษา; ชั้นเรียน; กลุ่ม",
+  studentHint:"ต่อบรรทัด: นามสกุล; ชื่อ; ชื่อเล่น; อีเมล; ภาษา; ชั้นเรียน; กลุ่ม; #เลขประจำตัว หากมีอีเมลหรือ #เลขประจำตัว วันที่บันทึกไว้จะยังอยู่กับคนเดิมแม้แก้ไขชื่อ",
   apply:"ยืนยัน", loadBackup:"โหลดไฟล์สำรองจากแล็ปท็อป",
   loadHint:"นำไฟล์ JSON จากรายงานในแล็ปท็อปไปไว้ใน Files หรือ iCloud แล้วโหลดที่นี่ จะได้กลุ่ม ทีม เอาต์เล็ต ผู้สอน รอบฝึก และรายชื่อนักศึกษาพร้อมอีเมลทันที",
   loadBtn:"⤒ โหลดไฟล์สำรอง", loadArm:"จะแทนที่ทั้งหมด แตะอีกครั้ง",
-  loadDone:"โหลดไฟล์สำรองแล้ว", loadBad:"อ่านไฟล์ไม่ได้ หรือไม่ใช่ไฟล์สำรองของรายงานบริการ", storeWarn:"คำเตือน: อุปกรณ์นี้ไม่ได้บันทึกข้อมูลอยู่ในขณะนี้ (โหมดส่วนตัวหรือพื้นที่เต็ม) กรุณากด «⤓ สำรองข้อมูล» ทันที และส่งข้อมูลของวันนี้เลย", loadSem:"นี่คือชุดข้อมูลภาคเรียนของคุณ กรุณาโหลดในหน้าเริ่มต้นส่วนตัว (ไอคอนบนหน้าจอโฮม) ไม่ใช่ที่นี่",
+  loadDone:"โหลดไฟล์สำรองแล้ว", loadOther:"ไฟล์นี้เป็นของรายงานฝ่ายครัว ไม่มีการเปลี่ยนแปลง", loadBad:"อ่านไฟล์ไม่ได้ หรือไม่ใช่ไฟล์สำรองของรายงานบริการ", storeWarn:"คำเตือน: อุปกรณ์นี้ไม่ได้บันทึกข้อมูลอยู่ในขณะนี้ (โหมดส่วนตัวหรือพื้นที่เต็ม) กรุณากด «⤓ สำรองข้อมูล» ทันที และส่งข้อมูลของวันนี้เลย", loadSem:"นี่คือชุดข้อมูลภาคเรียนของคุณ กรุณาโหลดในหน้าเริ่มต้นส่วนตัว (ไอคอนบนหน้าจอโฮม) ไม่ใช่ที่นี่",
   saveBackup:"บันทึกไฟล์สำรอง", saveBtn:"⤓ บันทึกเป็น JSON",
   shareHint:"«ส่งข้อมูลของวันนี้» เปิดเมนูแชร์: เลือก «Mail» แล้วส่งถึง michael.pilman@ehl.ch การขาดของวันนี้อยู่ในข้อความอีเมลแล้ว «⤓ สำรองข้อมูล» บันทึกไฟล์สำรองของคุณไว้ใน «ไฟล์»",
   examDay:"วันสอบ", week:"สัปดาห์", light:"เบา", medium:"กลาง", heavy:"หนัก", ko:"ตัดสิทธิ์",
   langTitle:"ภาษา", setupDone:"บันทึกการตั้งค่าแล้ว",
-  homeHint:"เคล็ดลับ: ใน Safari กดไอคอนแชร์ แล้วเลือก «เพิ่มไปยังโฮมสกรีน» จะเปิดใช้งานเหมือนแอป",
+  homeHint:"เคล็ดลับ: เปิดรายงานผ่านไอคอน «Daily Grades» (หน้าเริ่มต้นส่วนตัวของคุณ) บนหน้าจอโฮมเสมอ อย่าสร้างไอคอนแยกสำหรับรายงานแต่ละฉบับ เพราะบน iPad แต่ละไอคอนมีพื้นที่เก็บข้อมูลของตัวเอง วันที่บันทึกไว้จะถูกแยกกัน",
   recorded:"บันทึกแล้ว", ofDay:"จาก", examAbs:"ในวันสอบ การไม่มาไม่ว่าด้วยเหตุใดจะได้คะแนน 1.00"
 }
 };
@@ -136,7 +136,7 @@ const QUICK = {
   mep:["mep-n1","mep-n2","mep-p1","mep-p2","mep-p3"],
   tec:["tec-n1","tec-n3","tec-p1","tec-p2","tec-p3"],
   ver:["ver-n1","ver-n2","ver-p1","ver-p2","ver-p3"],
-  tea:["tea-lt","tea-n1","tea-p1","tea-p2","tea-p3"],
+  tea:["tea-n1","tea-n2","tea-p1","tea-p2","tea-p3"],   // tea-lt «Verspätet» nicht mehr: Verspätung nur über die Anwesenheit
   sel:["sel-n1","sel-n2","sel-p1","sel-p2","sel-p3"],
   mot:["mot-n1","mot-n3","mot-p1","mot-p2","mot-p3"],
   auf:["auf-n1","auf-n3","auf-p1","auf-p2","auf-p3"]
@@ -170,9 +170,10 @@ const gruppeOf = s => (s && s.gruppe) || S.settings.team  || "";
    erkannt, damit die alte Schreibweise "Ammann Lea; mail; de" weiter funktioniert. */
 function parseStudentZeile(line){
   const roh = String(line || "").split(/[;\t]/).map(x=>x.trim());
-  let mail = "", lang = "", klasse = "", gruppe = ""; const rest = [];
+  let mail = "", lang = "", klasse = "", gruppe = "", nr = ""; const rest = [];
   roh.forEach(x=>{
     if(!x) return;
+    if(!nr && /^#\s*\S+$/.test(x)){ nr = x.replace(/^#\s*/, ""); return; }   // Studierendennummer, z. B. #1001
     if(!mail && x.indexOf("@") >= 0){ mail = x; return; }
     if(!klasse && erkenneKlasse(x)){ klasse = erkenneKlasse(x); return; }
     if(!gruppe && erkenneGruppe(x)){ gruppe = erkenneGruppe(x); return; }
@@ -183,10 +184,12 @@ function parseStudentZeile(line){
   let nachname = rest[0] || "", vorname = rest[1] || "", nick = rest[2] || "";
   if(nachname && !vorname){ const g = splitName(nachname); nachname = g.nachname; vorname = g.vorname; }
   if(!nachname && !vorname) return null;
-  return {nachname, vorname, nick, mail, lang, klasse, gruppe};
+  const o = {nachname, vorname, nick, mail, lang, klasse, gruppe};
+  if(nr) o.nr = nr;                       // nur wenn angegeben, sonst bleibt die Nummer der Person erhalten
+  return o;
 }
 const studentZeile = s => [s.nachname||"", s.vorname||"", s.nick||"", s.mail||"", s.lang||"",
-                           s.klasse||"", s.gruppe||""]
+                           s.klasse||"", s.gruppe||"", s.nr ? "#" + s.nr : ""]
   .filter((x,i)=> i < 2 || x).join("; ");
 const critShort = (k, lg) => { const c = CRITS.find(x=>x.k===k); return c && c.s ? (c.s[lg||L]||c.s.de) : critName(k,lg); };
 const chipT = (c, lg) => c.t[lg||L] || c.t.de;
@@ -236,12 +239,13 @@ S.settings.variant = MVARIANT;   // die Datei bestimmt die Variante, nicht der S
    Schluessel: lang (de/en/th), outlet, dozent, klasse, gruppe,
    plan (Bewertende nach Wochentag, z. B. plan=mo:Berta,tu:Berta,we:Anna,th:Anna) */
 const STARTLINK = (function(){
-  const p = {};
+  const p = {}, roh = {};
+  const dec = s => decodeURIComponent(String(s).replace(/\+/g, " ")).trim();
   try{
     String(location.hash || "").replace(/^#/, "").split("&").forEach(kv=>{
       const i = kv.indexOf("="); if(i <= 0) return;
-      p[decodeURIComponent(kv.slice(0, i)).trim().toLowerCase()] =
-        decodeURIComponent(kv.slice(i + 1).replace(/\+/g, " ")).trim();
+      const k = dec(kv.slice(0, i)).toLowerCase();
+      roh[k] = kv.slice(i + 1); p[k] = dec(kv.slice(i + 1));
     });
   }catch(e){ return {}; }
   const st = S.settings; let changed = false;
@@ -253,11 +257,18 @@ const STARTLINK = (function(){
   if(p.klasse) put("group", (typeof erkenneKlasse === "function" && erkenneKlasse(p.klasse)) || p.klasse);
   if(p.gruppe) put("team",  (typeof erkenneGruppe === "function" && erkenneGruppe(p.gruppe)) || p.gruppe);
   if(p.plan){
-    const plan = {};
-    p.plan.split(",").forEach(x=>{
-      const m = x.split(":"); const wd = (m[0] || "").trim().toLowerCase(); const nm = (m[1] || "").trim();
-      if(["mo","tu","we","th","fr","sa","su"].indexOf(wd) >= 0 && nm) plan[wd] = nm;
-    });
+    /* Erst am noch verschlüsselten Wert bei «,» und «:» trennen, dann jeden Teil entschlüsseln: ein Komma oder
+       Doppelpunkt im Namen («Beispiel, Berta» = Beispiel%2C%20Berta) zerreisst den Plan nicht (Entscheid 31.10.2026).
+       Alte Links mit ganz verschlüsseltem Wert (mo%3A…%2C…) werden wie bisher gelesen. */
+    const lies = (txt, teil) => { const plan = {};
+      String(txt || "").split(",").forEach(x=>{
+        const j = x.indexOf(":"); if(j <= 0) return;
+        try{ const wd = teil(x.slice(0, j)).toLowerCase(), nm = teil(x.slice(j + 1));
+             if(["mo","tu","we","th","fr","sa","su"].indexOf(wd) >= 0 && nm) plan[wd] = nm; }catch(e){}
+      });
+      return plan; };
+    let plan = lies(roh.plan, dec);
+    if(!Object.keys(plan).length) plan = lies(p.plan, x => String(x).trim());
     if(Object.keys(plan).length){
       if(JSON.stringify(st.teacherPlan || {}) !== JSON.stringify(plan)){ st.teacherPlan = plan; changed = true; }
       if(!p.dozent) put("teacher", Array.from(new Set(Object.values(plan))).join(" / "));
@@ -471,8 +482,8 @@ async function shareDay(){
   const sl = slotById(curSlot);
   const subj = t("dayMailSubj") + " – " + [S.settings.outlet, S.settings.teacher, slotLabel(sl)].filter(Boolean).join(" · ");
   const abs = absenceList(curSlot);
-  const text = [subj, "", t("absMail") + ":"].concat(abs.length ? abs.map(x => "- " + x) : [t("absNone")])
-    .concat(["", t("dayMailTo") + " " + ABS_MAIL]).join("\n");
+  const lines = [t("absMail") + ":"].concat(abs.length ? abs.map(x => "- " + x) : [t("absNone")]);
+  const text = [subj, ""].concat(lines).concat(["", t("dayMailTo") + " " + ABS_MAIL]).join("\n");
   try{
     const file = new File([blob], name, {type:"application/json"});
     if(navigator.canShare && navigator.canShare({files:[file]})){
@@ -480,7 +491,9 @@ async function shareDay(){
       toast(t("shared")); return;
     }
   }catch(e){ if(e && e.name === "AbortError") return; }
+  /* Kein Teilen-Menü für Dateien (Android, Windows): Datei herunterladen, dann die Mail an die Kursleitung öffnen */
   downloadBlob(blob, name);
+  n2DayMailFallback(subj, lines, name);
 }
 /* Noten 2.0: eigene Sicherung in «Dateien» (iPad) bzw. Downloads (Laptop) */
 async function backupSave(){
@@ -604,7 +617,8 @@ function renderDay(){
 
   const ul = el("ul",{class:"slist"});
   S.students.forEach(s=>{
-    const r = dayRec(curSlot, s.id);
+    /* nur lesen: Anzeigen legt keinen Tagesdatensatz an (Entscheid 31.10.2026) */
+    const r = (S.days[curSlot] || {})[s.id] || {att:"present", obs:[], note:null};
     const n = obsCount(curSlot, s.id);
     const li = el("li");
     const b = el("button",{class:"srow",onclick:()=>openSheet(s)});
@@ -651,11 +665,12 @@ function openSheet(student){
     el("div",{class:"sb"},[document.createTextNode(slotLabel(slotById(curSlot)) + "  "), schichtPill(student, curSlot), el("span",{id:"n2grade",class:"gpill big"})])
   ]));
   if(hasOutlet2()){
-    const rr = dayRec(curSlot, student.id);
-    const ob = el("button",{class:"opill"+(rr.outlet?" alt":""),title:t("switchTitle"),
-      text:"\u21c4 " + (rr.outlet || S.settings.outlet || "\u2013")});
-    ob.addEventListener("click", ()=>{ toggleOutlet(rr); persist();
-      ob.className = "opill" + (rr.outlet ? " alt" : ""); ob.textContent = "\u21c4 " + (rr.outlet || S.settings.outlet || "\u2013"); });
+    /* Datensatz erst beim Umschalten anlegen, nicht schon beim Öffnen des Blatts */
+    const ort = () => ((S.days[curSlot] || {})[student.id] || {}).outlet || "";
+    const ob = el("button",{class:"opill"+(ort()?" alt":""),title:t("switchTitle"),
+      text:"\u21c4 " + (ort() || S.settings.outlet || "\u2013")});
+    ob.addEventListener("click", ()=>{ toggleOutlet(dayRec(curSlot, student.id)); persist();
+      ob.className = "opill" + (ort() ? " alt" : ""); ob.textContent = "\u21c4 " + (ort() || S.settings.outlet || "\u2013"); });
     hd.appendChild(ob);
   }
   hd.appendChild(el("button",{class:"hbtn",text:"✕","aria-label":t("done"),onclick:close}));
@@ -672,9 +687,11 @@ function openSheet(student){
   sh.appendChild(ft);
   host.innerHTML = ""; host.appendChild(sh);
 
+  /* Den Tagesdatensatz erst bei einer Eingabe anlegen: Anschauen allein legt nichts an (Entscheid 31.10.2026) */
+  const rec = () => dayRec(curSlot, student.id);
   function draw(){
     body.innerHTML = "";
-    const r = dayRec(curSlot, student.id);
+    const r = (S.days[curSlot] || {})[student.id] || {att:"present", obs:[], note:null};
     n2ShowHead(student.id);
     const n2cg = n2Crit(curSlot, student.id);
 
@@ -687,7 +704,7 @@ function openSheet(student){
       .forEach(([k,cls],i)=>{
         const val = (k === "teamMarket") ? "tm" : k;
         att.appendChild(el("button",{class:cls,"aria-pressed":String(n2AttPressed(r.att||"present", val)),
-          text:t(k), onclick:()=>{ r.att = n2AttClick(r.att||"present", val); persist(); draw(); }}));
+          text:t(k), onclick:()=>{ const R = rec(); R.att = n2AttClick(R.att||"present", val); persist(); draw(); }}));
       });
     body.appendChild(att);
     if((r.att||"present") === "late") body.appendChild(el("div",{class:"banner",style:"margin-top:9px",text:n2x("lateDay")}));
@@ -711,22 +728,32 @@ function openSheet(student){
     body.appendChild(bar);
 
     if(sheetCrit === "__note"){
-      const nt = r.note || {txt:""};
+      const nt = (r.note && typeof r.note === "object") ? r.note : {txt:""};
       const f = el("div",{class:"field"});
+      /* Nur den Text ändern: Kriterium, Wirkung und «intern» vom Laptop bleiben erhalten (Entscheid 31.10.2026) */
       const ta = el("textarea",{placeholder:t("notePh"),
-        oninput:e=>{ r.note = {txt:e.target.value, crit:"", dir:0, w:0}; persist(); const ok = document.getElementById("noteOk"); if(ok) ok.textContent = n2x("saved"); },
+        oninput:e=>{ const R = rec();
+          R.note = Object.assign({crit:"", dir:0, w:0, internal:false}, (R.note && typeof R.note === "object") ? R.note : {}, {txt:e.target.value});
+          persist(); const ok = document.getElementById("noteOk"); if(ok) ok.textContent = n2x("saved"); },
         onblur:()=>persist()});
       ta.value = nt.txt || "";
       f.appendChild(ta);
       body.appendChild(f);
-      body.appendChild(el("p",{class:"muted",style:"margin:0",text:t("noteHint")}));
+      const zug = !!(nt.crit && nt.dir && nt.w);
+      if(zug) body.appendChild(el("p",{class:"muted",style:"margin:0 0 6px",
+        text:n2x("noteLaptop").replace("{c}", critName(nt.crit)).replace("{v}", (nt.dir > 0 ? "+" : "−") + Math.abs(Number(nt.w)).toFixed(2))}));
+      if(nt.internal) body.appendChild(el("p",{class:"muted",style:"margin:0 0 6px",text:n2x("noteIntern")}));
+      if(!zug) body.appendChild(el("p",{class:"muted",style:"margin:0",text:t("noteHint")}));
       body.appendChild(el("p",{class:"muted",id:"noteOk",style:"margin:6px 0 0;font-size:13px;color:var(--plus,#2f7d4f)",text:""}));
       return;
     }
 
-    const set = new Set(r.obs || []);
-    const quick = QUICK[sheetCrit] || [];
-    const list = CHIPS.filter(c=>c.c === sheetCrit);
+    const set = new Set(Array.isArray(r.obs) ? r.obs : []);
+    /* Alter Baustein «Verspätet» (N2_LATE) wird nicht mehr angeboten, ausser er ist hier gesetzt (zum Entfernen).
+       Verspätung nur über die Anwesenheit (Entscheid 31.10.2026). */
+    const angeboten = id => id !== N2_LATE || set.has(id);
+    const quick = (QUICK[sheetCrit] || []).filter(angeboten);
+    const list = CHIPS.filter(c=>c.c === sheetCrit && angeboten(c.i));
     const shown = sheetAll ? list
       : list.filter(c=>quick.indexOf(c.i) >= 0 || set.has(c.i));
     const order = c => (quick.indexOf(c.i) >= 0 ? quick.indexOf(c.i) : 90) + (c.d > 0 ? 0 : -0.5);
@@ -739,9 +766,9 @@ function openSheet(student){
       const b = el("button",{class:"chip "+(c.d>0?"pos":"neg")+(c.ko?" ko":""),
         "aria-pressed":String(on),
         onclick:()=>{
-          const s2 = new Set(r.obs || []);
+          const R = rec(); const s2 = new Set(Array.isArray(R.obs) ? R.obs : []);
           if(s2.has(c.i)) s2.delete(c.i); else s2.add(c.i);
-          r.obs = [...s2]; persist(); draw();
+          R.obs = [...s2]; persist(); draw();
         }});
       b.appendChild(el("span",{class:"sg",text: on ? "✓" : (c.d>0 ? "+" : "−")}));
       b.appendChild(el("span",{class:"tx"},[
@@ -760,9 +787,11 @@ function openSheet(student){
 }
 
 /* ---------- Setup ---------- */
-let loadArmed = false;
+let loadArmed = false, loadTimer = null;
 function renderSet(){
   const root = document.getElementById("view"); root.innerHTML = "";
+  /* Jede neue Setup-Ansicht beginnt mit einem nicht scharfen Knopf (Entscheid 31.10.2026) */
+  loadArmed = false; clearTimeout(loadTimer); loadTimer = null;
 
   if(!storeOK) root.appendChild(el("div",{class:"banner bad",text:t("storeWarn")}));
 
@@ -776,9 +805,14 @@ function renderSet(){
     if(hasData && !loadArmed){
       loadArmed = true; lb.textContent = t("loadArm");
       lb.style.background = "var(--minus)"; lb.style.borderColor = "var(--minus)";
-      setTimeout(()=>{ if(loadArmed){ loadArmed = false; renderSet(); } }, 6000);
+      clearTimeout(loadTimer);
+      /* nach 6 s wieder entschärfen, aber nur in der Setup-Ansicht neu zeichnen */
+      loadTimer = setTimeout(()=>{ loadTimer = null; if(loadArmed){ loadArmed = false; if(view === "set") renderSet(); } }, 6000);
       return;
     }
+    /* zweites Tippen: Timer weg, Knopf zurücksetzen, dann die Dateiauswahl öffnen */
+    loadArmed = false; clearTimeout(loadTimer); loadTimer = null;
+    lb.textContent = t("loadBtn"); lb.style.background = ""; lb.style.borderColor = "";
     fin.click();
   }});
   c0.appendChild(lb); c0.appendChild(fin);
@@ -846,18 +880,23 @@ function renderSet(){
   c1.appendChild(f5);
   c1.appendChild(el("button",{class:"btn pri wide",text:t("apply"),onclick:()=>{
     const lines = ta.value.split("\n").map(x=>x.trim()).filter(Boolean);
-    S.students = lines.map(line=>{
-      const g = parseStudentZeile(line);
-      if(!g) return null;
-      const ex = S.students.find(s=>
-        (s.nachname||"").trim().toLowerCase() === g.nachname.toLowerCase() &&
-        (s.vorname ||"").trim().toLowerCase() === g.vorname.toLowerCase());
+    const rows = lines.map(parseStudentZeile).filter(Boolean);
+    /* Zuordnung nach #Nr., E-Mail, Name; bei einer Namenskorrektur bleiben ID, Foto, Pläne und Tage (Entscheid 31.10.2026) */
+    const hit = n2MatchRows(rows, S.students, x => ({nr:x.nr, mail:x.mail, last:x.nachname, first:x.vorname}));
+    const bleibt = new Set(hit.filter(Boolean).map(x => x.id));
+    const weg = S.students.filter(x => !bleibt.has(x.id) && n2StudentHasData(x.id));
+    if(!n2ConfirmGone(weg, n2SumName)) return;                     // abgebrochen: nichts ändern
+    S.students = rows.map((g, i)=>{
+      const ex = hit[i];
       const o = ex ? {...ex, ...g, nick:g.nick||ex.nick||"", mail:g.mail||ex.mail||"", lang:g.lang||ex.lang||"",
                       klasse:g.klasse||ex.klasse||"", gruppe:g.gruppe||ex.gruppe||""}
                    : {id:"m"+Math.random().toString(36).slice(2,8), ...g};
+      if("last" in o) o.last = o.nachname;                         // Felder aus dem Paket mitführen (Anrede, Zusammenfassung)
+      if("first" in o) o.first = o.vorname;
       o.name = anzeigeName(o);
       return o;
-    }).filter(Boolean);
+    });
+    n2PruneOrphans();                                              // keine verwaisten Tagesdatensätze zurücklassen
     persist(); toast(S.students.length + " " + t("students"));
     view = "day"; render();
   }}));
@@ -901,14 +940,18 @@ function renderSet(){
 
   root.appendChild(el("p",{class:"muted",style:"margin:16px 2px 0",text:t("homeHint")}));
 }
+/* Sicherung oder Paket laden. Ergebnis (Vertrag mit der Übergabe, wie onRestore am Laptop):
+   true = geladen, false = abgelehnt (nichts geändert). */
 async function onLoadBackup(e){
   const f = e.target.files && e.target.files[0];
   e.target.value = "";
-  if(!f) return;
+  if(!f) return false;
   try{
     const o = JSON.parse(await f.text());
-    if(o && o.format === "praxisrapport-semesterpaket"){ toast(t("loadSem")); return; }
-    if(!o || !o.settings || !Array.isArray(o.students)) throw new Error("format");
+    if(o && o.format === "praxisrapport-semesterpaket"){ toast(t("loadSem")); return false; }
+    /* Datei aus dem anderen Bereich (Küche/Service) ablehnen: gleiche Baustein-IDs bedeuten dort etwas anderes */
+    if(o && o.app && o.app !== "Servicerapport"){ toast(t("loadOther")); return false; }
+    if(!o || !o.settings || typeof o.settings !== "object" || !Array.isArray(o.students)) throw new Error("format");
     const other = o.variant && o.variant !== MVARIANT;
     S = {settings:{...DEF, ...o.settings, variant:MVARIANT},
          students:o.students||[],
@@ -921,7 +964,8 @@ async function onLoadBackup(e){
     view = "day"; render();
     toast(other ? t("loadPartial")
                 : (t("loadDone") + ": " + S.students.length + " " + t("students")));
-  }catch(err){ toast(t("loadBad")); }
+    return true;
+  }catch(err){ toast(t("loadBad")); return false; }
 }
 
 
