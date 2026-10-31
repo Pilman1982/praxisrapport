@@ -2,7 +2,7 @@
 """Noten 2.0: Datum statt Woche, Zyklus, Noten und Wirkung sichtbar, Fotos, Semesterpaket und persoenliche Startseite."""
 import pathlib, json, threading, functools, http.server, socketserver, datetime
 from playwright.sync_api import sync_playwright
-R = pathlib.Path(__file__).parent.parent; D = R/"docs"; LIB = pathlib.Path("/tmp/claude-0/libs/node_modules")
+R = pathlib.Path(__file__).parent.parent; D = R/"docs"; LIB = pathlib.Path(__import__("os").environ.get("DG_LIBS", str(pathlib.Path(__file__).parent / ".cache" / "node_modules")))  # pdfjs-dist@3.11.174, jszip@3.10.1 (npm)
 res = []
 def ok(n, c, i=""): res.append(("OK      " if c else "FEHLER  ") + "%-70s %s" % (n, str(i)[:130]))
 def libs(route):
@@ -163,12 +163,12 @@ with sync_playwright() as p:
     pg.evaluate("()=>openPack(SEM.pakete[0], false)"); pg.wait_for_load_state(); pg.wait_for_timeout(700)
     g = pg.evaluate("""()=>{ const s = S.students[0], s1 = slots()[0].id; curSlot = s1; openSlot(s1); render(); openSheet(s);
         return {u:location.pathname, lab:slotLabel(slots()[0],'de'), ava:!!document.querySelector('.sheet-h img.ava'), head:document.getElementById('n2grade').textContent,
-                cg:document.querySelectorAll('.critbar .cg').length, n:CRITS.length, dbl:N2_DOUBLE}; }""")
+                cg:document.querySelectorAll('.critbar .cg').length, n:CRITS.length, dbl:DOUBLE_CRITS.slice().sort().join('+')}; }""")
     ok("Service: Mobil 10T geoeffnet", g["u"].endswith("Servicerapport_Mobil.html"), g["u"])
     ok("Service: Mittwoch 02.09. statt Woche", g["lab"] == "Mittwoch 02.09.", g["lab"])
     ok("Service: Foto im Erfassungsblatt", g["ava"])
     ok("Service: Tagesnote 4.50 im Kopf, Kriteriennoten sichtbar", g["head"].startswith("Tag 4.50") and g["cg"] == g["n"], g)
-    ok("Service: Gastgeberhaltung doppelt gewichtet", g["dbl"] == "gas", g["dbl"])
+    ok("Service: Gastgeberhaltung und Hygiene doppelt gewichtet (fest seit 31.10.2026)", g["dbl"] == "gas+hyg", g["dbl"])
     ok("Service: keine JavaScript-Fehler", not errs, errs); c.close()
     b.close()
 srv.shutdown()

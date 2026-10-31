@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 """Cockpit: Plan pruefen, Fotos zuordnen, Pakete erzeugen und in den Apps laden, Eingangskontrolle."""
 import pathlib, json, zipfile, io
+import tempfile as _tf; OUT = _tf.mkdtemp(prefix="dg_test_")
 from playwright.sync_api import sync_playwright
 R = pathlib.Path(__file__).parent.parent
-D = R/"docs"; LIB = pathlib.Path("/tmp/claude-0/libs/node_modules")
+D = R/"docs"; LIB = pathlib.Path(__import__("os").environ.get("DG_LIBS", str(pathlib.Path(__file__).parent / ".cache" / "node_modules")))  # pdfjs-dist@3.11.174, jszip@3.10.1 (npm)
 PLAN = (R/"testdaten/turnusplan_BEISPIEL.json").read_text(encoding="utf-8")
 res = []
 def ok(n, c, i=""): res.append(("OK      " if c else "FEHLER  ") + "%-66s %s" % (n, str(i)[:130]))
 def libs(route):
     u = route.request.url
     f = LIB/"pdfjs-dist/build/pdf.worker.min.js" if "pdf.worker" in u else LIB/"pdfjs-dist/build/pdf.min.js" if "pdf.js" in u else LIB/"jszip/dist/jszip.min.js" if "jszip" in u else None
-    if f: route.fulfill(path=str(f), content_type="application/javascript")
+    if f and f.exists(): route.fulfill(path=str(f), content_type="application/javascript")   # fehlt die Bibliothek: sofort abbrechen statt haengen
     else: route.abort()
 with sync_playwright() as p:
     b = p.chromium.launch()
@@ -42,7 +43,7 @@ with sync_playwright() as p:
     sz = pg.evaluate("()=>{ const f = fotoFor(PLAN.studierende[0]); return f ? f.length : 0; }")
     ok("Foto ist klein (unter 20 kB)", 0 < sz < 20000, sz)
     ok("Fotos in der Uebersicht sichtbar", pg.locator("#overview img.ava").count() >= 20, pg.locator("#overview img.ava").count())
-    pg.screenshot(path="/tmp/claude-0/cockpit.png", full_page=False)
+    pg.screenshot(path=OUT + "/cockpit.png", full_page=False)
     # Suche
     pg.fill("#search", "Ethan"); pg.wait_for_timeout(100)
     ok("Suche nach Nickname findet die Person in Kueche und Service", pg.locator("#overview tr.hit").count() == 2, pg.locator("#overview tr.hit").count())
@@ -61,27 +62,27 @@ with sync_playwright() as p:
     links = z.read("Startlinks.txt").decode("utf-8")
     ok("Startlink Service enthaelt outlet2 und plan", "outlet2=Da%20Fortunat" in links and "plan=mo:Service%20A" in links, "")
     errs_c = list(errs); c.close()
-    pathlib.Path("/tmp/claude-0/pk_kueche.json").write_text(json.dumps(pk), encoding="utf-8")
-    pathlib.Path("/tmp/claude-0/pk_service.json").write_text(json.dumps(pks), encoding="utf-8")
+    pathlib.Path(OUT + "/pk_kueche.json").write_text(json.dumps(pk), encoding="utf-8")
+    pathlib.Path(OUT + "/pk_service.json").write_text(json.dumps(pks), encoding="utf-8")
     # Paket in der App laden: Kueche mobil
     c = b.new_context(viewport={"width":390,"height":844}); pg = c.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     pg.goto((D/"kueche/Kuechenrapport_Mobil.html").as_uri()); pg.wait_for_timeout(300)
     pg.evaluate("()=>{view='set';render();}")
-    fi = pg.locator("input[type=file]").first; fi.set_input_files("/tmp/claude-0/pk_kueche.json"); pg.wait_for_timeout(500)
+    fi = pg.locator("input[type=file]").first; fi.set_input_files(OUT + "/pk_kueche.json"); pg.wait_for_timeout(500)
     r = pg.evaluate("()=>({n:S.students.length, l:S.settings.uiLang, t:S.settings.teacher, foto:S.students.filter(s=>s.foto).length})")
     ok("Kueche mobil: Paket laden ergibt Personen, Thai, Dozent", r["n"] == len(pk["students"]) and r["l"] == "th" and r["t"] == "Koch Umami", r)
     pg.evaluate("()=>{view='day';render();}"); pg.wait_for_timeout(200)
     if pg.locator("button.btn.pri.wide").count(): pg.locator("button.btn.pri.wide").first.click(); pg.wait_for_timeout(200)
     ok("Kueche mobil: Fotos und Nicknames in der Liste", pg.locator(".srow img.ava").count() == r["foto"] and r["foto"] > 0, pg.locator(".srow img.ava").count())
-    pg.screenshot(path="/tmp/claude-0/mobil_fotos.png")
+    pg.screenshot(path=OUT + "/mobil_fotos.png")
     ok("Kueche mobil: keine JavaScript-Fehler", not errs, errs); c.close()
     # Paket in der App laden: Service Laptop
     c = b.new_context(); pg = c.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     pg.goto((D/"service/Servicerapport.html").as_uri()); pg.wait_for_timeout(300)
     pg.evaluate("()=>{view='set';render();}")
-    pg.set_input_files("#restoreFile", "/tmp/claude-0/pk_service.json"); pg.wait_for_timeout(300)
+    pg.set_input_files("#restoreFile", OUT + "/pk_service.json"); pg.wait_for_timeout(300)
     if pg.evaluate("()=>S.students.length") != len(pks["students"]):   # zweiter Klick bei vorhandenen Daten
-        pg.set_input_files("#restoreFile", "/tmp/claude-0/pk_service.json"); pg.wait_for_timeout(300)
+        pg.set_input_files("#restoreFile", OUT + "/pk_service.json"); pg.wait_for_timeout(300)
     r = pg.evaluate("""()=>{ const sl=slots(); sl.forEach(s=>openSlot(s.id));
         const w = S.students.find(s=>s.wechselAb);
         return {n:S.students.length, o2:S.settings.outlet2, w: w ? [outletOfDay(sl[3].id,w.id), outletOfDay(sl[4].id,w.id), placementText(w.id,'de')] : null,
@@ -91,12 +92,12 @@ with sync_playwright() as p:
     ok("Service Laptop: Fotos bleiben erhalten", r["foto"] >= 1, r["foto"])
     snap = pg.evaluate("()=>JSON.stringify(snapshot())")
     ok("Service Laptop: keine JavaScript-Fehler", not errs, errs); c.close()
-    pathlib.Path("/tmp/claude-0/rep_service.json").write_text(snap, encoding="utf-8")
+    pathlib.Path(OUT + "/rep_service.json").write_text(snap, encoding="utf-8")
     # Eingangskontrolle
     c = b.new_context(); c.route("https://cdnjs.cloudflare.com/**", libs); pg = c.new_page(); errs = []; pg.on("pageerror", lambda e: errs.append(str(e)))
     pg.goto((D/"cockpit.html").as_uri()); pg.wait_for_timeout(300)
     pg.fill("#planText", PLAN); pg.click("#btnPlan")
-    pg.set_input_files("#repFile", "/tmp/claude-0/rep_service.json"); pg.wait_for_timeout(300)
+    pg.set_input_files("#repFile", OUT + "/rep_service.json"); pg.wait_for_timeout(300)
     ok("Eingangskontrolle: Rapport erscheint in der Tabelle", pg.locator("#reports tr").count() == 2, pg.locator("#reports tr").count())
     ok("Eingangskontrolle: Paket zeigt 'Rapport da'", pg.locator("text=Rapport da").count() == 1, pg.locator("text=Rapport da").count())
     ok("Cockpit: keine JavaScript-Fehler", not errs and not errs_c, errs + errs_c); c.close()

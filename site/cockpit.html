@@ -164,14 +164,20 @@ function parsePlan(txt){
   catch(e){ $("planStat").innerHTML = '<span class="err">Kein gültiges JSON: ' + e.message.replace(/</g,"&lt;")
     + '. Ist die Antwort von Copilot vollständig? Sonst «weiter» schreiben oder pro Klasse einzeln erzeugen.</span>'; return null; }
 }
-function loadPlanText(txt){ const o = parsePlan(txt); if(!o) return; PLAN = o; build(); render(); }
+function cleanPlan(o){ if(!o || typeof o !== "object") return o;
+  if(Array.isArray(o.dozierende)) o.dozierende = o.dozierende.filter(d => d && typeof d === "object").map(d => Object.assign(d, {outlets: [].concat(d.outlets || []).filter(Boolean)}));
+  if(Array.isArray(o.studierende)) o.studierende = o.studierende.filter(x => x && typeof x === "object");
+  (Array.isArray(o.studierende) ? o.studierende : []).forEach(x => { if(Array.isArray(x.einsaetze)) x.einsaetze = x.einsaetze.filter(e => e && typeof e === "object"); });
+  return o; }
+function loadPlanText(txt){ const o = cleanPlan(parsePlan(txt)); if(!o) return; PLAN = o; build(); render(); }
 /* Teil hinzufuegen: Studierende eines weiteren JSON anhaengen (gleiche Nummer = ersetzen) */
 function addPlanText(txt){
-  const o = parsePlan(txt); if(!o) return;
+  const o = cleanPlan(parsePlan(txt)); if(!o) return;
   if(!PLAN){ PLAN = o; build(); render(); return; }
   const neu = Array.isArray(o.studierende) ? o.studierende : [];
-  PLAN.studierende = (PLAN.studierende || []).filter(s => !s.nr || !neu.some(n => String(n.nr) === String(s.nr))).concat(neu);
-  if((!PLAN.dozierende || !PLAN.dozierende.length) && Array.isArray(o.dozierende)) PLAN.dozierende = o.dozierende;
+  const samePers = (a, b) => (a.nr && b.nr) ? String(a.nr) === String(b.nr) : nameKey(a.nachname, a.vorname) === nameKey(b.nachname, b.vorname);
+  PLAN.studierende = (PLAN.studierende || []).filter(s => !neu.some(n => samePers(n, s))).concat(neu);
+  if(Array.isArray(o.dozierende)) PLAN.dozierende = (PLAN.dozierende || []).concat(o.dozierende.filter(d => !(PLAN.dozierende || []).some(x => x.name === d.name && x.bereich === d.bereich)));
   $("planText").value = ""; build(); render();
   $("planStat").innerHTML += " · Teil mit " + neu.length + " Personen hinzugefügt";
 }
@@ -192,6 +198,7 @@ function build(){
   P._wd = wdays;
   const doz = Array.isArray(P.dozierende) ? P.dozierende : [];
   if(!doz.length) warn("Keine Dozierenden im Plan. Pakete haben dann keinen Namen und keine Sprache.");
+  doz.forEach((d, i) => { if(!String(d.name || "").trim()) err("Dozent/in " + (i+1) + ": Name fehlt."); });
   const studs = Array.isArray(P.studierende) ? P.studierende : [];
   if(!studs.length) err("Keine Studierenden im Plan.");
   const seenNr = {}, seenName = {};
@@ -225,6 +232,8 @@ function build(){
       /* Tagesplan (freiwillig): Liste der Einsatztage mit Ort und Team Market */
       const tageList = Array.isArray(e.tage) ? e.tage.filter(t => pDate(t && t.datum)).sort((a, b) => String(a.datum).localeCompare(String(b.datum))) : null;
       const praxisSlots = VARS[v].n - (VARS[v].exam ? 1 : 0);
+      if(tageList && tageList.length < e.tage.length) warn(who + ", Einsatz " + (k+1) + ": " + (e.tage.length - tageList.length) + " von " + e.tage.length + " Tagen ohne gültiges Datum (JJJJ-MM-TT), Team Market/OC und Schichten fehlen.");
+      else if(tageList && !tageList.length) aggAdd("tg0", "Tagesplan leer", who);
       if(!wdays.includes(WD[von.getDay()])) aggAdd("wd|" + e.outlet + iso(von), e.outlet + ": Beginn " + fDate(von) + " ist ein " + ["So","Mo","Di","Mi","Do","Fr","Sa"][von.getDay()] + ", kein Einsatztag", who);
       if(tageList){
         if(tageList.length > praxisSlots) aggAdd("ov|" + e.outlet + v + (e.block||""), e.outlet + " " + v + (e.block ? " (" + e.block + ")" : "") + ": mehr als " + praxisSlots + " Einsatztage, die überzähligen fehlen in der App", who);
@@ -236,21 +245,22 @@ function build(){
                     && (x.outlets || []).some(o => norm(o) === norm(e.outlet)))
              || (e.wechsel && doz.find(x => String(x.bereich||"").toLowerCase() === ber && (x.outlets||[]).some(o => norm(o) === norm(e.wechsel.outlet))));
       const homeOutlet = d ? d.outlets[0] : e.outlet;
-      const key = [ber, d ? d.name : e.outlet, v, e.block || iso(von)].join("|");
+      const key = [ber, d ? "doz" + doz.indexOf(d) : e.outlet, v, e.block || iso(von)].join("|");
       let p = packMap[key];
       if(!p){
         p = packMap[key] = {key, ber, v, von, bis, doz:d || null, outlet:homeOutlet,
               outlet2: (ber === "service" && d && d.outlets.length > 1) ? d.outlets[1] : "", studs:[]};
         if(!d) warn("Kein Dozent für " + BER_LABEL[ber] + " " + e.outlet + " eingetragen.");
       }
+      if(p.studs.some(x => x.s === s)) err(who + ": zweimal im Paket " + BER_LABEL[ber] + " " + p.outlet + " " + v + " (Wechsel mit «wechsel» oder «tage» in einem Einsatz angeben).");
       if(bis > p.bis) p.bis = bis;
       if(von < p.von) p.von = von;
       if(e.block) p.block = e.block;
-      let wAb = 0, wOut = "";
+      let wAb = 0, wOut = "", wAbDate = "";
       if(e.wechsel && e.wechsel.outlet){
         const ab = pDate(e.wechsel.ab);
         if(!ab || ab < von || ab > bis) warn(who + ": Wechseldatum fehlt oder liegt ausserhalb des Einsatzes.");
-        else { wAb = workDays(von, ab, wdays).length; wOut = e.wechsel.outlet; }
+        else { wAb = workDays(von, new Date(ab.getTime() - 864e5), wdays).length + 1; wOut = e.wechsel.outlet; wAbDate = iso(ab); }
         if(ber !== "service") warn(who + ": Wechsel ist nur im Service vorgesehen.");
       }
       /* Ein Einsatz im zweiten Restaurant einer Service-Gruppe: ganzer Einsatz dort */
@@ -266,7 +276,7 @@ function build(){
         if(!schichtPlan.some(Boolean)) schichtPlan = null;
       }
       p.studs.push({s, e, wAb, wOut, ortPlan, tmTage, schichtPlan, days: tageList ? tageList.length + (VARS[v].exam ? 1 : 0) : days.length,
-        dates: tageList ? tageList.map(t => String(t.datum)) : null, exam: e.exam || (VARS[v].exam ? iso(bis) : null)});
+        dates: tageList ? tageList.map(t => String(t.datum)) : null, tage: tageList, wAbDate, exam: e.exam || (VARS[v].exam ? iso(bis) : null)});
     });
   });
   Object.values(agg).forEach(a => warn(a.text + ": " + (a.who.length > 4 ? a.who.length + " Personen" : a.who.join(", ")) + "."));
@@ -284,6 +294,12 @@ function build(){
 function same(list){ const u = Array.from(new Set(list.filter(Boolean))); return u.length === 1 ? u[0] : ""; }
 function packageJSON(p){
   const A = APP[p.ber], V = VARS[p.v];
+  /* Datum pro Einsatztag: das häufigste Datum aller Personen an dieser Stelle */
+  const pick = arr => { const c = {}; arr.filter(Boolean).forEach(d => c[d] = (c[d] || 0) + 1);
+    let best = "", bn = 0; Object.keys(c).sort().forEach(d => { if(c[d] > bn){ bn = c[d]; best = d; } }); return best; };
+  const nPr = V.n - (V.exam ? 1 : 0), slotDates = [];
+  for(let k = 0; k < nPr; k++) slotDates.push(pick(p.studs.map(x => x.dates ? x.dates[k] : "")));
+  if(V.exam) slotDates.push(pick(p.studs.map(x => x.exam || "")));
   const studs = p.studs.map(x => {
     const s = x.s, id = "p" + (s.nr ? String(s.nr).replace(/\W/g,"") : Math.abs(hash(nameKey(s.nachname, s.vorname))).toString(36));
     const o = {id, name:[s.nachname, s.vorname].filter(Boolean).join(" "),
@@ -293,9 +309,23 @@ function packageJSON(p){
     if(s.nr) o.nr = String(s.nr);
     const f = fotoFor(s); if(f) o.foto = f;
     if(x.wAb && x.wOut){ o.wechselAb = x.wAb; o.wechselOutlet = x.wOut; }
-    if(x.ortPlan) o.ortPlan = x.ortPlan;
-    if(x.tmTage && x.tmTage.length) o.tmTage = x.tmTage;
-    if(x.schichtPlan) o.schichtPlan = x.schichtPlan;
+    let op = x.ortPlan, tm = x.tmTage, sp = x.schichtPlan;
+    if(x.tage && x.tage.length && slotDates.some(Boolean)){
+      const at = k => x.tage.find(t => String(t.datum) === slotDates[k]) || null;
+      tm = []; sp = []; const op2 = [];
+      for(let k = 0; k < nPr; k++){ const t = at(k);
+        if(t && (t.market || TM_CODES.includes(String(t.schicht || "").trim().toUpperCase()))) tm.push(k + 1);
+        sp.push(t ? String(t.schicht || "").trim() : ""); op2.push(t && t.outlet && norm(t.outlet) !== norm(p.outlet) ? t.outlet : ""); }
+      if(!sp.some(Boolean)) sp = null; op = op2.some(Boolean) ? op2 : null;
+    }
+    let wab = x.wAb; const pd = slotDates.slice(0, nPr);
+    if(x.wAbDate && pd.every(Boolean)) wab = pd.filter(d => d < x.wAbDate).length + 1;          /* Wechsel nach Datum im Paket */
+    if(x.wOut) o.wechselAb = wab;
+    if(!op && x.wOut && norm(x.e.outlet) !== norm(p.outlet))                                    /* Start ausserhalb des Stammrestaurants */
+      op = Array.from({length: nPr}, (_, k) => k + 1 < wab ? x.e.outlet : (norm(x.wOut) === norm(p.outlet) ? "" : x.wOut));
+    if(op) o.ortPlan = op;
+    if(tm && tm.length) o.tmTage = tm;
+    if(sp) o.schichtPlan = sp;
     return o;
   });
   const teacher = p.doz ? p.doz.name : "";
@@ -303,12 +333,6 @@ function packageJSON(p){
     outlet:p.outlet, teacher, uiLang: p.doz && ["de","en","th"].includes(p.doz.sprache) ? p.doz.sprache : "de",
     outLang:"de", weekdays:PLAN._wd.slice(), startIdx:p.startIdx, base:4.5, isSample:false};
   settings[A.w2] = true;
-  /* Datum pro Einsatztag: das häufigste Datum aller Personen an dieser Stelle */
-  const pick = arr => { const c = {}; arr.filter(Boolean).forEach(d => c[d] = (c[d] || 0) + 1);
-    let best = "", bn = 0; Object.keys(c).sort().forEach(d => { if(c[d] > bn){ bn = c[d]; best = d; } }); return best; };
-  const nPr = V.n - (V.exam ? 1 : 0), slotDates = [];
-  for(let k = 0; k < nPr; k++) slotDates.push(pick(p.studs.map(x => x.dates ? x.dates[k] : "")));
-  if(V.exam) slotDates.push(pick(p.studs.map(x => x.exam || "")));
   if(slotDates.some(Boolean)) settings.slotDates = slotDates;
   settings.paketId = p.file.replace(/\.json$/, "");
   /* Zyklus und Semester im Paket (31.10.2026): die Notenzentrale ordnet die Rapporte damit sicher zu */
@@ -497,7 +521,7 @@ async function onReports(files){
           key:nameKey(s.nachname || s.last || (s.name||"").split(" ")[0], s.vorname || s.first || (s.name||"").split(" ").slice(1).join(" "))}))});
     }catch(err){ REPS.push({file:f.name, bad:true}); }
   }
-  renderReports(); if(PLAN) render();
+  if(PLAN) render(); else renderReports();
 }
 function renderReports(){
   const host = $("reports"); host.innerHTML = "";
@@ -523,9 +547,10 @@ function nickChanges(){
   if(!PLAN) return [];
   const out = {}, studs = PLAN.studierende || [];
   REPS.filter(r => !r.bad).sort((a, b) => (a.saved || 0) - (b.saved || 0)).forEach(r => (r.nicks || []).forEach(n => {
-    const s = studs.find(x => (n.nr && String(x.nr) === n.nr) || nameKey(x.nachname, x.vorname) === n.key); if(!s) return;
-    const id = s.nr || nameKey(s.nachname, s.vorname);
-    if(String(s.nickname || "").trim() === n.nick){ delete out[id]; return; }
+    const s = (n.nr && studs.find(x => String(x.nr) === n.nr)) || studs.find(x => !(n.nr && x.nr) && nameKey(x.nachname, x.vorname) === n.key); if(!s) return;
+    const id = s.nr || nameKey(s.nachname, s.vorname), cur = String(s.nickname || "").trim();
+    if(cur === n.nick){ if(n.neu) delete out[id]; return; }      /* nur ein auf dem Gerät geänderter Nickname hebt eine Änderung auf */
+    if(!n.neu && cur) return;                                     /* Nickname aus einem älteren Paket, nicht geändert */
     out[id] = {s, alt:s.nickname || "", neu:n.nick, von:r.teacher || r.file};
   }));
   return Object.values(out);
@@ -541,9 +566,9 @@ function renderNicks(host){
   box.appendChild(el("div",{class:"tw"}, tb));
   box.appendChild(el("div",{class:"row",style:"margin-top:8px"},[
     el("button",{class:"pri",id:"btnNicks",text:"Nicknames übernehmen und Turnusplan speichern",onclick:()=>{
-      ch.forEach(x => { x.s.nickname = x.neu; });
+      nickChanges().forEach(x => { x.s.nickname = x.neu; });
       download("turnusplan_" + fileSafe(PLAN.semester || "") + "_Nicknames_" + iso(new Date()) + ".json", JSON.stringify(PLAN, null, 1));
-      build(); render(); renderReports();
+      build(); render();
     }}),
     el("span",{class:"small muted",text:"Danach Semesterpakete neu erzeugen und verschicken, dann sehen alle die Nicknames."})]));
   host.appendChild(box);
@@ -582,6 +607,7 @@ function render(){
   [["alle","Alle"],["kueche","Küche"],["service","Service"]].forEach(([k, l]) =>
     tabs.appendChild(el("button",{"aria-pressed":String(TAB === k), text:l, onclick:()=>{ TAB = k; render(); }})));
   const blocks = {}; PACKS.forEach(p => { const k = p.block || iso(p.von); if(!blocks[k] || p.von < blocks[k].von) blocks[k] = {von:p.von, bis:p.bis}; else if(p.bis > blocks[k].bis) blocks[k].bis = p.bis; });
+  if(BLK !== "alle" && !blocks[BLK]) BLK = "alle";
   if(Object.keys(blocks).length > 1){
     const sel = el("select",{id:"blk", style:"font:inherit;padding:8px;border-radius:9px;border:1px solid var(--line);background:var(--field);color:inherit",
       onchange:e=>{ BLK = e.target.value; render(); }});
@@ -596,14 +622,15 @@ function render(){
   $("btnSem").disabled = !PACKS.length;
   renderSem();
   if(FOTOS.n) showFotoStat();
+  renderReports();
 }
 function avatarCell(s){
   const f = fotoFor(s);
   return el("td",{}, f ? el("img",{class:"ava",src:f,alt:""}) : el("div",{class:"ph",text:((s.vorname||"?")[0] + (s.nachname||"?")[0]).toUpperCase()}));
 }
 function arrived(p){
-  return REPS.find(r => !r.bad && r.app === APP[p.ber].app && norm(r.outlet) === norm(p.outlet) && r.variant === p.v
-    && p.studs.some(x => r.students.includes(nameKey(x.s.nachname, x.s.vorname))));
+  return REPS.filter(r => !r.bad && r.app === APP[p.ber].app && norm(r.outlet) === norm(p.outlet) && r.variant === p.v
+    && p.studs.some(x => r.students.includes(nameKey(x.s.nachname, x.s.vorname)))).sort((a, b) => (b.saved || 0) - (a.saved || 0))[0];
 }
 function renderOverview(){
   const host = $("overview"); host.innerHTML = ""; host.classList.remove("muted");

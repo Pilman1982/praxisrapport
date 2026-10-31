@@ -136,7 +136,7 @@ with sync_playwright() as p:
     # aeltere Datei des Service-Pakets: Tag 1 anders erfasst, Tag 2 fehlt -> neuere Datei gewinnt
     old = json.loads(json.dumps(REP[("service", "10T")])); old["savedAt"] = "2026-11-03T10:00:00.000Z"
     sid = [s["id"] for s in old["students"] if s["nr"] == "103"][0]
-    old["days"] = {"d01": {sid: REC(obs=["gas-n1"])}}
+    old["days"] = {"d01": {sid: REC(obs=["gas-n1"])}, "d07": {sid: REC(obs=["mep-n1"])}}     # d07 ist in der neueren Datei leer
     (tmp / "Service_alt.json").write_text(json.dumps(old), encoding="utf-8"); files.append(tmp / "Service_alt.json")
     # Kopie mit gleichem Inhalt, Semesterpaket, kaputte Datei
     (tmp / "Kopie.json").write_text(files[0].read_text(encoding="utf-8"), encoding="utf-8"); files.append(tmp / "Kopie.json")
@@ -176,6 +176,7 @@ with sync_playwright() as p:
     ok("Kontrolle: Exam entschuldigt = 1.00 als Hinweis (Eva)", any("Egli Eva" in t and "Exam Day entschuldigt" in t for lv, t in iss), iss)
     ok("Kontrolle: aeltere Datei ohne eigene Eintraege erzeugt keinen Hinweis", not any("nur in älteren" in t for lv, t in iss), [t for lv, t in iss if "älteren" in t])
     # Tag 1 Carla: aeltere Datei hatte gas-n1, neuere gas-p5 + gas-p6 -> 6.00 in Gastgeberhaltung
+    ok("Kontrolle: in der neueren Datei leer ueberschriebene Beobachtung wird gemeldet (Carla 11.11.)", any(lv == "warn" and "Caflisch Carla" in t and "leer überschrieben" in t and "11.11." in t for lv, t in iss), [t for lv, t in iss if "leer" in t])
     g1 = pg.evaluate("()=>{ const e = NZ.EINS.find(x=>x.person.nr==='103'); const d = e.days.find(x=>x.sl.id==='d01'); return d.g.gas; }")
     ok("Notenzentrale: neuere Datei gewinnt (Tag 1 Gastgeberhaltung 6.00)", g1 == 6, g1)
     # Ansichten ohne Fehler
@@ -207,6 +208,10 @@ with sync_playwright() as p:
         res.append("SKIP    Excel-Export: SheetJS lokal nicht vorhanden (DG_XLSX oder tests/.cache/xlsx.full.min.js)")
     ok("Notenzentrale: keine JavaScript-Fehler", not errs, errs)
 
+    # ---------- Exam in der Zukunft: noch nicht fertig, Hinweis ----------
+    fut = pg.evaluate("()=>{ window.NZ_TODAY = '2026-11-12'; NZ.addTexts([]); return [NZ.EINS.filter(e=>e.done).length, NZ.ISSUES.filter(i=>/in der Zukunft/.test(i.text)).length]; }")
+    ok("Exam 17.11. am 12.11. schon geoeffnet: kein Einsatz fertig, Hinweis in der Kontrolle", fut[0] == 0 and fut[1] >= 1, fut)
+    pg.evaluate("()=>{ window.NZ_TODAY = '2026-11-18'; NZ.addTexts([]); }")
     # ---------- Doppelt erfasst: am Laptop zusammengefuehrte Datei im Ordner ----------
     dup = json.loads(json.dumps(REP[("kueche", "5T")])); dup["savedAt"] = "2026-11-17T19:00:00.000Z"
     dup["settings"]["paketId"] = "Paket_Zyklus-3-1_Kueche_Zusammengefuehrt_10T_2026-11-02"; dup["variant"] = "10T"

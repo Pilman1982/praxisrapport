@@ -40,8 +40,9 @@ OK      Notenzentrale 102: jede Tagesnote identisch zur App                     
 OK      Notenzentrale 103: Praxis, Exam und Schlussnote identisch zur App              (3.903409090909091, 4.681818181818182, 4.162878787878788, 3.903409090909091, 4.681818181818182, 4.162878787878788)
 OK      Notenzentrale 103: jede Tagesnote identisch zur App                            ([4.7727272727272725, 4.7727272727272725, 4.2272727272727275, 3.6363636363636362, 3.8636363636363638, None, 4.5, 4.454545454545454, 1, 4.6818181818181
 OK      Kontrolle: unentschuldigt gemeldet (Anna 4T Tag 1, Carla Tag 9)                ['Arnold Anna (Küche, Zyklus 3.1): unentschuldigt am 10.11. (zählt 1.00).', 'Caflisch Carla (Service, Zyklus 3.1): unentschuldigt am 16.11. (zählt 1.0
-OK      Kontrolle: Exam entschuldigt = 1.00 als Hinweis (Eva)                          [['warn', 'Datei «kaputt.json»: kein gültiges JSON.'], ['warn', 'Arnold Anna (Küche, Zyklus 3.1): unentschuldigt am 10.11. (zählt 1.00).'], ['warn', '
+OK      Kontrolle: Exam entschuldigt = 1.00 als Hinweis (Eva)                          [['warn', 'Datei «kaputt.json»: kein gültiges JSON.'], ['warn', 'Caflisch Carla (Service · Campigiana · 9 Tage + Exam · Service Campi · Zyklus 3.1): B
 OK      Kontrolle: aeltere Datei ohne eigene Eintraege erzeugt keinen Hinweis          []
+OK      Kontrolle: in der neueren Datei leer ueberschriebene Beobachtung wird gemeldet (Carla 11.11.) ['Caflisch Carla (Service · Campigiana · 9 Tage + Exam · Service Campi · Zyklus 3.1): Beobachtungen vom 11.11. wurden durch die neuere Datei «Rapport_
 OK      Notenzentrale: neuere Datei gewinnt (Tag 1 Gastgeberhaltung 6.00)              6
 OK      Uebersicht: Schlussnote Ben 6.0 und Zyklus-Spalte sichtbar                     Personen4Einsätze fertig4 / 4Ø Schlussnoten4.44unter 4.001Note 5.50 und höher1PersonZyklus 3.1Arnold AnnaHFD · Gruppe 1 Team A · N° 1014.3Küche Campig
 OK      Person: Beobachtungen im Wortlaut und Notiz sichtbar                           ‹
@@ -59,8 +60,9 @@ OK      Export Schlussnoten: gerundet auf 0.1, Teilnoten 5T und 4T              
 OK      CSV: Kopfzeile und 4 Zeilen, Semikolon                                         Nachname;Vorname;Nickname;N°;Klasse;Gruppe;Semester;Zyklus;Bereich;Outlets;Dozie
 OK      Excel: fuenf Blaetter, 4 Schlussnoten                                          [['Schlussnoten', 'Pakete', 'Tagesnoten Küche', 'Tagesnoten Service', 'Absenzen'], 4, [4.3, 6, 4.2, 3.3]]
 OK      Notenzentrale: keine JavaScript-Fehler                                         []
+OK      Exam 17.11. am 12.11. schon geoeffnet: kein Einsatz fertig, Hinweis in der Kontrolle [0, 3]
 OK      Kontrolle: gleiche Person am gleichen Tag in zwei Paketen = Fehler             ['Arnold Anna: am 02.11.2026 in 2 Paketen erfasst (Küche · Campigiana · 9 Tage + Exam · Koch Campi und Küche · Campigiana · 5 Tage · Koch Campi). Meis
 OK      Kontrolle: Rueckstand seit dem letzten Rapport (6 vergangene Einsatztage)      ['Küche · The Essence · 9 Tage + Exam · Koch Essence · Zyklus 3.2: seit dem letzten Rapport vom 04.11.2026 sind 6 Einsatztage vergangen (18.11., 19.11
 OK      Notenzentrale: keine JavaScript-Fehler (nach Nachladen)                        []
 
-54 von 54 Pruefungen bestanden
+56 von 56 Pruefungen bestanden

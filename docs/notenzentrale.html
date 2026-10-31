@@ -475,7 +475,7 @@ let PERSONS = new Map();
 let EINS = [];         // Einsätze: Person × Bereich × Zyklus
 let ISSUES = [];
 let TAB = "ov", SEL = "";
-const F = {sem:"", cyc:"", area:"", kl:"", q:""};
+const F = {sem:"", cyc:"", area:"", kl:"", q:"", semSet:false};
 let DIR_HANDLE = null;
 
 /* ================= Dateien lesen ================= */
@@ -555,7 +555,7 @@ $("btnAgain").onclick = async () => {
 };
 $("dirIn").onchange = e => { readFiles([...e.target.files], true); e.target.value = ""; };
 $("fileIn").onchange = e => { readFiles([...e.target.files], false); e.target.value = ""; };
-$("btnClear").onclick = () => { RAW = []; rebuild(); renderAll(); };
+$("btnClear").onclick = () => { RAW = []; F.semSet = false; F.sem = F.cyc = ""; rebuild(); renderAll(); };
 (function dropZone(){
   const z = $("drop");
   ["dragenter", "dragover"].forEach(ev => z.addEventListener(ev, e => { e.preventDefault(); z.classList.add("over"); }));
@@ -599,6 +599,9 @@ function pkgKeyOf(o){
   const first = dts[0] || firstMetaDate(o);
   return [area, v, norm(st.outlet || m.outlet), norm(st.teacher || m.teacher), first ? mondayOf(first) : ""].join("|");
 }
+/* Eintrag mit Inhalt: Absenz, Verspätung, Team Market, Beobachtung, Notiz oder anderes Restaurant */
+const hasContent = r => !!r && ((ATT.includes(r.att) && r.att !== "present") || (Array.isArray(r.obs) && r.obs.length > 0)
+  || !!(r.note && typeof r.note === "object" && String(r.note.txt || "").trim()) || !!String(r.outlet || ""));
 const lastOf = st => String(st.nachname || st.last || "").trim();
 const firstOf = st => String(st.vorname || st.first || "").trim();
 function nrOf(st){ return String(st.nr || "").replace(/\s+/g, ""); }
@@ -615,7 +618,7 @@ function rebuild(){
     const o = d.o, st = o.settings || {}, key = pkgKeyOf(o);
     d.pkgKey = key;
     let p = pk.get(key);
-    if(!p){ p = {key, area:APPS[o.app], app:o.app, variant: VARS[o.variant] ? o.variant : "10T", docs:[], studs:new Map(), days:{}, from:{}, dayMeta:{}, fb:{}}; pk.set(key, p); }
+    if(!p){ p = {key, area:APPS[o.app], app:o.app, variant: VARS[o.variant] ? o.variant : "10T", docs:[], studs:new Map(), days:{}, from:{}, dayMeta:{}, fb:{}, emptied:[]}; pk.set(key, p); }
     p.docs.push(d); p.latest = d; p.latestIdx = di; p.settings = st; p.meta = o.meta || {}; p.o = o;
     const sid2pk = {};
     o.students.forEach(s => {
@@ -633,6 +636,10 @@ function rebuild(){
       const recs = o.days[dk]; if(!recs || typeof recs !== "object") return;
       Object.keys(recs).forEach(sid => {
         const r = recs[sid], k = sid2pk[sid]; if(!k || !r || typeof r !== "object") return;
+        const prev = (p.days[dk] || {})[k];
+        /* neuere Datei gewinnt; leer überschriebene Beobachtungen werden in der Kontrolle gemeldet */
+        if(prev && hasContent(prev) && !hasContent(r)) p.emptied.push({dk, k, from: d.name});
+        else if(prev && hasContent(r)) p.emptied = p.emptied.filter(x => !(x.dk === dk && x.k === k));
         (p.days[dk] = p.days[dk] || {})[k] = r; p.from[dk + "|" + k] = di;
       });
     });
@@ -648,7 +655,7 @@ function rebuild(){
     const dates = p.slots.map(s => s.when).filter(isoOk).sort();
     p.von = dates[0] || ""; p.bis = dates[dates.length - 1] || "";
     p.block = blockOf(p.o);
-    p.semester = String(st.semester || m.semester || "") || semFromDate(p.von);
+    p.semester = String(st.semester || m.semester || "") || semFromDate(p.von) || (p.latest.saved ? semFromDate(isoOf(new Date(p.latest.saved))) : "");
     p.cycle = p.block || (p.von ? "ab " + dmy(p.von) : "ohne Datum");
     p.cycleSort = (p.block ? "0" : "1") + (p.von || "9999");
     p.saved = p.latest.saved || 0;
@@ -701,7 +708,7 @@ function buildEinsaetze(){
     e.hasExam = e.parts.some(p => VARS[p.variant].exam);
     e.expected = e.parts.reduce((s, p) => s + VARS[p.variant].prax, 0);
     e.recorded = e.days.filter(d => !d.sl.exam).length;
-    e.done = e.recorded >= e.expected && (!e.hasExam || !!e.examDay);
+    e.done = e.recorded >= e.expected && (!e.hasExam || (!!e.examDay && (!isoOk(e.examDay.date) || e.examDay.date <= today())));
     e.final = e.hasExam ? ((e.praxis != null && e.exam != null) ? (2 * e.praxis + e.exam) / 3 : null) : e.praxis;
     e.partAvg = e.parts.map(p => ({p, avg: mean(e.days.filter(d => d.p === p && !d.sl.exam && d.total != null).map(d => d.total)),
       n: e.days.filter(d => d.p === p && !d.sl.exam && d.total != null).length}));
@@ -732,6 +739,10 @@ function buildIssues(){
     const before = empty.filter(s => !(lastSaved && s.date > lastSaved));
     if(after.length) add("warn", name + ": seit dem letzten Rapport vom " + dmyy(lastSaved) + " " + (after.length === 1 ? "ist 1 Einsatztag" : "sind " + after.length + " Einsatztage") + " vergangen (" + after.map(s => dmy(s.date)).join(", ") + "). Bitte «Tag senden» nachholen lassen.", {pkg:p});
     if(before.length) add("warn", name + ": vergangene Einsatztage nicht erfasst: " + before.map(s => (s.exam ? "Exam " : "") + dmy(s.date)).join(", ") + ". Tag in der App öffnen und erfassen.", {pkg:p});
+    const future = p.slots.filter(s => isoOk(s.date) && s.date > td && p.days[s.id] && Object.keys(p.days[s.id]).length);
+    if(future.length) add("info", name + ": " + future.map(s => (s.exam ? "Exam " : "") + dmy(s.date)).join(", ") + " liegt in der Zukunft, ist aber schon geöffnet. Ein geöffneter Tag zählt 4.50; stimmt das?", {pkg:p});
+    p.emptied.forEach(x => { const P = PERSONS.get(x.k), sl = p.slots.find(s => s.id === x.dk);
+      add("warn", (P ? P.disp : "?") + " (" + name + "): Beobachtungen vom " + (sl ? dmy(sl.when) : x.dk) + " wurden durch die neuere Datei «" + x.from + "» leer überschrieben. Es gilt die neuere Datei. War das eine Korrektur? Sonst bei der bewertenden Person nachfragen.", {pkg:p, pk:x.k}); });
     /* Einträge, die nur noch in älteren Dateien stehen (Gerät zurückgesetzt, zweites Gerät, gelöschter Tag) */
     p.olderOnly = Object.keys(p.from).filter(k => p.from[k] !== p.latestIdx).length;
     if(p.olderOnly && p.docs.length > 1) add("info", name + ": " + p.olderOnly + " Einträge stehen nur in älteren Dateien (die neueste vom " + savedTxt(p.saved) + " enthält sie nicht). Sie zählen mit. Wurde ein Tag absichtlich gelöscht, die älteren Dateien aus dem Ordner nehmen.", {pkg:p});
@@ -777,7 +788,7 @@ function fillFilters(){
   const opts = (id, vals, cur, all) => { const s = $(id); s.innerHTML = ""; s.appendChild(el("option", {value:"", text:all}));
     vals.forEach(v => s.appendChild(el("option", {value:v[0], text:v[1]}))); s.value = vals.some(v => v[0] === cur) ? cur : ""; };
   const sems = [...new Set(PKGS.map(p => p.semester).filter(Boolean))].sort();
-  if(!F.sem && sems.length) F.sem = sems[sems.length - 1];          // Standard: jüngstes Semester
+  if(!F.semSet && sems.length){ F.sem = sems[sems.length - 1]; F.semSet = true; }   // Standard beim ersten Einlesen: jüngstes Semester
   opts("fSem", sems.map(s => [s, s]), F.sem, "alle Semester"); F.sem = $("fSem").value;
   const cyc = new Map(); PKGS.filter(p => !F.sem || p.semester === F.sem).forEach(p => { if(!cyc.has(p.cycle) || cyc.get(p.cycle) > p.cycleSort) cyc.set(p.cycle, p.cycleSort); });
   opts("fCyc", [...cyc.entries()].sort((a, b) => a[1].localeCompare(b[1])).map(x => [x[0], x[0]]), F.cyc, "alle Zyklen"); F.cyc = $("fCyc").value;
@@ -980,7 +991,7 @@ function renderPerson(v){
         el("td", {class:"nw"}, [d.sl.exam ? el("b", {text:"Exam Day"}) : (WD_DE[d.sl.wd] || ""), " " + dmy(d.date)]),
         el("td", {class:"nw"}, [d.outlet || "–", d.shift ? el("span", {class:"muted", text:" · " + d.shift}) : null, el("div", {class:"sub", text:d.by || ""})]),
         el("td", {class:"nw", text: ATT_TXT[d.att] + (d.sl.exam && d.att === "excused" ? " (1.00)" : "")}),
-        el("td", {}, d.att === "excused" && !d.sl.exam ? el("span", {class:"muted", text:"zählt nicht"}) : gPill(d.total)),
+        el("td", {class:"nw"}, d.att === "excused" && !d.sl.exam ? el("span", {class:"muted", text:"zählt nicht"}) : gPill(d.total)),
         el("td", {class:"small crit", text: critTxt}),
         el("td", {class:"ob"}, ul.childNodes.length ? ul : el("span", {class:"muted small", text:"–"}))]));
     });
