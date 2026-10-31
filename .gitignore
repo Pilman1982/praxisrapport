@@ -7,3 +7,4 @@ __pycache__/
 *.json
 !testdaten/*.json
 tools/anleitungen/personen_*.json
+tests/.cache/

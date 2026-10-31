@@ -108,7 +108,7 @@ img.ava{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#cc
 
 <section class="card">
   <h2><span class="n">6</span>Eingangskontrolle</h2>
-  <p class="muted small" style="margin-top:0">Rapporte der Dozierenden (JSON, auch ältere) hierher ziehen. Du siehst, was angekommen ist und wie weit erfasst wurde. Für Noten und Versand die Laptop-Fassung öffnen und dort «Rapporte zusammenführen».</p>
+  <p class="muted small" style="margin-top:0">Rapporte der Dozierenden (JSON, auch ältere) hierher ziehen. Du siehst, was angekommen ist, und übernimmst neue Nicknames. Noten, Beobachtungen, Absenzen und das Excel für die Notensoftware: <a href="notenzentrale.html">Notenzentrale</a>.</p>
   <div class="drop" id="repDrop">JSON-Rapporte hierher ziehen oder <label class="btn" style="margin-left:6px">wählen<input type="file" id="repFile" accept=".json,application/json" multiple hidden></label></div>
   <div id="reports" style="margin-top:10px"></div>
 </section>
@@ -311,6 +311,9 @@ function packageJSON(p){
   if(V.exam) slotDates.push(pick(p.studs.map(x => x.exam || "")));
   if(slotDates.some(Boolean)) settings.slotDates = slotDates;
   settings.paketId = p.file.replace(/\.json$/, "");
+  /* Zyklus und Semester im Paket (31.10.2026): die Notenzentrale ordnet die Rapporte damit sicher zu */
+  if(p.block) settings.block = p.block;
+  if(PLAN.semester) settings.semester = String(PLAN.semester);
   if(p.outlet2) settings.outlet2 = p.outlet2;
   if(p.doz && p.doz.plan && typeof p.doz.plan === "object") settings.teacherPlan = p.doz.plan;
   return {app:A.app, variant:p.v, savedAt:new Date().toISOString(), source:"cockpit",

@@ -35,7 +35,7 @@ day:"Erfassen",week:"Übersicht",rep:"Beurteilung",data:"Daten",set:"Eintragen",
   noData:"Für diesen Zeitraum ist nichts erfasst.",excusedNote:"entschuldigt (zählt nicht)",
   unexcusedNote:"unentschuldigt (Tagesnote 1.0)",
   banner:"Die Daten bleiben nur in diesem Browser. Am Tagesende «Tag speichern» und die Datei an michael.pilman@ehl.ch senden. Oben rechts «📱 Tablet» wechselt zur Tablet-Ansicht.",
-  weighting:"Gewichtung",gas2:"Gastgeberhaltung doppelt gewichten",base:"Basisnote «erfüllt die Erwartungen»",baseShort:"Basisnote",
+  weighting:"Gewichtung",gas2:"Gastgeberhaltung und Hygiene zählen doppelt",base:"Basisnote «erfüllt die Erwartungen»",baseShort:"Basisnote",
   teamField:"Gruppe",
   restoreTitle:"Sicherung einlesen",
   restoreHint:"Liest eine zuvor gespeicherte JSON zurück in diese Datei. Damit holen Sie Gruppe, Team, Outlet, Dozent, Turnus, alle Studierenden mit E-Mail-Adresse und alle erfassten Tage zurück, zum Beispiel nach einem Gerätewechsel.",
@@ -78,7 +78,7 @@ day:"Erfassen",week:"Übersicht",rep:"Beurteilung",data:"Daten",set:"Eintragen",
   cl2:"Solide Arbeit. Mit den Punkten oben holen Sie im nächsten Einsatz am meisten heraus.",
   cl3:"Die Basis steht. Nehmen Sie sich die Punkte oben einzeln vor, dann werden Sie merklich sicherer.",
   cl4:"Hier ist Luft nach oben, und die Punkte oben sind konkret machbar. Melden Sie sich, wenn Sie dabei Unterstützung brauchen.",
-  weightNote:"Gastgeberhaltung und Gästekontakt zählt doppelt. Anwesenheit und Pünktlichkeit wirken stark auf die Note.",
+  weightNote:"Gastgeberhaltung und Gästekontakt sowie Hygiene und Erscheinungsbild zählen doppelt. Anwesenheit und Pünktlichkeit wirken stark auf die Note.",
   storeWarn:"Dieses Gerät speichert nichts dauerhaft. Exportiere den Rapport am Ende jedes Einsatztages, sonst gehen die Eingaben verloren.",
   byTeacher:"Erfasst von",outlet:"Abteilung",
   studentListHint:"Eine Person pro Zeile: Nachname; Vorname; Nickname; E-Mail; Sprache; Klasse; Gruppe. Nur Nachname und Vorname sind Pflicht. Leere Klasse oder Gruppe = Wert aus der Kopfzeile. Beispiel: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
@@ -137,7 +137,7 @@ day:"Record",week:"Overview",rep:"Feedback",data:"Data",set:"Setup",
   noData:"Nothing recorded for this period.",excusedNote:"excused (not counted)",
   unexcusedNote:"unexcused (daily grade 1.0)",
   banner:"Data stays in this browser only. At the end of the day, «Save day» and send the file to michael.pilman@ehl.ch. «📱 Tablet» at the top right switches to the tablet view.",
-  weighting:"Weighting",gas2:"Weight host attitude double",base:"Baseline grade “meets expectations”",baseShort:"Baseline grade",
+  weighting:"Weighting",gas2:"Host attitude and hygiene count double",base:"Baseline grade “meets expectations”",baseShort:"Baseline grade",
   teamField:"Group",
   restoreTitle:"Load a backup",
   restoreHint:"Reads a previously saved JSON back into this file. It brings back group, team, outlet, lecturer, rotation, all students with their e-mail addresses and every recorded day, for example after changing device.",
@@ -180,7 +180,7 @@ day:"Record",week:"Overview",rep:"Feedback",data:"Data",set:"Setup",
   cl2:"Solid work. The points above are where you gain most on your next shift.",
   cl3:"The basics are there. Take the points above one at a time and you will feel noticeably more confident.",
   cl4:"There is room to grow, and the points above are concrete and doable. Come and ask if you want support.",
-  weightNote:"Host attitude and guest contact counts double. Attendance and punctuality weigh heavily on the grade.",
+  weightNote:"Host attitude and guest contact as well as hygiene and grooming count double. Attendance and punctuality weigh heavily on the grade.",
   storeWarn:"This device does not store anything permanently. Export the report at the end of each shift day or your entries are lost.",
   byTeacher:"Recorded by",outlet:"Outlet",
   studentListHint:"One person per line: surname; first name; nickname; e-mail; language; class; group. Only surname and first name are required. Empty class or group = value from the header. Example: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
@@ -239,7 +239,7 @@ day:"บันทึก",week:"ภาพรวม",rep:"ผลประเมิ
   noData:"ไม่มีข้อมูลในช่วงเวลานี้",excusedNote:"ลา (ไม่นับคะแนน)",
   unexcusedNote:"ขาดโดยไม่แจ้ง (คะแนนวันนั้น 1.0)",
   banner:"ข้อมูลเก็บไว้ในเบราว์เซอร์นี้เท่านั้น เมื่อจบวันให้บันทึกข้อมูลของวันแล้วส่งไฟล์ถึง michael.pilman@ehl.ch ปุ่ม «📱 Tablet» มุมขวาบนจะเปลี่ยนเป็นมุมมองแท็บเล็ต",
-  weighting:"การให้น้ำหนัก",gas2:"ให้น้ำหนักความเป็นเจ้าบ้านสองเท่า",base:"คะแนนพื้นฐาน «เป็นไปตามที่คาดหวัง»",baseShort:"คะแนนพื้นฐาน",
+  weighting:"การให้น้ำหนัก",gas2:"ความเป็นเจ้าบ้านและสุขอนามัยนับสองเท่า",base:"คะแนนพื้นฐาน «เป็นไปตามที่คาดหวัง»",baseShort:"คะแนนพื้นฐาน",
   teamField:"กลุ่ม",
   restoreTitle:"โหลดไฟล์สำรอง",
   restoreHint:"อ่านไฟล์ JSON ที่เคยบันทึกไว้กลับเข้าไฟล์นี้ จะได้กลุ่ม ทีม เอาต์เล็ต ผู้สอน รอบฝึก รายชื่อนักศึกษาพร้อมอีเมล และวันฝึกที่บันทึกไว้ทั้งหมดกลับคืนมา เช่น หลังเปลี่ยนอุปกรณ์",
@@ -282,7 +282,7 @@ day:"บันทึก",week:"ภาพรวม",rep:"ผลประเมิ
   cl2:"ทำได้ดี จุดข้างต้นคือสิ่งที่จะช่วยให้ครั้งต่อไปดีขึ้นมากที่สุด",
   cl3:"พื้นฐานมั่นคงแล้ว ค่อย ๆ พัฒนาทีละจุดตามข้างต้น แล้วจะมั่นใจขึ้นชัดเจน",
   cl4:"ยังมีพื้นที่ให้พัฒนา และจุดข้างต้นทำได้จริง หากต้องการความช่วยเหลือ บอกได้เสมอ",
-  weightNote:"ความเป็นเจ้าบ้านและการดูแลแขกคิดเป็นสองเท่า การมาเรียนและตรงต่อเวลามีผลต่อคะแนนมาก",
+  weightNote:"ความเป็นเจ้าบ้านและการดูแลแขก รวมถึงสุขอนามัยและบุคลิกภาพ คิดเป็นสองเท่า การมาเรียนและตรงต่อเวลามีผลต่อคะแนนมาก",
   storeWarn:"อุปกรณ์นี้ไม่บันทึกข้อมูลถาวร กรุณาส่งออกรายงานเมื่อจบแต่ละวัน มิฉะนั้นข้อมูลจะหาย",
   byTeacher:"บันทึกโดย",outlet:"แผนก",
   studentListHint:"หนึ่งคนต่อหนึ่งบรรทัด: นามสกุล; ชื่อ; ชื่อเล่น; อีเมล; ภาษา; ชั้นเรียน; กลุ่ม จำเป็นเฉพาะนามสกุลและชื่อ ตัวอย่าง: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
@@ -342,7 +342,7 @@ day:"记录",week:"总览",rep:"评估",data:"数据",set:"设置",
   grade:"成绩",copy:"复制",copyAll:"全部复制",copied:"已复制",mail:"邮件",
   noData:"该时段没有记录。",excusedNote:"已请假（不计入）",
   unexcusedNote:"旷工（当日成绩 1.00）",
-  base:"基准分「符合预期」",weighting:"权重",gas2:"待客态度双倍计分",
+  base:"基准分「符合预期」",weighting:"权重",gas2:"待客态度与卫生双倍计分",
   group:"班级 / 部门",teacher:"授课教师",
   placements:"实习地点",
   daysCounted:"个计分日",obsCount:"条观察记录",
@@ -354,7 +354,7 @@ day:"记录",week:"总览",rep:"评估",data:"数据",set:"设置",
   cl2:"完成得扎实。上述几点是你下次上岗提升最快的地方。",
   cl3:"基础已经具备。把上述几点逐条攻克，你会明显变得更有把握。",
   cl4:"还有提升空间，而上述几点都是具体可行的。需要支持时随时来找我们。",
-  weightNote:"待客态度与客人接触按双倍计分。出勤与守时对成绩影响很大。",
+  weightNote:"待客态度与客人接触以及卫生与仪容均按双倍计分。出勤与守时对成绩影响很大。",
   fleiss:"",internal:""}
 };
 
@@ -443,7 +443,7 @@ function sanitizeSettings(s){
   if(!o.weekdays.length) o.weekdays = DEF.weekdays.slice();
   const ix = parseInt(o.startIdx, 10);
   o.startIdx = (isFinite(ix) && ix >= 0 && ix < o.weekdays.length) ? ix : 0;
-  o.gas2 = !!o.gas2;
+  o.gas2 = true; o.hyg2 = true;   // fest seit 31.10.2026: Gastgeberhaltung und Hygiene zählen immer doppelt
   o.hideBanner = !!o.hideBanner;
   if(!T[o.uiLang]) o.uiLang = "de";
   if(!OUT_LANGS.some(x => x.code === o.outLang)) o.outLang = "de";
@@ -845,7 +845,7 @@ function slotsInRange(mode){
 function dayTotal(id, sid){
   const g = critGradesForDay(id, sid); if(!g) return null;
   let sum = 0, w = 0;
-  CRITS.forEach(c=>{ const ww = (c.k==="gas" && S.settings.gas2) ? 2 : 1; sum += g[c.k]*ww; w += ww; });
+  CRITS.forEach(c=>{ const ww = critWeight(c.k); sum += g[c.k]*ww; w += ww; });
   return sum/w;
 }
 function summary(sid, mode){
@@ -869,7 +869,7 @@ function summary(sid, mode){
   const crit = {};
   CRITS.forEach(c=>{ crit[c.k] = per[c.k].reduce((a,b)=>a+b,0)/per[c.k].length; });
   let sum = 0, wsum = 0;
-  CRITS.forEach(c=>{ const w = (c.k==="gas" && S.settings.gas2) ? 2 : 1; sum += crit[c.k]*w; wsum += w; });
+  CRITS.forEach(c=>{ const w = critWeight(c.k); sum += crit[c.k]*w; wsum += w; });
   return {counted, exc, unx, late, tm, tml, tally, notes, crit, total: sum/wsum};
 }
 /* Exam Day separat */
@@ -895,6 +895,8 @@ function recordedPeriod(sid, mode, lg){
 const fmt  = g => (g==null ? "–" : g.toFixed(2));
 const fmt1 = g => (g==null ? "–" : (Math.round(g*10)/10).toFixed(1));
 
+/* Gewicht kurz anzeigen: .25 / .50 / 1.00 (vorher wurde 1.00 teils als ".00" angezeigt) */
+const wSig = w => (w >= 1 ? w.toFixed(2) : w.toFixed(2).slice(1));
 /* ---- DOM-Helfer ---- */
 const el = (tag, attrs={}, kids=[]) => {
   const n = document.createElement(tag);
@@ -1017,10 +1019,10 @@ function selfTest(){
 
     const negs = CHIPS.filter(c=>c.c===K && c.d<0 && !c.ko).map(c=>c.i);
     set(first,{att:"present",obs:negs,note:null});
-    add(t("stCapDown"), g(first)[K] === Math.max(1, base-1.5), fmt(g(first)[K]));
+    add(t("stCapDown"), g(first)[K] === Math.max(1, base+CAP_NEG), fmt(g(first)[K]));
     const poss = CHIPS.filter(c=>c.c===K && c.d>0).map(c=>c.i);
     set(first,{att:"present",obs:poss,note:null});
-    add(t("stCapUp"), g(first)[K] === Math.min(6, base+1), fmt(g(first)[K]));
+    add(t("stCapUp"), g(first)[K] === Math.min(6, base+CAP_POS), fmt(g(first)[K]));
 
     const ko = CHIPS.find(c=>c.ko);
     if(ko){ set(first,{att:"present",obs:[ko.i],note:null});
@@ -1163,13 +1165,13 @@ function renderDay(){
         const c = CHIP[id]; if(!c) return;
         const auto = false;
         const pill = el("span",{class:"obs "+(c.d>0?"p":"m")},
-          el("span",{class:"tx",text:(c.ko ? "K.-o. " : (c.d>0?"+":"\u2212") + c.w.toFixed(2).slice(1) + " ") + chipT(c, S.settings.uiLang)}));
+          el("span",{class:"tx",text:(c.ko ? "K.-o. " : (c.d>0?"+":"\u2212") + wSig(c.w) + " ") + chipT(c, S.settings.uiLang)}));
         if(!auto) pill.appendChild(el("button",{class:"x",text:"×","aria-label":"x",
           onclick:()=>{ unseed(); r.obs = r.obs.filter(x=>x!==id); persist(); renderDay(); }}));
         body.appendChild(pill);
       });
       if(r.note && r.note.txt){
-        const sign = r.note.dir && r.note.w ? (r.note.dir>0?"+":"−")+r.note.w.toFixed(2).slice(1)+" " : "";
+        const sign = r.note.dir && r.note.w ? (r.note.dir>0?"+":"−")+wSig(r.note.w)+" " : "";
         body.appendChild(el("span",{class:"obs nt"},[
           el("span",{class:"tx",text:(r.note.internal?"🔒 ":"✎ ")+sign+r.note.txt}),
           el("button",{class:"x",text:"×","aria-label":"x",
@@ -1511,7 +1513,7 @@ function openSheet(student){
       const opts = el("div",{class:"opts"});
       list.forEach(c=>{
         const on = (r.obs||[]).includes(c.i);
-        const sig = c.ko ? "K.-o." : (c.d>0?"+":"−") + (c.w >= 1 ? c.w.toFixed(2) : c.w.toFixed(2).slice(1));
+        const sig = c.ko ? "K.-o." : (c.d>0?"+":"−") + wSig(c.w);
         const b = el("button",{class:"opt "+(c.d>0?"p":"m")+(on?" on":"")+(c.ko?" ko":""),
           onclick:()=>{ unseed();
             r.obs = (r.obs||[]).includes(c.i) ? r.obs.filter(x=>x!==c.i) : [...(r.obs||[]), c.i];
@@ -1865,7 +1867,7 @@ function printReports(){
     ]));
     doc.appendChild(el("div",{class:"pfoot",text:"EHL Hotelfachschule Passugg · Hauptstrasse 12, 7062 Chur-Passugg · "
       + tOut("base",lg) + " " + S.settings.base.toFixed(2)
-      + (S.settings.gas2 ? " · " + tOut("gas2",lg) : "")}));
+      + " · " + tOut("gas2",lg)}));
     area.appendChild(doc);
   });
   if(!n){ toast(t("noData")); return; }
@@ -2212,8 +2214,7 @@ function renderSet(){
   const f4 = el("div",{class:"field"});
   f4.appendChild(el("label",{text:t("weighting")}));
   const lbl = el("label",{style:"display:flex;gap:8px;align-items:center;font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink);padding:8px 0"});
-  lbl.appendChild(el("input",{type:"checkbox",id:"fHyg",checked:!!S.settings.gas2,style:"width:auto",
-    onchange:e=>{S.settings.gas2=e.target.checked;persist();}}));
+  lbl.appendChild(el("input",{type:"checkbox",id:"fHyg",checked:true,disabled:true,style:"width:auto",title:"Fest seit 31.10.2026"}));
   lbl.appendChild(el("span",{text:t("gas2")}));
   f4.appendChild(lbl);
   c1.appendChild(g2);
@@ -2298,14 +2299,14 @@ function renderSet(){
   c4.appendChild(el("span",{class:"eyebrow",text:t("calc"),style:"display:block;margin-bottom:8px"}));
   const info = el("div",{style:"font-size:13.5px;line-height:1.65;color:var(--ink2)"});
   info.innerHTML = "Jeder Einsatztag startet pro Kriterium auf der Basisnote <b class='num'>"+Number(S.settings.base).toFixed(2)+"</b>. "+
-    "Jede angetippte Beobachtung verschiebt diese Note: leicht <b class='num'>0.25</b>, mittel <b class='num'>0.50</b>, schwer <b class='num'>1.00</b>. "+
-    "Pro Tag und Kriterium sind maximal <b class='num'>−1.50</b> und <b class='num'>+1.00</b> möglich. "+
+    "Jede angetippte Beobachtung verschiebt diese Note: Plus-Beobachtungen um <b class='num'>0.50</b> oder <b class='num'>1.00</b>, Minus-Beobachtungen um <b class='num'>0.25</b>, <b class='num'>0.50</b> oder <b class='num'>1.00</b>. "+
+    "Pro Tag und Kriterium sind maximal <b class='num'>−1.50</b> und <b class='num'>+1.50</b> möglich, die Note liegt also zwischen <b class='num'>3.00</b> und <b class='num'>6.00</b>; drei Plus-Beobachtungen im gleichen Kriterium ergeben eine <b class='num'>6.00</b>. "+
     "Ein K.-o.-Baustein setzt das Kriterium auf <b class='num'>1.00</b>. "+
     "Ein Tag ohne Beobachtung zählt bewusst als «wie erwartet». "+
     "Unentschuldigt ergibt eine Tagesnote von <b class='num'>1.00</b>, entschuldigt zählt nicht in den Durchschnitt. "+
     "«Verspätet» lässt den Tag eine Note tiefer starten (<b class='num'>3.50</b>). "+
     "Ein Freitext wirkt nur dann auf die Note, wenn ein Kriterium und eine Wirkung gewählt sind. "+
-    (S.settings.gas2 ? "Gastgeberhaltung und Gästekontakt zählt im Gesamtschnitt <b>doppelt</b>. " : "Gastgeberhaltung und Gästekontakt zählt im Gesamtschnitt einfach. ")+
+    "Gastgeberhaltung und Gästekontakt sowie Hygiene und Erscheinungsbild zählen im Gesamtschnitt immer <b>doppelt</b>. "+
     (HAS_EXAM
       ? "Der <b>Exam Day</b> ist der " + SLOT_COUNT + ". und letzte Einsatztag. Er wird mit demselben Raster bewertet, "
         + "ergibt eine <b>eigene Note</b> und fliesst nicht in die Praxisnote ein. Abwesenheit am Exam Day ergibt "

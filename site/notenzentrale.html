@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#001436">
+<meta name="robots" content="noindex">
+<link rel="icon" href="__DG_ICON__">
+<link rel="apple-touch-icon" href="__DG_ICON__">
+<title>Daily Grades · Notenzentrale</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--navy:#001436;--petrol:#005779;--salbei:#919388;--terra:#B6633F;--hell:#E3E3E1;--cyan:#5EC7F0;
+  --bg:#F4F4F2;--ink:#1a1f2b;--card:#fff;--line:#d9d9d5;--muted:#5b616b;--field:#fafaf8;
+  --ok:#2f7d4f;--okbg:#e3f2e8;--warn:#a86a12;--warnbg:#fbf0dc;--err:#b3261e;--errbg:#fbe4e2}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0c111c;--ink:#e9eaee;--card:#151c2b;--line:#2a3346;--muted:#9aa3b2;
+  --hell:#1d2638;--field:#10172a;--ok:#5cc28a;--okbg:#14301f;--warn:#e0a948;--warnbg:#33270f;--err:#ff8a80;--errbg:#3a1714}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--navy);color:#fff;padding:16px}
+header .in,main{max-width:1280px;margin:0 auto}
+h1{font:600 24px/1.2 Georgia,serif;margin:0;display:flex;align-items:center;gap:12px}
+h1 .logo{width:36px;height:36px;display:inline-block;flex:none}
+header p{margin:4px 0 0;opacity:.85;font-size:13.5px}
+main{padding:16px 16px 60px;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+h2{font:600 17px/1.3 Georgia,serif;margin:0 0 10px}
+h3{font:600 15px/1.3 Georgia,serif;margin:0}
+.muted{color:var(--muted)} .small{font-size:12.5px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,.btn{font:inherit;font-weight:600;border:0;border-radius:9px;padding:9px 13px;cursor:pointer;background:var(--hell);color:var(--ink);text-decoration:none;display:inline-block}
+button.pri,.btn.pri{background:var(--navy);color:#fff}
+@media (prefers-color-scheme: dark){button.pri,.btn.pri{background:var(--petrol)}}
+button:disabled{opacity:.45;cursor:default}
+button.link{background:none;padding:0;color:inherit;font-weight:600;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px;text-align:left}
+select,input[type=search]{font:inherit;color:inherit;background:var(--field);border:1px solid var(--line);border-radius:9px;padding:8px 10px;max-width:100%}
+input[type=search]{min-width:220px;flex:1}
+label.f{display:grid;gap:3px;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+label.f select{min-width:130px;text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink)}
+.drop{border:2px dashed var(--line);border-radius:12px;padding:14px;text-align:center;color:var(--muted)}
+.drop.over{border-color:var(--petrol);color:var(--ink)}
+.stat{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12.5px;white-space:nowrap}
+.chip.ok{border-color:var(--ok);color:var(--ok)} .chip.warn{border-color:var(--warn);color:var(--warn)} .chip.err{border-color:var(--err);color:var(--err)}
+nav.tabs{display:flex;gap:6px;flex-wrap:wrap}
+nav.tabs button[aria-pressed=true]{background:var(--navy);color:#fff}
+@media (prefers-color-scheme: dark){nav.tabs button[aria-pressed=true]{background:var(--petrol)}}
+nav.tabs .cnt{display:inline-block;min-width:20px;margin-left:6px;padding:0 6px;border-radius:999px;background:var(--terra);color:#fff;font-size:12px}
+.tw{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-top:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);border-top:0;white-space:nowrap}
+td.nw,th.nw{white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.ov td:first-child,table.ov th:first-child{position:sticky;left:0;background:var(--card);z-index:1}
+.g{display:inline-block;min-width:46px;text-align:center;padding:1px 6px;border-radius:6px;font-variant-numeric:tabular-nums;font-weight:600;background:var(--hell)}
+.g.hi{background:var(--okbg);color:var(--ok)} .g.lo{background:var(--errbg);color:var(--err)} .g.na{background:none;color:var(--muted);font-weight:400}
+.g.big{font-size:17px;min-width:56px;padding:2px 8px}
+.g.att{background:none;border:1px solid var(--line);font-weight:600}
+.g.att.u{border-color:var(--err);color:var(--err)}
+.sub{font-size:12px;color:var(--muted);line-height:1.35;margin-top:2px}
+.pk{border:1px solid var(--line);border-radius:12px;margin:0 0 12px;overflow:hidden}
+.pk-h{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between;padding:10px 12px;background:var(--hell)}
+.pk-h .t{font-weight:600}
+.pk table td,.pk table th{white-space:nowrap}
+.pk.pv table td{white-space:normal} .pk.pv table td.nw{white-space:nowrap}
+.pk.pv td.crit{min-width:170px;max-width:300px} .pk.pv td.ob{min-width:320px}
+ul.iss{list-style:none;margin:0;padding:0}
+ul.iss li{padding:8px 10px;border-radius:9px;margin:0 0 6px;border-left:4px solid var(--line);background:var(--field)}
+ul.iss li.err{border-left-color:var(--err)} ul.iss li.warn{border-left-color:var(--warn)} ul.iss li.info{border-left-color:var(--petrol)}
+ul.iss .lv{font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;margin-right:8px}
+li.err .lv{color:var(--err)} li.warn .lv{color:var(--warn)} li.info .lv{color:var(--petrol)}
+.ph{width:56px;height:56px;border-radius:50%;object-fit:cover;background:var(--hell);flex:none}
+.obs{margin:0;padding-left:16px} .obs li{margin:1px 0}
+.plus{color:var(--ok)} .minus{color:var(--err)}
+.intern{font-size:11px;border:1px solid var(--line);border-radius:6px;padding:0 5px;margin-left:4px;color:var(--muted)}
+.empty{padding:22px;text-align:center;color:var(--muted)}
+.hide{display:none!important}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
+.kv div{background:var(--field);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.kv b{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.kv span{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+footer{max-width:1280px;margin:0 auto;padding:0 16px 30px;font-size:12px;color:var(--muted)}
+@media (max-width:640px){header{padding:14px 16px} main{padding:12px 16px 40px} input[type=search]{min-width:0;width:100%}}
+@media print{
+  header,#cardLoad,#cardFilter,nav.tabs,footer,.noprint{display:none!important}
+  body{background:#fff;color:#000;font-size:11px} main{padding:0;display:block} .card{border:0;padding:0}
+  .g{background:none!important;color:#000!important;border:1px solid #999} .pk{break-inside:avoid}
+  .tw{overflow:visible}
+}
+</style>
+</head>
+<body>
+<header><div class="in">
+  <h1><span class="logo">__DG_LOGO__</span>Daily Grades · Notenzentrale</h1>
+  <p>Für die Kursleitung: liest die JSON-Rapporte aller Dozierenden und zeigt Noten, Beobachtungen und Absenzen. Hier wird nur gelesen, nicht bewertet. Es wird nichts hochgeladen oder gespeichert.</p>
+</div></header>
+<main>
+
+<section class="card" id="cardLoad">
+  <h2>Rapporte einlesen</h2>
+  <div class="row">
+    <button class="pri" id="btnDir">Ordner «Rapporte» wählen</button>
+    <button id="btnAgain" class="hide"></button>
+    <label class="btn">Einzelne Dateien<input type="file" id="fileIn" accept=".json,application/json" multiple hidden></label>
+    <input type="file" id="dirIn" webkitdirectory multiple hidden>
+    <button id="btnClear" class="hide">Leeren</button>
+  </div>
+  <div class="drop" id="drop" style="margin-top:10px">oder Dateien beziehungsweise den ganzen Ordner hierher ziehen</div>
+  <div id="loadStat" class="stat"></div>
+  <p class="muted small" style="margin:10px 0 0">Jede Datei enthält den ganzen Stand eines Pakets. Pro Eintrag gilt die neueste Datei, ältere Dateien schaden nicht. Die Noten werden immer neu aus den Beobachtungen gerechnet, mit denselben Regeln wie in den Apps.</p>
+</section>
+
+<section class="card hide" id="cardFilter">
+  <div class="row" style="align-items:flex-end">
+    <label class="f">Semester<select id="fSem"></select></label>
+    <label class="f">Zyklus<select id="fCyc"></select></label>
+    <label class="f">Bereich<select id="fArea"></select></label>
+    <label class="f">Klasse<select id="fKl"></select></label>
+    <input type="search" id="fQ" placeholder="Name, Nickname, N°, Outlet oder Dozent/in">
+  </div>
+  <div class="row" style="margin-top:10px">
+    <button class="pri" id="btnXlsx">Excel erstellen</button>
+    <button id="btnCsv">Schlussnoten als CSV</button>
+    <button id="btnPrint">Drucken</button>
+    <span id="expStat" class="small muted"></span>
+  </div>
+</section>
+
+<nav class="tabs hide" id="tabs"></nav>
+<section class="card hide" id="view"></section>
+
+</main>
+<footer>EHL Hotelfachschule Passugg · Daily Grades · <a href="index.html" style="color:inherit">Startseite</a> · <a href="cockpit.html" style="color:inherit">Cockpit</a></footer>
+<script>
+"use strict";
+/* =====================================================================================
+   Daily Grades · Notenzentrale (31.10.2026)
+   Rolle Kursleitung: liest alle JSON-Rapporte («Tag senden», «Sichern»), führt sie pro Paket
+   zusammen (neuester Eintrag gewinnt) und rechnet die Noten mit dem Notenmodell der Apps.
+   Das Notenmodell (Gewichte, Kappung, Doppelgewichtung, Kriterien, Bausteine) wird beim Bauen
+   aus src/kueche und src/service eingesetzt. Die Seite speichert keine Daten.
+   ===================================================================================== */
+const MODELS = {kueche: /*__MODEL_kueche__*/null, service: /*__MODEL_service__*/null};
+const BASE = 4.5, TM_NOTE = 5, LATE_MINUS = 1;            // wie BASE_NOTE, TM_NOTE, LATE_MINUS in den Apps
+const APPS = {Kuechenrapport:"kueche", Servicerapport:"service"};
+const AREA = {kueche:"Küche", service:"Service"};
+const VARS = {"10T":{n:10, exam:true, prax:9, label:"9 Tage + Exam"}, "4T":{n:5, exam:true, prax:4, label:"4 Tage + Exam"}, "5T":{n:5, exam:false, prax:5, label:"5 Tage"}};
+const ATT = ["present","late","excused","unexcused","tm","tml"];
+const ATT_TXT = {present:"anwesend", late:"verspätet", excused:"entschuldigt", unexcused:"unentschuldigt", tm:"Team Market / OC", tml:"Team Market, verspätet"};
+const ATT_SHORT = {late:"v", excused:"e", unexcused:"u", tm:"TM", tml:"TM v"};
+const WD = ["su","mo","tu","we","th","fr","sa"];
+const WD_DE = {mo:"Mo", tu:"Di", we:"Mi", th:"Do", fr:"Fr", sa:"Sa", su:"So"};
+
+/* ================= Hilfen ================= */
+const $ = id => document.getElementById(id);
+function el(tag, attrs, kids){
+  const n = document.createElement(tag);
+  for(const k in (attrs || {})){
+    const v = attrs[k]; if(v == null || v === false) continue;
+    if(k === "text") n.textContent = v;
+    else if(k === "class") n.className = v;
+    else if(k.slice(0, 2) === "on") n.addEventListener(k.slice(2), v);
+    else n.setAttribute(k, v === true ? "" : v);
+  }
+  (Array.isArray(kids) ? kids : (kids ? [kids] : [])).forEach(c => { if(c != null && c !== false) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+  return n;
+}
+const norm = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+const nameKey = (a, b) => norm(a + " " + b).split(" ").filter(Boolean).sort().join(" ");
+const isoOk = d => /^\d{4}-\d{2}-\d{2}$/.test(String(d || ""));
+const dmy = d => isoOk(d) ? d.slice(8, 10) + "." + d.slice(5, 7) + "." : "–";
+const dmyy = d => isoOk(d) ? d.slice(8, 10) + "." + d.slice(5, 7) + "." + d.slice(0, 4) : "–";
+const isoOf = dt => dt.getFullYear() + "-" + String(dt.getMonth() + 1).padStart(2, "0") + "-" + String(dt.getDate()).padStart(2, "0");
+function today(){ return (window.NZ_TODAY && isoOk(window.NZ_TODAY)) ? window.NZ_TODAY : isoOf(new Date()); }
+const f2 = v => v == null ? "–" : v.toFixed(2);
+const f1 = v => v == null ? "–" : (Math.round(v * 10 + 1e-9) / 10).toFixed(1);
+const r1 = v => v == null ? null : Math.round(v * 10 + 1e-9) / 10;
+const gcls = v => v == null ? "na" : (v >= BASE + 0.25 ? "hi" : (v < 4 ? "lo" : ""));
+function gPill(v, big, txt){ return el("span", {class:"g " + gcls(v) + (big ? " big" : ""), text: txt != null ? txt : f2(v)}); }
+const mean = a => a.length ? a.reduce((s, x) => s + x, 0) / a.length : null;
+function hashStr(s){ let h = 2166136261; for(let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36) + ":" + s.length; }
+const savedTxt = ms => ms ? new Date(ms).toLocaleString("de-CH", {day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit"}) : "–";
+const fileSafe = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "");
+/* Semester aus einem Datum: Februar bis Juli = FS, August bis Januar = HS (Januar gehört zum HS des Vorjahres) */
+function semFromDate(d){
+  if(!isoOk(d)) return "";
+  const y = +d.slice(0, 4), m = +d.slice(5, 7);
+  if(m >= 2 && m <= 7) return "FS" + String(y).slice(2);
+  return "HS" + String(m === 1 ? y - 1 : y).slice(2);
+}
+
+/* ================= Notenmodell (identisch zu den Apps) ================= */
+function critGrades(area, slot, rec){
+  const M = MODELS[area]; if(!rec) return null;
+  const att = ATT.includes(rec.att) ? rec.att : "present";
+  const g = {};
+  /* Team Market und OC: fest 5.00, verspätet 4.00 */
+  if(att === "tm" || att === "tml"){ M.CRITS.forEach(c => g[c.k] = TM_NOTE - (att === "tml" ? LATE_MINUS : 0)); return g; }
+  /* entschuldigt zählt nicht; am Exam Day ergibt jede Abwesenheit 1.00 */
+  if(att === "excused" && !slot.exam) return null;
+  if(att === "unexcused" || (slot.exam && att === "excused")){ M.CRITS.forEach(c => g[c.k] = 1); return g; }
+  const obs = (Array.isArray(rec.obs) ? rec.obs : []).filter(x => typeof x === "string").map(i => M.CHIP[i]).filter(Boolean);
+  const b0 = BASE - (att === "late" ? LATE_MINUS : 0);
+  const nt = (rec.note && typeof rec.note === "object") ? rec.note : null;
+  M.CRITS.forEach(c => {
+    const mine = obs.filter(o => o.c === c.k);
+    if(mine.some(o => o.ko)){ g[c.k] = 1; return; }
+    let d = 0; mine.forEach(o => { d += o.d * o.w; });
+    const nd = nt ? (Number(nt.dir) || 0) : 0, nw = nt ? (Number(nt.w) || 0) : 0;
+    if(nt && String(nt.crit || "") === c.k && nd && nw) d += nd * nw;
+    d = Math.max(M.CAP_NEG, Math.min(M.CAP_POS, d));
+    g[c.k] = Math.max(1, Math.min(6, b0 + d));
+  });
+  return g;
+}
+function dayTotal(area, g){
+  if(!g) return null;
+  const M = MODELS[area]; let s = 0, w = 0;
+  M.CRITS.forEach(c => { const ww = M.critWeight(c.k); s += g[c.k] * ww; w += ww; });
+  return s / w;
+}
+const critShort = (area, k) => { const c = MODELS[area].CRITS.find(x => x.k === k); return c ? ((c.s && c.s.de) || c.de) : k; };
+const critLong = (area, k) => { const c = MODELS[area].CRITS.find(x => x.k === k); return c ? c.de : k; };
+
+/* Einsatztage eines Pakets, wie slots() in den Apps */
+function pkgSlots(variant, st){
+  const V = VARS[variant] || VARS["10T"];
+  const wd = (Array.isArray(st.weekdays) && st.weekdays.length) ? st.weekdays : ["mo","tu","we","th"];
+  const s0 = Math.max(0, Math.min(parseInt(st.startIdx, 10) || 0, wd.length - 1));
+  const dts = Array.isArray(st.slotDates) ? st.slotDates : [];
+  const out = [];
+  for(let i = 0; i < V.n; i++){
+    const j = s0 + i;
+    const s = {id:"d" + String(i + 1).padStart(2, "0"), idx:i + 1, wd:wd[j % wd.length], exam: V.exam && i === V.n - 1, date:""};
+    const d = String(dts[i] || "");
+    if(isoOk(d)){ s.date = d; s.wd = WD[new Date(d + "T12:00:00").getDay()]; }
+    out.push(s);
+  }
+  return out;
+}
+
+/* ================= Zustand ================= */
+let RAW = [];          // gelesene Dateien
+let PKGS = [];         // zusammengeführte Pakete
+let PERSONS = new Map();
+let EINS = [];         // Einsätze: Person × Bereich × Zyklus
+let ISSUES = [];
+let TAB = "ov", SEL = "";
+const F = {sem:"", cyc:"", area:"", kl:"", q:"", semSet:false};
+let DIR_HANDLE = null;
+
+/* ================= Dateien lesen ================= */
+function classify(name, text){
+  const r = {name, kind:"fehler", why:"", text:null, o:null};
+  let o;
+  try{ o = JSON.parse(String(text).replace(/^﻿/, "")); }catch(e){ r.why = "kein gültiges JSON"; return r; }
+  if(!o || typeof o !== "object"){ r.why = "leer"; return r; }
+  if(o.format === "praxisrapport-semesterpaket"){ r.kind = "ignoriert"; r.why = "Semesterpaket (gehört auf «Meine Startseite»)"; return r; }
+  if(o.format === "praxisrapport-turnusplan"){ r.kind = "ignoriert"; r.why = "Turnusplan (gehört ins Cockpit)"; return r; }
+  if(!APPS[o.app] || !Array.isArray(o.students) || !o.days || typeof o.days !== "object"){ r.why = "kein Rapport von Daily Grades"; return r; }
+  if(!MODELS[APPS[o.app]]){ r.why = "Notenmodell fehlt"; return r; }
+  r.kind = "rapport"; r.o = o;
+  return r;
+}
+function addTexts(list){
+  const seen = new Map(RAW.filter(x => x.hash).map(x => [x.hash, x]));
+  list.forEach(f => {
+    if(f.err){ RAW.push({name:f.name, path:f.path || f.name, kind:"fehler", why:f.err}); return; }
+    const h = hashStr(f.text);
+    if(seen.has(h)){ RAW.push({name:f.name, path:f.path || f.name, kind:"ignoriert", why:"gleicher Inhalt wie " + seen.get(h).name}); return; }
+    const r = classify(f.name, f.text);
+    r.path = f.path || f.name; r.hash = h; r.mod = f.mod || 0;
+    if(r.o){ const t = Date.parse(r.o.savedAt || ""); r.saved = isFinite(t) ? t : (f.mod || 0); }
+    seen.set(h, r); RAW.push(r);
+  });
+  rebuild(); renderAll();
+}
+async function readFiles(files, reset){
+  const json = files.filter(x => /\.json$/i.test((x.file || x).name));
+  if(reset) RAW = [];
+  const out = []; let i = 0;
+  for(const x of json){
+    const f = x.file || x;
+    i++; if(i % 15 === 0) $("loadStat").textContent = "Lese " + i + " von " + json.length + " …";
+    try{ out.push({name:f.name, path:x.path || f.webkitRelativePath || f.name, mod:f.lastModified || 0, text: await f.text()}); }
+    catch(e){ out.push({name:f.name, path:x.path || f.name, err:"nicht lesbar (" + (e && e.name || "Fehler") + ")"}); }
+  }
+  if(!json.length && !reset){ $("loadStat").textContent = "Keine JSON-Dateien gefunden."; return; }
+  addTexts(out);
+}
+/* Ordner mit der File System Access API (Chrome, Edge): Ordner merken, später mit einem Klick neu einlesen */
+async function readDirHandle(h, prefix, out){
+  for await (const [name, entry] of h.entries()){
+    if(entry.kind === "file" && /\.json$/i.test(name)){ try{ out.push({file: await entry.getFile(), path: prefix + name}); }catch(e){} }
+    else if(entry.kind === "directory") await readDirHandle(entry, prefix + name + "/", out);
+  }
+}
+async function readDir(h){
+  const out = []; $("loadStat").textContent = "Lese den Ordner …";
+  try{ await readDirHandle(h, h.name + "/", out); }
+  catch(e){ $("loadStat").textContent = "Ordner nicht lesbar: " + (e && e.message || e); return; }
+  await readFiles(out, true);
+}
+const IDB = {
+  open(){ return new Promise((res, rej) => { const r = indexedDB.open("dailygrades-notenzentrale", 1);
+    r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); },
+  async get(k){ try{ const db = await IDB.open(); return await new Promise(res => { const q = db.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); }); }catch(e){ return null; } },
+  async set(k, v){ try{ const db = await IDB.open(); return await new Promise(res => { const q = db.transaction("kv", "readwrite").objectStore("kv").put(v, k); q.onsuccess = () => res(true); q.onerror = () => res(false); }); }catch(e){ return false; } }
+};
+function showAgain(){
+  const b = $("btnAgain");
+  if(!DIR_HANDLE){ b.classList.add("hide"); return; }
+  b.textContent = "«" + DIR_HANDLE.name + "» neu einlesen"; b.classList.remove("hide");
+}
+$("btnDir").onclick = async () => {
+  if(window.showDirectoryPicker){
+    try{ DIR_HANDLE = await window.showDirectoryPicker({id:"dg-rapporte", mode:"read"}); }
+    catch(e){ return; }                                         // abgebrochen
+    IDB.set("rapporte", DIR_HANDLE); showAgain(); await readDir(DIR_HANDLE);
+  } else $("dirIn").click();
+};
+$("btnAgain").onclick = async () => {
+  if(!DIR_HANDLE) return;
+  try{ const p = await DIR_HANDLE.requestPermission({mode:"read"}); if(p !== "granted") return; }catch(e){}
+  await readDir(DIR_HANDLE);
+};
+$("dirIn").onchange = e => { readFiles([...e.target.files], true); e.target.value = ""; };
+$("fileIn").onchange = e => { readFiles([...e.target.files], false); e.target.value = ""; };
+$("btnClear").onclick = () => { RAW = []; F.semSet = false; F.sem = F.cyc = ""; rebuild(); renderAll(); };
+(function dropZone(){
+  const z = $("drop");
+  ["dragenter", "dragover"].forEach(ev => z.addEventListener(ev, e => { e.preventDefault(); z.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(ev => z.addEventListener(ev, e => { e.preventDefault(); z.classList.remove("over"); }));
+  z.addEventListener("drop", async e => {
+    const items = [...(e.dataTransfer.items || [])].map(i => i.webkitGetAsEntry ? i.webkitGetAsEntry() : null).filter(Boolean);
+    if(!items.length){ readFiles([...(e.dataTransfer.files || [])], false); return; }
+    const out = [];
+    const walk = (entry, path) => new Promise(res => {
+      if(entry.isFile) entry.file(f => { out.push({file:f, path: path + f.name}); res(); }, () => res());
+      else if(entry.isDirectory){
+        const rd = entry.createReader(), all = [];
+        const more = () => rd.readEntries(async ents => { if(!ents.length){ for(const x of all) await walk(x, path + entry.name + "/"); res(); } else { all.push(...ents); more(); } }, () => res());
+        more();
+      } else res();
+    });
+    for(const it of items) await walk(it, "");
+    readFiles(out, false);
+  });
+})();
+(async () => { if(!window.showDirectoryPicker) return; const h = await IDB.get("rapporte"); if(h && h.kind === "directory"){ DIR_HANDLE = h; showAgain(); } })();
+
+/* ================= Zusammenführen ================= */
+function blockOf(o){
+  const st = o.settings || {}, m = o.meta || {};
+  if(st.block) return String(st.block);
+  if(m.block) return String(m.block);
+  const id = String(st.paketId || m.paketId || "");
+  const mm = id.match(/^Paket_(.+?)_(Kueche|Service)_/);
+  if(mm){ const z = mm[1].match(/^Zyklus-(\d+)-(\d+)$/i); return z ? "Zyklus " + z[1] + "." + z[2] : mm[1].replace(/-/g, " "); }
+  return "";
+}
+const firstMetaDate = o => Object.keys(o.dayMeta || {}).sort().map(k => (o.dayMeta[k] || {}).date).filter(isoOk)[0] || "";
+function mondayOf(d){ const dt = new Date(d + "T12:00:00"); dt.setDate(dt.getDate() - ((dt.getDay() + 6) % 7)); return isoOf(dt); }
+function pkgKeyOf(o){
+  const st = o.settings || {}, m = o.meta || {};
+  const area = APPS[o.app], v = VARS[o.variant] ? o.variant : "10T";
+  const id = String(st.paketId || m.paketId || "");
+  if(id) return [area, v, id].join("|");
+  const dts = (Array.isArray(st.slotDates) ? st.slotDates : []).filter(isoOk);
+  const first = dts[0] || firstMetaDate(o);
+  return [area, v, norm(st.outlet || m.outlet), norm(st.teacher || m.teacher), first ? mondayOf(first) : ""].join("|");
+}
+const lastOf = st => String(st.nachname || st.last || "").trim();
+const firstOf = st => String(st.vorname || st.first || "").trim();
+function nrOf(st){ return String(st.nr || "").replace(/\s+/g, ""); }
+function rebuild(){
+  const docs = RAW.filter(r => r.kind === "rapport").sort((a, b) => (a.saved || 0) - (b.saved || 0) || a.name.localeCompare(b.name));
+  /* Personen-Schlüssel: Nummer, sonst Name. Ein Name mit bekannter Nummer zählt als dieselbe Person. */
+  const nmToNr = new Map();
+  docs.forEach(d => d.o.students.forEach(st => { if(!st || typeof st !== "object") return; const nr = nrOf(st);
+    const nk = nameKey(lastOf(st) || st.name || "", firstOf(st)); if(nr && nk) nmToNr.set(nk, nr); }));
+  const pkOf = st => { const nr = nrOf(st); if(nr) return "nr:" + nr;
+    const nk = nameKey(lastOf(st) || st.name || "", firstOf(st)); return nmToNr.has(nk) ? "nr:" + nmToNr.get(nk) : "nm:" + nk; };
+  const pk = new Map(); PERSONS = new Map();
+  docs.forEach((d, di) => {
+    const o = d.o, st = o.settings || {}, key = pkgKeyOf(o);
+    d.pkgKey = key;
+    let p = pk.get(key);
+    if(!p){ p = {key, area:APPS[o.app], app:o.app, variant: VARS[o.variant] ? o.variant : "10T", docs:[], studs:new Map(), days:{}, from:{}, dayMeta:{}, fb:{}}; pk.set(key, p); }
+    p.docs.push(d); p.latest = d; p.latestIdx = di; p.settings = st; p.meta = o.meta || {}; p.o = o;
+    const sid2pk = {};
+    o.students.forEach(s => {
+      if(!s || typeof s !== "object") return;
+      const k = pkOf(s); sid2pk[s.id] = k;
+      const prev = p.studs.get(k) || {};
+      p.studs.set(k, {pk:k, nr: nrOf(s) || prev.nr || "", last: lastOf(s) || prev.last || "", first: firstOf(s) || prev.first || "",
+        name: String(s.name || prev.name || ""), nick: String(s.nick || "").trim() || prev.nick || "", klasse: s.klasse || prev.klasse || "",
+        gruppe: s.gruppe || prev.gruppe || "", mail: s.mail || prev.mail || "", sid:s.id, schichtPlan: Array.isArray(s.schichtPlan) ? s.schichtPlan : (prev.schichtPlan || null),
+        ortPlan: Array.isArray(s.ortPlan) ? s.ortPlan : (prev.ortPlan || null), foto: (typeof s.foto === "string" && /^data:image\//.test(s.foto)) ? s.foto : (prev.foto || "")});
+      const fs = st.fbSent && st.fbSent[s.id]; if(fs) p.fb[k] = String(fs);
+    });
+    Object.keys(o.days || {}).forEach(dk => {
+      if(!/^d\d\d$/.test(dk)) return;
+      const recs = o.days[dk]; if(!recs || typeof recs !== "object") return;
+      Object.keys(recs).forEach(sid => {
+        const r = recs[sid], k = sid2pk[sid]; if(!k || !r || typeof r !== "object") return;
+        (p.days[dk] = p.days[dk] || {})[k] = r; p.from[dk + "|" + k] = di;
+      });
+    });
+    Object.keys(o.dayMeta || {}).forEach(dk => { if(o.dayMeta[dk] && typeof o.dayMeta[dk] === "object") p.dayMeta[dk] = Object.assign({}, p.dayMeta[dk], o.dayMeta[dk]); });
+  });
+  PKGS = [...pk.values()];
+  PKGS.forEach(p => {
+    const st = p.settings || {}, m = p.meta || {};
+    p.outlet = String(st.outlet || m.outlet || ""); p.outlet2 = String(st.outlet2 || m.outlet2 || "");
+    p.teacher = String(st.teacher || m.teacher || ""); p.group = String(st.group || ""); p.team = String(st.team || "");
+    p.slots = pkgSlots(p.variant, st);
+    p.slots.forEach(s => { s.recDate = (p.dayMeta[s.id] || {}).date || ""; s.when = s.date || (isoOk(s.recDate) ? s.recDate : ""); });
+    const dates = p.slots.map(s => s.when).filter(isoOk).sort();
+    p.von = dates[0] || ""; p.bis = dates[dates.length - 1] || "";
+    p.block = blockOf(p.o);
+    p.semester = String(st.semester || m.semester || "") || semFromDate(p.von);
+    p.cycle = p.block || (p.von ? "ab " + dmy(p.von) : "ohne Datum");
+    p.cycleSort = (p.block ? "0" : "1") + (p.von || "9999");
+    p.saved = p.latest.saved || 0;
+    p.title = AREA[p.area] + " · " + p.outlet + (p.outlet2 ? " ⇄ " + p.outlet2 : "") + " · " + VARS[p.variant].label;
+    p.studs.forEach((s, k) => { if(!s.klasse) s.klasse = p.group; if(!s.gruppe) s.gruppe = p.team; });
+    /* Personen sammeln (neuere Angaben überschreiben ältere, leere nie) */
+    p.studs.forEach((s, k) => {
+      const prev = PERSONS.get(k) || {pk:k, parts:[]};
+      ["nr","last","first","name","nick","klasse","gruppe","mail","foto"].forEach(f => { if(s[f] && (!prev[f] || (prev._t || 0) <= p.saved)) prev[f] = s[f]; });
+      prev._t = Math.max(prev._t || 0, p.saved);
+      PERSONS.set(k, prev);
+    });
+  });
+  PERSONS.forEach(P => {
+    P.disp = (P.last || P.first) ? [P.last, P.first].filter(Boolean).join(" ") : (P.name || "?");
+    P.sortKey = norm(P.disp);
+  });
+  buildEinsaetze();
+  buildIssues();
+}
+function buildEinsaetze(){
+  const map = new Map();
+  PKGS.forEach(p => p.studs.forEach((s, k) => {
+    const key = [k, p.area, p.semester, p.cycle].join("|");
+    let e = map.get(key);
+    if(!e){ e = {key, pk:k, area:p.area, semester:p.semester, cycle:p.cycle, cycleSort:p.cycleSort, parts:[]}; map.set(key, e); }
+    e.parts.push(p);
+  }));
+  EINS = [...map.values()];
+  EINS.forEach(e => {
+    e.person = PERSONS.get(e.pk);
+    e.parts.sort((a, b) => (a.von || "").localeCompare(b.von || "") || a.variant.localeCompare(b.variant));
+    e.days = [];
+    e.parts.forEach(p => p.slots.forEach(sl => {
+      const rec = (p.days[sl.id] || {})[e.pk]; if(!rec) return;
+      const g = critGrades(p.area, sl, rec);
+      const s = p.studs.get(e.pk) || {};
+      const att = ATT.includes(rec.att) ? rec.att : "present";
+      e.days.push({p, sl, rec, att, g, total: dayTotal(p.area, g), date: sl.when, outlet: String(rec.outlet || "") || (s.ortPlan && s.ortPlan[sl.idx - 1]) || p.outlet,
+        shift: (s.schichtPlan && String(s.schichtPlan[sl.idx - 1] || "").trim()) || "", by: (p.dayMeta[sl.id] || {}).teacher || p.teacher, older: p.from[sl.id + "|" + e.pk] !== p.latestIdx});
+    }));
+    e.days.sort((a, b) => (a.date || "9").localeCompare(b.date || "9") || (a.sl.exam - b.sl.exam) || a.sl.idx - b.sl.idx);
+    const prax = e.days.filter(d => !d.sl.exam && d.total != null);
+    const exams = e.days.filter(d => d.sl.exam);
+    e.counted = prax.length;
+    e.praxis = mean(prax.map(d => d.total));
+    e.examDay = exams.length ? exams[exams.length - 1] : null;
+    e.exam = e.examDay ? e.examDay.total : null;
+    e.examCount = exams.length;
+    e.hasExam = e.parts.some(p => VARS[p.variant].exam);
+    e.expected = e.parts.reduce((s, p) => s + VARS[p.variant].prax, 0);
+    e.recorded = e.days.filter(d => !d.sl.exam).length;
+    e.done = e.recorded >= e.expected && (!e.hasExam || !!e.examDay);
+    e.final = e.hasExam ? ((e.praxis != null && e.exam != null) ? (2 * e.praxis + e.exam) / 3 : null) : e.praxis;
+    e.partAvg = e.parts.map(p => ({p, avg: mean(e.days.filter(d => d.p === p && !d.sl.exam && d.total != null).map(d => d.total)),
+      n: e.days.filter(d => d.p === p && !d.sl.exam && d.total != null).length}));
+    const cnt = a => e.days.filter(d => d.att === a).length;
+    e.abs = {e: cnt("excused"), u: cnt("unexcused"), v: cnt("late") + cnt("tml"), tm: cnt("tm") + cnt("tml")};
+    e.outlets = [...new Set(e.days.map(d => d.outlet).concat(e.parts.map(p => p.outlet)).filter(Boolean))];
+    e.teachers = [...new Set(e.parts.map(p => p.teacher).filter(Boolean))];
+    e.fb = e.parts.map(p => p.fb[e.pk]).filter(Boolean);
+    const crit = {}; const M = MODELS[e.area];
+    M.CRITS.forEach(c => { crit[c.k] = mean(prax.map(d => d.g[c.k])); });
+    e.crit = crit;
+  });
+  EINS.sort((a, b) => a.cycleSort.localeCompare(b.cycleSort) || a.area.localeCompare(b.area));
+}
+
+/* ================= Kontrolle ================= */
+function buildIssues(){
+  ISSUES = [];
+  const add = (lv, text, ref) => ISSUES.push(Object.assign({lv, text}, ref || {}));
+  const td = today();
+  RAW.filter(r => r.kind === "fehler").forEach(r => add("warn", "Datei «" + r.path + "»: " + r.why + ".", {file:true}));
+  PKGS.forEach(p => {
+    const name = p.title + " · " + (p.teacher || "ohne Dozent/in") + " · " + p.cycle;
+    const lastSaved = p.saved ? isoOf(new Date(p.saved)) : "";
+    const past = p.slots.filter(s => isoOk(s.date) && s.date < td);
+    const empty = past.filter(s => !p.days[s.id] || !Object.keys(p.days[s.id]).length);
+    const after = empty.filter(s => lastSaved && s.date > lastSaved);
+    const before = empty.filter(s => !(lastSaved && s.date > lastSaved));
+    if(after.length) add("warn", name + ": seit dem letzten Rapport vom " + dmyy(lastSaved) + " " + (after.length === 1 ? "ist 1 Einsatztag" : "sind " + after.length + " Einsatztage") + " vergangen (" + after.map(s => dmy(s.date)).join(", ") + "). Bitte «Tag senden» nachholen lassen.", {pkg:p});
+    if(before.length) add("warn", name + ": vergangene Einsatztage nicht erfasst: " + before.map(s => (s.exam ? "Exam " : "") + dmy(s.date)).join(", ") + ". Tag in der App öffnen und erfassen.", {pkg:p});
+    /* Einträge, die nur noch in älteren Dateien stehen (Gerät zurückgesetzt, zweites Gerät, gelöschter Tag) */
+    p.olderOnly = Object.keys(p.from).filter(k => p.from[k] !== p.latestIdx).length;
+    if(p.olderOnly && p.docs.length > 1) add("info", name + ": " + p.olderOnly + " Einträge stehen nur in älteren Dateien (die neueste vom " + savedTxt(p.saved) + " enthält sie nicht). Sie zählen mit. Wurde ein Tag absichtlich gelöscht, die älteren Dateien aus dem Ordner nehmen.", {pkg:p});
+  });
+  /* gleiche Person, gleiches Datum, zwei Pakete */
+  const byPd = new Map();
+  EINS.forEach(e => e.days.forEach(d => { if(!isoOk(d.date)) return; const k = e.pk + "|" + d.date; (byPd.get(k) || byPd.set(k, []).get(k)).push({e, d}); }));
+  byPd.forEach(list => {
+    const pk = new Set(list.map(x => x.d.p.key)); if(pk.size < 2) return;
+    const P = list[0].e.person;
+    add("err", (P ? P.disp : "?") + ": am " + dmyy(list[0].d.date) + " in " + pk.size + " Paketen erfasst (" + [...new Set(list.map(x => x.d.p.title + " · " + (x.d.p.teacher || "–")))].join(" und ") + "). Meist liegt eine am Laptop zusammengeführte Datei im Ordner: diese herausnehmen, sonst zählt der Tag doppelt.", {pk:list[0].e.pk});
+  });
+  EINS.forEach(e => {
+    const P = e.person, who = (P ? P.disp : "?") + " (" + AREA[e.area] + ", " + e.cycle + ")";
+    if(e.praxis != null && e.praxis < 4) add("warn", who + ": Ø Praxis " + f2(e.praxis) + ", ungenügend.", {pk:e.pk});
+    const un = e.days.filter(d => d.att === "unexcused");
+    if(un.length) add("warn", who + ": unentschuldigt am " + un.map(d => dmy(d.date)).join(", ") + " (zählt 1.00).", {pk:e.pk});
+    if(e.examDay && (e.examDay.att === "excused" || e.examDay.att === "unexcused")) add("info", who + ": am Exam Day " + ATT_TXT[e.examDay.att] + ", zählt 1.00. Nach der Nachprüfung den Exam Day neu erfassen und senden lassen.", {pk:e.pk});
+    if(e.examCount > 1) add("warn", who + ": " + e.examCount + " Exam Days erfasst. Es zählt der letzte (" + dmy(e.examDay.date) + ").", {pk:e.pk});
+    if(e.done && e.hasExam && e.praxis == null) add("warn", who + ": Exam erfasst, aber kein gewerteter Praxistag.", {pk:e.pk});
+  });
+  const rank = {err:0, warn:1, info:2};
+  ISSUES.sort((a, b) => rank[a.lv] - rank[b.lv]);
+}
+
+/* ================= Filter ================= */
+function matchQ(e){
+  const q = norm(F.q); if(!q) return true;
+  const P = e.person || {};
+  const hay = norm([P.last, P.first, P.name, P.nick, P.nr, e.outlets.join(" "), e.teachers.join(" "), P.klasse, P.gruppe].join(" "));
+  return q.split(" ").every(w => hay.includes(w));
+}
+const passE = e => (!F.sem || e.semester === F.sem) && (!F.cyc || e.cycle === F.cyc) && (!F.area || e.area === F.area)
+  && (!F.kl || (e.person && e.person.klasse === F.kl)) && matchQ(e);
+function passP(p){
+  if((F.sem && p.semester !== F.sem) || (F.cyc && p.cycle !== F.cyc) || (F.area && p.area !== F.area)) return false;
+  if(F.kl && ![...p.studs.values()].some(s => s.klasse === F.kl)) return false;
+  const q = norm(F.q); if(!q) return true;
+  const hay = norm([p.outlet, p.outlet2, p.teacher].concat([...p.studs.values()].map(s => [s.last, s.first, s.nick, s.nr].join(" "))).join(" "));
+  return q.split(" ").every(w => hay.includes(w));
+}
+function fillFilters(){
+  const opts = (id, vals, cur, all) => { const s = $(id); s.innerHTML = ""; s.appendChild(el("option", {value:"", text:all}));
+    vals.forEach(v => s.appendChild(el("option", {value:v[0], text:v[1]}))); s.value = vals.some(v => v[0] === cur) ? cur : ""; };
+  const sems = [...new Set(PKGS.map(p => p.semester).filter(Boolean))].sort();
+  if(!F.semSet && sems.length){ F.sem = sems[sems.length - 1]; F.semSet = true; }   // Standard beim ersten Einlesen: jüngstes Semester
+  opts("fSem", sems.map(s => [s, s]), F.sem, "alle Semester"); F.sem = $("fSem").value;
+  const cyc = new Map(); PKGS.filter(p => !F.sem || p.semester === F.sem).forEach(p => { if(!cyc.has(p.cycle) || cyc.get(p.cycle) > p.cycleSort) cyc.set(p.cycle, p.cycleSort); });
+  opts("fCyc", [...cyc.entries()].sort((a, b) => a[1].localeCompare(b[1])).map(x => [x[0], x[0]]), F.cyc, "alle Zyklen"); F.cyc = $("fCyc").value;
+  opts("fArea", Object.keys(AREA).filter(a => PKGS.some(p => p.area === a)).map(a => [a, AREA[a]]), F.area, "Küche und Service"); F.area = $("fArea").value;
+  const kls = [...new Set([...PERSONS.values()].map(P => P.klasse).filter(Boolean))].sort();
+  opts("fKl", kls.map(k => [k, k]), F.kl, "alle Klassen"); F.kl = $("fKl").value;
+}
+["fSem", "fCyc", "fArea", "fKl"].forEach(id => $(id).onchange = e => { F[{fSem:"sem", fCyc:"cyc", fArea:"area", fKl:"kl"}[id]] = e.target.value; if(id === "fSem") F.cyc = ""; renderAll(); });
+$("fQ").oninput = e => { F.q = e.target.value; renderView(); };
+
+/* ================= Darstellung ================= */
+const TABS = [["ov","Übersicht"], ["pk","Pakete"], ["ps","Person"], ["ab","Absenzen"], ["ko","Kontrolle"], ["fi","Dateien"]];
+function renderAll(){
+  const has = RAW.length > 0;
+  ["cardFilter", "tabs", "view"].forEach(id => $(id).classList.toggle("hide", !has));
+  $("btnClear").classList.toggle("hide", !has);
+  renderStat();
+  if(!has) return;
+  fillFilters();
+  const nav = $("tabs"); nav.innerHTML = "";
+  TABS.forEach(([k, label]) => {
+    const b = el("button", {"aria-pressed": String(TAB === k), onclick: () => { TAB = k; renderAll(); }}, label);
+    if(k === "ko"){ const n = ISSUES.filter(i => i.lv !== "info").length; if(n) b.appendChild(el("span", {class:"cnt", text:String(n)})); }
+    nav.appendChild(b);
+  });
+  renderView();
+}
+function renderStat(){
+  const s = $("loadStat"); s.innerHTML = "";
+  if(!RAW.length){ s.appendChild(el("span", {class:"muted small", text: MODELS.kueche ? "Noch keine Rapporte gelesen." : "Diese Seite ist nicht gebaut (Notenmodell fehlt). Bitte die veröffentlichte Fassung öffnen."})); return; }
+  const rep = RAW.filter(r => r.kind === "rapport").length, ign = RAW.filter(r => r.kind === "ignoriert").length, bad = RAW.filter(r => r.kind === "fehler").length;
+  const newest = Math.max(0, ...PKGS.map(p => p.saved || 0));
+  s.appendChild(el("span", {class:"chip ok", text: rep + " Rapporte"}));
+  s.appendChild(el("span", {class:"chip", text: PKGS.length + " Pakete"}));
+  s.appendChild(el("span", {class:"chip", text: PERSONS.size + " Personen"}));
+  if(ign) s.appendChild(el("span", {class:"chip", text: ign + " ignoriert"}));
+  if(bad) s.appendChild(el("span", {class:"chip err", text: bad + " nicht lesbar"}));
+  if(newest) s.appendChild(el("span", {class:"chip", text: "neuester Stand " + savedTxt(newest)}));
+}
+function renderView(){
+  const v = $("view"); v.innerHTML = "";
+  ({ov:renderOverview, pk:renderPackages, ps:renderPerson, ab:renderAbsences, ko:renderIssues, fi:renderFiles}[TAB] || renderOverview)(v);
+}
+function personCell(P, e){
+  const b = el("button", {class:"link", onclick: () => { SEL = P.pk; TAB = "ps"; renderAll(); window.scrollTo(0, 0); }}, P.disp);
+  return el("td", {class:"nw"}, [b, P.nick ? el("span", {class:"muted", text:" «" + P.nick + "»"}) : null,
+    el("div", {class:"sub", text:[P.klasse, P.gruppe, P.nr ? "N° " + P.nr : ""].filter(Boolean).join(" · ")})]);
+}
+function einsCell(e){
+  const td = el("td", {class:"nw"});
+  if(e.done && e.final != null) td.appendChild(gPill(r1(e.final), true, f1(e.final)));
+  else td.appendChild(el("span", {class:"g att", text: e.recorded || e.examDay ? "läuft " + e.recorded + "/" + e.expected : "offen"}));
+  const bits = [];
+  bits.push(AREA[e.area] + " " + e.outlets.join(" + "));
+  const sub = el("div", {class:"sub"}, bits.join(" · "));
+  td.appendChild(sub);
+  const nums = el("div", {class:"sub"});
+  nums.appendChild(document.createTextNode("Ø " + f2(e.praxis) + (e.hasExam ? " · Exam " + f2(e.exam) : "")));
+  if(e.abs.u) nums.appendChild(el("span", {class:"g att u", style:"margin-left:6px;min-width:0", text: e.abs.u + " u"}));
+  td.appendChild(nums);
+  return td;
+}
+function renderOverview(v){
+  const list = EINS.filter(passE);
+  if(!list.length){ v.appendChild(el("div", {class:"empty", text:"Keine Einsätze für diese Auswahl."})); return; }
+  const cycles = [...new Map(list.map(e => [e.cycle, e.cycleSort])).entries()].sort((a, b) => a[1].localeCompare(b[1])).map(x => x[0]);
+  const persons = [...new Set(list.map(e => e.pk))].map(k => PERSONS.get(k)).filter(Boolean)
+    .sort((a, b) => (a.klasse || "").localeCompare(b.klasse || "") || a.sortKey.localeCompare(b.sortKey));
+  const done = list.filter(e => e.done && e.final != null);
+  const kv = el("div", {class:"kv"}, [
+    el("div", {}, [el("b", {text:"Personen"}), el("span", {text:String(persons.length)})]),
+    el("div", {}, [el("b", {text:"Einsätze fertig"}), el("span", {text: done.length + " / " + list.length})]),
+    el("div", {}, [el("b", {text:"Ø Schlussnoten"}), el("span", {text: f2(mean(done.map(e => e.final)))})]),
+    el("div", {}, [el("b", {text:"unter 4.00"}), el("span", {text:String(list.filter(e => (e.done ? e.final : e.praxis) != null && (e.done ? e.final : e.praxis) < 4).length)})]),
+    el("div", {}, [el("b", {text:"Note 5.50 und höher"}), el("span", {text:String(done.filter(e => r1(e.final) >= 5.5).length)})])]);
+  v.appendChild(kv);
+  const tb = el("table", {class:"ov"});
+  tb.appendChild(el("thead", {}, el("tr", {}, [el("th", {text:"Person"})].concat(cycles.map(c => el("th", {text:c}))))));
+  const body = el("tbody");
+  persons.forEach(P => {
+    const tr = el("tr"); tr.appendChild(personCell(P));
+    cycles.forEach(c => {
+      const es = list.filter(e => e.pk === P.pk && e.cycle === c);
+      if(!es.length){ tr.appendChild(el("td", {class:"muted", text:"–"})); return; }
+      if(es.length === 1){ tr.appendChild(einsCell(es[0])); return; }
+      const td = el("td"); es.forEach(e => { const inner = einsCell(e); [...inner.childNodes].forEach(n => td.appendChild(n)); }); tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+  tb.appendChild(body);
+  v.appendChild(el("div", {class:"tw"}, tb));
+  v.appendChild(el("p", {class:"muted small", style:"margin:10px 0 0", text:"Grosse Zahl: Schlussnote auf 0.1 gerundet (bei Einsätzen ohne Exam der Durchschnitt der Praxistage). «läuft 6/9»: erfasste Praxistage von erwarteten. Grün ab 4.75, rot unter 4.00. Küche 5 Tage und 4 Tage + Exam im gleichen Zyklus zählen als ein Einsatz. Namen anklicken für alle Beobachtungen."}));
+}
+function dayCell(d){
+  if(!d) return el("td", {class:"muted", text:"·"});
+  const td = el("td", {class:"nw"});
+  if(d.att === "excused" && !d.sl.exam){ td.appendChild(el("span", {class:"g att", text:"e"})); return td; }
+  const short = ATT_SHORT[d.att];
+  const pill = gPill(d.total, false, d.att === "unexcused" ? "u" : null);
+  if(d.att === "unexcused") pill.className = "g att u";
+  td.appendChild(pill);
+  if(short && d.att !== "unexcused") td.appendChild(el("span", {class:"muted small", text:" " + short}));
+  return td;
+}
+function renderPackages(v){
+  const list = PKGS.filter(passP).sort((a, b) => a.cycleSort.localeCompare(b.cycleSort) || a.area.localeCompare(b.area) || a.outlet.localeCompare(b.outlet));
+  if(!list.length){ v.appendChild(el("div", {class:"empty", text:"Keine Pakete für diese Auswahl."})); return; }
+  list.forEach(p => {
+    const box = el("div", {class:"pk"});
+    const nOpen = p.slots.filter(s => p.days[s.id] && Object.keys(p.days[s.id]).length).length;
+    box.appendChild(el("div", {class:"pk-h"}, [
+      el("div", {}, [el("span", {class:"t", text:p.title}), el("div", {class:"sub", text:[p.cycle, p.semester, p.teacher || "ohne Dozent/in", (p.von ? dmy(p.von) + " bis " + dmy(p.bis) : "")].filter(Boolean).join(" · ")})]),
+      el("div", {class:"sub", style:"text-align:right"}, [
+        "Stand " + savedTxt(p.saved) + " · " + p.docs.length + (p.docs.length === 1 ? " Datei" : " Dateien") + " · " + nOpen + "/" + p.slots.length + " Tage erfasst",
+        el("br"), "Feedback-Mails " + Object.keys(p.fb).length + "/" + p.studs.size + (p.settings && p.settings.sumSent ? " · Zusammenfassung " + dmy(p.settings.sumSent) : "")])]));
+    const tb = el("table");
+    const hr = el("tr", {}, [el("th", {text:"Person"})]);
+    p.slots.forEach(s => hr.appendChild(el("th", {class:"nw", text: s.exam ? "Exam" + (s.when ? " " + dmy(s.when) : "") : (WD_DE[s.wd] || s.wd) + " " + (s.when ? dmy(s.when) : s.idx)})));
+    ["Ø Praxis", p.slots.some(s => s.exam) ? "Exam" : null, "Feedback"].filter(Boolean).forEach(h => hr.appendChild(el("th", {class:"nw", text:h})));
+    tb.appendChild(el("thead", {}, hr));
+    const body = el("tbody");
+    [...p.studs.values()].sort((a, b) => nameKey(a.last, a.first).localeCompare(nameKey(b.last, b.first))).forEach(s => {
+      const P = PERSONS.get(s.pk) || {pk:s.pk, disp:[s.last, s.first].join(" ")};
+      const tr = el("tr"); tr.appendChild(personCell(P));
+      const ds = []; let ex = null;
+      p.slots.forEach(sl => {
+        const rec = (p.days[sl.id] || {})[s.pk];
+        if(!rec){ tr.appendChild(dayCell(null)); return; }
+        const g = critGrades(p.area, sl, rec), att = ATT.includes(rec.att) ? rec.att : "present";
+        const d = {sl, att, total: dayTotal(p.area, g)};
+        tr.appendChild(dayCell(d));
+        if(sl.exam) ex = d.total; else if(d.total != null) ds.push(d.total);
+      });
+      tr.appendChild(el("td", {}, gPill(mean(ds))));
+      if(p.slots.some(x => x.exam)) tr.appendChild(el("td", {}, gPill(ex)));
+      tr.appendChild(el("td", {class:"nw small", text: p.fb[s.pk] ? "✓ " + dmy(p.fb[s.pk]) : "–"}));
+      body.appendChild(tr);
+    });
+    tb.appendChild(body);
+    box.appendChild(el("div", {class:"tw"}, tb));
+    v.appendChild(box);
+  });
+  v.appendChild(el("p", {class:"muted small", style:"margin:4px 0 0", text:"Tagesnoten mit zwei Stellen. e = entschuldigt (zählt nicht, am Exam Day 1.00), u = unentschuldigt (1.00), v = verspätet (Start 3.50), TM = Team Market oder OC (5.00), TM v = Team Market verspätet (4.00), · = nicht erfasst."}));
+}
+function personOptions(){
+  return [...new Set(EINS.filter(passE).map(e => e.pk))].map(k => PERSONS.get(k)).filter(Boolean).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+}
+function chipLine(area, id){
+  const c = MODELS[area].CHIP[id]; if(!c) return null;
+  const sign = c.ko ? "K.-o." : (c.d > 0 ? "+" : "−") + (c.w >= 1 ? c.w.toFixed(2) : c.w.toFixed(2).slice(1));
+  return el("li", {class: c.d > 0 ? "plus" : "minus"}, [el("b", {text: sign + " "}), critShort(area, c.c) + ": " + (c.t.de || c.t.en || id)]);
+}
+function renderPerson(v){
+  const opts = personOptions();
+  if(!opts.length){ v.appendChild(el("div", {class:"empty", text:"Keine Personen für diese Auswahl."})); return; }
+  if(!opts.some(P => P.pk === SEL)) SEL = opts[0].pk;
+  const bar = el("div", {class:"row noprint", style:"margin-bottom:12px"});
+  const sel = el("select", {onchange: e => { SEL = e.target.value; renderView(); }});
+  opts.forEach(P => sel.appendChild(el("option", {value:P.pk, text:P.disp + (P.nick ? " «" + P.nick + "»" : "") + (P.klasse ? " · " + P.klasse : "")})));
+  sel.value = SEL;
+  const ix = opts.findIndex(P => P.pk === SEL);
+  bar.appendChild(el("button", {disabled: ix <= 0, onclick: () => { SEL = opts[ix - 1].pk; renderView(); }}, "‹"));
+  bar.appendChild(sel);
+  bar.appendChild(el("button", {disabled: ix >= opts.length - 1, onclick: () => { SEL = opts[ix + 1].pk; renderView(); }}, "›"));
+  bar.appendChild(el("button", {onclick: () => window.print()}, "Drucken"));
+  v.appendChild(bar);
+  const P = PERSONS.get(SEL);
+  const head = el("div", {class:"row", style:"gap:14px;margin-bottom:6px"});
+  if(P.foto) head.appendChild(el("img", {class:"ph", src:P.foto, alt:""}));
+  head.appendChild(el("div", {}, [el("h2", {style:"margin:0", text:P.disp + (P.nick ? " «" + P.nick + "»" : "")}),
+    el("div", {class:"sub", text:[P.klasse, P.gruppe, P.nr ? "N° " + P.nr : "", P.mail].filter(Boolean).join(" · ")})]));
+  v.appendChild(head);
+  EINS.filter(e => e.pk === SEL && passE(e)).forEach(e => {
+    const M = MODELS[e.area];
+    const box = el("div", {class:"pk pv", style:"margin-top:12px"});
+    box.appendChild(el("div", {class:"pk-h"}, [
+      el("div", {}, [el("span", {class:"t", text: AREA[e.area] + " · " + e.cycle + " · " + e.outlets.join(" + ")}),
+        el("div", {class:"sub", text: e.parts.map(p => VARS[p.variant].label + " bei " + (p.teacher || "–")).join(" · ") + (e.done ? "" : " · läuft " + e.recorded + "/" + e.expected)})]),
+      el("div", {class:"row", style:"gap:10px"}, [
+        el("span", {class:"small muted", text:"Ø Praxis"}), gPill(e.praxis),
+        e.hasExam ? el("span", {class:"small muted", text:"Exam"}) : null, e.hasExam ? gPill(e.exam) : null,
+        el("span", {class:"small muted", text:"Schlussnote"}), gPill(e.done ? r1(e.final) : null, true, e.done && e.final != null ? f1(e.final) : "–")])]));
+    const tb = el("table");
+    tb.appendChild(el("thead", {}, el("tr", {}, ["Tag", "Ort und Schicht", "Anwesenheit", "Note", "Kriterien (abweichend)", "Beobachtungen und Notiz"].map(h => el("th", {text:h})))));
+    const body = el("tbody");
+    e.days.forEach(d => {
+      const fest = d.att === "tm" ? "fest 5.00 in allen Kriterien" : d.att === "tml" ? "fest 4.00 in allen Kriterien"
+        : (d.att === "unexcused" || (d.sl.exam && d.att === "excused")) ? "1.00 in allen Kriterien" : "";
+      const b0 = d.att === "late" ? BASE - LATE_MINUS : BASE;
+      const crit = (d.g && !fest) ? M.CRITS.filter(c => Math.abs(d.g[c.k] - b0) > 1e-9).map(c => critShort(e.area, c.k) + " " + f2(d.g[c.k])) : [];
+      const critTxt = fest || ((d.att === "late" ? "Start 3.50" + (crit.length ? " · " : "") : "") + (crit.join(" · ") || (d.att === "late" ? "" : (d.g ? "alle wie erwartet (4.50)" : ""))));
+      const ul = el("ul", {class:"obs"});
+      (Array.isArray(d.rec.obs) ? d.rec.obs : []).forEach(id => { const li = chipLine(e.area, id); if(li) ul.appendChild(li); });
+      const nt = d.rec.note && typeof d.rec.note === "object" && d.rec.note.txt ? d.rec.note : null;
+      if(nt){
+        const eff = (nt.crit && Number(nt.dir) && Number(nt.w)) ? " (" + critShort(e.area, nt.crit) + " " + (Number(nt.dir) > 0 ? "+" : "−") + Number(nt.w).toFixed(2) + ")" : "";
+        ul.appendChild(el("li", {}, [el("i", {text:"Notiz: " + nt.txt + eff}), nt.internal ? el("span", {class:"intern", text:"intern"}) : null]));
+      }
+      body.appendChild(el("tr", {}, [
+        el("td", {class:"nw"}, [d.sl.exam ? el("b", {text:"Exam Day"}) : (WD_DE[d.sl.wd] || ""), " " + dmy(d.date)]),
+        el("td", {class:"nw"}, [d.outlet || "–", d.shift ? el("span", {class:"muted", text:" · " + d.shift}) : null, el("div", {class:"sub", text:d.by || ""})]),
+        el("td", {class:"nw", text: ATT_TXT[d.att] + (d.sl.exam && d.att === "excused" ? " (1.00)" : "")}),
+        el("td", {class:"nw"}, d.att === "excused" && !d.sl.exam ? el("span", {class:"muted", text:"zählt nicht"}) : gPill(d.total)),
+        el("td", {class:"small crit", text: critTxt}),
+        el("td", {class:"ob"}, ul.childNodes.length ? ul : el("span", {class:"muted small", text:"–"}))]));
+    });
+    tb.appendChild(body);
+    box.appendChild(el("div", {class:"tw"}, tb));
+    const cr = el("div", {class:"row", style:"padding:10px 12px;gap:6px 14px"});
+    cr.appendChild(el("span", {class:"small muted", text:"Ø pro Kriterium:"}));
+    M.CRITS.forEach(c => cr.appendChild(el("span", {class:"small nw"}, [critShort(e.area, c.k) + (M.critWeight(c.k) > 1 ? " (×2) " : " "), gPill(e.crit[c.k])])));
+    box.appendChild(cr);
+    if(e.parts.length > 1) box.appendChild(el("div", {class:"sub", style:"padding:0 12px 10px"}, "Teilnoten: " + e.partAvg.map(x => VARS[x.p.variant].label + " " + x.p.outlet + " Ø " + f2(x.avg)).join(" · ")));
+    v.appendChild(box);
+  });
+}
+function absRows(){
+  const out = [];
+  EINS.filter(passE).forEach(e => e.days.forEach(d => { if(["late", "tml", "excused", "unexcused"].includes(d.att)) out.push({e, d}); }));
+  return out.sort((a, b) => (b.d.date || "").localeCompare(a.d.date || ""));
+}
+function renderAbsences(v){
+  const rows = absRows();
+  if(!rows.length){ v.appendChild(el("div", {class:"empty", text:"Keine Absenzen und Verspätungen für diese Auswahl."})); return; }
+  const cnt = k => rows.filter(x => x.d.att === k).length;
+  v.appendChild(el("div", {class:"kv"}, [["entschuldigt", cnt("excused")], ["unentschuldigt", cnt("unexcused")], ["verspätet", cnt("late") + cnt("tml")]]
+    .map(([a, b]) => el("div", {}, [el("b", {text:a}), el("span", {text:String(b)})]))));
+  const tb = el("table");
+  tb.appendChild(el("thead", {}, el("tr", {}, ["Datum", "Person", "Klasse", "Ort", "Dozent/in", "Art", "Notiz"].map(h => el("th", {text:h})))));
+  const body = el("tbody");
+  rows.forEach(({e, d}) => {
+    const nt = d.rec.note && d.rec.note.txt ? d.rec.note.txt : "";
+    body.appendChild(el("tr", {}, [el("td", {class:"nw", text: dmyy(d.date) + (d.sl.exam ? " (Exam)" : "")}), personCell(e.person),
+      el("td", {class:"nw", text:[e.person.klasse, e.person.gruppe].filter(Boolean).join(" · ")}),
+      el("td", {class:"nw", text: AREA[e.area] + " " + d.outlet}), el("td", {class:"nw", text: d.by || "–"}),
+      el("td", {class:"nw" + (d.att === "unexcused" ? " " : ""), style: d.att === "unexcused" ? "color:var(--err);font-weight:600" : "", text: ATT_TXT[d.att]}),
+      el("td", {class:"small", text: nt})]));
+  });
+  tb.appendChild(body);
+  v.appendChild(el("div", {class:"tw"}, tb));
+}
+function renderIssues(v){
+  const keep = ISSUES.filter(i => !i.pk || EINS.some(e => e.pk === i.pk && passE(e)) || (!F.q && !F.kl && !F.sem && !F.cyc && !F.area))
+    .filter(i => !i.pkg || passP(i.pkg));
+  if(!keep.length){ v.appendChild(el("div", {class:"empty", text:"Keine Auffälligkeiten. Die Daten sind bereit für den Export."})); return; }
+  v.appendChild(el("p", {class:"muted small", style:"margin:0 0 10px", text:"Vor jedem Export: rote und gelbe Punkte klären. Korrekturen macht immer die bewertende Person in ihrer App und sendet neu; in der Notenzentrale wird nichts geändert."}));
+  const ul = el("ul", {class:"iss"});
+  keep.forEach(i => ul.appendChild(el("li", {class:i.lv}, [el("span", {class:"lv", text:{err:"Fehler", warn:"Prüfen", info:"Hinweis"}[i.lv]}), i.text])));
+  v.appendChild(ul);
+}
+function renderFiles(v){
+  const tb = el("table");
+  tb.appendChild(el("thead", {}, el("tr", {}, ["Datei", "Paket", "gespeichert", "Quelle", "Status"].map(h => el("th", {text:h})))));
+  const body = el("tbody");
+  const latest = new Set(PKGS.map(p => p.latest));
+  RAW.slice().sort((a, b) => (b.saved || 0) - (a.saved || 0)).forEach(r => {
+    const p = r.kind === "rapport" ? PKGS.find(x => x.key === r.pkgKey) : null;
+    const st = r.kind === "rapport" ? (latest.has(r) ? "neueste im Paket" : "älter (ergänzt nur fehlende Einträge)") : (r.kind === "ignoriert" ? "ignoriert: " + r.why : "Fehler: " + r.why);
+    body.appendChild(el("tr", {}, [el("td", {class:"small", text:r.path || r.name}), el("td", {class:"small", text: p ? p.title + " · " + (p.teacher || "–") + " · " + p.cycle : "–"}),
+      el("td", {class:"nw small", text: savedTxt(r.saved)}), el("td", {class:"small", text: r.o ? (r.o.source || "Laptop") : "–"}),
+      el("td", {class:"small", style: r.kind === "fehler" ? "color:var(--err)" : "", text: st})]));
+  });
+  tb.appendChild(body);
+  v.appendChild(el("div", {class:"tw"}, tb));
+}
+
+/* ================= Export ================= */
+function exportName(ext){
+  return "Notenzentrale_" + [F.sem, F.cyc, F.area ? AREA[F.area] : "", F.kl].filter(Boolean).map(fileSafe).join("_") + (F.sem || F.cyc || F.area || F.kl ? "_" : "") + today() + "." + ext;
+}
+function finalRows(){
+  return EINS.filter(passE).map(e => { const P = e.person || {};
+    const part = v => e.partAvg.find(x => x.p.variant === v);
+    return {"Nachname":P.last || "", "Vorname":P.first || "", "Nickname":P.nick || "", "N°":P.nr || "", "Klasse":P.klasse || "", "Gruppe":P.gruppe || "",
+      "Semester":e.semester, "Zyklus":e.cycle, "Bereich":AREA[e.area], "Outlets":e.outlets.join(" + "), "Dozierende":e.teachers.join(" + "),
+      "Tage gewertet":e.counted, "Tage erfasst":e.recorded, "Tage erwartet":e.expected,
+      "Ø Praxis":e.praxis == null ? null : +e.praxis.toFixed(4), "Exam":e.exam == null ? null : +e.exam.toFixed(4),
+      "Schlussnote exakt":(e.done && e.final != null) ? +e.final.toFixed(4) : null, "Schlussnote gerundet":(e.done && e.final != null) ? r1(e.final) : null,
+      "Ø 5 Tage":part("5T") ? (part("5T").avg == null ? null : +part("5T").avg.toFixed(4)) : null,
+      "Ø 4 Tage":part("4T") ? (part("4T").avg == null ? null : +part("4T").avg.toFixed(4)) : null,
+      "entschuldigt":e.abs.e, "unentschuldigt":e.abs.u, "verspätet":e.abs.v, "Team Market/OC":e.abs.tm,
+      "Status":e.done ? "fertig" : "läuft " + e.recorded + "/" + e.expected, "Feedback-Mail":e.fb.join(", ")}; })
+    .sort((a, b) => String(a.Klasse).localeCompare(String(b.Klasse)) || String(a.Nachname).localeCompare(String(b.Nachname), "de") || String(a.Zyklus).localeCompare(String(b.Zyklus)));
+}
+function dayRows(area){
+  const M = MODELS[area], out = [];
+  EINS.filter(e => e.area === area && passE(e)).forEach(e => e.days.forEach(d => {
+    const P = e.person || {};
+    const row = {"Nachname":P.last || "", "Vorname":P.first || "", "N°":P.nr || "", "Klasse":P.klasse || "", "Zyklus":e.cycle, "Outlet":d.outlet, "Dozent/in":d.by || "",
+      "Datum":isoOk(d.date) ? dmyy(d.date) : "", "Tag":d.sl.exam ? "Exam Day" : (WD_DE[d.sl.wd] || ""), "Schicht":d.shift, "Anwesenheit":ATT_TXT[d.att],
+      "Tagesnote":d.total == null ? null : +d.total.toFixed(4)};
+    M.CRITS.forEach(c => { row[critShort(area, c.k) + (M.critWeight(c.k) > 1 ? " (x2)" : "")] = d.g ? +d.g[c.k].toFixed(2) : null; });
+    row["Beobachtungen"] = (Array.isArray(d.rec.obs) ? d.rec.obs : []).map(id => { const c = M.CHIP[id]; return c ? (c.ko ? "K.-o. " : (c.d > 0 ? "+" : "-")) + c.t.de : ""; }).filter(Boolean).join(" | ");
+    row["Notiz"] = d.rec.note && d.rec.note.txt ? d.rec.note.txt + (d.rec.note.internal ? " (intern)" : "") : "";
+    out.push(row);
+  }));
+  return out;
+}
+function pkgRows(){
+  return PKGS.filter(passP).map(p => ({"Bereich":AREA[p.area], "Outlet":p.outlet + (p.outlet2 ? " + " + p.outlet2 : ""), "Dozent/in":p.teacher, "Variante":VARS[p.variant].label,
+    "Semester":p.semester, "Zyklus":p.cycle, "von":p.von ? dmyy(p.von) : "", "bis":p.bis ? dmyy(p.bis) : "", "Personen":p.studs.size,
+    "Tage erfasst":p.slots.filter(s => p.days[s.id] && Object.keys(p.days[s.id]).length).length + "/" + p.slots.length,
+    "Stand":savedTxt(p.saved), "Dateien":p.docs.length, "Feedback-Mails":Object.keys(p.fb).length, "Paket-ID":(p.settings && p.settings.paketId) || ""}));
+}
+function absExportRows(){
+  return absRows().map(({e, d}) => ({"Datum":dmyy(d.date), "Exam":d.sl.exam ? "ja" : "", "Nachname":e.person.last || "", "Vorname":e.person.first || "", "N°":e.person.nr || "",
+    "Klasse":e.person.klasse || "", "Gruppe":e.person.gruppe || "", "Bereich":AREA[e.area], "Outlet":d.outlet, "Dozent/in":d.by || "", "Art":ATT_TXT[d.att],
+    "Notiz":d.rec.note && d.rec.note.txt ? d.rec.note.txt : ""}));
+}
+function sheet(rows, cols){
+  const ws = XLSX.utils.json_to_sheet(rows.length ? rows : [{}], cols ? {header:cols} : undefined);
+  const keys = rows.length ? Object.keys(rows[0]) : (cols || []);
+  ws["!cols"] = keys.map(k => ({wch: Math.min(48, Math.max(8, k.length + 2, ...rows.slice(0, 200).map(r => String(r[k] == null ? "" : r[k]).length + 1)))}));
+  const rng = XLSX.utils.decode_range(ws["!ref"] || "A1");
+  for(let R = 1; R <= rng.e.r; R++) for(let C = 0; C <= rng.e.c; C++){
+    const c = ws[XLSX.utils.encode_cell({r:R, c:C})];
+    if(c && c.t === "n" && !/^(N°|Personen|Dateien|Tage|entschuldigt|unentschuldigt|verspätet|Team|Feedback)/.test(keys[C] || "")) c.z = /gerundet/.test(keys[C]) ? "0.0" : "0.00";
+  }
+  return ws;
+}
+$("btnXlsx").onclick = () => {
+  if(!window.XLSX){ $("expStat").textContent = "Excel-Bibliothek nicht geladen (offline?). Bitte «Schlussnoten als CSV» nehmen."; return; }
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, sheet(finalRows()), "Schlussnoten");
+  XLSX.utils.book_append_sheet(wb, sheet(pkgRows()), "Pakete");
+  if(!F.area || F.area === "kueche") XLSX.utils.book_append_sheet(wb, sheet(dayRows("kueche")), "Tagesnoten Küche");
+  if(!F.area || F.area === "service") XLSX.utils.book_append_sheet(wb, sheet(dayRows("service")), "Tagesnoten Service");
+  XLSX.utils.book_append_sheet(wb, sheet(absExportRows()), "Absenzen");
+  XLSX.writeFile(wb, exportName("xlsx"));
+  $("expStat").textContent = "Excel erstellt: " + exportName("xlsx");
+};
+$("btnCsv").onclick = () => {
+  const rows = finalRows(); if(!rows.length){ $("expStat").textContent = "Keine Einsätze für diese Auswahl."; return; }
+  const keys = Object.keys(rows[0]);
+  const esc = v => { const s = v == null ? "" : String(v); return /[;"\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const txt = "﻿" + [keys.join(";")].concat(rows.map(r => keys.map(k => esc(r[k])).join(";"))).join("\r\n");
+  const a = el("a", {href: URL.createObjectURL(new Blob([txt], {type:"text/csv;charset=utf-8"})), download: exportName("csv")});
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+  $("expStat").textContent = "CSV erstellt: " + exportName("csv");
+};
+$("btnPrint").onclick = () => window.print();
+
+/* Test- und Hilfszugang (Konsole): NZ.addTexts([{name, text}]) */
+window.NZ = {addTexts, critGrades, dayTotal, pkgSlots, get PKGS(){ return PKGS; }, get EINS(){ return EINS; }, get ISSUES(){ return ISSUES; },
+  get PERSONS(){ return PERSONS; }, get RAW(){ return RAW; }, F, finalRows, dayRows, pkgRows, absExportRows, setTab: t => { TAB = t; renderAll(); }};
+renderAll();
+</script>
+</body>
+</html>

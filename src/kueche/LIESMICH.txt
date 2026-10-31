@@ -81,3 +81,15 @@ REGELN AB 11.10.2026 (fest im Code, nicht ueber die Oberflaeche aenderbar)
 - Studierende werden auf Deutsch gesiezt (Feedback-Mail, Beurteilung, Massnahmentexte). Neue
   Massnahmentexte in _chips.js deshalb immer in der Sie-Form oder neutral (Infinitiv) schreiben.
 - Hinweis: "tea-lt" setzt "Verspaetet" seit 08.10.2026 nicht mehr automatisch.
+
+
+REGELN AB 31.10.2026 (fest im Code)
+-----------------------------------
+- Kappung pro Tag und Kriterium: CAP_NEG = -1.5, CAP_POS = 1.5 (_scriptA.js).
+  Damit ist 6.00 in jedem Kriterium erreichbar (vorher bei Basis 4.50 hoechstens 5.50).
+- Plus-Bausteine haben mindestens W.m (0.50). Neue Plus-Bausteine nie mit W.l anlegen.
+- Doppelt gewichtet, fest: DOUBLE_CRITS (Hygiene). Die Einstellung hyg2 ist immer true
+  und nicht mehr abschaltbar. Die Gewichtung kommt ueberall aus critWeight(k).
+- Die Notenzentrale (site/notenzentrale.html) bekommt das Notenmodell beim Bauen aus _scriptA.js und _chips.js.
+  Wer hier etwas aendert, baut neu und laesst tests/test_notenzentrale.py laufen.
+

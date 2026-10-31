@@ -274,7 +274,7 @@ function normalizeSettings(){
   const num = (v,d)=>{ const n = parseFloat(v); return Number.isFinite(n) ? n : d; };
   S.settings.base     = 4.5;   // fest seit 11.10.2026
   S.settings.startIdx = Math.max(0, Math.trunc(num(S.settings.startIdx, 0)));
-  S.settings.hyg2     = !!S.settings.hyg2;
+  S.settings.hyg2     = true;      // fest seit 31.10.2026
   if(!Array.isArray(S.settings.weekdays) || !S.settings.weekdays.length)
     S.settings.weekdays = ["mo","tu","we","th"];
   ["group","team","outlet","teacher"].forEach(k=>{

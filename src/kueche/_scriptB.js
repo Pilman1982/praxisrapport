@@ -27,7 +27,7 @@ const T = {
   noData:"Für diesen Zeitraum ist nichts erfasst.",excusedNote:"entschuldigt (zählt nicht)",
   unexcusedNote:"unentschuldigt (Tagesnote 1.0)",
   banner:"Die Daten bleiben nur in diesem Browser. Am Tagesende «Tag speichern» und die Datei an michael.pilman@ehl.ch senden. Oben rechts «📱 Tablet» wechselt zur Tablet-Ansicht.",
-  hyg2:"Hygiene doppelt gewichten",base:"Basisnote «erfüllt die Erwartungen»",baseShort:"Basisnote",
+  hyg2:"Hygiene zählt doppelt",base:"Basisnote «erfüllt die Erwartungen»",baseShort:"Basisnote",
   teamField:"Team",
   restoreTitle:"Sicherung einlesen",
   restoreHint:"Liest eine zuvor gespeicherte JSON zurück in diese Datei. Damit holen Sie Gruppe, Team, Outlet, Dozent, Turnus, alle Studierenden mit E-Mail-Adresse und alle erfassten Tage zurück, zum Beispiel nach einem Gerätewechsel.",
@@ -128,7 +128,7 @@ const T = {
   noData:"Nothing recorded for this period.",excusedNote:"excused (not counted)",
   unexcusedNote:"unexcused (daily grade 1.0)",
   banner:"Data stays in this browser only. At the end of the day, «Save day» and send the file to michael.pilman@ehl.ch. «📱 Tablet» at the top right switches to the tablet view.",
-  hyg2:"Weight hygiene double",base:"Baseline grade “meets expectations”",baseShort:"Baseline grade",
+  hyg2:"Hygiene counts double",base:"Baseline grade “meets expectations”",baseShort:"Baseline grade",
   teamField:"Team",
   restoreTitle:"Load a backup",
   restoreHint:"Reads a previously saved JSON back into this file. It brings back group, team, outlet, lecturer, rotation, all students with their e-mail addresses and every recorded day, for example after changing device.",
@@ -229,7 +229,7 @@ const T = {
   noData:"ไม่มีข้อมูลในช่วงเวลานี้",excusedNote:"ลา (ไม่นับคะแนน)",
   unexcusedNote:"ขาดโดยไม่แจ้ง (คะแนนวันนั้น 1.0)",
   banner:"ข้อมูลเก็บไว้ในเบราว์เซอร์นี้เท่านั้น เมื่อจบวันให้บันทึกข้อมูลของวันแล้วส่งไฟล์ถึง michael.pilman@ehl.ch ปุ่ม «📱 Tablet» มุมขวาบนจะเปลี่ยนเป็นมุมมองแท็บเล็ต",
-  hyg2:"ให้น้ำหนักสุขอนามัยสองเท่า",base:"คะแนนพื้นฐาน «เป็นไปตามที่คาดหวัง»",baseShort:"คะแนนพื้นฐาน",
+  hyg2:"สุขอนามัยนับสองเท่า",base:"คะแนนพื้นฐาน «เป็นไปตามที่คาดหวัง»",baseShort:"คะแนนพื้นฐาน",
   teamField:"ทีม",
   restoreTitle:"โหลดไฟล์สำรอง",
   restoreHint:"อ่านไฟล์ JSON ที่เคยบันทึกไว้กลับเข้าไฟล์นี้ จะได้กลุ่ม ทีม เอาต์เล็ต ผู้สอน รอบฝึก รายชื่อนักศึกษาพร้อมอีเมล และวันฝึกที่บันทึกไว้ทั้งหมดกลับคืนมา เช่น หลังเปลี่ยนอุปกรณ์",
@@ -487,7 +487,7 @@ function normalizeSettings(){
   const num = (v,d)=>{ const n = parseFloat(v); return Number.isFinite(n) ? n : d; };
   S.settings.base     = BASE_NOTE;   // fest, alte Dateien mit 5.00 werden übernommen
   S.settings.startIdx = Math.max(0, Math.trunc(num(S.settings.startIdx, 0)));
-  S.settings.hyg2     = !!S.settings.hyg2;
+  S.settings.hyg2     = true;      // fest seit 31.10.2026: Hygiene zählt immer doppelt
   if(!Array.isArray(S.settings.weekdays) || !S.settings.weekdays.length)
     S.settings.weekdays = ["mo","tu","we","th"];
   ["group","team","outlet","teacher"].forEach(k=>{
@@ -777,7 +777,7 @@ function slotsInRange(mode){
 function dayTotal(id, sid){
   const g = critGradesForDay(id, sid); if(!g) return null;
   let sum = 0, w = 0;
-  CRITS.forEach(c=>{ const ww = (c.k==="hyg" && S.settings.hyg2) ? 2 : 1; sum += g[c.k]*ww; w += ww; });
+  CRITS.forEach(c=>{ const ww = critWeight(c.k); sum += g[c.k]*ww; w += ww; });
   return sum/w;
 }
 function summary(sid, mode){
@@ -801,7 +801,7 @@ function summary(sid, mode){
   const crit = {};
   CRITS.forEach(c=>{ crit[c.k] = per[c.k].reduce((a,b)=>a+b,0)/per[c.k].length; });
   let sum = 0, wsum = 0;
-  CRITS.forEach(c=>{ const w = (c.k==="hyg" && S.settings.hyg2) ? 2 : 1; sum += crit[c.k]*w; wsum += w; });
+  CRITS.forEach(c=>{ const w = critWeight(c.k); sum += crit[c.k]*w; wsum += w; });
   return {counted, exc, unx, late, tm, tml, tally, notes, crit, total: sum/wsum};
 }
 /* Exam Day separat */
@@ -827,6 +827,8 @@ function recordedPeriod(sid, mode, lg){
 const fmt  = g => (g==null ? "–" : g.toFixed(2));
 const fmt1 = g => (g==null ? "–" : (Math.round(g*10)/10).toFixed(1));
 
+/* Gewicht kurz anzeigen: .25 / .50 / 1.00 (vorher wurde 1.00 als ".00" angezeigt) */
+const wSig = w => (w >= 1 ? w.toFixed(2) : w.toFixed(2).slice(1));
 /* ---- DOM-Helfer ---- */
 const el = (tag, attrs={}, kids=[]) => {
   const n = document.createElement(tag);
@@ -1008,13 +1010,13 @@ function renderDay(){
         const c = CHIP[id]; if(!c) return;
         const auto = false;
         const pill = el("span",{class:"obs "+(c.d>0?"p":"m")},
-          el("span",{class:"tx",text:(c.ko ? "K.-o. " : (c.d>0?"+":"\u2212") + c.w.toFixed(2).slice(1) + " ") + chipT(c, S.settings.uiLang)}));
+          el("span",{class:"tx",text:(c.ko ? "K.-o. " : (c.d>0?"+":"\u2212") + wSig(c.w) + " ") + chipT(c, S.settings.uiLang)}));
         if(!auto) pill.appendChild(el("button",{class:"x",text:"×","aria-label":"x",
           onclick:()=>{ unseed(); r.obs = r.obs.filter(x=>x!==id); persist(); renderDay(); }}));
         body.appendChild(pill);
       });
       if(r.note && r.note.txt){
-        const sign = r.note.dir && r.note.w ? (r.note.dir>0?"+":"−")+r.note.w.toFixed(2).slice(1)+" " : "";
+        const sign = r.note.dir && r.note.w ? (r.note.dir>0?"+":"−")+wSig(r.note.w)+" " : "";
         body.appendChild(el("span",{class:"obs nt"},[
           el("span",{class:"tx",text:(r.note.internal?"🔒 ":"✎ ")+sign+r.note.txt}),
           el("button",{class:"x",text:"×","aria-label":"x",
@@ -1384,7 +1386,7 @@ function openSheet(student){
       const opts = el("div",{class:"opts"});
       list.forEach(c=>{
         const on = obsOf(r).includes(c.i);
-        const sig = c.ko ? "K.-o." : (c.d>0?"+":"−") + c.w.toFixed(2).slice(1);
+        const sig = c.ko ? "K.-o." : (c.d>0?"+":"−") + wSig(c.w);
         const b = el("button",{class:"opt "+(c.d>0?"p":"m")+(on?" on":"")+(c.ko?" ko":""),
           onclick:()=>{ unseed();
             r.obs = obsOf(r).includes(c.i) ? obsOf(r).filter(x=>x!==c.i) : [...obsOf(r), c.i];
@@ -1658,7 +1660,7 @@ function printReports(){
     ]));
     doc.appendChild(el("div",{class:"pfoot",text:"EHL Hotelfachschule Passugg · Hauptstrasse 12, 7062 Chur-Passugg · "
       + tOut("base",lg) + " " + baseNum().toFixed(2)
-      + (S.settings.hyg2 ? " · " + tOut("hyg2",lg) : "")}));
+      + " · " + tOut("hyg2",lg)}));
     area.appendChild(doc);
   });
   if(!n){ toast(t("noData")); return; }
@@ -2001,8 +2003,7 @@ function renderSet(){
   const f4 = el("div",{class:"field"});
   f4.appendChild(el("label",{text:"HACCP"}));
   const lbl = el("label",{style:"display:flex;gap:8px;align-items:center;font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink);padding:8px 0"});
-  lbl.appendChild(el("input",{type:"checkbox",id:"fHyg",checked:!!S.settings.hyg2,style:"width:auto",
-    onchange:e=>{S.settings.hyg2=e.target.checked;persist();}}));
+  lbl.appendChild(el("input",{type:"checkbox",id:"fHyg",checked:true,disabled:true,style:"width:auto",title:"Fest seit 31.10.2026"}));
   lbl.appendChild(el("span",{text:t("hyg2")}));
   f4.appendChild(lbl);
   c1.appendChild(g2);
@@ -2084,14 +2085,14 @@ function renderSet(){
   c4.appendChild(el("span",{class:"eyebrow",text:t("calc"),style:"display:block;margin-bottom:8px"}));
   const info = el("div",{style:"font-size:13.5px;line-height:1.65;color:var(--ink2)"});
   info.innerHTML = "Jeder Einsatztag startet pro Kriterium auf der Basisnote <b class='num'>"+baseNum().toFixed(2)+"</b>. "+
-    "Jede angetippte Beobachtung verschiebt diese Note: leicht <b class='num'>0.25</b>, mittel <b class='num'>0.50</b>, schwer <b class='num'>1.00</b>. "+
-    "Pro Tag und Kriterium sind maximal <b class='num'>−1.50</b> und <b class='num'>+1.00</b> möglich. "+
+    "Jede angetippte Beobachtung verschiebt diese Note: Plus-Beobachtungen um <b class='num'>0.50</b> oder <b class='num'>1.00</b>, Minus-Beobachtungen um <b class='num'>0.25</b>, <b class='num'>0.50</b> oder <b class='num'>1.00</b>. "+
+    "Pro Tag und Kriterium sind maximal <b class='num'>−1.50</b> und <b class='num'>+1.50</b> möglich, die Note liegt also zwischen <b class='num'>3.00</b> und <b class='num'>6.00</b>; drei Plus-Beobachtungen im gleichen Kriterium ergeben eine <b class='num'>6.00</b>. "+
     "Ein K.-o.-Baustein setzt das Kriterium auf <b class='num'>1.00</b>. "+
     "Ein Tag ohne Beobachtung zählt bewusst als «wie erwartet». "+
     "Unentschuldigt ergibt eine Tagesnote von <b class='num'>1.00</b>, entschuldigt zählt nicht in den Durchschnitt. "+
     "«Verspätet» lässt den Tag eine Note tiefer starten (<b class='num'>3.50</b>). "+
     "Ein Freitext wirkt nur dann auf die Note, wenn ein Kriterium und eine Wirkung gewählt sind. "+
-    (S.settings.hyg2 ? "Hygiene zählt im Gesamtschnitt <b>doppelt</b>. " : "Hygiene zählt im Gesamtschnitt einfach. ")+
+    "Hygiene zählt im Gesamtschnitt immer <b>doppelt</b>. "+
     (HAS_EXAM
       ? "Der <b>Exam Day</b> ist der " + SLOT_COUNT + ". und letzte Einsatztag. Er wird mit demselben Raster bewertet, "
         + "ergibt eine <b>eigene Note</b> und fliesst nicht in die Praxisnote ein. Abwesenheit am Exam Day ergibt "

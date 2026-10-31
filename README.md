@@ -13,6 +13,7 @@ Es werden nie Daten von Studierenden hier abgelegt (siehe `.gitignore`).
 |---|---|
 | `/` | Startseite mit allen Programmen |
 | `/cockpit.html` | Cockpit Kursleitung: Turnusplan prüfen, Fotos zuordnen, Pakete pro Outlet, Eingangskontrolle |
+| `/notenzentrale.html` | Notenzentrale Kursleitung: liest den Ordner mit allen JSON-Rapporten, zeigt Noten, Beobachtungen, Absenzen und Kontrolle, Excel für die Notensoftware |
 | `/startlink.html` | Persönliche Startlinks für Dozierende erzeugen (Sprache, Outlet, Name, Wochentagsplan) |
 | `/kueche/…` | Küchenrapport (Laptop und Mobil, 10T / 4T / 5T) |
 | `/service/…` | Servicerapport (Laptop und Mobil, 10T / 4T / 5T) |
@@ -70,6 +71,7 @@ python3 tests/test_cockpit.py       # Cockpit: Plan, Fotos, Pakete, Eingangskont
 python3 tests/test_altdaten.py      # Rapporte aus dem Pilot (alter Programmstand)
 python3 tests/test_daily_grades.py  # Rückmeldungen Pilot 08.10.2026 (Schichten, OC, Verspätung, Nickname, Zusammenfassung)
 python3 tests/test_regeln_2026_10_11.py  # Basis 4.50, Team Market verspätet 4.00, Sie-Form
+python3 tests/test_notenzentrale.py      # Regeln 31.10.2026 (6.00 erreichbar, Hygiene fest doppelt), Notenzentrale = gleiche Noten wie die Apps
 git commit -am "…" && git push      # GitHub Pages aktualisiert sich in 1 bis 2 Minuten
 ```
 
@@ -109,3 +111,26 @@ Gewichte, Exam Day, 2/3 Praxis + 1/3 Exam) stehen in `src/*/LIESMICH.txt` und we
   relativ zur Basis (ab 4.75, ab 4.25, ab 4.00, darunter).
 - **Sie-Form**: Feedback-Mail Deutsch «Guten Tag Vorname» mit Sie, «Freundliche Grüsse»; Englisch «Dear …».
   Auch die Beurteilung am Laptop und die Massnahmentexte (Tipps) der Service-Bausteine sind in der Sie-Form.
+
+## Regeln ab 31.10.2026
+
+- **6.00 in jedem Kriterium erreichbar**: Kappung pro Tag und Kriterium −1.50 / **+1.50** (vorher +1.00, also bei Basis 4.50 höchstens 5.50).
+  Spanne 3.00 bis 6.00, K.-o. bleibt 1.00. Verspätet: Start 3.50, höchstens 5.00.
+- **Plus-Bausteine mindestens 0.50** (vorher teils 0.25): drei Plus-Beobachtungen im gleichen Kriterium ergeben 6.00.
+  Minus-Bausteine unverändert (0.25, 0.50, 1.00).
+- Neue Soft-Skill-Bausteine (Plus, 0.50): Küche `hyg-p5` Listen lückenlos geführt, `tea-p5` freundlich und respektvoll,
+  `tea-p6` kommuniziert klar, `sel-p5` nimmt Feedback an; Service `gas-p6` persönlich und herzlich betreut,
+  `tea-p6` freundlich und respektvoll, `tea-p7` Kritik angenommen und umgesetzt.
+- **Doppelt gewichtet, fest** (nicht mehr abschaltbar): Küche Hygiene; Service Gastgeberhaltung **und** Hygiene.
+  Steht in `DOUBLE_CRITS` (src/kueche/_scriptA.js, src/service/_scriptA.js und src/service/_mobile_head.html; `build.py` prüft, dass Service-Laptop und -Mobil gleich sind).
+- Noten werden nie gespeichert, sondern immer aus den Beobachtungen gerechnet: die Regeln gelten sofort für alle Dateien, auch für bereits erfasste Tage.
+
+## Notenzentrale (Kursleitung)
+
+`site/notenzentrale.html` liest alle Rapport-Dateien («Tag senden», «Sichern») aus einem Ordner, führt sie pro Paket zusammen
+(pro Tag und Person gewinnt die neuere Datei, ältere ergänzen nur Fehlendes) und rechnet mit dem Notenmodell der Apps:
+`build.py` setzt Kappung, Doppelgewichtung, Kriterien und Bausteine aus `src/kueche` und `src/service` unverändert ein.
+Küche 5T + 4T im gleichen Zyklus = ein Einsatz (Ø 9 Tage, Exam, Schlussnote). Zyklus und Semester kommen aus dem Paket
+(`settings.block`, `settings.semester`, seit 31.10.2026), sonst aus der Paket-ID bzw. dem Datum. Ansichten: Übersicht, Pakete,
+Person, Absenzen, Kontrolle, Dateien. Export: Excel (Schlussnoten, Pakete, Tagesnoten Küche und Service, Absenzen) oder CSV.
+Die Seite speichert keine Daten; in Chrome und Edge merkt sie sich nur den gewählten Ordner, um ihn mit einem Klick neu einzulesen.

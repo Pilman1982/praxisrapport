@@ -6,7 +6,7 @@
    - Rechnung identisch zur Laptop-Fassung (Basisnote, Abweichung, Kappung, Doppelgewicht)
    ==================================================================================== */
 function dmy(d){ return String(d).slice(8,10) + "." + String(d).slice(5,7) + "."; }
-const N2_DOUBLE = CRITS.some(c => c.k === "gas") ? "gas" : "hyg";
+/* Doppelt gewichtet (fest seit 31.10.2026): critWeight aus _scriptA.js bzw. _mobile_head.html, Küche Hygiene, Service Gastgeberhaltung und Hygiene */
 const N2_LATE = CHIP["tea-lt"] ? "tea-lt" : "tea-n1";
 const N2T = {
   de:{grades:"Noten", today:"Tag", praxis:"Ø Praxis", exam:"Exam", final:"Schlussnote", counted:"Tage gewertet",
@@ -59,7 +59,7 @@ function n2Crit(slotId, sid){
 function n2Day(slotId, sid){
   const g = n2Crit(slotId, sid); if(!g) return null;
   let sum = 0, w = 0;
-  CRITS.forEach(c => { const ww = (c.k === N2_DOUBLE && S.settings[N2_DOUBLE + "2"] !== false) ? 2 : 1; sum += g[c.k] * ww; w += ww; });
+  CRITS.forEach(c => { const ww = critWeight(c.k); sum += g[c.k] * ww; w += ww; });
   return sum / w;
 }
 function n2Praxis(sid){

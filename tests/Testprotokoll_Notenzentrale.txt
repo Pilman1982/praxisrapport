@@ -1,0 +1,66 @@
+Testprotokoll Daily Grades: Regeln 31.10.2026 und Notenzentrale
+OK      Cockpit: 4 Pakete (Kueche 5T, 4T, 10T, Service 10T)                            [('Kuechenrapport', '5T'), ('Kuechenrapport', '10T'), ('Kuechenrapport', '4T'), ('Servicerapport', '10T')]
+OK      Cockpit: Paket traegt Zyklus und Semester in den Einstellungen                 [('Zyklus 3.1', 'HS26'), ('Zyklus 3.1', 'HS26'), ('Zyklus 3.1', 'HS26'), ('Zyklus 3.1', 'HS26')]
+OK      Cockpit: keine JavaScript-Fehler                                               []
+OK      Mobil kueche 5T: keine JavaScript-Fehler                                       []
+OK      Mobil kueche 10T: keine JavaScript-Fehler                                      []
+OK      Mobil kueche 4T: keine JavaScript-Fehler                                       []
+OK      Mobil service 10T: keine JavaScript-Fehler                                     []
+OK      Regel: drei Plus Hygiene = 6.00, drei Plus Team = 6.00 (Kueche)                {'hyg': 6, 'pro': 4.5, 'org': 4.5, 'tea': 6, 'sel': 4.5, 'mot': 4.5, 'fac': 4.5}
+OK      Regel: Kueche Tag 1 = (2*6 + 6 + 5*4.5)/8 = 5.0625 (Hygiene doppelt)           5.0625
+OK      Regel: verspaetet + ein Plus = 4.00 im Kriterium, sonst 3.50                   {'hyg': 3.5, 'pro': 4, 'org': 3.5, 'tea': 3.5, 'sel': 3.5, 'mot': 3.5, 'fac': 3.5}
+OK      Regel: alle Kriterien mit drei Plus = Tagesnote 6.00                           6
+OK      Regel: Bestnote erreichbar: Praxis 6.00, Exam 6.00, Schlussnote 6.0            (6, 6, 6)
+OK      Regel Service: 1.00 + 0.50 Gastgeberhaltung = 6.00, Tag = (2*6 + 8*4.5)/11     4.7727272727272725
+OK      Regel Service: Hygiene doppelt (Tag 2 = (2*6 + 2*4.5 + 7*4.5)/11)              4.7727272727272725
+OK      Regel Service: verspaetet, drei Plus Team = 5.00 (Deckel ab 3.50)              {'gas': 3.5, 'hyg': 3.5, 'mep': 3.5, 'tec': 3.5, 'ver': 3.5, 'tea': 5, 'sel': 3.5, 'mot': 3.5, 'auf': 3.5}
+OK      Laptop kueche 5T: gleiche Tages- und Praxisnoten wie Mobil                     [{'101': {'days': [5.0625, 3.5625, 5, None, 3.75], 'praxis': 4.34375, 'exam': None}, '105': {'days': [4.1875, 4.5, 4.5625, 4, 4.3125], 'praxis': 4.312
+OK      Laptop kueche 5T: Doppelgewichtung fest (Haken gesetzt und gesperrt)           [True, True]
+OK      Laptop kueche 5T: keine JavaScript-Fehler                                      []
+OK      Laptop kueche 10T: gleiche Tages- und Praxisnoten wie Mobil                    [{'102': {'days': [6, 6, 6, 6, 6, 6, 6, 6, 6, 6], 'praxis': 6, 'exam': 6}}, {'102': ([6, 6, 6, 6, 6, 6, 6, 6, 6, 6], 6)}]
+OK      Laptop kueche 10T: Doppelgewichtung fest (Haken gesetzt und gesperrt)          [True, True]
+OK      Laptop kueche 10T: keine JavaScript-Fehler                                     []
+OK      Laptop kueche 4T: gleiche Tages- und Praxisnoten wie Mobil                     [{'101': {'days': [1, 4, 6, 4.5, 4.625], 'praxis': 3.875, 'exam': 4.625}, '105': {'days': [4.75, 4.5, 3.5, 6, 1], 'praxis': 4.6875, 'exam': 1}}, {'101
+OK      Laptop kueche 4T: Doppelgewichtung fest (Haken gesetzt und gesperrt)           [True, True]
+OK      Laptop kueche 4T: keine JavaScript-Fehler                                      []
+OK      Laptop service 10T: gleiche Tages- und Praxisnoten wie Mobil                   [{'103': {'days': [4.7727272727272725, 4.7727272727272725, 4.2272727272727275, 3.6363636363636362, 3.8636363636363638, None, 4.5, 4.454545454545454, 1
+OK      Laptop service 10T: Doppelgewichtung fest (Haken gesetzt und gesperrt)         [True, True]
+OK      Laptop service 10T: keine JavaScript-Fehler                                    []
+OK      Notenzentrale: 4 Pakete, 4 Einsaetze (Anna und Eva je 5T + 4T als einer)       {'pk': 4, 'ein': 4, 'raw': [['Rapport_kueche_5T.json', 'rapport'], ['Rapport_kueche_10T.json', 'rapport'], ['Rapport_kueche_4T.json', 'rapport'], ['Ra
+OK      Notenzentrale: Kopie, Semesterpaket und kaputte Datei erkannt                  {'Rapport_kueche_5T.json': 'rapport', 'Rapport_kueche_10T.json': 'rapport', 'Rapport_kueche_4T.json': 'rapport', 'Rapport_service_10T.json': 'rapport'
+OK      Notenzentrale: Semester HS26 vorgewaehlt                                       HS26
+OK      Notenzentrale 101: Praxis = Ø aller 9 Tage aus 5T und 4T                       (4.109375, 4.109375)
+OK      Notenzentrale 101: Exam aus dem 4T-Paket, Schlussnote 2/3 + 1/3                (4.625, 4.28125, True)
+OK      Notenzentrale 101: Zyklus 3.1, 9 Tage erwartet                                 ('Zyklus 3.1', 9)
+OK      Notenzentrale 105: Praxis = Ø aller 9 Tage aus 5T und 4T                       (4.479166666666667, 4.479166666666667)
+OK      Notenzentrale 105: Exam aus dem 4T-Paket, Schlussnote 2/3 + 1/3                (1, 3.3194444444444446, True)
+OK      Notenzentrale 105: Zyklus 3.1, 9 Tage erwartet                                 ('Zyklus 3.1', 9)
+OK      Notenzentrale 102: Praxis, Exam und Schlussnote identisch zur App              (6, 6, 6, 6, 6, 6)
+OK      Notenzentrale 102: jede Tagesnote identisch zur App                            ([6, 6, 6, 6, 6, 6, 6, 6, 6, 6], [6, 6, 6, 6, 6, 6, 6, 6, 6, 6])
+OK      Notenzentrale 103: Praxis, Exam und Schlussnote identisch zur App              (3.903409090909091, 4.681818181818182, 4.162878787878788, 3.903409090909091, 4.681818181818182, 4.162878787878788)
+OK      Notenzentrale 103: jede Tagesnote identisch zur App                            ([4.7727272727272725, 4.7727272727272725, 4.2272727272727275, 3.6363636363636362, 3.8636363636363638, None, 4.5, 4.454545454545454, 1, 4.6818181818181
+OK      Kontrolle: unentschuldigt gemeldet (Anna 4T Tag 1, Carla Tag 9)                ['Arnold Anna (Küche, Zyklus 3.1): unentschuldigt am 10.11. (zählt 1.00).', 'Caflisch Carla (Service, Zyklus 3.1): unentschuldigt am 16.11. (zählt 1.0
+OK      Kontrolle: Exam entschuldigt = 1.00 als Hinweis (Eva)                          [['warn', 'Datei «kaputt.json»: kein gültiges JSON.'], ['warn', 'Arnold Anna (Küche, Zyklus 3.1): unentschuldigt am 10.11. (zählt 1.00).'], ['warn', '
+OK      Kontrolle: aeltere Datei ohne eigene Eintraege erzeugt keinen Hinweis          []
+OK      Notenzentrale: neuere Datei gewinnt (Tag 1 Gastgeberhaltung 6.00)              6
+OK      Uebersicht: Schlussnote Ben 6.0 und Zyklus-Spalte sichtbar                     Personen4Einsätze fertig4 / 4Ø Schlussnoten4.44unter 4.001Note 5.50 und höher1PersonZyklus 3.1Arnold AnnaHFD · Gruppe 1 Team A · N° 1014.3Küche Campig
+OK      Person: Beobachtungen im Wortlaut und Notiz sichtbar                           ‹
+Arnold Anna · HFD
+Bucher Ben · HFD
+Caflisch Carla · HFD
+Egli Eva «Evi» · HFE1
+›
+Drucken
+Arnold Anna
+HFD · Gruppe 1 Team A · N° 101 · a@x.ch
+Küche · 
+OK      Filter Bereich: nur Service im Export                                          ['103']
+OK      Export Schlussnoten: gerundet auf 0.1, Teilnoten 5T und 4T                     {'Nachname': 'Arnold', 'Vorname': 'Anna', 'Nickname': '', 'N°': '101', 'Klasse': 'HFD', 'Gruppe': 'Gruppe 1 Team A', 'Semester': 'HS26', 'Zyklus': 'Zy
+OK      CSV: Kopfzeile und 4 Zeilen, Semikolon                                         Nachname;Vorname;Nickname;N°;Klasse;Gruppe;Semester;Zyklus;Bereich;Outlets;Dozie
+OK      Excel: fuenf Blaetter, 4 Schlussnoten                                          [['Schlussnoten', 'Pakete', 'Tagesnoten Küche', 'Tagesnoten Service', 'Absenzen'], 4, [4.3, 6, 4.2, 3.3]]
+OK      Notenzentrale: keine JavaScript-Fehler                                         []
+OK      Kontrolle: gleiche Person am gleichen Tag in zwei Paketen = Fehler             ['Arnold Anna: am 02.11.2026 in 2 Paketen erfasst (Küche · Campigiana · 9 Tage + Exam · Koch Campi und Küche · Campigiana · 5 Tage · Koch Campi). Meis
+OK      Kontrolle: Rueckstand seit dem letzten Rapport (6 vergangene Einsatztage)      ['Küche · The Essence · 9 Tage + Exam · Koch Essence · Zyklus 3.2: seit dem letzten Rapport vom 04.11.2026 sind 6 Einsatztage vergangen (18.11., 19.11
+OK      Notenzentrale: keine JavaScript-Fehler (nach Nachladen)                        []
+
+54 von 54 Pruefungen bestanden
