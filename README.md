@@ -72,8 +72,15 @@ python3 tests/test_altdaten.py      # Rapporte aus dem Pilot (alter Programmstan
 python3 tests/test_daily_grades.py  # Rückmeldungen Pilot 08.10.2026 (Schichten, OC, Verspätung, Nickname, Zusammenfassung)
 python3 tests/test_regeln_2026_10_11.py  # Basis 4.50, Team Market verspätet 4.00, Sie-Form
 python3 tests/test_notenzentrale.py      # Regeln 31.10.2026 (6.00 erreichbar, Hygiene fest doppelt), Notenzentrale = gleiche Noten wie die Apps
+python3 tests/test_fixes_kueche.py       # Fehlerkorrekturen 31.10.2026 Küche Laptop
+python3 tests/test_fixes_service.py      # Fehlerkorrekturen 31.10.2026 Service Laptop
+python3 tests/test_fixes_mobil.py        # Fehlerkorrekturen 31.10.2026 Mobil und Startseite
 git commit -am "…" && git push      # GitHub Pages aktualisiert sich in 1 bis 2 Minuten
 ```
+
+Ohne Internet (CDN gesperrt) brauchen einige Tests lokale Bibliotheken, die nicht im Repository liegen (`tests/.cache/`, siehe `.gitignore`):
+SheetJS 0.18.5 als `tests/.cache/xlsx.full.min.js` (oder Umgebungsvariable `DG_XLSX`), pdfjs-dist 3.11.174 und jszip 3.10.1 unter
+`tests/.cache/node_modules/` (oder `DG_LIBS`). Holen mit `npm pack xlsx@0.18.5 pdfjs-dist@3.11.174 jszip@3.10.1` und entpacken.
 
 Feste Regeln (Basisnote 4.50, Verspätung startet eine Note tiefer bei 3.50, Team Market und OC zählen 5.00, Team Market verspätet 4.00,
 Gewichte, Exam Day, 2/3 Praxis + 1/3 Exam) stehen in `src/*/LIESMICH.txt` und werden nicht über die Oberfläche geändert.
@@ -134,3 +141,17 @@ Küche 5T + 4T im gleichen Zyklus = ein Einsatz (Ø 9 Tage, Exam, Schlussnote). 
 (`settings.block`, `settings.semester`, seit 31.10.2026), sonst aus der Paket-ID bzw. dem Datum. Ansichten: Übersicht, Pakete,
 Person, Absenzen, Kontrolle, Dateien. Export: Excel (Schlussnoten, Pakete, Tagesnoten Küche und Service, Absenzen) oder CSV.
 Die Seite speichert keine Daten; in Chrome und Edge merkt sie sich nur den gewählten Ordner, um ihn mit einem Klick neu einzulesen.
+
+## Fehlerkorrekturen 31.10.2026 (Prüfung aller Apps)
+
+- Service Laptop: «Tag senden» brach ab, sobald jemand verspätet oder abwesend war.
+- Rundung auf 0.1 immer «halb auf» mit kleinem Zuschlag (x.x5 aus einer Rechnung wurde teils abgerundet); Farbe, Prädikat und Schlusssatz folgen der angezeigten Note.
+- Schlussnote nur, wenn Praxis und Exam vorliegen (Laptop wie Tablet); 5T: Praxisnote.
+- Freitext: am Tablet bleiben Kriterium, Wirkung und «intern» beim Bearbeiten erhalten; am Laptop wird die Notiz bei jedem Schliessen gespeichert.
+- Namensliste: Abgleich über Nummer (`#Nr` am Zeilenende), E-Mail, dann Name; Umbenennen behält alle Daten; vor dem Entfernen von Personen mit Einträgen wird gefragt.
+- Anzeigen eines Tages legt keine Einträge mehr an; Einträge entstehen nur durch «Tag erfassen» oder eine Eingabe.
+- Fremde Dateien (Service-Datei in der Küche und umgekehrt) werden abgelehnt; kaputte Dateien laden ohne Absturz.
+- Baustein «Verspätet zum Dienst erschienen» nicht mehr wählbar (Verspätung nur über den Knopf), zählt in alten Daten als Verspätung.
+- Wechsel Tablet/Laptop: landet auf dem heutigen Tag, fragt vor dem Überschreiben; neu ausgestellte Pakete übernehmen Daten, Plan, Zyklus.
+- Zusammenfassung zählt «Team Market verspätet» richtig; Anrede mit Vorname; Startlinks mit Komma im Namen; mein.html robust gegen fehlerhafte Pakete.
+- Cockpit: Restaurantwechsel und Tagesplan nach Datum statt Position, Wechseldatum an Einsatztagen, Nicknames nur bei echter Änderung, doppelte Namen und Dozierende ohne Namen erkannt.
