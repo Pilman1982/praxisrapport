@@ -585,7 +585,7 @@ day:"Erfassen",week:"Übersicht",rep:"Beurteilung",data:"Daten",set:"Eintragen",
   weightNote:"Gastgeberhaltung und Gästekontakt sowie Hygiene und Erscheinungsbild zählen doppelt. Anwesenheit und Pünktlichkeit wirken stark auf die Note.",
   storeWarn:"Dieses Gerät speichert nichts dauerhaft. Exportiere den Rapport am Ende jedes Einsatztages, sonst gehen die Eingaben verloren.",
   byTeacher:"Erfasst von",outlet:"Abteilung",
-  studentListHint:"Eine Person pro Zeile: Nachname; Vorname; Nickname; E-Mail; Sprache; Klasse; Gruppe. Nur Nachname und Vorname sind Pflicht. Leere Klasse oder Gruppe = Wert aus der Kopfzeile. Beispiel: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
+  studentListHint:"Eine Person pro Zeile: Nachname; Vorname; Nickname; E-Mail; Sprache; Klasse; Gruppe; #Nr. Nur Nachname und Vorname sind Pflicht. Leere Klasse oder Gruppe = Wert aus der Kopfzeile. Die Studierendennummer mit # am Schluss bitte stehen lassen, daran wird die Person auch nach einer Namenskorrektur erkannt. Beispiel: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
   repLang:"Sprache der Beurteilung",repLangAll:"Sprache für alle setzen",
   absMailTitle:"Absenzen und Verspätungen melden",
   absMailBtn:"Meldung an die Kursleitung",
@@ -620,7 +620,10 @@ day:"Erfassen",week:"Übersicht",rep:"Beurteilung",data:"Daten",set:"Eintragen",
   halfFirst:"als erste Hälfte",halfSecond:"als zweite Hälfte",
   halfHint:"Dateien mit 5 Tagen und mit 4 Tagen plus Exam werden auf die zehn Einsatztage verteilt. Automatisch bedeutet: die 5 Tage werden zur ersten Hälfte, die 4 Tage plus Exam zur zweiten.",
   placedAs:"eingeordnet",
-  vExam:"Exam Day",vNoExam:"ohne Exam Day",vDays:"Einsatztage"},
+  vExam:"Exam Day",vNoExam:"ohne Exam Day",vDays:"Einsatztage",
+  mailClip:"Der Text ist in der Zwischenablage. Bitte hier mit Strg+V einfügen.",
+  notRecHint:"Für diesen Tag noch nicht erfasst. Wähle die Anwesenheit oder füge eine Beobachtung hinzu.",
+  dropStudConfirm:"Diese Personen haben schon Einträge und fallen aus der Liste: {n}. Deren Einträge werden danach nicht mehr angezeigt. Trotzdem übernehmen?"},
  en:{
   stNames:"Every student has a name",stClass:"Class and group are set",
   dropConfirm:"Really discard this day?",dropDone:"Day discarded",
@@ -687,7 +690,7 @@ day:"Record",week:"Overview",rep:"Feedback",data:"Data",set:"Setup",
   weightNote:"Host attitude and guest contact as well as hygiene and grooming count double. Attendance and punctuality weigh heavily on the grade.",
   storeWarn:"This device does not store anything permanently. Export the report at the end of each shift day or your entries are lost.",
   byTeacher:"Recorded by",outlet:"Outlet",
-  studentListHint:"One person per line: surname; first name; nickname; e-mail; language; class; group. Only surname and first name are required. Empty class or group = value from the header. Example: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
+  studentListHint:"One person per line: surname; first name; nickname; e-mail; language; class; group; #no. Only surname and first name are required. Empty class or group = value from the header. Leave the student number with # at the end as it is: it identifies the person even after a name correction. Example: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
   repLang:"Feedback language",repLangAll:"Set the language for everyone",
   absMailTitle:"Report absences and lateness",
   absMailBtn:"Report to the course lead",
@@ -722,7 +725,10 @@ day:"Record",week:"Overview",rep:"Feedback",data:"Data",set:"Setup",
   halfFirst:"as the first half",halfSecond:"as the second half",
   halfHint:"Files with 5 days and with 4 days plus exam are mapped onto the ten shift days. Automatic means: the 5 days become the first half, the 4 days plus exam the second.",
   placedAs:"placed",
-  vExam:"Exam Day",vNoExam:"no Exam Day",vDays:"shift days"},
+  vExam:"Exam Day",vNoExam:"no Exam Day",vDays:"shift days",
+  mailClip:"The text is on the clipboard. Please paste it here with Ctrl+V.",
+  notRecHint:"Not recorded for this day yet. Choose the attendance or add an observation.",
+  dropStudConfirm:"These people already have entries and would drop out of the list: {n}. Their entries will no longer be shown. Apply anyway?"},
  th:{
   stNames:"นักศึกษาทุกคนมีชื่อ",stClass:"ตั้งชั้นเรียนและกลุ่มแล้ว",
   dropConfirm:"\u0e22\u0e01\u0e40\u0e25\u0e34\u0e01\u0e27\u0e31\u0e19\u0e19\u0e35\u0e49\u0e08\u0e23\u0e34\u0e07\u0e2b\u0e23\u0e37\u0e2d",dropDone:"\u0e22\u0e01\u0e40\u0e25\u0e34\u0e01\u0e41\u0e25\u0e49\u0e27",
@@ -789,7 +795,7 @@ day:"บันทึก",week:"ภาพรวม",rep:"ผลประเมิ
   weightNote:"ความเป็นเจ้าบ้านและการดูแลแขก รวมถึงสุขอนามัยและบุคลิกภาพ คิดเป็นสองเท่า การมาเรียนและตรงต่อเวลามีผลต่อคะแนนมาก",
   storeWarn:"อุปกรณ์นี้ไม่บันทึกข้อมูลถาวร กรุณาส่งออกรายงานเมื่อจบแต่ละวัน มิฉะนั้นข้อมูลจะหาย",
   byTeacher:"บันทึกโดย",outlet:"แผนก",
-  studentListHint:"หนึ่งคนต่อหนึ่งบรรทัด: นามสกุล; ชื่อ; ชื่อเล่น; อีเมล; ภาษา; ชั้นเรียน; กลุ่ม จำเป็นเฉพาะนามสกุลและชื่อ ตัวอย่าง: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
+  studentListHint:"หนึ่งคนต่อหนึ่งบรรทัด: นามสกุล; ชื่อ; ชื่อเล่น; อีเมล; ภาษา; ชั้นเรียน; กลุ่ม; #เลขประจำตัว จำเป็นเฉพาะนามสกุลและชื่อ กรุณาอย่าแก้ไขเลขประจำตัวที่มี # ท้ายบรรทัด ระบบใช้เลขนี้ระบุตัวบุคคลแม้แก้ไขชื่อแล้ว ตัวอย่าง: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
   repLang:"ภาษาของผลประเมิน",repLangAll:"ตั้งภาษาให้ทุกคน",
   absMailTitle:"รายงานการขาดและมาสาย",
   absMailBtn:"ส่งรายงานถึงผู้ดูแลหลักสูตร",
@@ -824,7 +830,10 @@ day:"บันทึก",week:"ภาพรวม",rep:"ผลประเมิ
   halfFirst:"เป็นครึ่งแรก",halfSecond:"เป็นครึ่งหลัง",
   halfHint:"ไฟล์ 5 วัน และ 4 วันพร้อมสอบ จะถูกจัดเข้าสิบวันฝึก อัตโนมัติหมายถึง 5 วันเป็นครึ่งแรก และ 4 วันพร้อมสอบเป็นครึ่งหลัง",
   placedAs:"จัดเข้า",
-  vExam:"วันสอบ",vNoExam:"ไม่มีวันสอบ",vDays:"วันฝึก"} ,
+  vExam:"วันสอบ",vNoExam:"ไม่มีวันสอบ",vDays:"วันฝึก",
+  mailClip:"ข้อความอยู่ในคลิปบอร์ดแล้ว กรุณาวางที่นี่ด้วย Ctrl+V",
+  notRecHint:"ยังไม่ได้บันทึกสำหรับวันนี้ เลือกการมาเรียนหรือเพิ่มข้อสังเกต",
+  dropStudConfirm:"บุคคลต่อไปนี้มีข้อมูลที่บันทึกไว้แล้วและจะถูกนำออกจากรายชื่อ: {n} ข้อมูลของพวกเขาจะไม่แสดงอีก ยืนยันหรือไม่"} ,
  /* Chinesisch dient nur als Ausgabesprache fuer die Beurteilung, nicht als Bedienoberflaeche. */
  zh:{
   stNames:"每位学生都有姓名",stClass:"已设置班级与组别",
@@ -853,7 +862,7 @@ day:"记录",week:"总览",rep:"评估",data:"数据",set:"设置",
   emailSubj:"餐厅服务实践评估",
   examDay:"考核日",examShort:"考核",praxis:"实践",
   praxisGrade:"实践成绩",examGrade:"考核成绩",finalGrade:"最终成绩",
-  teamMarket:"Team Market",
+  teamMarket:"Team Market",tmLateShort:"其中迟到",
   cl1:"表现出色。保持这个水平，并针对上述几点继续打磨，还能更进一步。",
   cl2:"完成得扎实。上述几点是你下次上岗提升最快的地方。",
   cl3:"基础已经具备。把上述几点逐条攻克，你会明显变得更有把握。",
@@ -897,6 +906,18 @@ function wdName(k, lg){
   const p = pack(lg); if(p && p.wdays && p.wdays[k]) return p.wdays[k];
   const w = WDAYS.find(x=>x.k===k); return (w && (w[lg]||w.de)) || k;
 }
+/* Kurzname des Wochentags fuer die Knoepfe (31.10.2026): Thai-Namen beginnen alle mit «วัน»,
+   drei Zeichen reichen dort nicht zur Unterscheidung. */
+const WD_SHORT = {
+  de:{mo:"Mo",tu:"Di",we:"Mi",th:"Do",fr:"Fr",sa:"Sa",su:"So"},
+  en:{mo:"Mon",tu:"Tue",we:"Wed",th:"Thu",fr:"Fri",sa:"Sat",su:"Sun"},
+  th:{mo:"จ.",tu:"อ.",we:"พ.",th:"พฤ.",fr:"ศ.",sa:"ส.",su:"อา."}
+};
+function wdShort(k, lg){
+  lg = lg || S.settings.uiLang;
+  const p = pack(lg); if(p && p.wdays && p.wdays[k]) return String(p.wdays[k]).slice(0,3);
+  return (WD_SHORT[lg] && WD_SHORT[lg][k]) || wdName(k, lg).slice(0,3);
+}
 function chipT(c, lg){
   const p = pack(lg); if(p && p.chips && p.chips[c.i] && p.chips[c.i].t) return p.chips[c.i].t;
   return c.t[lg] || c.t.de;
@@ -907,7 +928,8 @@ function chipA(c, lg){
   return c.a[lg] || c.a.de;
 }
 function bandName(g, lg){
-  const b = SCALE.find(s=>g>=s.min);
+  /* kleine Toleranz (31.10.2026): eine als 3.9499… gerechnete 3.95 bleibt «Genügend» */
+  const b = SCALE.find(s=>g + 1e-9 >= s.min) || SCALE[SCALE.length-1];
   const p = pack(lg); if(p && p.bands && p.bands[String(b.min)]) return p.bands[String(b.min)];
   return b[lg] || b.de;
 }
@@ -987,10 +1009,13 @@ function anzeigeName(s){ return [s.nachname, s.vorname].filter(Boolean).join(" "
    Schreibweise "Ammann Lea; mail; de" noch richtig gelesen wird. */
 function parseStudentZeile(line){
   const roh = String(line || "").split(/[;\t]/).map(x=>x.trim());
-  let mail = "", lang = "", klasse = "", gruppe = "";
+  let mail = "", lang = "", klasse = "", gruppe = "", nr = "";
   const rest = [];
   roh.forEach(x=>{
     if(!x) return;
+    /* Studierendennummer «#21» (letztes Feld, wie in der Tablet-Liste). Ein «#…» zählt überall als Nummer,
+       nie als Klasse, Gruppe oder E-Mail; so legt eine Namenskorrektur die Person nicht neu an. */
+    if(x.charAt(0) === "#"){ const v = x.slice(1).trim(); if(!nr && v) nr = v; return; }
     if(!mail && x.indexOf("@") >= 0){ mail = x; return; }
     if(!klasse && erkenneKlasse(x)){ klasse = erkenneKlasse(x); return; }
     if(!gruppe && erkenneGruppe(x)){ gruppe = erkenneGruppe(x); return; }
@@ -1003,12 +1028,27 @@ function parseStudentZeile(line){
     const g = splitName(nachname); nachname = g.nachname; vorname = g.vorname;
   }
   if(!nachname && !vorname) return null;
-  return {nachname, vorname, nick, mail, lang, klasse, gruppe};
+  return {nachname, vorname, nick, mail, lang, klasse, gruppe, nr};
 }
 function studentZeile(s){
   return [s.nachname || "", s.vorname || "", s.nick || "", s.mail || "", s.lang || "",
-          s.klasse || "", s.gruppe || ""]
+          s.klasse || "", s.gruppe || "", s.nr ? "#" + s.nr : ""]
     .filter((x,i)=> i < 2 || x).join("; ");
+}
+/* «Übernehmen» (Entscheid 31.10.2026): eine Zeile gehoert zu einer bestehenden Person ueber
+   die Nummer, sonst die E-Mail (Gross/klein egal), sonst den Namen. Gleicher Name mit zwei
+   verschiedenen E-Mail-Adressen bleiben zwei Personen; jede Person passt nur zu einer Zeile. */
+const nameKey = (n, v) => [n, v].filter(Boolean).join(" ").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase().replace(/\s+/g, " ").trim();
+const mailKey = m => String(m || "").trim().toLowerCase();
+function matchStudent(g, list, used){
+  const frei = list.filter(s => !used.has(s.id));
+  const gNr = String(g.nr || "").trim(), gMail = mailKey(g.mail), gName = nameKey(g.nachname, g.vorname);
+  const nrPasst = s => !gNr || !s.nr || String(s.nr).trim() === gNr;          /* andere Nummer = andere Person */
+  if(gNr){ const x = frei.find(s => s.nr && String(s.nr).trim() === gNr); if(x) return x; }
+  if(gMail){ const x = frei.find(s => mailKey(s.mail) === gMail && nrPasst(s)); if(x) return x; }
+  return frei.find(s => nameKey(s.nachname, s.vorname) === gName && nrPasst(s)
+                     && (!gMail || !mailKey(s.mail) || mailKey(s.mail) === gMail)) || null;
 }
 
 /* Nur Personen mit Namen uebernehmen und alle Felder auf saubere Zeichenketten bringen.
@@ -1045,6 +1085,42 @@ function saubereStudierende(list){
     })
     .filter(Boolean);
 }
+/* ---- Tagesdaten aus fremden oder alten Dateien auf die erwartete Form bringen (wie im Kuechenrapport) ----
+   Beobachtungen als Text statt Liste, Gewichte als Text oder leere Tage haben sonst Erfassen,
+   Uebersicht und Beurteilung mit einem Fehler angehalten. */
+const ATT_OK = ["present","late","excused","unexcused","tm","tml"];
+const obsOf = r => (r && Array.isArray(r.obs)) ? r.obs : [];
+const attOf = r => (r && ATT_OK.includes(r.att)) ? r.att : "present";
+/* Alter Baustein «Verspätet zum Dienst erschienen» (vor 08.10.2026 automatisch gesetzt). Wird nicht mehr
+   angeboten, alte Einträge zählen in der Note weiter und gelten in der Beurteilung als Verspätung. */
+const LATE_CHIP = "tea-lt";
+function sanitizeDays(days){
+  const out = {};
+  if(!days || typeof days !== "object" || Array.isArray(days)) return out;
+  Object.entries(days).forEach(([k, recs])=>{
+    if(!/^d\d\d$/.test(k) || !recs || typeof recs !== "object" || Array.isArray(recs)) return;
+    out[k] = {};
+    Object.entries(recs).forEach(([sid, r])=>{
+      if(!r || typeof r !== "object" || Array.isArray(r)) return;
+      const o = {
+        att: ATT_OK.includes(r.att) ? r.att : "present",
+        obs: obsOf(r).filter(x=>typeof x === "string"),
+        note: (r.note && typeof r.note === "object" && typeof r.note.txt === "string")
+          ? {txt:r.note.txt, crit:String(r.note.crit||""), dir:Number(r.note.dir)||0, w:Number(r.note.w)||0, internal:!!r.note.internal}
+          : null
+      };
+      if(r.outlet && typeof r.outlet === "string") o.outlet = r.outlet;      // Restaurant des Tages (Wechsel)
+      out[k][sid] = o;
+    });
+  });
+  return out;
+}
+function sanitizeMeta(m){
+  const out = {};
+  if(!m || typeof m !== "object" || Array.isArray(m)) return out;
+  Object.entries(m).forEach(([k, v])=>{ if(/^d\d\d$/.test(k) && v && typeof v === "object" && !Array.isArray(v)) out[k] = v; });
+  return out;
+}
 /* ===== Variante dieser Datei, bewusst nicht einstellbar =====
    Wird beim Erzeugen der Datei gesetzt. Drei Varianten sind im Umlauf:
    10T  10 Einsatztage, Tag 10 ist der Exam Day
@@ -1057,10 +1133,12 @@ const VARIANT = "5T";
 const SLOT_COUNT = 5;
 const HAS_EXAM = false;
 
+/* Kopfangaben der Beispieldatei; beim Verlassen des Beispiels werden genau diese Werte geleert */
+const SAMPLE_SET = {group:"Group 3", team:"Team A", outlet:"Bellavista", teacher:"M. Pilman"};
 function seed(){
   const names = ["Ammann Lea","Bertschi Nino","Da Silva Rui","Frei Anouk","Keller Timo","Vogt Sarina"];
   const st = {
-    settings:{...DEF, group:"Group 3", team:"Team A", outlet:"Bellavista", teacher:"M. Pilman", isSample:true},
+    settings:{...DEF, ...SAMPLE_SET, isSample:true},
     students: names.map((n,i)=>({id:"s"+(i+1), name:n,
       mail: n.toLowerCase().replace(/[^a-z ]/g,"").split(" ").reverse().join(".")+"@stud.ehl.edu"})),
     days:{},
@@ -1113,9 +1191,9 @@ try{
 if(!S || !S.settings) S = seed();
 S.settings = sanitizeSettings(S.settings);
 /* Altbestand aufteilen: fruehere Dateien kannten nur ein Namensfeld. */
-S.students = saubereStudierende(S.students || []); S.days = S.days || {};
-
-S.dayMeta = S.dayMeta || {};
+S.students = saubereStudierende(S.students || []);
+S.days = sanitizeDays(S.days || {});
+S.dayMeta = sanitizeMeta(S.dayMeta);
 let storeOK = true;
 try{ localStorage.setItem("sr.probe","1"); storeOK = localStorage.getItem("sr.probe")==="1"; localStorage.removeItem("sr.probe"); }
 catch(e){ storeOK = false; }
@@ -1130,7 +1208,18 @@ function persist(){
     const sa = document.getElementById("storeAlert"); if(sa) sa.hidden = false;
   }
 }
-function unseed(){ if(S.settings.isSample) S.settings.isSample = false; }
+/* Beispielinhalt (Entscheid 31.10.2026): Herumprobieren im Beispiel macht daraus keine echte Datei.
+   Das Beispiel wird erst mit einer echten Liste («Übernehmen»), einer Sicherung, einem Paket oder
+   beim Zusammenführen verlassen; dann verschwinden Beispieltage, Tagesangaben und Beispiel-Kopfwerte. */
+function unseed(){}
+function leaveSample(){
+  if(!S.settings.isSample) return false;
+  S.days = {}; S.dayMeta = {};
+  Object.keys(SAMPLE_SET).forEach(k => { if(S.settings[k] === SAMPLE_SET[k]) S.settings[k] = ""; });
+  S.settings.isSample = false;
+  curSlot = startSlot();
+  return true;
+}
 
 /* ---- Turnus-Slots ---- */
 function slots(){
@@ -1163,7 +1252,7 @@ const examSlot = () => slots().find(s=>s.exam) || null;
 const gradedSlots = () => slots().filter(s=>!s.exam);
 
 let view = "day";
-let curSlot = (function(){
+function startSlot(){
   const all = slots();
   /* Noten 2.0: Ist heute ein Einsatztag des Pakets, immer diesen zeigen. Sonst landen
      Beobachtungen auf einem falschen Datum (z. B. Kollegin mit eigenem Gerät ab Mittwoch). */
@@ -1173,21 +1262,23 @@ let curSlot = (function(){
   if(nextOpen) return nextOpen.id;
   const filled = all.filter(s=>S.days[s.id]);
   return (filled.length ? filled[filled.length-1] : all[0]).id;
-})();
+}
+let curSlot = startSlot();
 const repMode = "all";   // Auswertung immer über den ganzen Turnus
 
 const dayOpen = id => !!S.days[id];
+/* Neuer Tagesdatensatz einer Person: Team Market und Restaurant aus dem Plan */
+function defaultRec(s, id){
+  const r = {att: planTM(s, id) ? "tm" : "present", obs:[], note:null};
+  /* Mit Tagesplan gilt nur der Plan (leer = Stammrestaurant); sonst Ort vom Vortag */
+  const vo = Array.isArray(s.ortPlan) ? planOutlet(s, id)
+           : (planOutlet(s, id) || (hasOutlet2() ? prevOutlet(id, s.id) : ""));
+  if(vo) r.outlet = vo;
+  return r;
+}
 function openSlot(id){
   S.days[id] = S.days[id] || {};
-  S.students.forEach(s=>{
-    if(!S.days[id][s.id]){
-      S.days[id][s.id] = {att: planTM(s, id) ? "tm" : "present", obs:[], note:null};
-      /* Mit Tagesplan gilt nur der Plan (leer = Stammrestaurant); sonst Ort vom Vortag */
-      const vo = Array.isArray(s.ortPlan) ? planOutlet(s, id)
-               : (planOutlet(s, id) || (hasOutlet2() ? prevOutlet(id, s.id) : ""));
-      if(vo) S.days[id][s.id].outlet = vo;
-    }
-  });
+  S.students.forEach(s=>{ if(!S.days[id][s.id]) S.days[id][s.id] = defaultRec(s, id); });
   const _m = S.dayMeta[id] || {};
   if(!_m.teacher) _m.teacher = S.settings.teacher || "";
   if(!_m.group)   _m.group   = S.settings.group   || "";
@@ -1201,9 +1292,15 @@ function openSlot(id){
   S.dayMeta[id] = _m;
   persist();
 }
+/* Anzeigen legt keinen Datensatz an (Entscheid 31.10.2026). recOf liest nur; dayRec legt den
+   Datensatz erst bei einer Handlung an (Anwesenheit, Baustein, Freitext, Restaurant). */
+const recOf = (id, sid) => (S.days[id] || {})[sid] || null;
 function dayRec(id, sid){
   S.days[id] = S.days[id] || {};
-  S.days[id][sid] = S.days[id][sid] || {att:"present", obs:[], note:null};
+  if(!S.days[id][sid]){
+    const s = S.students.find(x => x.id === sid);
+    S.days[id][sid] = s ? defaultRec(s, id) : {att:"present", obs:[], note:null};
+  }
   return S.days[id][sid];
 }
 
@@ -1284,7 +1381,8 @@ function mitOrt(r, o){
    Zusammen ergeben sie genau die 10T-Struktur: 9 Praxistage plus Exam Day. */
 let halfMode = "auto";
 function mapSlotId(srcVariant, slid){
-  if(!srcVariant || srcVariant === VARIANT) return slid;
+  const valid = id => slots().some(x=>x.id===id);           // nur Einsatztage, die es in dieser Datei gibt
+  if(!srcVariant || srcVariant === VARIANT) return valid(slid) ? slid : null;
   if(VARIANT !== "10T") return null;                       // nur die volle Datei nimmt Hälften auf
   const n = parseInt(String(slid).slice(1), 10);
   if(!n) return null;
@@ -1317,15 +1415,16 @@ function critGradesForDay(id, sid){
   if(!r) return null;
   const sl = slots().find(x=>x.id===id);
   const isExam = !!(sl && sl.exam);
+  const att = attOf(r);                                    // unbekannter Wert zählt als anwesend (wie Küche)
   /* Team Market und OC: kein Servicedienst, der Tag zählt fest mit 5.00, verspätet 4.00. */
-  if(r.att === "tm" || r.att === "tml"){ const g0 = {}; CRITS.forEach(c=>g0[c.k]=TM_NOTE - (r.att === "tml" ? LATE_MINUS : 0)); return g0; }
+  if(att === "tm" || att === "tml"){ const g0 = {}; CRITS.forEach(c=>g0[c.k]=TM_NOTE - (att === "tml" ? LATE_MINUS : 0)); return g0; }
   /* Exam Day: jede Abwesenheit ergibt 1.00, unabhängig vom Grund. */
-  if(r.att === "excused" && !isExam) return null;
+  if(att === "excused" && !isExam) return null;
   const g = {};
-  if(r.att === "unexcused" || (isExam && r.att === "excused")){ CRITS.forEach(c=>g[c.k]=1); return g; }
-  const obs = (r.obs||[]).map(i=>CHIP[i]).filter(Boolean);
+  if(att === "unexcused" || (isExam && att === "excused")){ CRITS.forEach(c=>g[c.k]=1); return g; }
+  const obs = obsOf(r).map(i=>CHIP[i]).filter(Boolean);
   /* Verspätet: der Tag startet eine Note tiefer, 3.50 statt 4.50 (Basis seit 11.10.2026). */
-  const b0 = BASE_NOTE - (r.att === "late" ? LATE_MINUS : 0);
+  const b0 = BASE_NOTE - (att === "late" ? LATE_MINUS : 0);
   const nt = r.note;
   CRITS.forEach(c=>{
     const mine = obs.filter(o=>o.c===c.k);
@@ -1355,39 +1454,44 @@ function dayTotal(id, sid){
 function summary(sid, mode){
   const rng = slotsInRange(mode);
   const per = {}; CRITS.forEach(c=>per[c.k]=[]);
-  let counted = 0, exc = 0, unx = 0, late = 0, tm = 0, tml = 0;
+  let counted = 0, exc = 0, unx = 0, late = 0, tm = 0, tml = 0, lateChip = 0;
   const tally = {}, notes = [];
   rng.forEach(sl=>{
     const r = (S.days[sl.id]||{})[sid]; if(!r) return;
+    const att = attOf(r);
     if(r.note && r.note.txt) notes.push({slot:sl, ...r.note});
-    if(r.att === "excused"){ exc++; return; }
-    if(r.att === "unexcused") unx++;
-    if(r.att === "late" || r.att === "tml") late++;
-    if(r.att === "tm" || r.att === "tml") tm++;
-    if(r.att === "tml") tml++;
-    (r.obs||[]).forEach(i=>{ tally[i] = (tally[i]||0)+1; });
+    if(att === "excused"){ exc++; return; }
+    if(att === "unexcused") unx++;
+    if(att === "late" || att === "tml") late++;
+    if(att === "tm" || att === "tml") tm++;
+    if(att === "tml") tml++;
+    /* Beobachtungen zählen in der Beurteilung nur an Tagen mit Anwesenheit anwesend oder verspätet
+       (Entscheid 31.10.2026); an Team-Market- und Absenztagen werden Bausteine dort nicht genannt. */
+    if(att === "present" || att === "late") obsOf(r).forEach(i=>{ tally[i] = (tally[i]||0)+1; });
+    if(att === "present" && obsOf(r).includes(LATE_CHIP)) lateChip++;      // alter Verspätungs-Baustein
     const g = critGradesForDay(sl.id, sid); if(!g) return;
     counted++; CRITS.forEach(c=>per[c.k].push(g[c.k]));
   });
-  if(!counted) return {counted:0, exc, unx, late, tm, tml, tally, notes, crit:null, total:null};
+  if(!counted) return {counted:0, exc, unx, late, tm, tml, lateChip, tally, notes, crit:null, total:null};
   const crit = {};
   CRITS.forEach(c=>{ crit[c.k] = per[c.k].reduce((a,b)=>a+b,0)/per[c.k].length; });
   let sum = 0, wsum = 0;
   CRITS.forEach(c=>{ const w = critWeight(c.k); sum += crit[c.k]*w; wsum += w; });
-  return {counted, exc, unx, late, tm, tml, tally, notes, crit, total: sum/wsum};
+  return {counted, exc, unx, late, tm, tml, lateChip, tally, notes, crit, total: sum/wsum};
 }
 /* Exam Day separat */
 function examSummary(sid){
   const sl = examSlot(); if(!sl) return null;
   const r = (S.days[sl.id]||{})[sid]; if(!r) return null;
   const g = critGradesForDay(sl.id, sid);
-  return {slot:sl, att:r.att, crit:g, total: g ? dayTotal(sl.id, sid) : null,
-          obs:(r.obs||[]).map(i=>CHIP[i]).filter(Boolean), note:r.note||null};
+  return {slot:sl, att:attOf(r), crit:g, total: g ? dayTotal(sl.id, sid) : null,
+          obs:obsOf(r).map(i=>CHIP[i]).filter(Boolean), note:r.note||null};
 }
-/* Schlussnote: zwei Drittel Praxis, ein Drittel Exam Day. */
+/* Schlussnote: zwei Drittel Praxis, ein Drittel Exam Day. Ohne Exam Day (5T) gilt die Praxisnote.
+   Mit Exam Day gibt es eine Schlussnote nur, wenn Praxis und Exam erfasst sind (Entscheid 31.10.2026). */
 function finalGrade(praxis, exam){
-  if(praxis == null) return exam;
-  if(exam == null) return praxis;
+  if(!HAS_EXAM) return praxis;
+  if(praxis == null || exam == null) return null;
   return (2*praxis + exam) / 3;
 }
 function recordedPeriod(sid, mode, lg){
@@ -1397,7 +1501,12 @@ function recordedPeriod(sid, mode, lg){
     : slotLabel(rec[0], lg) + " – " + slotLabel(rec[rec.length-1], lg);
 }
 const fmt  = g => (g==null ? "–" : g.toFixed(2));
-const fmt1 = g => (g==null ? "–" : (Math.round(g*10)/10).toFixed(1));
+/* Auf 0.1 gerundet (Entscheid 31.10.2026): mit kleiner Toleranz, sonst wird eine als 3.9499… gerechnete
+   3.95 zu 3.9 statt 4.0. Farbe, Prädikat und Schlusssatz einer gerundet gezeigten Note kommen aus diesem Wert. */
+const round1 = g => (g==null || !isFinite(g)) ? null : Math.round(g*10 + 1e-9)/10;
+const fmt1 = g => { const r = round1(g); return r==null ? "–" : r.toFixed(1); };
+/* Mit zwei Stellen gezeigt (fmt): Farbe, Prädikat und Schlusssatz kommen aus dem gezeigten Wert */
+const round2 = g => (g==null || !isFinite(g)) ? null : Number(g.toFixed(2));
 
 /* Gewicht kurz anzeigen: .25 / .50 / 1.00 (vorher wurde 1.00 teils als ".00" angezeigt) */
 const wSig = w => (w >= 1 ? w.toFixed(2) : w.toFixed(2).slice(1));
@@ -1420,7 +1529,9 @@ function toast(msg){
   clearTimeout(toast._t); toast._t = setTimeout(()=>{ h.innerHTML=""; }, Math.min(9000, 2200 + String(msg).length * 35));
 }
 /* grün ab Basis + 0.25 (über Erwartung), rot unter 4.00 (ungenügend) */
-const gradeClass = g => g==null ? "g-na" : (g>=BASE_NOTE+0.25 ? "g-hi" : (g<4 ? "g-lo" : ""));
+const gradeClass = g => g==null ? "g-na" : (g + 1e-9 >= BASE_NOTE+0.25 ? "g-hi" : (g < 4 - 1e-9 ? "g-lo" : ""));
+/* Schlusssatz der Beurteilung relativ zur Basis: ab 4.75, ab 4.25, ab 4.00, darunter */
+const closingKey = g => g + 1e-9 >= BASE_NOTE+0.25 ? "cl1" : g + 1e-9 >= BASE_NOTE-0.25 ? "cl2" : g + 1e-9 >= 4.0 ? "cl3" : "cl4";
 const subLine = () => [S.settings.group, S.settings.team, S.settings.outlet].filter(Boolean).join(" · ") || "Servicepraxis";
 const variantText = () => HAS_EXAM
   ? (SLOT_COUNT-1) + " " + t("vDays") + " + " + t("vExam")
@@ -1476,6 +1587,24 @@ async function saveFile(filename, data, mime){
     return true;
   }catch(e){}
   if(typeof data === "string") copy(data);
+  return false;
+}
+
+/* ---- E-Mail öffnen (Entscheid 31.10.2026) ----
+   Outlook kürzt mailto-Links ab rund 2000 Zeichen. Ist der Link länger als MAIL_MAX, kommt der ganze
+   Text in die Zwischenablage, die Mail öffnet mit Betreff und einem kurzen Hinweis, die Meldung sagt dasselbe. */
+const MAIL_MAX = 1800;
+const mailtoHref = (to, subj, body) => "mailto:" + (to || "") + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body);
+function openHref(href){
+  const a = el("a",{href:href, target:"_blank", rel:"noopener", style:"display:none"});
+  document.body.appendChild(a); a.click(); a.remove();
+}
+async function openMail(to, subj, body, sentMsg){
+  const href = mailtoHref(to, subj, body);
+  if(href.length <= MAIL_MAX){ openHref(href); if(sentMsg) toast(sentMsg); return true; }
+  await copy(body, true);
+  openHref(mailtoHref(to, subj, t("mailClip")));
+  toast(t("mailClip"));
   return false;
 }
 
@@ -1636,53 +1765,65 @@ function renderDay(){
   }
 
   S.students.forEach(s=>{
-    const r = dayRec(curSlot, s.id);
-    const tot = dayTotal(curSlot, s.id);
-    const card = el("article",{class:"stud"+(r.att==="excused"||r.att==="unexcused"||r.att==="tm"||r.att==="tml"?" absent":"")});
+    /* Anzeigen legt keinen Datensatz an (Entscheid 31.10.2026): fehlt er (z. B. Person später dazugekommen),
+       bleibt die Person für diesen Tag «offen», bis Anwesenheit, Baustein, Freitext oder Restaurant gewählt wird. */
+    const r0 = recOf(curSlot, s.id);
+    const r = r0 || defaultRec(s, curSlot);                  // nur Vorschau, wird nicht gespeichert
+    const att = r0 ? attOf(r0) : "";
+    const tot = r0 ? dayTotal(curSlot, s.id) : null;
+    const card = el("article",{class:"stud"+(att==="excused"||att==="unexcused"||att==="tm"||att==="tml"?" absent":"")});
     const head = el("div",{class:"stud-h"},[avatar(s, 34), el("div",{class:"nm"},[document.createTextNode(s.name + nickTag(s)), schichtPill(s, curSlot),
       el("button",{class:"nickbtn",title:"Nickname",text:"✎",onclick:()=>{        // Nickname direkt eintragen (Rückmeldung Pilot 08.10.2026)
         let v = null; try{ v = window.prompt("Nickname · " + s.name, s.nick || ""); }catch(e){ v = null; }
         if(v === null) return; s.nick = String(v).trim(); s.nickNeu = new Date().toISOString().slice(0, 10); persist(); render(); }})])]);
     if(hasOutlet2()) head.appendChild(el("button",{class:"opill"+(r.outlet?" alt":""),title:t("switchTitle"),
       text:"⇄ " + (r.outlet || S.settings.outlet || "–"),
-      onclick:()=>{ unseed(); toggleOutlet(r); persist(); renderDay(); }}));
-    head.appendChild(el("div",{class:"grade num "+gradeClass(tot),text: tot==null ? t("excused") : fmt(tot)}));
+      onclick:()=>{ unseed(); toggleOutlet(dayRec(curSlot, s.id)); persist(); renderDay(); }}));
+    head.appendChild(el("div",{class:"grade num "+gradeClass(round2(tot)),
+      text: !r0 ? t("notRec") : (tot==null ? t("excused") : fmt(tot))}));
     card.appendChild(head);
-    const seg = el("div",{class:"seg"+(sl.exam?" two":" five")});
-    (sl.exam
-      ? [["present",t("present"),""],["unexcused",t("absent"),"v-unx"]]
-      : [["present",t("present"),""],["late",t("late"),"v-late"],["excused",t("excused"),"v-exc"],
-         ["unexcused",t("unexcused"),"v-unx"],["tm",t("teamMarket"),"v-tm"]]
-    ).forEach(([k,label,cls])=>seg.appendChild(el("button",{class:cls,text:label,
-        "aria-pressed":String(sl.exam ? (k==="present" ? r.att==="present" : r.att!=="present") : attPressed(r.att, k)),
-        onclick:()=>{ unseed(); r.att = sl.exam ? k : attClick(r.att, k); persist(); renderDay(); }})));
+    /* Exam Day mit denselben Knöpfen wie die übrigen Tage, damit der echte Stand sichtbar ist
+       (Entscheid 31.10.2026). Rechnung unverändert: jede Abwesenheit am Exam Day ergibt 1.00. */
+    const seg = el("div",{class:"seg five"});
+    [["present",t("present"),""],["late",t("late"),"v-late"],["excused",t("excused"),"v-exc"],
+     ["unexcused",t("unexcused"),"v-unx"],["tm",t("teamMarket"),"v-tm"]]
+      .forEach(([k,label,cls])=>seg.appendChild(el("button",{class:cls,text:label,
+        "aria-pressed":String(r0 ? attPressed(att, k) : false),
+        onclick:()=>{ unseed(); const rr = dayRec(curSlot, s.id); rr.att = attClick(r0 ? attOf(rr) : "present", k); persist(); renderDay(); }})));
     card.appendChild(seg);
 
-    if(r.att === "tm" || r.att === "tml"){
-      card.appendChild(el("div",{class:"stud-b"}, el("span",{class:"emptyhint",text:t(r.att === "tml" ? "tmLateDay" : "tmDay")})));
+    if(!r0){                                                  // noch nicht erfasst
+      card.appendChild(el("div",{class:"stud-b"},[
+        el("span",{class:"emptyhint",text:t("notRecHint")}),
+        el("button",{class:"addbtn",text:"+ "+t("addObs"),onclick:()=>openSheet(s)})]));
+      root.appendChild(card);
+      return;
     }
-    if(r.att !== "excused" && r.att !== "unexcused" && r.att !== "tm" && r.att !== "tml"){
+    if(att === "tm" || att === "tml"){
+      card.appendChild(el("div",{class:"stud-b"}, el("span",{class:"emptyhint",text:t(att === "tml" ? "tmLateDay" : "tmDay")})));
+    }
+    if(att !== "excused" && att !== "unexcused" && att !== "tm" && att !== "tml"){
       const body = el("div",{class:"stud-b"});
-      const shown = [...(r.obs||[])];
-      if(r.att==="late") body.appendChild(el("span",{class:"emptyhint",text:t("lateDay")}));
+      const shown = [...obsOf(r0)];
+      if(att==="late") body.appendChild(el("span",{class:"emptyhint",text:t("lateDay")}));
       shown.forEach(id=>{
         const c = CHIP[id]; if(!c) return;
         const auto = false;
         const pill = el("span",{class:"obs "+(c.d>0?"p":"m")},
           el("span",{class:"tx",text:(c.ko ? "K.-o. " : (c.d>0?"+":"\u2212") + wSig(c.w) + " ") + chipT(c, S.settings.uiLang)}));
         if(!auto) pill.appendChild(el("button",{class:"x",text:"×","aria-label":"x",
-          onclick:()=>{ unseed(); r.obs = r.obs.filter(x=>x!==id); persist(); renderDay(); }}));
+          onclick:()=>{ unseed(); r0.obs = obsOf(r0).filter(x=>x!==id); persist(); renderDay(); }}));
         body.appendChild(pill);
       });
-      if(r.note && r.note.txt){
-        const sign = r.note.dir && r.note.w ? (r.note.dir>0?"+":"−")+wSig(r.note.w)+" " : "";
+      if(r0.note && r0.note.txt){
+        const sign = r0.note.dir && r0.note.w ? (r0.note.dir>0?"+":"−")+wSig(Number(r0.note.w))+" " : "";
         body.appendChild(el("span",{class:"obs nt"},[
-          el("span",{class:"tx",text:(r.note.internal?"🔒 ":"✎ ")+sign+r.note.txt}),
+          el("span",{class:"tx",text:(r0.note.internal?"🔒 ":"✎ ")+sign+r0.note.txt}),
           el("button",{class:"x",text:"×","aria-label":"x",
-            onclick:()=>{ unseed(); r.note = null; persist(); renderDay(); }})
+            onclick:()=>{ unseed(); r0.note = null; persist(); renderDay(); }})
         ]));
       }
-      if(!shown.length && !(r.note && r.note.txt)) body.appendChild(el("span",{class:"emptyhint",text:t("noObs")}));
+      if(!shown.length && !(r0.note && r0.note.txt)) body.appendChild(el("span",{class:"emptyhint",text:t("noObs")}));
       body.appendChild(el("button",{class:"addbtn",text:"+ "+t("addObs"),onclick:()=>openSheet(s)}));
       card.appendChild(body);
     }
@@ -1812,7 +1953,7 @@ function buildSingleSheets(area){
       const blk = el("div",{class:"critblk"});
       blk.appendChild(el("h4",{text:critName(c.k, S.settings.uiLang)}));
       [1,-1].forEach(dir=>{
-        CHIPS.filter(x=>x.c===c.k && x.d===dir).forEach(x=>{
+        CHIPS.filter(x=>x.c===c.k && x.d===dir && x.i !== LATE_CHIP).forEach(x=>{   // Verspätung nur über die Anwesenheit
           const it = el("div",{class:"it"});
           it.appendChild(el("span",{class:"bx "+(dir>0?"pos":"neg")}));
           it.appendChild(el("span",{text:(dir>0?"+ ":"\u2212 ")+chipT(x, S.settings.uiLang)}));
@@ -1875,7 +2016,7 @@ function absenceZeile(x){
   return "- " + person + (kg ? "   \u00b7   " + kg : "") + (x.outlet ? "   \u00b7   " + x.outlet : "")
        + "   \u2014   " + x.kind;
 }
-function absenceMailHref(slotId){
+function absenceMail(slotId){
   const sl = slotById(slotId);
   const list = absenceList(slotId);
   const head = [S.settings.group, S.settings.team, S.settings.outlet, S.settings.teacher].filter(Boolean).join(" · ");
@@ -1884,39 +2025,44 @@ function absenceMailHref(slotId){
     .concat(list.length ? list.map(absenceZeile) : [t("absMailNone")])
     .concat(["", "JSON: " + fileStem() + ".json"])
     .join("\n");
-  return "mailto:" + ABS_MAIL + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body);
+  return {subj, body};
 }
+function absenceMailHref(slotId){ const m = absenceMail(slotId); return mailtoHref(ABS_MAIL, m.subj, m.body); }
 /* ---- Noten 2.0: Tagesabschluss am Laptop wie auf dem Tablet (06.10.2026) ----
    «Tag senden»: öffnet die fertige Mail an die Kursleitung (Absenzen im Text, Dateiname genannt)
    und gleichzeitig «Speichern unter» für die Tagesdatei. Eine Webseite darf keine Datei selbst
    an eine Mail hängen: die eben gespeicherte Datei wird in die Mail gezogen.
    Reihenfolge bewusst: zuerst die Mail (braucht den Klick), dann der Speichern-Dialog. */
 const N2LAP = {
-  de:{mUpd:"{n} Einträge aktualisiert (neuere Datei)", mOld:"{n} Einträge aus älteren Dateien nicht übernommen", mNew:"Beispielinhalt entfernt, Angaben aus der ersten Datei übernommen", sem:"Das ist ein Semesterpaket. Es gehört auf die persönliche Startseite (mein.html), nicht in den Rapport.", send:"Tag senden", abs:"Absenzen", backup:"Sichern", subj:"Tagesrapport", absHead:"Absenzen:", none:"Keine Absenzen.",
+  de:{mUpd:"{n} Einträge aktualisiert (neuere Datei)", mOld:"{n} Einträge aus älteren Dateien nicht übernommen", mKeep:"{n} Einträge mit Inhalt behalten (in der neueren Datei nur leer vorbelegt)", mNew:"Beispielinhalt entfernt, Angaben aus der ersten Datei übernommen", sem:"Das ist ein Semesterpaket. Es gehört auf die persönliche Startseite (mein.html), nicht in den Rapport.", send:"Tag senden", abs:"Absenzen", backup:"Sichern", subj:"Tagesrapport", absHead:"Absenzen:", none:"Keine Absenzen.",
       att:"Anhang: {f}", attHint:"Die Datei wurde eben gespeichert (Ordner «Downloads» oder der gewählte Ordner). Bitte an diese Mail anhängen.",
       bar:"«Tag senden» speichert die Tagesdatei und öffnet die Mail an {m}: Datei anhängen, senden. «Sichern» legt eine eigene Sicherung ab."},
-  en:{mUpd:"{n} entries updated (newer file)", mOld:"{n} entries from older files not taken over", mNew:"Sample content removed, details taken from the first file", sem:"This is a semester package. It belongs on the personal start page (mein.html), not in the report.", send:"Send the day", abs:"Absences", backup:"Back up", subj:"Day report", absHead:"Absences:", none:"No absences.",
+  en:{mUpd:"{n} entries updated (newer file)", mOld:"{n} entries from older files not taken over", mKeep:"{n} entries with content kept (only an empty default in the newer file)", mNew:"Sample content removed, details taken from the first file", sem:"This is a semester package. It belongs on the personal start page (mein.html), not in the report.", send:"Send the day", abs:"Absences", backup:"Back up", subj:"Day report", absHead:"Absences:", none:"No absences.",
       att:"Attachment: {f}", attHint:"The file has just been saved (Downloads or the folder you chose). Please attach it to this e-mail.",
       bar:"«Send the day» saves the day file and opens the e-mail to {m}: attach the file, send. «Back up» saves your own backup."},
-  th:{mUpd:"อัปเดต {n} รายการ (ไฟล์ใหม่กว่า)", mOld:"ไม่นำ {n} รายการจากไฟล์ที่เก่ากว่ามาใช้", mNew:"ลบข้อมูลตัวอย่างแล้ว ใช้ข้อมูลจากไฟล์แรก", sem:"นี่คือชุดข้อมูลภาคเรียน ใช้ในหน้าเริ่มต้นส่วนตัว (mein.html) ไม่ใช่ในรายงาน", send:"ส่งข้อมูลของวันนี้", abs:"การขาด", backup:"สำรองข้อมูล", subj:"Tagesrapport", absHead:"การขาด:", none:"ไม่มีการขาด",
+  th:{mUpd:"อัปเดต {n} รายการ (ไฟล์ใหม่กว่า)", mOld:"ไม่นำ {n} รายการจากไฟล์ที่เก่ากว่ามาใช้", mKeep:"เก็บ {n} รายการที่มีข้อมูลไว้ (ไฟล์ใหม่กว่ามีเพียงค่าเริ่มต้นว่าง)", mNew:"ลบข้อมูลตัวอย่างแล้ว ใช้ข้อมูลจากไฟล์แรก", sem:"นี่คือชุดข้อมูลภาคเรียน ใช้ในหน้าเริ่มต้นส่วนตัว (mein.html) ไม่ใช่ในรายงาน", send:"ส่งข้อมูลของวันนี้", abs:"การขาด", backup:"สำรองข้อมูล", subj:"Tagesrapport", absHead:"การขาด:", none:"ไม่มีการขาด",
       att:"ไฟล์แนบ: {f}", attHint:"บันทึกไฟล์แล้ว (โฟลเดอร์ Downloads หรือโฟลเดอร์ที่เลือก) กรุณาแนบไฟล์กับอีเมลนี้",
       bar:"«ส่งข้อมูลของวันนี้» บันทึกไฟล์ของวันและเปิดอีเมลถึง {m}: แนบไฟล์แล้วส่ง «สำรองข้อมูล» บันทึกไฟล์สำรองของคุณเอง"}
 };
 const n2l = k => ((N2LAP[S.settings.uiLang] || N2LAP.de)[k] || N2LAP.de[k]);
-function n2LapDayMailHref(slotId, fname){
+function n2LapDayMail(slotId, fname){
   const sl = slotById(slotId), list = absenceList(slotId);
   const head = [S.settings.group, S.settings.outlet, S.settings.teacher].filter(Boolean).join(" · ");
   const subj = n2l("subj") + " – " + [S.settings.outlet, S.settings.teacher, slotLabel(sl)].filter(Boolean).join(" · ");
+  /* Meldezeile wie in der Absenzmeldung (absenceZeile); vorher stand hier der Name aus der Küche
+     (absenceLine), «Tag senden» brach bei jeder Absenz ab und speicherte nichts. */
   const body = [head, slotLabel(sl) + " · " + VARIANT, "", n2l("absHead")]
-    .concat(list.length ? list.map(absenceLine) : [n2l("none")])
+    .concat(list.length ? list.map(absenceZeile) : [n2l("none")])
     .concat(["", n2l("att").replace("{f}", fname), n2l("attHint")]).join("\n");
-  return "mailto:" + ABS_MAIL + "?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(body);
+  return {subj, body};
 }
-function n2LapSendDay(){
+function n2LapDayMailHref(slotId, fname){ const m = n2LapDayMail(slotId, fname); return mailtoHref(ABS_MAIL, m.subj, m.body); }
+async function n2LapSendDay(){
   const fname = fileStem() + ".json";
-  const a = el("a",{href:n2LapDayMailHref(curSlot, fname), target:"_blank", rel:"noopener", style:"display:none"});
-  document.body.appendChild(a); a.click(); a.remove();
-  saveFile(fname, JSON.stringify(snapshot(), null, 1), "application/json");
+  const m = n2LapDayMail(curSlot, fname);
+  const data = JSON.stringify(snapshot(), null, 1);
+  await openMail(ABS_MAIL, m.subj, m.body);
+  return saveFile(fname, data, "application/json");
 }
 function n2LapBackup(){
   saveFile("Sicherung_" + fileStem() + ".json", JSON.stringify(snapshot(), null, 1), "application/json");
@@ -1930,18 +2076,42 @@ function n2LapBar(){
   return bar;
 }
 function openAbsenceMail(slotId){
-  const a = el("a",{href:absenceMailHref(slotId), target:"_blank", rel:"noopener", style:"display:none"});
-  document.body.appendChild(a); a.click(); a.remove();
-  toast(t("absMailSent"));
+  const m = absenceMail(slotId);
+  return openMail(ABS_MAIL, m.subj, m.body, t("absMailSent"));
 }
 
 /* ---------- Bottom Sheet ---------- */
 let sheetCrit = "gas";
+/* Freitext vergleichbar machen (fehlende Felder = leer) */
+const normNote = n => (n && n.txt) ? {txt:n.txt, crit:n.crit||"", dir:Number(n.dir)||0, w:Number(n.w)||0, internal:!!n.internal} : null;
 function openSheet(student){
   const host = document.getElementById("sheetHost"); host.innerHTML = "";
-  const close = ()=>{ host.innerHTML=""; document.removeEventListener("keydown", onKey); renderDay(); };
+  let noteUI = null;                                   // Eingabefelder, solange der Reiter Freitext offen ist
+  /* Freitext geht nie verloren (Entscheid 31.10.2026): er wird bei jedem Schliessen (Fertig oben,
+     Esc, Klick daneben) und vor jedem Reiterwechsel übernommen, nicht nur mit «Fertig» unten. */
+  const commitNote = ()=>{
+    if(!noteUI) return false;
+    const {ta, sc, se, ci} = noteUI;
+    const txt = ta.value.trim();
+    let neu = null;
+    if(txt){
+      const num = parseFloat(se.value);
+      neu = {txt, crit: sc.value||"", dir: num>0?1:(num<0?-1:0), w: Math.abs(num)||0, internal: ci.checked};
+      if(!neu.crit){ neu.dir = 0; neu.w = 0; }
+    }
+    const alt = recOf(curSlot, student.id);
+    if(JSON.stringify(normNote(alt && alt.note)) === JSON.stringify(normNote(neu))) return false;   // unverändert
+    if(!neu && !alt) return false;
+    unseed();
+    dayRec(curSlot, student.id).note = neu;
+    persist();
+    return true;
+  };
+  const close = ()=>{ commitNote(); noteUI = null; host.innerHTML=""; document.removeEventListener("keydown", onKey);
+                      window.removeEventListener("pagehide", commitNote); renderDay(); };
   const onKey = e => { if(e.key==="Escape") close(); };
   document.addEventListener("keydown", onKey);
+  window.addEventListener("pagehide", commitNote);        // auch beim Schliessen oder Neuladen der Seite
   host.appendChild(el("div",{class:"scrim",onclick:close}));
   const sheet = el("div",{class:"sheet",role:"dialog","aria-modal":"true"});
   sheet.appendChild(el("div",{class:"sheet-h"},[
@@ -1952,9 +2122,9 @@ function openSheet(student){
   /* Kurzname im Reiter, damit alle neun Kriterien ohne Scrollen sichtbar bleiben */
   CRITS.forEach(c=>tabs.appendChild(el("button",{text:critShort(c.k, S.settings.uiLang),
     title:critName(c.k, S.settings.uiLang),
-    "aria-current":String(sheetCrit===c.k), onclick:()=>{ sheetCrit=c.k; draw(); }})));
+    "aria-current":String(sheetCrit===c.k), onclick:()=>{ commitNote(); sheetCrit=c.k; draw(); }})));
   tabs.appendChild(el("button",{class:"note",text:"✎ "+t("noteTab"),
-    "aria-current":String(sheetCrit==="__note"), onclick:()=>{ sheetCrit="__note"; draw(); }}));
+    "aria-current":String(sheetCrit==="__note"), onclick:()=>{ commitNote(); sheetCrit="__note"; draw(); }}));
   sheet.appendChild(tabs);
   const body = el("div",{class:"sheet-b"}); sheet.appendChild(body);
   host.appendChild(sheet);
@@ -1965,7 +2135,9 @@ function openSheet(student){
       b.setAttribute("aria-current", String(k===sheetCrit));
     });
     body.innerHTML = "";
-    const r = dayRec(curSlot, student.id);
+    noteUI = null;
+    /* nur lesen: der Datensatz entsteht erst mit einem Baustein oder einem Freitext */
+    const r = recOf(curSlot, student.id) || {att:"present", obs:[], note:null};
 
     if(sheetCrit === "__note"){
       body.appendChild(el("p",{class:"muted",style:"margin:0",text:t("noteHint")}));
@@ -1985,7 +2157,7 @@ function openSheet(student){
       const f3 = el("div",{class:"field"});
       f3.appendChild(el("label",{for:"noteEff",text:t("noteEffect")}));
       const se = el("select",{id:"noteEff"});
-      const cur = (nt.dir&&nt.w) ? (nt.dir>0?"+":"-")+nt.w : "0";
+      const cur = (nt.dir&&nt.w) ? (nt.dir>0?"+":"-")+Number(nt.w) : "0";
       [["0",t("neutral")],["+0.25","+ 0.25"],["+0.5","+ 0.50"],["+1","+ 1.00"],
        ["-0.25","− 0.25"],["-0.5","− 0.50"],["-1","− 1.00"]]
         .forEach(([v,lb])=>se.appendChild(el("option",{value:v,text:lb,selected:cur===v})));
@@ -1994,33 +2166,27 @@ function openSheet(student){
 
       const ci = el("input",{type:"checkbox",id:"noteInt",checked:!!nt.internal});
       body.appendChild(el("label",{class:"chk",for:"noteInt"},[ci, el("span",{text:t("internal")})]));
+      noteUI = {ta, sc, se, ci};
 
-      body.appendChild(el("button",{class:"btn pri",text:t("done"),onclick:()=>{
-        unseed();
-        const txt = ta.value.trim();
-        if(!txt){ r.note = null; }
-        else{
-          const num = parseFloat(se.value);
-          r.note = {txt, crit: sc.value||"", dir: num>0?1:(num<0?-1:0), w: Math.abs(num)||0, internal: ci.checked};
-          if(!r.note.crit){ r.note.dir = 0; r.note.w = 0; }
-        }
-        persist(); close();
-      }}));
+      body.appendChild(el("button",{class:"btn pri",text:t("done"),onclick:close}));
       return;
     }
 
     [[1,t("plus")],[-1,t("minus")]].forEach(([dir,label])=>{
-      const list = CHIPS.filter(c=>c.c===sheetCrit && c.d===dir);
+      /* Verspätung nur über die Anwesenheit (Entscheid 31.10.2026): der alte Baustein erscheint nur noch,
+         wenn er an diesem Tag schon gesetzt ist, damit er entfernt werden kann. */
+      const list = CHIPS.filter(c=>c.c===sheetCrit && c.d===dir && (c.i !== LATE_CHIP || obsOf(r).includes(c.i)));
       if(!list.length) return;
       const grp = el("div",{class:"grp"});
       grp.appendChild(el("span",{class:"eyebrow",text:label}));
       const opts = el("div",{class:"opts"});
       list.forEach(c=>{
-        const on = (r.obs||[]).includes(c.i);
+        const on = obsOf(r).includes(c.i);
         const sig = c.ko ? "K.-o." : (c.d>0?"+":"−") + wSig(c.w);
         const b = el("button",{class:"opt "+(c.d>0?"p":"m")+(on?" on":"")+(c.ko?" ko":""),
           onclick:()=>{ unseed();
-            r.obs = (r.obs||[]).includes(c.i) ? r.obs.filter(x=>x!==c.i) : [...(r.obs||[]), c.i];
+            const rr = dayRec(curSlot, student.id), o = obsOf(rr);
+            rr.obs = o.includes(c.i) ? o.filter(x=>x!==c.i) : [...o, c.i];
             persist(); draw(); }},
           [el("span",{class:"sig num",text:sig}), el("span",{text:chipT(c, S.settings.uiLang)})]);
         opts.appendChild(b);
@@ -2086,31 +2252,25 @@ function overviewText(stufe){
   out.push(t("ovFoot"));
   return out.join("\n");
 }
-const OV_LIMIT = 1900;     /* sichere Gesamtlaenge einer mailto-Adresse fuer Outlook */
-function mailOverview(){
+/* Übersicht an die Kursleitung: gesendet wird die ausführlichste Fassung, deren Link höchstens MAIL_MAX
+   Zeichen lang ist; die volle Fassung mit den Kriterienwerten liegt dann zusätzlich in der Zwischenablage.
+   Passt keine Fassung, gilt die Regel von openMail: ganzer Text in die Zwischenablage, kurzer Hinweis in der Mail. */
+async function mailOverview(){
   const subj = t("emailSubj") + " \u2013 "
              + [S.settings.group, S.settings.team, S.settings.outlet, S.settings.teacher].filter(Boolean).join(" \u00b7 ");
-  const bau = function(body){ return "mailto:" + ABS_MAIL + "?subject=" + encodeURIComponent(subj)
-                                   + "&body=" + encodeURIComponent(body); };
   const voll = overviewText(2);
   let gewaehlt = null, stufeUsed = -1;
   [2,1,0].some(function(stufe){
     const txt = overviewText(stufe);
-    if(bau(txt).length <= OV_LIMIT){ gewaehlt = txt; stufeUsed = stufe; return true; }
+    if(mailtoHref(ABS_MAIL, subj, txt).length <= MAIL_MAX){ gewaehlt = txt; stufeUsed = stufe; return true; }
     return false;
   });
-  if(gewaehlt === null){                    /* selbst die knappste Fassung passt nicht */
-    gewaehlt = overviewText(0).split("\n").slice(0,3).join("\n") + "\n" + t("ovClipHint");
-    stufeUsed = -1;
-  }
-  const a = el("a",{href:bau(gewaehlt), target:"_blank", rel:"noopener", style:"display:none"});
-  document.body.appendChild(a); a.click(); a.remove();
-  if(stufeUsed === 2){ toast(t("absMailSent")); return; }
-  /* Die volle Fassung mit den Kriterienwerten passt nicht in die Mail und geht still
-     in die Zwischenablage. Die Meldung sagt, was in der Mail steht. */
-  copy(voll, true).then(function(){
-    toast(stufeUsed >= 0 ? t("ovClipCrit") : t("ovClip"));
-  });
+  if(gewaehlt === null) return openMail(ABS_MAIL, subj, voll);          // selbst die knappste Fassung ist zu lang
+  if(stufeUsed === 2) return openMail(ABS_MAIL, subj, gewaehlt, t("absMailSent"));
+  await copy(voll, true);
+  openHref(mailtoHref(ABS_MAIL, subj, gewaehlt));
+  toast(t("ovClipCrit"));
+  return false;
 }
 
 function renderWeek(){
@@ -2140,17 +2300,17 @@ function renderWeek(){
     CRITS.forEach(c=>{
       const g = sum.crit ? sum.crit[c.k] : null;
       tr2.appendChild(el("td",{class:"n"},
-        el("span",{class:"grade num "+gradeClass(g),style:"min-width:0;padding:1px 6px;font-size:13px",text:fmt1(g)})));
+        el("span",{class:"grade num "+gradeClass(round1(g)),style:"min-width:0;padding:1px 6px;font-size:13px",text:fmt1(g)})));
     });
     tr2.appendChild(el("td",{class:"n sep"},
-      el("span",{class:"grade num "+gradeClass(sum.total),style:"padding:2px 8px;font-size:13.5px",text:fmt(sum.total)})));
+      el("span",{class:"grade num "+gradeClass(round2(sum.total)),style:"padding:2px 8px;font-size:13.5px",text:fmt(sum.total)})));
     if(withExam) tr2.appendChild(el("td",{class:"n"},
-      el("span",{class:"grade num "+gradeClass(ex?ex.total:null),style:"padding:2px 8px;font-size:13.5px",
+      el("span",{class:"grade num "+gradeClass(round2(ex?ex.total:null)),style:"padding:2px 8px;font-size:13.5px",
         text: ex ? fmt(ex.total) : "–"})));
     if(showFinal){
       const f = finalGrade(sum.total, ex?ex.total:null);
       tr2.appendChild(el("td",{class:"n"},
-        el("span",{class:"grade num "+gradeClass(f),style:"padding:2px 8px;font-size:13.5px;font-weight:600",text:fmt1(f),title:fmt(f)})));
+        el("span",{class:"grade num "+gradeClass(round1(f)),style:"padding:2px 8px;font-size:13.5px;font-weight:600",text:fmt1(f),title:f==null?"":fmt(f)})));
     }
     tr2.appendChild(el("td",{class:"n sep",text:String(sum.counted)}));
     const a = [];
@@ -2190,24 +2350,28 @@ function buildReport(s, mode, lg){
   const sum = summary(s.id, mode);
   const period = recordedPeriod(s.id, mode, lg);
   const P = k => tOut(k, lg);
-  const ex = (mode === "all") ? examSummary(s.id) : null;
-  const fin = ex ? finalGrade(sum.total, ex.total) : null;
+  /* Mit Exam Day stehen Praxis-, Prüfungs- und Schlussnote immer da, fehlt eine: «–» (Entscheid 31.10.2026).
+     Die Schlussnote steht auf 0.1 gerundet; ihr Prädikat und der Schlusssatz kommen aus dem gerundeten Wert. */
+  const withEx = (mode === "all") && !!examSlot();
+  const ex = withEx ? examSummary(s.id) : null;
+  const exT = ex ? ex.total : null;
+  const fin = withEx ? finalGrade(sum.total, exT) : null;
+  const fin1 = round1(fin);
   const out = [];
   out.push(s.name + (klasseOf(s) ? " · " + klasseOf(s) : ""));
   out.push(period + " · " + sum.counted + " " + P("daysCounted"));
   const _pl = placementText(s.id, lg);
   if(_pl) out.push(P("placements") + ": " + _pl);
-  if(sum.total!=null) out.push(P(ex?"praxisGrade":"grade") + ": " + fmt(sum.total) + " (" + bandName(sum.total, lg) + ")");
-  if(ex){
-    out.push(P("examGrade") + ": " + (ex.total!=null
-      ? fmt(ex.total) + " (" + bandName(ex.total, lg) + ")"
-      : P("noData")));
-  }
-  if(fin!=null) out.push(P("finalGrade") + ": " + fmt1(fin) + " (" + bandName(fin, lg) + ")");
+  if(withEx){
+    out.push(P("praxisGrade") + ": " + (sum.total!=null ? fmt(sum.total) + " (" + bandName(round2(sum.total), lg) + ")" : "–"));
+    out.push(P("examGrade") + ": " + (exT!=null ? fmt(exT) + " (" + bandName(round2(exT), lg) + ")" : "–"));
+    out.push(P("finalGrade") + ": " + (fin1!=null ? fmt1(fin) + " (" + bandName(fin1, lg) + ")" : "–"));
+  } else if(sum.total!=null) out.push(P("grade") + ": " + fmt(sum.total) + " (" + bandName(round2(sum.total), lg) + ")");
   out.push("");
   if(!sum.counted && !sum.notes.length){ out.push(P("noData")); return out.join("\n"); }
 
-  const entries = Object.entries(sum.tally).map(([id,n])=>({c:CHIP[id],n})).filter(x=>x.c);
+  /* der alte Verspätungs-Baustein steht im Satz zu den Absenzen, nicht bei den Beobachtungen */
+  const entries = Object.entries(sum.tally).map(([id,n])=>({c:CHIP[id],n})).filter(x=>x.c && x.c.i !== LATE_CHIP);
   const pos = entries.filter(x=>x.c.d>0).sort((a,b)=>b.n-a.n||b.c.w-a.c.w);
   const neg = entries.filter(x=>x.c.d<0).sort((a,b)=>(b.n*(b.c.w||1))-(a.n*(a.c.w||1)));
 
@@ -2232,11 +2396,13 @@ function buildReport(s, mode, lg){
     openNotes.forEach(n=>out.push("• " + slotLabel(n.slot, lg) + ": " + n.txt));
     out.push("");
   }
-  if(sum.exc || sum.unx || sum.late){
+  /* Verspätung: Anwesenheit «Verspätet» sowie Tage mit dem alten Baustein «Verspätet zum Dienst erschienen» */
+  const lateN = sum.late + (sum.lateChip || 0);
+  if(sum.exc || sum.unx || lateN){
     const a = [];
     if(sum.exc) a.push(sum.exc + " × " + P("excusedNote"));
     if(sum.unx) a.push(sum.unx + " × " + P("unexcusedNote"));
-    if(sum.late) a.push(sum.late + " × " + P("late"));
+    if(lateN) a.push(lateN + " × " + P("late"));
     out.push(P("abs") + ": " + a.join(", "));
     out.push("");
   }
@@ -2244,12 +2410,12 @@ function buildReport(s, mode, lg){
     out.push(P("teamMarket") + ": " + sum.tm + " × (5.00)" + (sum.tml ? ", " + P("tmLateShort") + " " + sum.tml + " × (4.00)" : ""));
     out.push("");
   }
-  const g0 = (fin!=null) ? fin : (sum.total!=null ? sum.total : (ex?ex.total:null));
-  if(g0!=null) out.push(P(g0>=BASE_NOTE+0.25 ? "cl1" : g0>=BASE_NOTE-0.25 ? "cl2" : g0>=4.0 ? "cl3" : "cl4"));
+  const g0 = (fin1!=null) ? fin1 : (sum.total!=null ? round2(sum.total) : round2(exT));
+  if(g0!=null) out.push(P(closingKey(g0)));
   out.push("");
   out.push(P("weightNote"));
   out.push("");
-  if(sum.crit) out.push(P(ex?"praxis":"grade") + ": " + CRITS.map(c=>critName(c.k, lg)+" "+fmt1(sum.crit[c.k])).join("  ·  "));
+  if(sum.crit) out.push(P(withEx?"praxis":"grade") + ": " + CRITS.map(c=>critName(c.k, lg)+" "+fmt1(sum.crit[c.k])).join("  ·  "));
   if(ex && ex.crit) out.push(P("examShort") + ": " + CRITS.map(c=>critName(c.k, lg)+" "+fmt1(ex.crit[c.k])).join("  ·  "));
   return out.join("\n").trim();
 }
@@ -2290,12 +2456,15 @@ function renderRep(){
       + (exq && exq.total!=null ? t("examGrade")+" "+fmt(exq.total)+" · " : "")
       + sum.counted+" "+t("daysCounted")}));
     box.appendChild(el("pre",{text:txt}));
+    /* Zu langer Link (über MAIL_MAX): Text in die Zwischenablage, Mail mit kurzem Hinweis (Entscheid 31.10.2026) */
+    const toM = encodeURIComponent(s.mail||""), subjM = t("emailSubj")+" – "+s.name;
+    const hrefM = mailtoHref(toM, subjM, txt), zuLang = hrefM.length > MAIL_MAX;
     box.appendChild(el("div",{class:"row acts"},[
       el("button",{class:"btn sm",text:t("copy"),onclick:()=>copy(txt)}),
       el("a",{class:"btn sm",target:"_blank",rel:"noopener",
         title: s.mail || t("noMail"),
-        href:"mailto:"+encodeURIComponent(s.mail||"")+"?subject="+encodeURIComponent(t("emailSubj")+" – "+s.name)
-             +"&body="+encodeURIComponent(txt),
+        href: zuLang ? mailtoHref(toM, subjM, t("mailClip")) : hrefM,
+        onclick: zuLang ? (e=>{ e.preventDefault(); openMail(toM, subjM, txt); }) : null,
         text:t("mail")+(s.mail?"":" ⚠︎")})
     ]));
     root.appendChild(box);
@@ -2308,11 +2477,13 @@ function printReports(){
   const area = document.getElementById("printArea");
   area.innerHTML = "";
   let n = 0;
-  const gbox = (label, g, strong, lg) => {
+  /* gerundet = Schlussnote: auf 0.1 und Prädikat aus dem gerundeten Wert (Entscheid 31.10.2026) */
+  const gbox = (label, g, strong, lg, gerundet) => {
     const b = el("div",{class:"pgbox"});
+    const gv = gerundet ? round1(g) : round2(g);
     b.appendChild(el("div",{class:"lb",text:label}));
-    b.appendChild(el("div",{class:"vl",style:strong?"":"font-weight:500",text:fmt(g)}));
-    b.appendChild(el("div",{class:"bd",text: g==null ? "–" : bandName(g,lg)}));
+    b.appendChild(el("div",{class:"vl",style:strong?"":"font-weight:500",text: gerundet ? fmt1(g) : fmt(g)}));
+    b.appendChild(el("div",{class:"bd",text: gv==null ? "–" : bandName(gv,lg)}));
     return b;
   };
   S.students.forEach(s=>{
@@ -2321,8 +2492,9 @@ function printReports(){
     n++;
     const lg = outLangOf(s);
     const closings = ["cl1","cl2","cl3","cl4"].map(k=>tOut(k,lg));
-    const ex = (repMode==="all") ? examSummary(s.id) : null;
-    const fin = ex ? finalGrade(sum.total, ex.total) : null;
+    const withEx = (repMode==="all") && !!examSlot();
+    const ex = withEx ? examSummary(s.id) : null;
+    const fin = withEx ? finalGrade(sum.total, ex ? ex.total : null) : null;
     const doc = el("div",{class:"pdoc"});
     doc.appendChild(el("img",{class:"plogo",src:LOGO,alt:"EHL Hotelfachschule Passugg"}));
     doc.appendChild(el("div",{class:"phead"},[
@@ -2332,9 +2504,11 @@ function printReports(){
       placementText(s.id, lg) ? el("div",{class:"pmeta",text:tOut("placements",lg) + ": " + placementText(s.id, lg)}) : null
     ]));
     const gr = el("div",{class:"pgrades"});
-    gr.appendChild(gbox(tOut(ex?"praxisGrade":"grade",lg), sum.total, !ex || fin==null, lg));
-    if(ex) gr.appendChild(gbox(tOut("examGrade",lg), ex.total, fin==null, lg));
-    if(fin!=null) gr.appendChild(gbox(tOut("finalGrade",lg), fin, true, lg));
+    gr.appendChild(gbox(tOut(withEx?"praxisGrade":"grade",lg), sum.total, !withEx || fin==null, lg));
+    if(withEx){
+      gr.appendChild(gbox(tOut("examGrade",lg), ex ? ex.total : null, fin==null, lg));
+      gr.appendChild(gbox(tOut("finalGrade",lg), fin, true, lg, true));
+    }
     doc.appendChild(gr);
     if(sum.crit){
       const tb = el("table");
@@ -2342,7 +2516,7 @@ function printReports(){
       CRITS.forEach(c=>hr.appendChild(el("th",{text:critName(c.k,lg)})));
       tb.appendChild(el("thead",{},hr));
       const body2 = el("tbody");
-      const dr = el("tr"); dr.appendChild(el("td",{style:"font-weight:600",text:tOut(ex?"praxis":"grade",lg)}));
+      const dr = el("tr"); dr.appendChild(el("td",{style:"font-weight:600",text:tOut(withEx?"praxis":"grade",lg)}));
       CRITS.forEach(c=>dr.appendChild(el("td",{text:fmt1(sum.crit[c.k])})));
       body2.appendChild(dr);
       if(ex && ex.crit){
@@ -2398,8 +2572,8 @@ function gradeRows(){
                   s.nachname||s.name||"", s.vorname||"", s.nick||"", s.mail||"", period,
                   su.counted, su.exc, su.unx, su.late, su.tm||0,
       ...CRITS.map(c=>su.crit?Number(su.crit[c.k].toFixed(2)):""),
-      su.total!=null?Number(su.total.toFixed(2)):"", su.total!=null?Number(fmt1(su.total)):"",
-      su.total!=null?bandName(su.total,"de"):""];
+      su.total!=null?Number(su.total.toFixed(2)):"", su.total!=null?round1(su.total):"",
+      su.total!=null?bandName(round2(su.total),"de"):""];
     let row = base;
     if(withExam){
       const att = {present:"Anwesend",late:"Verspätet",excused:"Abwesend",unexcused:"Abwesend",tm:"Team Market",tml:"Team Market, verspätet"};
@@ -2411,7 +2585,7 @@ function gradeRows(){
     }
     if(withExam){
       const fin = finalGrade(su.total, ex?ex.total:null);
-      row = row.concat([fin!=null?Number(fin.toFixed(2)):"", fin!=null?Number(fmt1(fin)):""]);   // Schlussnote auf 0.1 gerundet (Entscheid 06.10.2026)
+      row = row.concat([fin!=null?Number(fin.toFixed(2)):"", fin!=null?round1(fin):""]);   // Schlussnote auf 0.1 gerundet (Entscheid 06.10.2026, Toleranz 31.10.2026); ohne Exam leer
     }
     row = row.concat([outLangOf(s)]);
     row = row.concat([buildReport(s, repMode, outLangOf(s))]);
@@ -2434,7 +2608,7 @@ function evidenceRows(){
       const lab = sl.exam ? "Exam Day" : slotLabel(sl,"de");
       const mt = dayMeta(sl.id);
       const pre = [s.name, lab, sl.week, kind, mt.teacher, mt.group, mt.team||"", outletOfDay(sl.id, s.id) || mt.outlet || "", att];
-      (r.obs||[]).forEach(id=>{
+      obsOf(r).forEach(id=>{
         const c = CHIP[id]; if(!c) return;
         rows.push(pre.concat([critName(c.c,"de"), c.ko?"K.-o.":(c.d>0?"+":"−"), c.ko?"":c.w, chipT(c,"de")]));
       });
@@ -2442,7 +2616,7 @@ function evidenceRows(){
         rows.push(pre.concat([r.note.crit?critName(r.note.crit,"de"):"",
           r.note.dir>0?"+":(r.note.dir<0?"−":""), r.note.w||"",
           (r.note.internal?"Freitext (intern): ":"Freitext: ")+r.note.txt]));
-      if((!r.obs||!r.obs.length) && !(r.note&&r.note.txt) && r.att!=="present")
+      if(!obsOf(r).length && !(r.note&&r.note.txt) && r.att!=="present")
         rows.push(pre.concat(["", "", "", ""]));
     });
   });
@@ -2547,7 +2721,7 @@ function renderData(){
   st.appendChild(el("summary",{text:t("topObs")}));
   const stb = el("div");
   const counts = {}; let totalObs = 0;
-  slotsInRange(repMode).forEach(sl=>Object.values(S.days[sl.id]||{}).forEach(r=>(r.obs||[]).forEach(i=>{counts[i]=(counts[i]||0)+1;totalObs++;})));
+  slotsInRange(repMode).forEach(sl=>Object.values(S.days[sl.id]||{}).forEach(r=>obsOf(r).forEach(i=>{counts[i]=(counts[i]||0)+1;totalObs++;})));
   const top = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,12);
   if(!top.length) stb.appendChild(el("p",{class:"muted",text:t("noData")}));
   else{
@@ -2564,31 +2738,49 @@ function renderData(){
   }
   st.appendChild(stb); root.appendChild(st);
 }
+/* Rapporte dieser App; andere Apps (z. B. Küchenrapport) haben andere Bausteine mit teils gleichen Namen */
+const APP_NAME = "Servicerapport";
+/* Pro Person geplante Felder eines Halbturnus (4T/5T) zählen nach den Einsatztagen der Halbdatei und passen
+   nicht auf die zehn Tage dieser Datei; beim Einordnen fallen sie weg (wie im Küchenrapport, Entscheid 31.10.2026). */
+const PLAN_FIELDS = ["tmTage","schichtPlan","ortPlan","wechselAb","wechselOutlet"];
+/* Unberührter Standardeintrag: anwesend, ohne Beobachtung, ohne Freitext, ohne Restaurant */
+const istLeer = r => attOf(r) === "present" && !obsOf(r).length && !(r && r.note && r.note.txt) && !(r && r.outlet);
 async function onMerge(e){
   const files = [...e.target.files]; let addedS=0, addedD=0; const clash=[], wrongVar=[], placed=[];
   /* Noten 2.0 (06.10.2026): Jede Tagesdatei enthält den ganzen Stand bis zu diesem Tag.
      Darum zuerst alle Dateien lesen und nach Speicherzeit ordnen. Gleiche Einträge werden
      still übersprungen (früher: Fehlalarm «doppelt erfasst»), bei Abweichungen gewinnt die
      neuere Datei (Korrekturen vom Folgetag kommen an). In eine neue Datei mit Beispielinhalt
-     wird nicht hineingemischt: Beispielpersonen weg, Angaben aus der ersten Datei. */
+     wird nicht hineingemischt: Beispielpersonen weg, Angaben aus der ersten Datei.
+     31.10.2026: Der Ort des Tages gehört zum Vergleich; ein leerer Standardeintrag einer neueren
+     Datei ersetzt keinen Eintrag mit Inhalt; Dateien anderer Apps und Varianten bleiben draussen. */
   const docs = [];
   for(const f of files){
-    try{ const o = JSON.parse(await f.text()); if(o && Array.isArray(o.students) && o.days) docs.push({o, f}); }catch(err){}
+    try{
+      const o = JSON.parse(await f.text());
+      if(!o || !Array.isArray(o.students) || !o.days || typeof o.days !== "object") continue;
+      const fremd = !!(o.app && o.app !== APP_NAME);
+      if(fremd || !acceptsVariant(o.variant)){ wrongVar.push(f.name + " (" + (fremd ? o.app : o.variant) + ")"); continue; }
+      docs.push({o, f});
+    }catch(err){}
   }
   docs.sort((a, b) => String(a.o.savedAt || "").localeCompare(String(b.o.savedAt || "")));
-  let updD = 0, oldD = 0, fresh = false;
+  let updD = 0, oldD = 0, keptD = 0, fresh = false, neuStart = false;
   if(docs.length && (S.settings.isSample || (!S.students.length && !Object.keys(S.days || {}).some(k => Object.keys(S.days[k] || {}).length)))){
-    const o0 = docs[0].o.settings || {};
+    const o0 = (docs[0].o.settings && typeof docs[0].o.settings === "object") ? docs[0].o.settings : {};
+    leaveSample();                                    // Beispieltage, Tagesangaben und Beispiel-Kopfwerte weg
     S.students = []; S.days = {}; S.dayMeta = {};
     ["group","team","outlet","outlet2","teacher","teacherPlan","paketId","weekdays","startIdx"].forEach(k => { if(o0[k] !== undefined) S.settings[k] = JSON.parse(JSON.stringify(o0[k])); });
-    S.settings.isSample = false; S.settings.slotDates = []; fresh = !!S.settings.outlet;
+    S.settings = sanitizeSettings(S.settings);
+    S.settings.isSample = false; S.settings.slotDates = []; fresh = !!S.settings.outlet; neuStart = true;
   }
-  const sameRec = (a, b) => { const n = r => JSON.stringify([r.att || "present", [...(r.obs || [])].sort(), r.note || null]); return n(a) === n(b); };
+  const sameRec = (a, b) => { const n = r => JSON.stringify([attOf(r), [...obsOf(r)].sort(), normNote(r.note), r.outlet || ""]); return n(a) === n(b); };
   for(const {o, f} of docs){
     try{
       const stand = String(o.savedAt || "");
-      if(!acceptsVariant(o.variant)){ wrongVar.push(f.name + " (" + o.variant + ")"); continue; }
-      if(o.variant && o.variant !== VARIANT) placed.push(o.variant);
+      const halb = !!(o.variant && o.variant !== VARIANT);
+      if(halb) placed.push(o.variant);
+      const days = sanitizeDays(o.days), meta = sanitizeMeta(o.dayMeta);
       const map = {};
       saubereStudierende(o.students).forEach(st=>{
         /* Name allein reicht nicht: zwei gleichnamige Studierende duerfen nicht
@@ -2600,6 +2792,7 @@ async function onMerge(e){
           clash.push(st.name + " (" + t("sameName") + ")");
         if(!ex){
           ex = {...st, id:"m"+Math.random().toString(36).slice(2,8)};
+          if(halb) PLAN_FIELDS.forEach(k => { delete ex[k]; });
           S.students.push(ex); addedS++;
         } else {                       // bestehende Person: fehlende Angaben nachtragen
           if(!ex.mail && st.mail) ex.mail = st.mail;
@@ -2620,28 +2813,32 @@ async function onMerge(e){
         for(let i = 0; i < arr.length; i++) if(!arr[i]) arr[i] = "";
         S.settings.slotDates = arr;
       }
-      Object.entries(o.days).forEach(([srcId,recs])=>{
+      Object.entries(days).forEach(([srcId,recs])=>{
         const slid = mapSlotId(o.variant, srcId);
         if(!slid) return;
         S.days[slid] = S.days[slid] || {};
-        if(o.dayMeta && o.dayMeta[srcId] && !S.dayMeta[slid]) S.dayMeta[slid] = o.dayMeta[srcId];
+        if(meta[srcId] && !S.dayMeta[slid]) S.dayMeta[slid] = {...meta[srcId]};
         const standVorher = String((S.dayMeta[slid] || {}).stand || "");
         Object.entries(recs).forEach(([oldId,r])=>{
           const nid = map[oldId]; if(!nid) return;
+          const neu = mitOrt(r, o);
           const cur = S.days[slid][nid];
-          if(!cur){ S.days[slid][nid] = mitOrt(r, o); addedD++; }
-          else if(sameRec(cur, r)) return;                                 // gleicher Eintrag aus einer späteren Tagesdatei
-          else if(stand >= String((S.dayMeta[slid] || {}).stand || "")){ S.days[slid][nid] = mitOrt(r, o); updD++; }
+          if(!cur){ S.days[slid][nid] = neu; addedD++; }
+          else if(sameRec(cur, neu)) return;                               // gleicher Eintrag aus einer späteren Tagesdatei
+          else if(istLeer(r) && !istLeer(cur)){ keptD++; return; }          // leerer Standardeintrag ersetzt keinen Inhalt
+          else if(stand >= String((S.dayMeta[slid] || {}).stand || "")){ S.days[slid][nid] = neu; updD++; }
           else oldD++;
         });
         if(stand && stand > standVorher){ S.dayMeta[slid] = S.dayMeta[slid] || {}; S.dayMeta[slid].stand = stand; }
       });
     }catch(err){}
   }
-  unseed(); persist();
+  persist();
+  if(neuStart) curSlot = startSlot();
   let msg = "+"+addedS+" "+t("student")+" · +"+addedD+" "+t("days");
   if(fresh) msg = n2l("mNew") + "  ·  " + msg;
   if(updD) msg += "  ·  " + n2l("mUpd").replace("{n}", updD);
+  if(keptD) msg += "  ·  " + n2l("mKeep").replace("{n}", keptD);
   if(oldD) msg += "  ⚠︎ " + n2l("mOld").replace("{n}", oldD);
   if(clash.length) msg += "  ⚠︎ "+clash.length+"× doppelt erfasst, bestehender Eintrag behalten: "
     + clash.slice(0,3).join(", ") + (clash.length>3 ? " …" : "");
@@ -2649,27 +2846,74 @@ async function onMerge(e){
   if(wrongVar.length) msg += "  ⚠︎ " + t("wrongVariant") + ": " + wrongVar.join(", ");
   toast(msg); renderData();
 }
-/* Sicherung wieder einlesen: ersetzt den gesamten Inhalt dieser Datei */
+/* Sicherung wieder einlesen: ersetzt den gesamten Inhalt dieser Datei.
+   Gibt true zurück, wenn eingelesen, sonst false (falsche App oder Variante, kaputte Datei, Semesterpaket);
+   die Übergabe von der Startseite wertet das aus (Entscheid 31.10.2026). */
 async function onRestore(e){
   const f = e.target.files && e.target.files[0];
   e.target.value = "";
-  if(!f) return;
+  if(!f) return false;
   try{
     const o = JSON.parse(await f.text());
-    if(o && o.format === "praxisrapport-semesterpaket"){ toast(n2l("sem")); return; }
-    if(!o || !o.settings || !Array.isArray(o.students)) throw new Error("format");
-    if(o.variant && o.variant !== VARIANT){ toast(t("wrongVariant") + ": " + o.variant); return; }
+    if(o && o.format === "praxisrapport-semesterpaket"){ toast(n2l("sem")); return false; }
+    if(!o || !o.settings || typeof o.settings !== "object" || !Array.isArray(o.students)) throw new Error("format");
+    if(o.app && o.app !== APP_NAME) throw new Error("app");            // z. B. Küchenrapport: nicht einlesen
+    if(o.variant && o.variant !== VARIANT){ toast(t("wrongVariant") + ": " + o.variant); return false; }
     S = { settings:{...sanitizeSettings(o.settings), isSample:false},
-          students:saubereStudierende(o.students), days:o.days || {}, dayMeta:o.dayMeta || {} };
+          students:saubereStudierende(o.students), days:sanitizeDays(o.days), dayMeta:sanitizeMeta(o.dayMeta) };
     persist();
     curSlot = slots()[0].id;
     view = "set"; render();
     toast(t("restoreDone") + ": " + S.students.length + " " + t("student")
           + " · " + Object.keys(S.days).length + " " + t("days"));
-  }catch(err){ toast(t("restoreBad")); }
+    return true;
+  }catch(err){ toast(t("restoreBad")); return false; }
 }
 
 /* ---------- Einstellungen ---------- */
+/* Hat die Person an irgendeinem Tag etwas Erfasstes (Anwesenheit ausser anwesend, Baustein, Freitext)? */
+function hatEintraege(sid){
+  return Object.keys(S.days || {}).some(d => { const r = (S.days[d] || {})[sid];
+    return !!r && (attOf(r) !== "present" || obsOf(r).length > 0 || !!(r.note && r.note.txt)); });
+}
+/* «Übernehmen» der Studierendenliste (Entscheid 31.10.2026): Zeilen werden über Nummer, E-Mail, Namen
+   den bisherigen Personen zugeordnet; Id und alle übrigen Angaben (Nummer, Foto, Pläne) bleiben bei
+   einer Namenskorrektur erhalten. Fällt jemand mit Einträgen weg, wird zuerst nachgefragt.
+   Rückgabe false: abgebrochen, nichts geändert. Aus dem Beispiel heraus zählt keine Beispielperson. */
+function applyStudentList(text){
+  const zeilen = String(text || "").split("\n").map(x=>x.trim()).filter(Boolean).map(parseStudentZeile).filter(Boolean);
+  const sample = !!S.settings.isSample;
+  const alt = sample ? [] : S.students.slice();
+  const used = new Set(), ids = new Set(S.students.map(s=>s.id));
+  Object.keys(S.days || {}).forEach(d => Object.keys(S.days[d] || {}).forEach(k => ids.add(k)));
+  const neueId = () => { let id; do{ id = "s" + Math.random().toString(36).slice(2,8); }while(ids.has(id)); ids.add(id); return id; };
+  const neu = zeilen.map(g=>{
+    const ex = matchStudent(g, alt, used);
+    let o;
+    if(ex){
+      used.add(ex.id);
+      o = {...ex, nachname:g.nachname, vorname:g.vorname,
+           nick: g.nick || ex.nick || "", mail: g.mail || ex.mail || "", lang: g.lang || ex.lang || "",
+           klasse: g.klasse || ex.klasse || "", gruppe: g.gruppe || ex.gruppe || ""};
+    } else {
+      o = {id:neueId(), nachname:g.nachname, vorname:g.vorname, nick:g.nick, mail:g.mail, lang:g.lang,
+           klasse:g.klasse, gruppe:g.gruppe};
+    }
+    if(g.nr) o.nr = g.nr;
+    o.name = anzeigeName(o);
+    return o;
+  });
+  const weg = alt.filter(s => !used.has(s.id) && hatEintraege(s.id));
+  if(weg.length){
+    let ja = false;
+    try{ ja = window.confirm(t("dropStudConfirm").replace("{n}", weg.map(s=>s.name).join(", "))); }catch(e){ ja = false; }
+    if(!ja) return false;
+  }
+  if(sample) leaveSample();                                     // Beispieltage und Beispiel-Kopfwerte weg
+  S.students = neu;
+  persist();
+  return true;
+}
 function renderSet(){
   const root = document.getElementById("v-set"); root.innerHTML = "";
 
@@ -2734,25 +2978,8 @@ function renderSet(){
   c1.appendChild(f5);
   const rowb = el("div",{class:"row"});
   rowb.appendChild(el("button",{class:"btn pri",text:t("apply"),onclick:()=>{
-    const lines = ta.value.split("\n").map(x=>x.trim()).filter(Boolean);
-    const neu = lines.map(line=>{
-      const g = parseStudentZeile(line);
-      if(!g) return null;
-      const ex = S.students.find(s=>
-        (s.nachname||"").trim().toLowerCase() === g.nachname.toLowerCase() &&
-        (s.vorname ||"").trim().toLowerCase() === g.vorname.toLowerCase());
-      const o = ex ? {...ex, ...g,
-                      nick: g.nick || ex.nick || "",
-                      mail: g.mail || ex.mail || "",
-                      lang: g.lang || ex.lang || "",
-                      klasse: g.klasse || ex.klasse || "",
-                      gruppe: g.gruppe || ex.gruppe || ""}
-                   : {id:"s"+Math.random().toString(36).slice(2,8), ...g};
-      o.name = anzeigeName(o);
-      return o;
-    }).filter(Boolean);
-    S.students = neu;
-    unseed(); persist(); toast(S.students.length+" "+t("student")); render();
+    if(!applyStudentList(ta.value)) return;                    // abgebrochen: nichts geändert
+    toast(S.students.length+" "+t("student")); render();
   }}));
   const cb = el("input",{type:"checkbox",id:"fBan",checked:!!S.settings.hideBanner,
     onchange:e=>{S.settings.hideBanner=e.target.checked;persist();render();}});
@@ -2766,7 +2993,7 @@ function renderSet(){
   const fw = el("div",{class:"field"});
   fw.appendChild(el("label",{text:t("weekdaysLbl")}));
   const wd = el("div",{class:"wdays"});
-  WDAYS.forEach(w=>wd.appendChild(el("button",{text:wdName(w.k).slice(0,3),
+  WDAYS.forEach(w=>wd.appendChild(el("button",{text:wdShort(w.k),
     "aria-pressed":String((S.settings.weekdays||[]).includes(w.k)),
     onclick:()=>{
       const cur = S.settings.weekdays||[];

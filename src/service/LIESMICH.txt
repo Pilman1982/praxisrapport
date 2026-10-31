@@ -56,8 +56,12 @@ Ganz oben in _chips.js stehen zwei Listen, die beide Apps lesen:
 Kommt eine Klasse oder eine Gruppe dazu, wird hier eine Zeile ergaenzt.
 
 Feste Regeln, die nicht ueber die Oberflaeche aenderbar sind:
-  - tea-lt ist der Baustein, den "Verspaetet" automatisch setzt. Nicht umbenennen.
-  - Die Doppelgewichtung haengt am Kriterium "gas" (Gastgeberhaltung).
+  - tea-lt ("Verspaetet zum Dienst erschienen") ist ein alter Baustein: er wird seit 31.10.2026 nicht
+    mehr zur Auswahl angeboten (Laptop-Blatt, Einzelblatt), nur noch angezeigt, wenn er an einem Tag
+    schon gesetzt ist, damit er entfernt werden kann. Verspaetung nur ueber die Anwesenheit
+    "Verspaetet" (Start 3.50). Alte Eintraege rechnen unveraendert und gelten in der Beurteilung als
+    Verspaetung. Nicht umbenennen und nicht loeschen (alte Dateien).
+  - Doppelt gewichtet sind Gastgeberhaltung (gas) und Hygiene (hyg), fest (DOUBLE_CRITS, seit 31.10.2026).
   - Jeder negative Baustein braucht einen Massnahmentext, sonst fehlt er im Bericht.
   - Studierende haben die Felder nachname, vorname, nick, mail, lang, klasse, gruppe.
     Das Feld name wird daraus berechnet und nicht von Hand gesetzt.
