@@ -68,7 +68,7 @@ python3 tests/test_startlink.py     # Startlinks
 python3 tests/test_halbturnus.py    # 5T + 4T in die 10T-Datei
 python3 tests/test_wechsel.py       # Service: Restaurantwechsel
 python3 tests/test_cockpit.py       # Cockpit: Plan, Fotos, Pakete, Eingangskontrolle
-python3 tests/test_altdaten.py      # Rapporte aus dem Pilot (braucht die archivierten Programme: DG_ALT oder testdaten/alt/, sonst SKIP)
+python3 tests/test_altdaten.py      # Rapporte aus dem Pilot (alte Programme vom 05.10.2026 liegen in testdaten/alt/)
 python3 tests/test_daily_grades.py  # Rückmeldungen Pilot 08.10.2026 (Schichten, OC, Verspätung, Nickname, Zusammenfassung)
 python3 tests/test_regeln_2026_10_11.py  # Basis 4.50, Team Market verspätet 4.00, Sie-Form
 python3 tests/test_notenzentrale.py      # Regeln 31.10.2026 (6.00 erreichbar, Hygiene fest doppelt), Notenzentrale = gleiche Noten wie die Apps
@@ -188,7 +188,7 @@ Behoben:
 
 Neu geprüft: `tests/test_fuzz_notenmodell.py` (Zufallsdaten, drei Fassungen müssen auf 1e-9 gleich rechnen) und
 `tests/test_audit_2026_11_10.py` (zufällig beschädigte Dateien in Tablet, Laptop, Notenzentrale, Cockpit und «Meine Startseite»).
-Stand 10.11.2026: 900 Prüfungen in 19 Testreihen bestanden (`test_altdaten.py` übersprungen, siehe oben), Darstellung in 360 bis 1366 px und drei Sprachen ohne seitliches Scrollen.
+Stand 10.11.2026: 908 Prüfungen in 20 Testreihen bestanden, Darstellung in 360 bis 1366 px und drei Sprachen ohne seitliches Scrollen.
 Prüfung des Quelltexts: `node --check` und ESLint über alle gebauten Seiten (keine Fehler), `pyflakes` über die Python-Skripte.
 
 ## Entscheide 10.11.2026 (nach dem Audit)
