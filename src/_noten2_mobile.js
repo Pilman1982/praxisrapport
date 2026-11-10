@@ -50,7 +50,7 @@ function n2Crit(slotId, sid){
     const mine = obs.filter(o => o.c === c.k);
     if(mine.some(o => o.ko)){ g[c.k] = 1; return; }
     let d = 0; mine.forEach(o => { d += o.d * o.w; });
-    if(nt && nt.crit === c.k && nt.dir && nt.w) d += nt.dir * nt.w;
+    if(nt && nt.crit === c.k && nt.dir && nt.w && String(nt.txt || "").trim()) d += nt.dir * nt.w;   // nur mit Text (Audit 10.11.2026)
     d = Math.max(CAP_NEG, Math.min(CAP_POS, d));
     g[c.k] = Math.max(1, Math.min(6, b0 + d));
   });
@@ -148,17 +148,17 @@ const N2FB = {
 const N2FBUI = {
   de:{fb:"Feedback", fbTitle:"Feedback-Mail", fbHint:"Am Ende deines Einsatzes: pro Person eine Feedback-Mail. Der Text ist ein Vorschlag, du kannst ihn ändern.",
       withGrades:"Praxisnote mitschicken (ohne Exam)", open:"In Mail öffnen", copy:"Kopieren", close:"Schliessen", noMail:"Keine E-Mail-Adresse hinterlegt. Text kopieren und selbst senden.",
-      sent:"gesendet", copied:"Kopiert", lang:"Sprache",
+      sent:"gesendet", copied:"Kopiert", lang:"Sprache", replace:"Du hast den Text geändert. Er wird durch den neuen Vorschlag ersetzt. Fortfahren?",
       noDays:"Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.",
       pasted:"Der Text ist lang und wurde kopiert. In der Mail mit Strg+V (Mac: Cmd+V) einfügen.", pasteHere:"(Feedback-Text hier einfügen: Strg+V)"},
   en:{fb:"Feedback", fbTitle:"Feedback e-mail", fbHint:"At the end of your assignment: one feedback e-mail per student. The text is a suggestion; you can change it.",
       withGrades:"Include practice grade (no exam)", open:"Open in Mail", copy:"Copy", close:"Close", noMail:"No e-mail address on file. Copy the text and send it yourself.",
-      sent:"sent", copied:"Copied", lang:"Language",
+      sent:"sent", copied:"Copied", lang:"Language", replace:"You have changed the text. It will be replaced by the new suggestion. Continue?",
       noDays:"There is no graded day for this student yet (e.g. only absences). Please check the text before sending it.",
       pasted:"The text is long and has been copied. Paste it into the e-mail with Ctrl+V (Mac: Cmd+V).", pasteHere:"(Paste the feedback text here: Ctrl+V)"},
   th:{fb:"ข้อเสนอแนะ", fbTitle:"อีเมลข้อเสนอแนะ", fbHint:"เมื่อจบการฝึก: ส่งอีเมลข้อเสนอแนะให้นักศึกษาแต่ละคน ข้อความเป็นเพียงข้อเสนอ แก้ไขได้",
       withGrades:"ส่งคะแนนภาคปฏิบัติด้วย (ไม่รวมสอบ)", open:"เปิดในแอปเมล", copy:"คัดลอก", close:"ปิด", noMail:"ไม่มีที่อยู่อีเมล ให้คัดลอกข้อความแล้วส่งเอง",
-      sent:"ส่งแล้ว", copied:"คัดลอกแล้ว", lang:"ภาษา",
+      sent:"ส่งแล้ว", copied:"คัดลอกแล้ว", lang:"ภาษา", replace:"คุณแก้ไขข้อความแล้ว ข้อความจะถูกแทนที่ด้วยข้อเสนอใหม่ ดำเนินการต่อหรือไม่",
       noDays:"นักศึกษาคนนี้ยังไม่มีวันที่ได้รับการประเมิน (เช่น มีแต่การขาด) กรุณาตรวจข้อความก่อนส่ง",
       pasted:"ข้อความยาวและถูกคัดลอกแล้ว วางในอีเมลด้วย Ctrl+V (Mac: Cmd+V)", pasteHere:"(วางข้อความข้อเสนอแนะที่นี่: Ctrl+V)"}
 };
@@ -274,10 +274,12 @@ function n2OpenFb(s){
   const ta = el("textarea",{class:"fbtext",id:"n2fbtext",oninput:()=>{ edited = true; }});
   const fill = () => { ta.value = n2FbText(s, lg, withGrades).body; edited = false; };
   const row = el("div",{class:"fbopts"});
-  const ls = el("select",{"aria-label":n2u("lang"),onchange:e=>{ lg = e.target.value; fill(); }});
+  /* Eigene Änderungen am Text nicht still überschreiben (Audit 10.11.2026): vor dem neuen Vorschlag fragen */
+  const darfErsetzen = () => { if(!edited) return true; try{ return !!window.confirm(n2u("replace")); }catch(e){ return false; } };
+  const ls = el("select",{"aria-label":n2u("lang"),onchange:e=>{ if(!darfErsetzen()){ e.target.value = lg; return; } lg = e.target.value; fill(); }});
   [["de","Deutsch"],["en","English"]].forEach(([v, n]) => ls.appendChild(el("option",{value:v,text:n,selected:v === lg})));
   row.appendChild(el("label",{},[document.createTextNode(n2u("lang") + " "), ls]));
-  const cb = el("input",{type:"checkbox",onchange:e=>{ withGrades = e.target.checked; fill(); }});
+  const cb = el("input",{type:"checkbox",onchange:e=>{ if(!darfErsetzen()){ e.target.checked = withGrades; return; } withGrades = e.target.checked; fill(); }});
   row.appendChild(el("label",{},[cb, document.createTextNode(" " + n2u("withGrades"))]));
   body.appendChild(row);
   if(!s.mail) body.appendChild(el("div",{class:"banner",text:n2u("noMail")}));
@@ -289,7 +291,7 @@ function n2OpenFb(s){
     try{ navigator.clipboard.writeText(ta.value).then(()=>toast(n2u("copied"))); }catch(e){ ta.select(); try{ document.execCommand("copy"); toast(n2u("copied")); }catch(_){} } }}));
   ft.appendChild(el("button",{class:"btn pri",text:"✉ " + n2u("open"),onclick:()=>{
     const subj = n2FbText(s, lg, withGrades).subj;
-    S.settings.fbSent = S.settings.fbSent || {}; S.settings.fbSent[s.id] = new Date().toISOString().slice(0, 10); persist();
+    S.settings.fbSent = S.settings.fbSent || {}; S.settings.fbSent[s.id] = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date()); persist();
     const m = n2FbMailto(s, subj, ta.value, n2Touch());
     if(m.copy){                                                      // zu lang für Outlook unter Windows: Text in die Zwischenablage
       try{ navigator.clipboard.writeText(ta.value); }catch(e){ try{ ta.select(); document.execCommand("copy"); }catch(_){} }
@@ -347,7 +349,7 @@ const n2x = k => (N2X[L] && N2X[L][k]) || N2X.de[k] || k;
 function n2NickBox(student, onDone){
   const box = el("div",{class:"nickbox"});
   const inp = el("input",{type:"text",value:student.nick || "",placeholder:n2x("nickPh"),autocapitalize:"words","aria-label":n2x("nick"),maxlength:"30"});
-  const save = v => { student.nick = String(v || "").trim(); student.nickNeu = new Date().toISOString().slice(0, 10); persist(); onDone(); };
+  const save = v => { student.nick = String(v || "").trim(); student.nickNeu = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date()); persist(); onDone(); };
   inp.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); save(inp.value); } });
   box.appendChild(el("label",{class:"eyebrow",text:n2x("nick")}));
   box.appendChild(el("div",{class:"row",style:"gap:8px;flex-wrap:nowrap"},[inp,
@@ -402,7 +404,7 @@ function n2SendSummary(){
     try{ navigator.clipboard.writeText(T.body); }catch(e){}
     href = base + "&body=" + encodeURIComponent(n2x("sumCopy")); toast(n2x("sumCopy"));
   }
-  S.settings.sumSent = new Date().toISOString().slice(0, 10); persist();
+  S.settings.sumSent = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date()); persist();
   location.href = href;
 }
 function n2SummaryCard(){
@@ -447,6 +449,22 @@ function n2HomeHref(){
   return /^https?:/.test(location.protocol) ? "../mein.html" : "https://pilman1982.github.io/praxisrapport/mein.html";
 }
 { const h = document.getElementById("btnHome"); if(h){ h.setAttribute("href", n2HomeHref());  } }
+/* Kopfzeile in der Sprache der Oberfläche (Audit 10.11.2026): Bereich und Knopf «Startseite» standen fest auf Deutsch,
+   auch in der englischen und thailändischen Oberfläche. Wird von render() jeder Fassung aufgerufen. */
+const N2_HEAD = {
+  de:{kueche:"Küche", service:"Service", home:"Startseite", myHome:"Meine Startseite"},
+  en:{kueche:"Kitchen", service:"Service", home:"Start page", myHome:"My start page"},
+  th:{kueche:"ครัว", service:"บริการ", home:"หน้าเริ่มต้น", myHome:"หน้าเริ่มต้นของฉัน"}
+};
+function n2HeadLang(){
+  const X = N2_HEAD[S.settings.uiLang] || N2_HEAD.de;
+  const area = /service/i.test(String(location.pathname || "").split("/").pop() || "") ? X.service : X.kueche;
+  const lap = document.querySelector("header.top .brand .txt b"); if(lap) lap.textContent = "Daily Grades · " + area;
+  const mob = document.querySelector("#brandApp .happ2"); if(mob) mob.textContent = " · " + area;
+  const h = document.getElementById("btnHome"); if(!h) return;
+  h.setAttribute("title", X.myHome); h.setAttribute("aria-label", X.myHome);
+  if(lap) h.textContent = "⌂ " + X.home;
+}
 
 function n2Handoff(load){
   let h = null;

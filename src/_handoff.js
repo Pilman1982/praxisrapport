@@ -31,6 +31,22 @@ function n2HomeHref(){
   return /^https?:/.test(location.protocol) ? "../mein.html" : "https://pilman1982.github.io/praxisrapport/mein.html";
 }
 { const h = document.getElementById("btnHome"); if(h){ h.setAttribute("href", n2HomeHref());  } }
+/* Kopfzeile in der Sprache der Oberfläche (Audit 10.11.2026): Bereich und Knopf «Startseite» standen fest auf Deutsch,
+   auch in der englischen und thailändischen Oberfläche. Wird von render() jeder Fassung aufgerufen. */
+const N2_HEAD = {
+  de:{kueche:"Küche", service:"Service", home:"Startseite", myHome:"Meine Startseite"},
+  en:{kueche:"Kitchen", service:"Service", home:"Start page", myHome:"My start page"},
+  th:{kueche:"ครัว", service:"บริการ", home:"หน้าเริ่มต้น", myHome:"หน้าเริ่มต้นของฉัน"}
+};
+function n2HeadLang(){
+  const X = N2_HEAD[S.settings.uiLang] || N2_HEAD.de;
+  const area = /service/i.test(String(location.pathname || "").split("/").pop() || "") ? X.service : X.kueche;
+  const lap = document.querySelector("header.top .brand .txt b"); if(lap) lap.textContent = "Daily Grades · " + area;
+  const mob = document.querySelector("#brandApp .happ2"); if(mob) mob.textContent = " · " + area;
+  const h = document.getElementById("btnHome"); if(!h) return;
+  h.setAttribute("title", X.myHome); h.setAttribute("aria-label", X.myHome);
+  if(lap) h.textContent = "⌂ " + X.home;
+}
 
 function n2Handoff(load){
   let h = null;

@@ -1,6 +1,10 @@
 import pathlib, json, threading, functools, http.server, socketserver, base64
 from playwright.sync_api import sync_playwright
-D=pathlib.Path("/home/claude/praxisrapport/docs"); O=pathlib.Path("/tmp/claude-0/guides/shots"); LIB=pathlib.Path("/tmp/claude-0/libs/node_modules")
+import os
+# Pfade ueber Umgebungsvariablen (Audit 10.11.2026): DG_GUIDES wie in make_guides.py, DG_LIBS wie in den Tests (jszip)
+REPO=pathlib.Path(__file__).resolve().parent.parent.parent
+D=REPO/"docs"; O=pathlib.Path(os.environ.get("DG_GUIDES") or (pathlib.Path(__file__).resolve().parent/"out"))/"shots"; O.mkdir(parents=True,exist_ok=True)
+LIB=pathlib.Path(os.environ.get("DG_LIBS") or (REPO/"tests"/".cache"/"node_modules"))
 class Q(http.server.SimpleHTTPRequestHandler):
     def log_message(self,*a): pass
 srv=socketserver.TCPServer(("127.0.0.1",0),functools.partial(Q,directory=str(D))); U="http://127.0.0.1:%d/"%srv.server_address[1]

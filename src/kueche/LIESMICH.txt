@@ -41,9 +41,8 @@ python3 mobile_build.py
    erzeugt die drei Kuechenrapport_Mobil*.html
    (ersetzt dabei MVARIANT)
 
-python3 guide_build.py
-   erzeugt die vier Anleitungen als HTML; die PDF entstehen daraus mit
-   einem Browser-Druck (im Projekt mit Playwright, Rand 0, A4)
+Anleitungen (PDF pro Person): tools/anleitungen/shots.py (Bildschirmfotos) und
+   tools/anleitungen/make_guides.py im Repository. Pfade ueber DG_GUIDES, DG_FONTS, DG_SEMZIP (siehe dort).
 
 
 WICHTIG BEIM ÄNDERN
@@ -65,9 +64,8 @@ WICHTIG BEIM ÄNDERN
 
 PRUEFUNG
 --------
-Testprotokoll_Harmonisierung.txt: 83 Pruefungen nach der Angleichung an den
-Servicerapport vom 05.10.2026 (Namensliste, Klassen, Meldezeile, Zusammenfuehren,
-Auswahlfelder mobil).
+Alle automatischen Pruefungen und ihre Protokolle liegen im Repository im Ordner tests/
+(Liste und Aufruf im README, Abschnitt «Ändern und veröffentlichen»).
 
 
 REGELN AB 11.10.2026 (fest im Code, nicht ueber die Oberflaeche aenderbar)

@@ -211,7 +211,7 @@ function critGrades(area, slot, rec){
     if(mine.some(o => o.ko)){ g[c.k] = 1; return; }
     let d = 0; mine.forEach(o => { d += o.d * o.w; });
     const nd = nt ? (Number(nt.dir) || 0) : 0, nw = nt ? (Number(nt.w) || 0) : 0;
-    if(nt && String(nt.crit || "") === c.k && nd && nw) d += nd * nw;
+    if(nt && String(nt.crit || "") === c.k && nd && nw && String(nt.txt || "").trim()) d += nd * nw;   // nur mit Text, wie in den Apps
     d = Math.max(M.CAP_NEG, Math.min(M.CAP_POS, d));
     g[c.k] = Math.max(1, Math.min(6, b0 + d));
   });
@@ -224,7 +224,6 @@ function dayTotal(area, g){
   return s / w;
 }
 const critShort = (area, k) => { const c = MODELS[area].CRITS.find(x => x.k === k); return c ? ((c.s && c.s.de) || c.de) : k; };
-const critLong = (area, k) => { const c = MODELS[area].CRITS.find(x => x.k === k); return c ? c.de : k; };
 
 /* Einsatztage eines Pakets, wie slots() in den Apps */
 function pkgSlots(variant, st){
@@ -377,9 +376,21 @@ function pkgKeyOf(o){
 /* Eintrag mit Inhalt: Absenz, Verspätung, Team Market, Beobachtung, Notiz oder anderes Restaurant */
 const hasContent = r => !!r && ((ATT.includes(r.att) && r.att !== "present") || (Array.isArray(r.obs) && r.obs.length > 0)
   || !!(r.note && typeof r.note === "object" && String(r.note.txt || "").trim()) || !!String(r.outlet || ""));
-const lastOf = st => String(st.nachname || st.last || "").trim();
-const firstOf = st => String(st.vorname || st.first || "").trim();
-function nrOf(st){ return String(st.nr || "").replace(/\s+/g, ""); }
+/* Eintrag auf die Form bringen, die die Apps beim Einlesen herstellen (sanitizeDays): gleiche Datei, gleiche Note.
+   Ein Freitext ohne Text zählt dort nicht, Bausteine sind Kennungen (Text), unbekannte Anwesenheit = anwesend. */
+function cleanRec(r){
+  if(!r || typeof r !== "object" || Array.isArray(r)) return null;
+  const n = r.note;
+  const o = {att: ATT.includes(r.att) ? r.att : "present", obs: Array.isArray(r.obs) ? r.obs.filter(x => typeof x === "string") : [],
+    note: (n && typeof n === "object" && typeof n.txt === "string") ? {txt:n.txt, crit:String(n.crit || ""), dir:Number(n.dir) || 0, w:Number(n.w) || 0, internal:!!n.internal} : null};
+  if(r.outlet && typeof r.outlet === "string") o.outlet = r.outlet;
+  return o;
+}
+/* Angaben zur Person immer als Text lesen (Audit 10.11.2026): eine Zahl oder Liste an dieser Stelle hielt die Übersicht an */
+const txtOf = v => (v == null || typeof v === "object") ? "" : String(v).trim();
+const lastOf = st => txtOf(st.nachname) || txtOf(st.last);
+const firstOf = st => txtOf(st.vorname) || txtOf(st.first);
+function nrOf(st){ return txtOf(st.nr).replace(/\s+/g, ""); }
 function rebuild(){
   const docs = RAW.filter(r => r.kind === "rapport").sort((a, b) => (a.saved || 0) - (b.saved || 0) || a.name.localeCompare(b.name));
   /* Personen-Schlüssel: Nummer, sonst Name. Ein Name mit bekannter Nummer zählt als dieselbe Person. */
@@ -401,16 +412,16 @@ function rebuild(){
       const k = pkOf(s); sid2pk[s.id] = k;
       const prev = p.studs.get(k) || {};
       p.studs.set(k, {pk:k, nr: nrOf(s) || prev.nr || "", last: lastOf(s) || prev.last || "", first: firstOf(s) || prev.first || "",
-        name: String(s.name || prev.name || ""), nick: String(s.nick || "").trim() || prev.nick || "", klasse: s.klasse || prev.klasse || "",
-        gruppe: s.gruppe || prev.gruppe || "", mail: s.mail || prev.mail || "", sid:s.id, schichtPlan: Array.isArray(s.schichtPlan) ? s.schichtPlan : (prev.schichtPlan || null),
+        name: txtOf(s.name) || prev.name || "", nick: txtOf(s.nick) || prev.nick || "", klasse: txtOf(s.klasse) || prev.klasse || "",
+        gruppe: txtOf(s.gruppe) || prev.gruppe || "", mail: txtOf(s.mail) || prev.mail || "", sid:s.id, schichtPlan: Array.isArray(s.schichtPlan) ? s.schichtPlan : (prev.schichtPlan || null),
         ortPlan: Array.isArray(s.ortPlan) ? s.ortPlan : (prev.ortPlan || null), foto: (typeof s.foto === "string" && /^data:image\//.test(s.foto)) ? s.foto : (prev.foto || "")});
       const fs = st.fbSent && st.fbSent[s.id]; if(fs) p.fb[k] = String(fs);
     });
     Object.keys(o.days || {}).forEach(dk => {
       if(!/^d\d\d$/.test(dk)) return;
-      const recs = o.days[dk]; if(!recs || typeof recs !== "object") return;
+      const recs = o.days[dk]; if(!recs || typeof recs !== "object" || Array.isArray(recs)) return;
       Object.keys(recs).forEach(sid => {
-        const r = recs[sid], k = sid2pk[sid]; if(!k || !r || typeof r !== "object") return;
+        const r = cleanRec(recs[sid]), k = sid2pk[sid]; if(!k || !r) return;
         const prev = (p.days[dk] || {})[k];
         /* neuere Datei gewinnt; leer überschriebene Beobachtungen werden in der Kontrolle gemeldet */
         if(prev && hasContent(prev) && !hasContent(r)) p.emptied.push({dk, k, from: d.name});
@@ -911,7 +922,8 @@ $("btnXlsx").onclick = () => {
 $("btnCsv").onclick = () => {
   const rows = finalRows(); if(!rows.length){ $("expStat").textContent = "Keine Einsätze für diese Auswahl."; return; }
   const keys = Object.keys(rows[0]);
-  const esc = v => { const s = v == null ? "" : String(v); return /[;"\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const esc = v => { let s = v == null ? "" : String(v); if(typeof v === "string" && /^[=+\-@\t\r]/.test(s)) s = "'" + s;   // entschärft Excel-Formeln
+    return /[;"\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
   const txt = "﻿" + [keys.join(";")].concat(rows.map(r => keys.map(k => esc(r[k])).join(";"))).join("\r\n");
   const a = el("a", {href: URL.createObjectURL(new Blob([txt], {type:"text/csv;charset=utf-8"})), download: exportName("csv")});
   document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800);

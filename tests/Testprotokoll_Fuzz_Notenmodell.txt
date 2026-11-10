@@ -1,0 +1,27 @@
+ZUFALLSPRUEFUNG NOTENMODELL 10.11.2026 (Startwert 20261110, 3 Runden)
+
+OK      kueche 10T: saubere Daten, Tablet = Laptop = Notenzentrale (153 Tagesnoten)            
+OK      kueche 10T: alle Noten in den Grenzen (1 bis 6, verspaetet hoechstens 5.00, Team Market fest) 
+OK      kueche 10T: beschaedigte Datei laedt, App und Notenzentrale rechnen gleich             
+OK      kueche 10T: keine JavaScript-Fehler (Tablet, Laptop)                                   
+OK      kueche 4T: saubere Daten, Tablet = Laptop = Notenzentrale (78 Tagesnoten)              
+OK      kueche 4T: alle Noten in den Grenzen (1 bis 6, verspaetet hoechstens 5.00, Team Market fest) 
+OK      kueche 4T: beschaedigte Datei laedt, App und Notenzentrale rechnen gleich              
+OK      kueche 4T: keine JavaScript-Fehler (Tablet, Laptop)                                    
+OK      kueche 5T: saubere Daten, Tablet = Laptop = Notenzentrale (77 Tagesnoten)              
+OK      kueche 5T: alle Noten in den Grenzen (1 bis 6, verspaetet hoechstens 5.00, Team Market fest) 
+OK      kueche 5T: beschaedigte Datei laedt, App und Notenzentrale rechnen gleich              
+OK      kueche 5T: keine JavaScript-Fehler (Tablet, Laptop)                                    
+OK      service 10T: saubere Daten, Tablet = Laptop = Notenzentrale (144 Tagesnoten)           
+OK      service 10T: alle Noten in den Grenzen (1 bis 6, verspaetet hoechstens 5.00, Team Market fest) 
+OK      service 10T: beschaedigte Datei laedt, App und Notenzentrale rechnen gleich            
+OK      service 10T: keine JavaScript-Fehler (Tablet, Laptop)                                  
+OK      service 4T: saubere Daten, Tablet = Laptop = Notenzentrale (69 Tagesnoten)             
+OK      service 4T: alle Noten in den Grenzen (1 bis 6, verspaetet hoechstens 5.00, Team Market fest) 
+OK      service 4T: beschaedigte Datei laedt, App und Notenzentrale rechnen gleich             
+OK      service 4T: keine JavaScript-Fehler (Tablet, Laptop)                                   
+OK      service 5T: saubere Daten, Tablet = Laptop = Notenzentrale (70 Tagesnoten)             
+OK      service 5T: alle Noten in den Grenzen (1 bis 6, verspaetet hoechstens 5.00, Team Market fest) 
+OK      service 5T: beschaedigte Datei laedt, App und Notenzentrale rechnen gleich             
+OK      service 5T: keine JavaScript-Fehler (Tablet, Laptop)                                   
+OK      Notenzentrale: keine JavaScript-Fehler                                                 

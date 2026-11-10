@@ -294,11 +294,12 @@ function normalizeSettings(){
 /* Eingelesene Tagesdaten auf die erwartete Form bringen. */
 function sanitizeDays(days){
   const out = {};
-  Object.entries(days || {}).forEach(([k, recs])=>{
-    if(!/^d\d\d$/.test(k) || !recs || typeof recs !== "object") return;
+  if(!days || typeof days !== "object" || Array.isArray(days)) return out;
+  Object.entries(days).forEach(([k, recs])=>{
+    if(!/^d\d\d$/.test(k) || !recs || typeof recs !== "object" || Array.isArray(recs)) return;
     out[k] = {};
     Object.entries(recs).forEach(([sid, r])=>{
-      if(!r || typeof r !== "object") return;
+      if(!r || typeof r !== "object" || Array.isArray(r)) return;
       out[k][sid] = {
         att: ATT_OK.includes(r.att) ? r.att : "present",
         obs: Array.isArray(r.obs) ? r.obs.filter(x=>typeof x === "string") : [],
@@ -311,6 +312,14 @@ function sanitizeDays(days){
   });
   return out;
 }
+/* Tagesangaben nur als Objekt uebernehmen (Audit 10.11.2026, wie im Servicerapport): ein kaputter Eintrag
+   liess sonst «Tag erfassen» abbrechen. */
+function sanitizeMeta(m){
+  const out = {};
+  if(!m || typeof m !== "object" || Array.isArray(m)) return out;
+  Object.entries(m).forEach(([k, v])=>{ if(/^d\d\d$/.test(k) && v && typeof v === "object" && !Array.isArray(v)) out[k] = v; });
+  return out;
+}
 function pruneOrphans(){
   const ids = new Set(S.students.map(x=>x.id));
   Object.keys(S.days || {}).forEach(d=>{
@@ -319,7 +328,7 @@ function pruneOrphans(){
 }
 normalizeSettings();
 normalizeStudents();
-S.days = sanitizeDays(S.days);
+S.days = sanitizeDays(S.days); S.dayMeta = sanitizeMeta(S.dayMeta);
 
 try{ localStorage.setItem("kr.probe","1"); localStorage.removeItem("kr.probe"); }catch(e){ storeOK = false; }
 function persist(){
@@ -433,7 +442,7 @@ function openSlot(id){
   if(!m.outlet)  m.outlet  = S.settings.outlet  || "";
   if(!m.label)   m.label   = slotLabel(sl, "de");
   if(!m.weekday) m.weekday = sl.wd;
-  if(!m.date)    m.date    = new Date().toISOString().slice(0,10);
+  if(!m.date)    m.date    = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date());
   m.source = "mobil";
   S.dayMeta[id] = m;
   persist();
@@ -629,7 +638,7 @@ function openSheet(student){
   const hd = el("div",{class:"sheet-h"});
   { const av0 = avatar(student, 44); if(av0) hd.appendChild(av0); }
   hd.appendChild(el("div",{style:"min-width:0;flex:1"},[
-    el("div",{class:"nm"},[document.createTextNode(dispName(student) + nickTag(student)),
+    el("div",{class:"nm nmflex"},[el("span",{class:"nmt",text:dispName(student) + nickTag(student)}),
       el("button",{class:"nickbtn",id:"nickBtn",title:n2x("nick"),"aria-label":n2x("nick"),text:"✎",onclick:()=>{ nickOpen = !nickOpen; draw(); }})]),
     el("div",{class:"sb"},[document.createTextNode(slotLabel(slotById(curSlot)) + "  "), schichtPill(student, curSlot), el("span",{id:"n2grade",class:"gpill big"})])
   ]));
@@ -693,7 +702,9 @@ function openSheet(student){
       /* Nur den Text ändern: Kriterium, Wirkung und «intern» vom Laptop bleiben erhalten (Entscheid 31.10.2026) */
       const ta = el("textarea",{placeholder:t("notePh"),
         oninput:e=>{ const R = rec();
-          R.note = Object.assign({crit:"", dir:0, w:0, internal:false}, (R.note && typeof R.note === "object") ? R.note : {}, {txt:e.target.value});
+          /* Audit 10.11.2026: ein geleerter Text entfernt den Freitext ganz (wie am Laptop). Vorher blieb eine am Laptop
+             gesetzte Wirkung ohne Text stehen und zählte unsichtbar weiter. Tippt man im offenen Blatt weiter, kommt sie zurück. */
+          R.note = e.target.value.trim() ? Object.assign({crit:"", dir:0, w:0, internal:false}, nt, (R.note && typeof R.note === "object") ? R.note : {}, {txt:e.target.value}) : null;
           persist(); const ok = document.getElementById("noteOk"); if(ok) ok.textContent = n2x("saved"); },
         onblur:()=>persist()});
       ta.value = nt.txt || "";
@@ -868,7 +879,7 @@ async function onLoadBackup(e){
   e.target.value = "";
   if(!f) return false;
   try{
-    const o = JSON.parse(await f.text());
+    const o = JSON.parse((await f.text()).replace(/^\uFEFF/, ""));
     if(o && o.format === "praxisrapport-semesterpaket"){ toast(t("loadSem")); return false; }
     /* Datei aus dem anderen Bereich (Küche/Service) ablehnen: gleiche Baustein-IDs bedeuten dort etwas anderes */
     if(o && o.app && o.app !== "Kuechenrapport"){ toast(t("loadOther")); return false; }
@@ -877,7 +888,7 @@ async function onLoadBackup(e){
     S = {settings:{...DEF, ...o.settings, variant:MVARIANT},
          students:o.students.filter(x=>x && typeof x.name === "string"),
          days: other ? {} : sanitizeDays(o.days),
-         dayMeta: other ? {} : ((o.dayMeta && typeof o.dayMeta === "object") ? o.dayMeta : {})};
+         dayMeta: other ? {} : sanitizeMeta(o.dayMeta)};
     delete S.settings.isSample;
     normalizeSettings(); normalizeStudents(); pruneOrphans();
     L = (T[S.settings.uiLang] ? S.settings.uiLang : "de");
@@ -916,6 +927,7 @@ function cycleLang(){
 /* ---------- Start ---------- */
 function render(){
   L = T[S.settings.uiLang] ? S.settings.uiLang : "de";
+  if(typeof n2HeadLang === "function") n2HeadLang();
   document.documentElement.setAttribute("lang", L);
   renderHead(); renderSlots(); renderBar();
   if(view === "set") renderSet(); else if(view === "grades") n2RenderGrades(); else renderDay();

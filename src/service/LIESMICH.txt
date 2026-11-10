@@ -22,21 +22,14 @@ Alles andere bleibt gleich.
   _logo.txt           EHL-Logo als Base64, wird beim Bauen eingesetzt
   _icon.txt           Touch-Icon fuer den iPhone-Homescreen
 
-  build_variants.py   baut die Browser-Dateien   ->  python3 build_variants.py 10T
-  mobile_build.py     baut die iPhone-Dateien    ->  python3 mobile_build.py 10T
+  build_variants.py   baut die drei Browser-Dateien (10T, 4T, 5T)
+  mobile_build.py     baut die drei iPhone-/iPad-Dateien
 
-Ohne Argument bauen beide Skripte alle drei Varianten (10T, 4T, 5T).
-Im Einsatz sind alle drei Varianten fuer Laptop und Mobil (seit 05.10.2026).
-Die Dateien landen im Ordner "dist" neben diesem Ordner und muessen danach
-nach "01 Programm" kopiert werden.
+Gebaut wird immer ueber  python3 build.py  im Hauptordner des Repositorys (Kueche und Service zusammen,
+Ergebnis in docs/). Im Einsatz sind alle drei Varianten fuer Laptop und Mobil (seit 05.10.2026).
 
-Testprotokolle in diesem Ordner, aus dem letzten Durchlauf:
-
-  Testprotokoll_Browser.txt      57 Funktionspruefungen der Laptop-Datei
-  Testprotokoll_Mobil.txt        30 Funktionspruefungen der iPhone-Datei
-  Testprotokoll_Robustheit.txt   23 Pruefungen gegen kaputte Sicherungen und Fehlklicks
-  Testprotokoll_Namen.txt        27 Pruefungen zu Namen, Klasse, Gruppe und Absenzmeldung (Stand 02.10.)
-  Testprotokoll_Harmonisierung.txt  83 Pruefungen Kueche und Service nach der Angleichung vom 05.10.2026
+Alle automatischen Pruefungen und ihre Protokolle liegen im Repository im Ordner tests/
+(Liste und Aufruf im README, Abschnitt «Ändern und veröffentlichen»).
 
 Aufbau eines Bausteins in _chips.js:
 
@@ -51,7 +44,7 @@ Aufbau eines Bausteins in _chips.js:
 Ganz oben in _chips.js stehen zwei Listen, die beide Apps lesen:
 
   const KLASSEN = ["HFD", "HFE1", "HFE2"];
-  const GRUPPEN = ["Gruppe 1", "Gruppe 2", "Team 1", "Team 2"];
+  const GRUPPEN = ["Gruppe 1 Team A", … "Gruppe 3 Team B", "Gruppe 1", "Gruppe 2", "Team 1", "Team 2"];
 
 Kommt eine Klasse oder eine Gruppe dazu, wird hier eine Zeile ergaenzt.
 

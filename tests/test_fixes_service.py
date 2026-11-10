@@ -6,7 +6,7 @@
 SheetJS fuer den Excel-Teil: DG_XLSX oder tests/.cache/xlsx.full.min.js (sonst wird das Excel-Blatt
 nur ueber gradeRows geprueft). Protokoll: tests/Testprotokoll_Fixes_Service.txt
 """
-import pathlib, json, os, sys, datetime, urllib.parse
+import pathlib, os, sys, datetime, urllib.parse
 from playwright.sync_api import sync_playwright
 
 R = pathlib.Path(__file__).parent.parent

@@ -1,9 +1,18 @@
 # -*- coding: utf-8 -*-
-"""Alte Rapporte (Programmstand vor dem 05.10.2026) lassen sich in die neue Fassung uebernehmen."""
-import pathlib, json
+"""Alte Rapporte (Programmstand vor dem 05.10.2026) lassen sich in die neue Fassung uebernehmen.
+
+Braucht die beiden archivierten Programme von vor der Harmonisierung (sie liegen nicht im Repository):
+    <Ordner>/k_arch/Kuechenrapport_2026-10-05_vor_Harmonisierung.html
+    <Ordner>/s_arch/Servicerapport_2026-10-05_vor_Harmonisierung.html
+Ordner: Umgebungsvariable DG_ALT, sonst testdaten/alt/. Fehlen die Dateien, wird die Pruefung uebersprungen
+(SKIP, kein Fehler); die Formate alter Dateien deckt zusaetzlich tests/test_audit_2026_11_10.py ab.
+"""
+import pathlib, json, os, sys
 from playwright.sync_api import sync_playwright
 R = pathlib.Path(__file__).parent.parent
-OLD = pathlib.Path("/mnt/user-data/outputs/deploy")
+OLD = pathlib.Path(os.environ.get("DG_ALT") or (R / "testdaten" / "alt"))
+if not (OLD / "k_arch/Kuechenrapport_2026-10-05_vor_Harmonisierung.html").exists() or not (OLD / "s_arch/Servicerapport_2026-10-05_vor_Harmonisierung.html").exists():
+    print("SKIP    Alte Programme nicht vorhanden (DG_ALT oder testdaten/alt/), Pruefung uebersprungen"); sys.exit(0)
 LIST_OLD = "Ammann; Lea; Lulu; lea@beispiel.ch; de; HFD; Gruppe 1\nChen; Yuxuan; Ethan; yuxuan@beispiel.ch; en; HFE; Gruppe 2\nvan der Berg; Sanne; ; sanne@beispiel.ch; en"
 res = []
 def ok(n, c, i=""): res.append(("OK      " if c else "FEHLER  ") + "%-62s %s" % (n, str(i)[:120]))

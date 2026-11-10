@@ -209,6 +209,11 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
 }
 .sheet-h .nm{flex:1;min-width:0;font-family:var(--f-disp);font-size:18px;font-weight:600;
              overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Name mit Stift (Nickname): der Name kürzt mit «…», der Stift bleibt immer sichtbar (Audit 10.11.2026; vorher
+   schob ein langer Name den Stift auf dem Telefon aus dem Bild) */
+.sheet-h .nm.nmflex{display:flex;align-items:center;overflow:visible}
+.sheet-h .nm.nmflex .nmt{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.sheet-h .nm.nmflex .nickbtn{flex:none}
 .sheet-h .sb{font-size:11.5px;color:#9FB0C6}
 .sheet-b{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
          padding:14px calc(var(--sar) + 12px) 28px calc(var(--sal) + 12px)}
@@ -227,6 +232,12 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
   display:flex;gap:9px;
 }
 .bar .btn{flex:1;min-height:50px;font-size:15px;white-space:nowrap}
+/* Telefon (Audit 10.11.2026): drei Knöpfe passen nicht nebeneinander auf 360 bis 430 px. Dort dürfen sie schmaler
+   werden und auf zwei Zeilen umbrechen, statt dass «Sichern» rechts aus dem Bild läuft. */
+@media (max-width:430px){
+  .bar{gap:6px}
+  .bar .btn{flex:1 1 0;min-width:0;font-size:13.5px;line-height:1.15;padding-left:4px;padding-right:4px;white-space:normal;overflow-wrap:anywhere}
+}
 
 /* ---------- Toast ---------- */
 #toast{

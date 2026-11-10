@@ -142,7 +142,9 @@ const klasseNorm = v => { const m = String(v||"").trim().match(/^hf\s*([a-z])\s*
 const gruppeNorm = v => { const s = String(v||"").trim(); const e = s.match(/^(?:gruppe|grp|gr|group)\s*(\d+)\s*(?:team\s*)?([a-z])$/i);
   if(e) return "Gruppe " + e[1] + " Team " + e[2].toUpperCase();
   const m = s.match(/^(gruppe|grp|group|team)\s*(\d+)$/i); return m ? ((/^t/i.test(m[1])?"Team ":"Gruppe ")+m[2]) : s; };
-const pDate = s => { const m = String(s||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return null; const d = new Date(+m[1], +m[2]-1, +m[3], 12); return isNaN(d) ? null : d; };
+const pDate = s => { const m = String(s||"").match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return null; const d = new Date(+m[1], +m[2]-1, +m[3], 12);
+  /* ein Datum, das es nicht gibt (31.11., 30.02.), nicht still auf den Folgemonat schieben (Audit 10.11.2026) */
+  return (isNaN(d) || d.getMonth() !== +m[2]-1 || d.getDate() !== +m[3]) ? null : d; };
 const fDate = d => d ? String(d.getDate()).padStart(2,"0") + "." + String(d.getMonth()+1).padStart(2,"0") + "." : "–";
 const iso = d => d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
 /* Einsatztage zwischen zwei Daten (inklusiv) an den Wochentagen des Plans */
@@ -162,17 +164,37 @@ const visiblePacks = () => PACKS.filter(p => (TAB === "alle" || p.ber === TAB) &
 function parsePlan(txt){
   try{ return JSON.parse(String(txt).replace(/^﻿/, "").trim().replace(/^```(?:json)?\s*|\s*```\s*$/g, "")); }
   catch(e){ $("planStat").innerHTML = '<span class="err">Kein gültiges JSON: ' + e.message.replace(/</g,"&lt;")
-    + '. Ist die Antwort von Copilot vollständig? Sonst «weiter» schreiben oder pro Klasse einzeln erzeugen.</span>'; return null; }
+    + '. Ist die Antwort von Copilot vollständig? Sonst «weiter» schreiben oder pro Klasse einzeln erzeugen.</span>'; return undefined; }
 }
-function cleanPlan(o){ if(!o || typeof o !== "object") return o;
-  if(Array.isArray(o.dozierende)) o.dozierende = o.dozierende.filter(d => d && typeof d === "object").map(d => Object.assign(d, {outlets: [].concat(d.outlets || []).filter(Boolean)}));
-  if(Array.isArray(o.studierende)) o.studierende = o.studierende.filter(x => x && typeof x === "object");
-  (Array.isArray(o.studierende) ? o.studierende : []).forEach(x => { if(Array.isArray(x.einsaetze)) x.einsaetze = x.einsaetze.filter(e => e && typeof e === "object"); });
+/* Plan auf die erwartete Form bringen (Audit 10.11.2026): Copilot liefert gelegentlich Zahlen statt Text oder null.
+   Namen, Nummern, Daten und Kürzel werden Text; Listen bleiben Listen; alles andere fällt weg, statt die Seite anzuhalten. */
+function cleanPlan(o){ if(!o || typeof o !== "object" || Array.isArray(o)) return null;
+  const str = v => (v == null || typeof v === "object") ? "" : String(v).trim();
+  const obj = v => !!v && typeof v === "object" && !Array.isArray(v);
+  ["semester", "bezeichnung", "format"].forEach(k => { if(o[k] != null) o[k] = str(o[k]); });
+  if(!Array.isArray(o.wochentage)) delete o.wochentage; else o.wochentage = o.wochentage.map(str).filter(Boolean);
+  o.dozierende = (Array.isArray(o.dozierende) ? o.dozierende : []).filter(obj).map(d => {
+    ["name", "bereich", "sprache"].forEach(k => { d[k] = str(d[k]); });
+    d.outlets = [].concat(d.outlets == null ? [] : d.outlets).map(str).filter(Boolean);
+    if(obj(d.plan)){ const pl = {}; Object.keys(d.plan).forEach(k => { const v = str(d.plan[k]); if(v) pl[String(k).toLowerCase()] = v; }); d.plan = Object.keys(pl).length ? pl : null; } else delete d.plan;
+    return d; });
+  o.studierende = (Array.isArray(o.studierende) ? o.studierende : []).filter(obj).map(x => {
+    ["nr", "nachname", "vorname", "nickname", "email", "klasse", "gruppe", "sprache"].forEach(k => { x[k] = str(x[k]); });
+    x.einsaetze = (Array.isArray(x.einsaetze) ? x.einsaetze : []).filter(obj).map(e => {
+      ["bereich", "outlet", "von", "bis", "variante", "block", "exam"].forEach(k => { if(e[k] != null) e[k] = str(e[k]); });
+      if(e.wechsel != null){ if(obj(e.wechsel)){ e.wechsel.outlet = str(e.wechsel.outlet); e.wechsel.ab = str(e.wechsel.ab); } else delete e.wechsel; }
+      if(e.tage != null){ if(Array.isArray(e.tage)) e.tage = e.tage.filter(obj).map(t => { ["datum", "outlet", "schicht"].forEach(k => { if(t[k] != null) t[k] = str(t[k]); }); return t; }); else delete e.tage; }
+      return e; });
+    return x; });
   return o; }
-function loadPlanText(txt){ const o = cleanPlan(parsePlan(txt)); if(!o) return; PLAN = o; build(); render(); }
+/* gelesenes JSON prüfen: undefined = kein JSON (Meldung steht schon), sonst muss es ein Objekt sein */
+function readPlan(txt){ const r = parsePlan(txt); if(r === undefined) return null;
+  const o = cleanPlan(r); if(!o) $("planStat").innerHTML = '<span class="err">Das ist kein Turnusplan: erwartet wird ein JSON-Objekt mit «studierende» und «dozierende».</span>';
+  return o; }
+function loadPlanText(txt){ const o = readPlan(txt); if(!o) return; PLAN = o; build(); render(); }
 /* Teil hinzufuegen: Studierende eines weiteren JSON anhaengen (gleiche Nummer = ersetzen) */
 function addPlanText(txt){
-  const o = cleanPlan(parsePlan(txt)); if(!o) return;
+  const o = readPlan(txt); if(!o) return;
   if(!PLAN){ PLAN = o; build(); render(); return; }
   const neu = Array.isArray(o.studierende) ? o.studierende : [];
   const samePers = (a, b) => (a.nr && b.nr) ? String(a.nr) === String(b.nr) : nameKey(a.nachname, a.vorname) === nameKey(b.nachname, b.vorname);
@@ -279,7 +301,7 @@ function build(){
         /* ohne Tagesplan (Abnahme 31.10.2026): Daten aus von/bis und den Wochentagen, wenn die Zahl der Einsatztage stimmt;
            sonst fehlen die Daten in der App (Montag 1/10 …) und die Notenzentrale datiert nach dem Erfassungstag */
         dates: tageList ? tageList.map(t => String(t.datum)) : (days.length === VARS[v].n ? days.slice(0, praxisSlots).map(iso) : null),
-        tage: tageList, wAbDate, exam: e.exam || (VARS[v].exam ? iso(bis) : null)});
+        tage: tageList, wAbDate, exam: pDate(e.exam) ? e.exam : (VARS[v].exam ? iso(bis) : null)});
     });
   });
   Object.values(agg).forEach(a => warn(a.text + ": " + (a.who.length > 4 ? a.who.length + " Personen" : a.who.join(", ")) + "."));
@@ -507,7 +529,7 @@ const REPS = [];
 async function onReports(files){
   for(const f of files){
     try{
-      const o = JSON.parse(await f.text());
+      const o = JSON.parse((await f.text()).replace(/^\uFEFF/, ""));
       if(!o || !Array.isArray(o.students)) throw new Error("kein Rapport");
       const st = o.settings || {}, m = o.meta || {};
       const days = o.days || {};

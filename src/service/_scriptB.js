@@ -458,7 +458,6 @@ const DEF = {group:"", team:"", outlet:"", teacher:"", uiLang:"de", outLang:"de"
    den Reiter Eintragen lahmgelegt und stillschweigend NaN-Noten erzeugt. */
 function sanitizeSettings(s){
   const o = {...DEF, ...(s || {})};
-  const bs = parseFloat(o.base);
   o.base = BASE_NOTE;   // fest seit 11.10.2026, alte Dateien mit 5.00 werden übernommen
   const gueltig = WDAYS.map(w => w.k);
   o.weekdays = Array.isArray(o.weekdays) ? o.weekdays.filter(k => gueltig.indexOf(k) >= 0) : [];
@@ -785,7 +784,7 @@ function openSlot(id){
     const _sl = slots().find(x=>x.id===id);
     if(_sl){ _m.label = _m.label || slotLabel(_sl); _m.weekday = _m.weekday || _sl.wd; }
   }
-  if(!_m.date) _m.date = new Date().toISOString().slice(0,10);
+  if(!_m.date) _m.date = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date());
   S.dayMeta[id] = _m;
   persist();
 }
@@ -928,7 +927,7 @@ function critGradesForDay(id, sid){
     if(mine.some(o=>o.ko)){ g[c.k] = 1; return; }
     let d = 0;
     mine.forEach(o=>{ d += o.d * o.w; });
-    if(nt && nt.crit === c.k && nt.dir && nt.w) d += nt.dir * nt.w;
+    if(nt && nt.crit === c.k && nt.dir && nt.w && String(nt.txt || "").trim()) d += nt.dir * nt.w;   // nur mit Text (Audit 10.11.2026)
     d = Math.max(CAP_NEG, Math.min(CAP_POS, d));
     g[c.k] = Math.max(1, Math.min(6, b0 + d));
   });
@@ -1206,6 +1205,7 @@ function renderTabs(){
 }
 function render(){
   L = S.settings.uiLang || "de";
+  if(typeof n2HeadLang === "function") n2HeadLang();
   fillLangSelects();
   const lg0 = document.getElementById("brandLogo"); if(lg0 && !lg0.src) lg0.src = LOGO;
   document.getElementById("brandVar").textContent = variantText();
@@ -1227,7 +1227,7 @@ function slotStrip(onPick){
   slots().forEach(s=>{
     const b = el("button",{class:"slot"+(dayOpen(s.id)?" filled":"")+(s.exam?" exam":""),
       "aria-current":String(s.id===curSlot), onclick:()=>{ curSlot = s.id; onPick(); }});
-    b.appendChild(el("span",{class:"sd",text: s.exam ? t("examShort") : wdName(s.wd)}));
+    b.appendChild(el("span",{class:"sd",text: s.exam ? (L === "de" ? t("examDay") : t("examShort")) : wdName(s.wd)}));   // Deutsch «Exam Day» wie am Tablet, nicht «Prüfung»
     b.appendChild(el("span",{class:"sw",text: s.exam
       ? (s.date ? wdName(s.wd)+" "+dmy(s.date) : wdName(s.wd)+" · "+s.idx+"/"+n)
       : (s.date ? dmy(s.date) : s.idx+"/"+n)}));
@@ -1272,7 +1272,7 @@ function renderDay(){
     const head = el("div",{class:"stud-h"},[avatar(s, 34), el("div",{class:"nm"},[document.createTextNode(s.name + nickTag(s)), schichtPill(s, curSlot),
       el("button",{class:"nickbtn",title:"Nickname",text:"✎",onclick:()=>{        // Nickname direkt eintragen (Rückmeldung Pilot 08.10.2026)
         let v = null; try{ v = window.prompt("Nickname · " + s.name, s.nick || ""); }catch(e){ v = null; }
-        if(v === null) return; s.nick = String(v).trim(); s.nickNeu = new Date().toISOString().slice(0, 10); persist(); render(); }})])]);
+        if(v === null) return; s.nick = String(v).trim(); s.nickNeu = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date()); persist(); render(); }})])]);
     if(hasOutlet2()) head.appendChild(el("button",{class:"opill"+(r.outlet?" alt":""),title:t("switchTitle"),
       text:"⇄ " + (r.outlet || S.settings.outlet || "–"),
       onclick:()=>{ unseed(); toggleOutlet(dayRec(curSlot, s.id)); persist(); renderDay(); }}));
@@ -1524,7 +1524,6 @@ function absenceMail(slotId){
     .join("\n");
   return {subj, body};
 }
-function absenceMailHref(slotId){ const m = absenceMail(slotId); return mailtoHref(ABS_MAIL, m.subj, m.body); }
 /* ---- Noten 2.0: Tagesabschluss am Laptop wie auf dem Tablet (06.10.2026) ----
    «Tag senden»: öffnet die fertige Mail an die Kursleitung (Absenzen im Text, Dateiname genannt)
    und gleichzeitig «Speichern unter» für die Tagesdatei. Eine Webseite darf keine Datei selbst
@@ -1553,7 +1552,6 @@ function n2LapDayMail(slotId, fname){
     .concat(["", n2l("att").replace("{f}", fname), n2l("attHint")]).join("\n");
   return {subj, body};
 }
-function n2LapDayMailHref(slotId, fname){ const m = n2LapDayMail(slotId, fname); return mailtoHref(ABS_MAIL, m.subj, m.body); }
 async function n2LapSendDay(){
   const fname = fileStem() + ".json";
   const m = n2LapDayMail(curSlot, fname);
@@ -1717,7 +1715,7 @@ function overviewText(stufe){
   const out = [];
   out.push(t("emailSubj") + " \u00b7 " + [S.settings.group, S.settings.team, S.settings.outlet].filter(Boolean).join(" \u00b7 "));
   out.push(t("teacher") + ": " + (S.settings.teacher || "\u2013") + "  \u00b7  " + VARIANT
-           + "  \u00b7  " + new Date().toISOString().slice(0,10));
+           + "  \u00b7  " + (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date()));
   out.push("");
   if(!rows.length){ out.push(t("noData")); return out.join("\n"); }
   if(stufe === 0)
@@ -2053,7 +2051,11 @@ function printReports(){
 }
 
 /* ---------- Daten ---------- */
-function csvEsc(v){ const s = String(v==null?"":v); return /[";\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; }
+function csvEsc(v){
+  let s = String(v==null?"":v);
+  if(/^[=+\-@\t\r]/.test(s)) s = "'" + s;            // entschaerft Excel-Formeln (wie im Kuechenrapport)
+  return /[";\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s;
+}
 function gradeRows(){
   const rng = slotsInRange(repMode);
   const period = rng.length ? slotLabel(rng[0],"de")+" – "+slotLabel(rng[rng.length-1],"de") : "";
@@ -2254,7 +2256,7 @@ async function onMerge(e){
   const docs = [];
   for(const f of files){
     try{
-      const o = JSON.parse(await f.text());
+      const o = JSON.parse((await f.text()).replace(/^\uFEFF/, ""));
       if(!o || !Array.isArray(o.students) || !o.days || typeof o.days !== "object") continue;
       const fremd = !!(o.app && o.app !== APP_NAME);
       if(fremd || !acceptsVariant(o.variant)){ wrongVar.push(f.name + " (" + (fremd ? o.app : o.variant) + ")"); continue; }
@@ -2272,7 +2274,7 @@ async function onMerge(e){
     S.settings.isSample = false; S.settings.slotDates = []; fresh = !!S.settings.outlet; neuStart = true;
   }
   const sameRec = (a, b) => { const n = r => JSON.stringify([attOf(r), [...obsOf(r)].sort(), normNote(r.note), r.outlet || ""]); return n(a) === n(b); };
-  for(const {o, f} of docs){
+  for(const {o} of docs){
     try{
       const stand = String(o.savedAt || "");
       const halb = !!(o.variant && o.variant !== VARIANT);
@@ -2282,8 +2284,11 @@ async function onMerge(e){
       saubereStudierende(o.students).forEach(st=>{
         /* Name allein reicht nicht: zwei gleichnamige Studierende duerfen nicht
            zu einer Person verschmelzen. Die E-Mail-Adresse entscheidet mit. */
-        let ex = S.students.find(x =>
-          x.name.trim().toLowerCase() === st.name.trim().toLowerCase() &&
+        /* Audit 10.11.2026: die Studierendennummer entscheidet zuerst (wie bei der Namensliste). Gleiche Nummer =
+           dieselbe Person, auch nach einer Namenskorrektur; verschiedene Nummern = nie dieselbe Person. */
+        const nrOf = x => String((x && x.nr) || "").trim();
+        let ex = (nrOf(st) && S.students.find(x => nrOf(x) === nrOf(st))) || S.students.find(x =>
+          x.name.trim().toLowerCase() === st.name.trim().toLowerCase() && !(nrOf(x) && nrOf(st) && nrOf(x) !== nrOf(st)) &&
           (!x.mail || !st.mail || x.mail.toLowerCase() === st.mail.toLowerCase()));
         if(!ex && S.students.some(x => x.name.trim().toLowerCase() === st.name.trim().toLowerCase()))
           clash.push(st.name + " (" + t("sameName") + ")");
@@ -2351,13 +2356,15 @@ async function onRestore(e){
   e.target.value = "";
   if(!f) return false;
   try{
-    const o = JSON.parse(await f.text());
+    const o = JSON.parse((await f.text()).replace(/^\uFEFF/, ""));
     if(o && o.format === "praxisrapport-semesterpaket"){ toast(n2l("sem")); return false; }
     if(!o || !o.settings || typeof o.settings !== "object" || !Array.isArray(o.students)) throw new Error("format");
     if(o.app && o.app !== APP_NAME) throw new Error("app");            // z. B. Küchenrapport: nicht einlesen
     if(o.variant && o.variant !== VARIANT){ toast(t("wrongVariant") + ": " + o.variant); return false; }
     S = { settings:{...sanitizeSettings(o.settings), isSample:false},
           students:saubereStudierende(o.students), days:sanitizeDays(o.days), dayMeta:sanitizeMeta(o.dayMeta) };
+    /* Eintraege ohne Person nicht uebernehmen (Audit 10.11.2026, wie Kueche und Tablet) */
+    { const ids = new Set(S.students.map(x=>x.id)); Object.keys(S.days).forEach(d=>{ Object.keys(S.days[d]).forEach(k=>{ if(!ids.has(k)) delete S.days[d][k]; }); }); }
     persist();
     curSlot = slots()[0].id;
     view = "set"; render();
@@ -2679,6 +2686,22 @@ function n2HomeHref(){
   return /^https?:/.test(location.protocol) ? "../mein.html" : "https://pilman1982.github.io/praxisrapport/mein.html";
 }
 { const h = document.getElementById("btnHome"); if(h){ h.setAttribute("href", n2HomeHref());  } }
+/* Kopfzeile in der Sprache der Oberfläche (Audit 10.11.2026): Bereich und Knopf «Startseite» standen fest auf Deutsch,
+   auch in der englischen und thailändischen Oberfläche. Wird von render() jeder Fassung aufgerufen. */
+const N2_HEAD = {
+  de:{kueche:"Küche", service:"Service", home:"Startseite", myHome:"Meine Startseite"},
+  en:{kueche:"Kitchen", service:"Service", home:"Start page", myHome:"My start page"},
+  th:{kueche:"ครัว", service:"บริการ", home:"หน้าเริ่มต้น", myHome:"หน้าเริ่มต้นของฉัน"}
+};
+function n2HeadLang(){
+  const X = N2_HEAD[S.settings.uiLang] || N2_HEAD.de;
+  const area = /service/i.test(String(location.pathname || "").split("/").pop() || "") ? X.service : X.kueche;
+  const lap = document.querySelector("header.top .brand .txt b"); if(lap) lap.textContent = "Daily Grades · " + area;
+  const mob = document.querySelector("#brandApp .happ2"); if(mob) mob.textContent = " · " + area;
+  const h = document.getElementById("btnHome"); if(!h) return;
+  h.setAttribute("title", X.myHome); h.setAttribute("aria-label", X.myHome);
+  if(lap) h.textContent = "⌂ " + X.home;
+}
 
 function n2Handoff(load){
   let h = null;

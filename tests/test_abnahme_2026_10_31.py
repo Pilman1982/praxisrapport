@@ -7,7 +7,7 @@
 5 Laptop: bewertende Person pro Wochentag laut Plan (geteiltes Geraet)
 6 mein.html: zwei gleichzeitig laufende Pakete, «1 Person»
 (Wechsel Tablet/Laptop behaelt den Tag: tests/test_fixes_mobil.py, M4)"""
-import pathlib, json, datetime, tempfile, os
+import pathlib, json, datetime, tempfile
 from playwright.sync_api import sync_playwright
 R = pathlib.Path(__file__).parent.parent; D = R / "docs"
 res = []

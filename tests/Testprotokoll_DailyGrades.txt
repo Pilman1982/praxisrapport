@@ -5,7 +5,7 @@ OK      Cockpit: OC (Tag 3) und Market (Tag 8) als Team-Market-Tage            [
 OK      Cockpit: Kueche 5T traegt Kuechen-Kuerzel                              ['K1', 'K2', 'TM', 'K3', 'K1']
 OK      Cockpit: Titel und Logo Daily Grades                                   Daily Grades · Cockpit Kursleitung
 OK      Cockpit: neuer Nickname aus dem Rapport erkannt                        [['12', '', 'Lulu']]
-OK      Cockpit: Nickname im Plan, Turnusplan gespeichert, Pakete neu          [['Lulu', 0, 2], 'turnusplan_TEST_Nicknames_2026-10-31.json']
+OK      Cockpit: Nickname im Plan, Turnusplan gespeichert, Pakete neu          [['Lulu', 0, 2], 'turnusplan_TEST_Nicknames_2026-11-10.json']
 OK      Cockpit: neues Paket enthaelt den Nickname                             
 OK      Cockpit: keine JavaScript-Fehler                                       []
 OK      Service Mobil iPad: Schicht-Kuerzel in der Tagesliste (CS1 und S)      ['S', 'CS1']
@@ -67,6 +67,6 @@ OK      index.html: Titel Daily Grades                                         D
 
 Nachtrag 08.10.2026
 OK      Service Umami + Da Fortunat: ein Paket 9 Tage + Exam mit zweitem Restaurant {'err': [], 'pk': [['10T', 'Da Fortunat', 'Umami', 1]]}
-OK      Feedback-Mail: Anna und Berta unterschreiben gemeinsam              ['Anna Muster und Berta Beispiel', 'Anna Muster and Berta Beispiel']
+OK      Feedback-Mail: Anna und Berta unterschreiben gemeinsam                 ['Anna Muster und Berta Beispiel', 'Anna Muster and Berta Beispiel']
 OK      10 Tage im Paket, Umami-Tage markiert                                  ['', 'Umami', '', '', 'Umami', 'Umami', '', '', 'Umami']
 OK      keine JavaScript-Fehler                                                []

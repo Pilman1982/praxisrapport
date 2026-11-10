@@ -120,7 +120,7 @@ const txt = v => (v == null || typeof v === "object") ? "" : String(v);
 const todayIso = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); };
 const pakete = () => (SEM && Array.isArray(SEM.pakete) ? SEM.pakete : []).filter(p => p && typeof p === "object");
 const vonOf = p => isoOk(p.von) ? p.von : "";
-function status(p){
+function paketStatus(p){
   const d = todayIso(), v = vonOf(p), b = isoOk(p.bis) ? p.bis : "";
   if(!v && !b) return "past";
   return (v && d < v) ? "soon" : ((b && d > b) ? "past" : "cur");
@@ -128,9 +128,9 @@ function status(p){
 /* Laufende Pakete (es können zwei gleichzeitig laufen, z. B. 5 Tage und 4 Tage + Exam zweier Gruppen), sonst das nächste */
 function current(){
   const ps = pakete(); if(!ps.length) return [];
-  const now = ps.filter(p => status(p) === "cur").sort((a, b) => vonOf(a).localeCompare(vonOf(b)));
+  const now = ps.filter(p => paketStatus(p) === "cur").sort((a, b) => vonOf(a).localeCompare(vonOf(b)));
   if(now.length) return now.map(p => ({p, kind:"now"}));
-  const next = ps.filter(p => status(p) === "soon").sort((a, b) => vonOf(a).localeCompare(vonOf(b)))[0];
+  const next = ps.filter(p => paketStatus(p) === "soon").sort((a, b) => vonOf(a).localeCompare(vonOf(b)))[0];
   return next ? [{p: next, kind:"next"}] : [];
 }
 const meta = p => dmy(p.von) + " " + t("until") + " " + dmy(p.bis) + (txt(p.personen) ? " · " + txt(p.personen) + " " + (String(txt(p.personen)) === "1" ? t("person") : t("persons")) : "");
@@ -149,7 +149,7 @@ function openPack(p, laptop){
 function onFile(e){
   const f = e.target.files && e.target.files[0]; e.target.value = ""; if(!f) return;
   f.text().then(txt => {
-    let o = null; try{ o = JSON.parse(txt); }catch(err){}
+    let o = null; try{ o = JSON.parse(String(txt).replace(/^\uFEFF/, "")); }catch(err){}
     if(!o || o.format !== "praxisrapport-semesterpaket" || !Array.isArray(o.pakete)){ render(t("bad")); return; }
     SEM = o; if(!hashLang && o.dozent && TX[o.dozent.sprache]){ L = o.dozent.sprache; }
     semSave(o).then(ok => render(ok ? t("done") + " ✓" : t("full")));
@@ -189,7 +189,7 @@ function render(msg){
     if(!cs.length) m.appendChild(el("div",{class:"card meta",text:t("none")}));
     const ul = el("ul");
     pakete().slice().sort((a, b) => vonOf(a).localeCompare(vonOf(b))).forEach(p => {
-      const st = status(p);
+      const st = paketStatus(p);
       ul.appendChild(el("li",{class:st === "past" ? "past" : ""},[
         el("div",{class:"tx"},[el("b",{text:txt(p.titel) || txt(p.id) || "–"}), el("span",{class:"meta small",text:meta(p)})]),
         el("span",{class:"tag " + (st === "cur" ? "now" : st), text:st === "cur" ? t("cur") : t(st)}),

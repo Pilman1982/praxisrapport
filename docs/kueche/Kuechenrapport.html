@@ -1093,7 +1093,7 @@ function openSlot(id){
     const _sl = slots().find(x=>x.id===id);
     if(_sl){ _m.label = _m.label || slotLabel(_sl); _m.weekday = _m.weekday || _sl.wd; }
   }
-  if(!_m.date) _m.date = new Date().toISOString().slice(0,10);
+  if(!_m.date) _m.date = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date());
   S.dayMeta[id] = _m;
   persist();
 }
@@ -1250,11 +1250,12 @@ const ATT_OK = ["present","late","excused","unexcused","tm","tml"];
 /* Eingelesene Tagesdaten auf die erwartete Form bringen. */
 function sanitizeDays(days){
   const out = {};
-  Object.entries(days || {}).forEach(([k, recs])=>{
-    if(!/^d\d\d$/.test(k) || !recs || typeof recs !== "object") return;
+  if(!days || typeof days !== "object" || Array.isArray(days)) return out;
+  Object.entries(days).forEach(([k, recs])=>{
+    if(!/^d\d\d$/.test(k) || !recs || typeof recs !== "object" || Array.isArray(recs)) return;
     out[k] = {};
     Object.entries(recs).forEach(([sid, r])=>{
-      if(!r || typeof r !== "object") return;
+      if(!r || typeof r !== "object" || Array.isArray(r)) return;
       out[k][sid] = {
         att: ATT_OK.includes(r.att) ? r.att : "present",
         obs: Array.isArray(r.obs) ? r.obs.filter(x=>typeof x === "string") : [],
@@ -1267,6 +1268,16 @@ function sanitizeDays(days){
   });
   return out;
 }
+/* Tagesangaben nur als Objekt uebernehmen (Audit 10.11.2026, wie im Servicerapport): ein kaputter Eintrag
+   liess sonst «Tag erfassen» abbrechen. */
+function sanitizeMeta(m){
+  const out = {};
+  if(!m || typeof m !== "object" || Array.isArray(m)) return out;
+  Object.entries(m).forEach(([k, v])=>{ if(/^d\d\d$/.test(k) && v && typeof v === "object" && !Array.isArray(v)) out[k] = v; });
+  return out;
+}
+/* Auch den auf dem Geraet gespeicherten Stand bereinigen (wie Tablet und Servicerapport). */
+S.days = sanitizeDays(S.days); S.dayMeta = sanitizeMeta(S.dayMeta);
 /* Datensaetze von entfernten Studierenden aufraeumen. */
 function pruneOrphans(){
   const ids = new Set(S.students.map(x=>x.id));
@@ -1330,7 +1341,7 @@ function critGradesForDay(id, sid){
     if(mine.some(o=>o.ko)){ g[c.k] = 1; return; }
     let d = 0;
     mine.forEach(o=>{ d += o.d * o.w; });
-    if(nt && nt.crit === c.k && nt.dir && nt.w) d += nt.dir * nt.w;
+    if(nt && nt.crit === c.k && nt.dir && nt.w && String(nt.txt || "").trim()) d += nt.dir * nt.w;   // nur mit Text (Audit 10.11.2026)
     d = Math.max(CAP_NEG, Math.min(CAP_POS, d));
     g[c.k] = Math.max(1, Math.min(6, b0 + d));
   });
@@ -1544,6 +1555,7 @@ function renderTabs(){
 }
 function render(){
   L = S.settings.uiLang || "de";
+  if(typeof n2HeadLang === "function") n2HeadLang();
   fillLangSelects();
   const lg0 = document.getElementById("brandLogo"); if(lg0 && !lg0.src) lg0.src = LOGO;
   document.getElementById("brandVar").textContent = variantText();
@@ -1565,7 +1577,7 @@ function slotStrip(onPick){
   slots().forEach(s=>{
     const b = el("button",{class:"slot"+(dayOpen(s.id)?" filled":"")+(s.exam?" exam":""),
       "aria-current":String(s.id===curSlot), onclick:()=>{ curSlot = s.id; onPick(); }});
-    b.appendChild(el("span",{class:"sd",text: s.exam ? t("examShort") : wdName(s.wd)}));
+    b.appendChild(el("span",{class:"sd",text: s.exam ? (L === "de" ? t("examDay") : t("examShort")) : wdName(s.wd)}));   // Deutsch «Exam Day» wie am Tablet, nicht «Prüfung»
     b.appendChild(el("span",{class:"sw",text: s.exam
       ? (s.date ? wdName(s.wd)+" "+dmy(s.date) : wdName(s.wd)+" · "+s.idx+"/"+n)
       : (s.date ? dmy(s.date) : s.idx+"/"+n)}));
@@ -1610,7 +1622,7 @@ function renderDay(){
     const head = el("div",{class:"stud-h"},[avatar(s, 34), el("div",{class:"nm"},[document.createTextNode(s.name + nickTag(s)), schichtPill(s, curSlot),
       el("button",{class:"nickbtn",title:"Nickname",text:"✎",onclick:()=>{        // Nickname direkt eintragen (Rückmeldung Pilot 08.10.2026)
         let v = null; try{ v = window.prompt("Nickname · " + s.name, s.nick || ""); }catch(e){ v = null; }
-        if(v === null) return; s.nick = String(v).trim(); s.nickNeu = new Date().toISOString().slice(0, 10); persist(); render(); }})])]);
+        if(v === null) return; s.nick = String(v).trim(); s.nickNeu = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date()); persist(); render(); }})])]);
     head.appendChild(el("div",{class:"grade num "+(r0 ? gradeClass(round2(tot)) : "g-na"),
       text: !r0 ? t("notRec") : (tot==null ? t("excused") : fmt(tot))}));
     card.appendChild(head);
@@ -1852,7 +1864,6 @@ function absenceMailPlan(slotId){
     .join("\n");
   return mailPlan(ABS_MAIL, subj, body);
 }
-const absenceMailHref = slotId => absenceMailPlan(slotId).href;
 /* Notenuebersicht als Klartext an die Kursleitung.
    Bewusst kompakt; wird die Adresse trotzdem laenger als MAILTO_MAX, geht der Text in die Zwischenablage. */
 function overviewMailPlan(){
@@ -1931,7 +1942,6 @@ function n2LapDayMailPlan(slotId, fname){
     .concat(["", n2l("att").replace("{f}", fname), n2l("attHint")]).join("\n");
   return mailPlan(ABS_MAIL, subj, body);
 }
-const n2LapDayMailHref = (slotId, fname) => n2LapDayMailPlan(slotId, fname).href;
 function n2LapSendDay(){
   const fname = fileStem() + ".json";
   openMailPlan(n2LapDayMailPlan(curSlot, fname));
@@ -2540,7 +2550,7 @@ async function onMerge(e){
   const docs = [];
   for(const f of files){
     let o = null;
-    try{ o = JSON.parse(await f.text()); }catch(err){ o = null; }
+    try{ o = JSON.parse((await f.text()).replace(/^\uFEFF/, "")); }catch(err){ o = null; }
     if(!o || !Array.isArray(o.students) || !o.days) continue;
     /* Entscheid 31.10.2026: nur Kuechenrapporte. Service-Dateien haben andere Bausteine unter gleichen Kennungen.
        Unpassende Dateien werden vor allem anderen aussortiert, damit sie keine Angaben in die Datei bringen. */
@@ -2558,10 +2568,11 @@ async function onMerge(e){
     S.settings.isSample = false; S.settings.slotDates = []; fresh = !!S.settings.outlet;
   }
   const sameRec = (a, b) => { const n = r => JSON.stringify([r.att || "present", [...(r.obs || [])].sort(), r.note || null]); return n(a) === n(b); };
-  for(const {o, f} of docs){
+  for(const {o} of docs){
     try{
       const stand = String(o.savedAt || "");
       o.days = sanitizeDays(o.days);                 // fremde Datei auf die erwartete Form bringen
+      o.dayMeta = sanitizeMeta(o.dayMeta);
       if(o.variant && o.variant !== VARIANT) placed.push(o.variant);
       const map = {};
       o.students.forEach(st=>{
@@ -2570,7 +2581,11 @@ async function onMerge(e){
         /* Gleicher Name und (falls beide vorhanden) gleiche E-Mail = dieselbe Person.
            Alle Felder werden uebernommen: vorher gingen Nachname/Vorname getrennt,
            Nickname, Klasse und Gruppe neuer Personen verloren (Fehler bis 05.10.2026). */
-        let ex = S.students.find(x => nmOf(x) === nmOf(st) &&
+        /* Audit 10.11.2026: die Studierendennummer entscheidet zuerst (wie bei der Namensliste). Gleiche Nummer =
+           dieselbe Person, auch nach einer Namenskorrektur; verschiedene Nummern = nie dieselbe Person. */
+        const nrOf = x => String((x && x.nr) || "").trim();
+        let ex = (nrOf(st) && S.students.find(x => nrOf(x) === nrOf(st))) ||
+          S.students.find(x => nmOf(x) === nmOf(st) && !(nrOf(x) && nrOf(st) && nrOf(x) !== nrOf(st)) &&
           (!x.mail || !st.mail || x.mail.toLowerCase() === String(st.mail).toLowerCase()));
         if(!ex){
           ex = {id:"m"+Math.random().toString(36).slice(2,8), name:st.name||"",
@@ -2637,7 +2652,7 @@ async function onRestore(e){
   e.target.value = "";
   if(!f) return false;
   try{
-    const o = JSON.parse(await f.text());
+    const o = JSON.parse((await f.text()).replace(/^\uFEFF/, ""));
     if(o && o.format === "praxisrapport-semesterpaket"){ toast(n2l("sem")); return false; }
     if(!o || !o.settings || !Array.isArray(o.students)) throw new Error("format");
     if(o.app && o.app !== "Kuechenrapport") throw new Error("app");      // z. B. Servicerapport
@@ -2645,7 +2660,7 @@ async function onRestore(e){
     S = { settings:{...DEF, ...o.settings, isSample:false},
           students:o.students.filter(x=>x && typeof x.name === "string"),
           days:sanitizeDays(o.days),
-          dayMeta:(o.dayMeta && typeof o.dayMeta === "object") ? o.dayMeta : {} };
+          dayMeta:sanitizeMeta(o.dayMeta) };
     normalizeSettings(); pruneOrphans();
     persist();
     curSlot = slots()[0].id;
@@ -2885,6 +2900,22 @@ function n2HomeHref(){
   return /^https?:/.test(location.protocol) ? "../mein.html" : "https://pilman1982.github.io/praxisrapport/mein.html";
 }
 { const h = document.getElementById("btnHome"); if(h){ h.setAttribute("href", n2HomeHref());  } }
+/* Kopfzeile in der Sprache der Oberfläche (Audit 10.11.2026): Bereich und Knopf «Startseite» standen fest auf Deutsch,
+   auch in der englischen und thailändischen Oberfläche. Wird von render() jeder Fassung aufgerufen. */
+const N2_HEAD = {
+  de:{kueche:"Küche", service:"Service", home:"Startseite", myHome:"Meine Startseite"},
+  en:{kueche:"Kitchen", service:"Service", home:"Start page", myHome:"My start page"},
+  th:{kueche:"ครัว", service:"บริการ", home:"หน้าเริ่มต้น", myHome:"หน้าเริ่มต้นของฉัน"}
+};
+function n2HeadLang(){
+  const X = N2_HEAD[S.settings.uiLang] || N2_HEAD.de;
+  const area = /service/i.test(String(location.pathname || "").split("/").pop() || "") ? X.service : X.kueche;
+  const lap = document.querySelector("header.top .brand .txt b"); if(lap) lap.textContent = "Daily Grades · " + area;
+  const mob = document.querySelector("#brandApp .happ2"); if(mob) mob.textContent = " · " + area;
+  const h = document.getElementById("btnHome"); if(!h) return;
+  h.setAttribute("title", X.myHome); h.setAttribute("aria-label", X.myHome);
+  if(lap) h.textContent = "⌂ " + X.home;
+}
 
 function n2Handoff(load){
   let h = null;

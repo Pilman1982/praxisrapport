@@ -11,7 +11,7 @@ Kueche 5T + 4T im gleichen Zyklus ergeben einen Einsatz.
 Excel-Export: braucht SheetJS 0.18.5 lokal (ohne Internet im Test). Pfad ueber die Umgebungsvariable
 DG_XLSX oder tests/.cache/xlsx.full.min.js (z. B. mit `npm pack xlsx@0.18.5` holen). Fehlt die Datei,
 wird dieser Teil uebersprungen."""
-import pathlib, json, os, re, tempfile
+import pathlib, json, os, tempfile
 from playwright.sync_api import sync_playwright
 R = pathlib.Path(__file__).parent.parent; D = R / "docs"
 res = []

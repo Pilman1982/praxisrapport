@@ -1,4 +1,4 @@
-import pathlib, json
+import pathlib
 from playwright.sync_api import sync_playwright
 R=pathlib.Path(__file__).parent.parent
 LIST=(R/"testdaten/Testklasse_ANONYM.txt").read_text(encoding="utf-8")

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Uebertraegt src/_handoff.js in die Laptop-Skripte und den Mobil-Zusatz (wird von build.py aufgerufen)."""
-import pathlib, re
+import pathlib
 R = pathlib.Path(__file__).parent.parent / "src"
 H = (R / "_handoff.js").read_text(encoding="utf-8").strip("\n")
 START = "/* ---- Noten 2.0: Übergabe von der persönlichen Startseite (mein.html) ----"

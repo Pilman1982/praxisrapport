@@ -1,4 +1,4 @@
-QA-LOOP MIT VIER PERSONAS 31.10.2026
+QA-LOOP MIT VIER PERSONAS 10.11.2026
 
 OK      Kueche · A1 Paket öffnen am Mittwoch: Tag Mittwoch 07.10. vorgewählt       Mittwoch 07.10.
 OK      Kueche · A2 App erneut öffnen (ohne Startseite): wieder der heutige Tag    Mittwoch 07.10.

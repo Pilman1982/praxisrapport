@@ -4,7 +4,7 @@ Rundung und Farben, Schlussnote nur mit Exam, Freitext geht nie verloren, Namens
 nur Kuechen-Dateien, Anzeigen legt nichts an, Exam-Day-Knoepfe, lange Mails, Beispiel verlassen,
 Verspaetungs-Baustein, Beobachtungen nur aus gewerteten Tagen, Thai-Wochentage, Zusammenfuehren
 ohne leere Ueberschreibungen, Tag verwerfen zweistufig, Uebersetzungen, Namen teilen, Rueckgabe Einlesen."""
-import pathlib, json, datetime, urllib.parse
+import pathlib, json, datetime
 from playwright.sync_api import sync_playwright
 R = pathlib.Path(__file__).parent.parent; D = R/"docs"/"kueche"
 res = []

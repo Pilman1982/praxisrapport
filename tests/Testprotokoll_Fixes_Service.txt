@@ -1,7 +1,7 @@
-PRUEFUNG KORREKTUREN SERVICERAPPORT LAPTOP 31.10.2026
+PRUEFUNG KORREKTUREN SERVICERAPPORT LAPTOP 10.11.2026
 
 OK      D0 Tag senden mit Absenzen: Mail mit Verspätung und Anhang-Hinweis               mailto:michael.pilman@ehl.ch?subject=Tagesrapport – Bellavista · M. Pilman · Montag (1)&body=Group 3 · Bellavista · M. P
-OK      D0 Tag senden mit Absenzen: Tagesdatei gespeichert                               [['M-Pilman_Group-3_Bellavista_10T_2026-10-31.json', True]]
+OK      D0 Tag senden mit Absenzen: Tagesdatei gespeichert                               [['M-Pilman_Group-3_Bellavista_10T_2026-11-10.json', True]]
 OK      D0 keine JavaScript-Fehler                                                       []
 OK      D1 fmt1/bandName mit Toleranz: 3.9499… -> 4.0 Genügend, nicht rot                ['4.0', 'Genügend', '', '4.4', '4.3', '–']
 OK      D1 Übersicht: exakt 3.95 wird 4.0, nicht rot                                     (3.9499999999999993, '4.0', 'grade num ')
@@ -31,7 +31,7 @@ OK      D3 keine JavaScript-Fehler                                              
 OK      D4 Liste zeigt die Studierendennummer mit #                                      ['Amman; Lea; lea@beispiel.ch; #1000000001']
 OK      D4 Namenskorrektur mit Nummer: gleiche Id, Nummer, Foto und Plan bleiben         [['p1', 'Ammann', 'Lea', '1000000001', True, '[2]', 'lea@beispiel.ch']]
 OK      D4 Namenskorrektur mit gleicher E-Mail: gleiche Id                               [['p2', 'Keller', 'Tim', '', False, 'null', 'timo@beispiel.ch']]
-OK      D4 gleicher Name, zwei E-Mail-Adressen: zwei Personen                            [['p3', 'Muster', 'Max', '', False, 'null', 'max1@beispiel.ch'], ['sgjh7br', 'Muster', 'Max', '', False, 'null', 'max2@beispiel.ch']]
+OK      D4 gleicher Name, zwei E-Mail-Adressen: zwei Personen                            [['p3', 'Muster', 'Max', '', False, 'null', 'max1@beispiel.ch'], ['s9u8uh2', 'Muster', 'Max', '', False, 'null', 'max2@beispiel.ch']]
 OK      D4 erfasste Tage bleiben bei der Person                                          (1, [])
 OK      D4 Wegfall mit Einträgen: Rückfrage, Abbrechen ändert nichts                     ['Diese Personen haben schon Einträge und fallen aus der Liste: Ammann Lea. Deren Einträge werden danach nicht mehr angezeigt. Trotzdem übernehmen?']
 OK      D4 Wegfall bestätigt: Person entfernt                                            ['Keller Tim', 'Muster Max', 'Muster Max']

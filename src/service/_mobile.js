@@ -216,20 +216,65 @@ try{
 }catch(e){ S = null; }
 if(!S || !S.settings) S = {settings:{...DEF}, students:[], days:{}, dayMeta:{}};
 S.settings = {...DEF, ...S.settings};
-S.settings.base = 4.5;   // Basisnote fest seit 11.10.2026, auch für alte Dateien
+/* Eingelesene Daten auf die erwartete Form bringen (Audit 10.11.2026): gleich wie am Laptop und in der Kueche,
+   beim Start und bei «Sicherung laden». Vorher uebernahm die Service-Mobil-Fassung eine Sicherung ungeprueft. */
 /* Altbestand aufteilen: fruehere Dateien kannten nur ein Namensfeld. */
-S.students = (S.students || []).map(s=>{
-  if(!s) return null;
-  let nach = String(s.nachname == null ? "" : s.nachname).trim();
-  let vor  = String(s.vorname  == null ? "" : s.vorname ).trim();
-  if(!nach && !vor){ const g = splitName(s.name); nach = g.nachname; vor = g.vorname; }
-  if(!nach && !vor) return null;
-  const o = {...s, nachname:nach, vorname:vor, nick:String(s.nick || "").trim(),
-             klasse:String(s.klasse || "").trim(), gruppe:String(s.gruppe || "").trim()};
-  o.name = anzeigeName(o);
-  return o;
-}).filter(Boolean);
-S.days = S.days || {}; S.dayMeta = S.dayMeta || {};
+function saubereStudierende(list){
+  return (Array.isArray(list) ? list : []).map(s=>{
+    if(!s || typeof s !== "object" || Array.isArray(s)) return null;
+    let nach = String(s.nachname == null ? "" : s.nachname).trim();
+    let vor  = String(s.vorname  == null ? "" : s.vorname ).trim();
+    if(!nach && !vor){ const g = splitName(s.name); nach = g.nachname; vor = g.vorname; }
+    if(!nach && !vor) return null;
+    const o = {...s, id:String(s.id || ("s" + Math.random().toString(36).slice(2,8))),
+               nachname:nach, vorname:vor, nick:String(s.nick || "").trim(), mail:String(s.mail || "").trim(),
+               klasse:String(s.klasse || "").trim(), gruppe:String(s.gruppe || "").trim()};
+    o.name = anzeigeName(o);
+    return o;
+  }).filter(Boolean);
+}
+const ATT_OK = ["present","late","excused","unexcused","tm","tml"];
+function sanitizeDays(days){
+  const out = {};
+  if(!days || typeof days !== "object" || Array.isArray(days)) return out;
+  Object.entries(days).forEach(([k, recs])=>{
+    if(!/^d\d\d$/.test(k) || !recs || typeof recs !== "object" || Array.isArray(recs)) return;
+    out[k] = {};
+    Object.entries(recs).forEach(([sid, r])=>{
+      if(!r || typeof r !== "object" || Array.isArray(r)) return;
+      const o = {
+        att: ATT_OK.includes(r.att) ? r.att : "present",
+        obs: Array.isArray(r.obs) ? r.obs.filter(x=>typeof x === "string") : [],
+        note: (r.note && typeof r.note === "object" && typeof r.note.txt === "string")
+          ? {txt:r.note.txt, crit:String(r.note.crit||""), dir:Number(r.note.dir)||0, w:Number(r.note.w)||0, internal:!!r.note.internal}
+          : null
+      };
+      if(r.outlet && typeof r.outlet === "string") o.outlet = r.outlet;      // Restaurant des Tages (Wechsel)
+      out[k][sid] = o;
+    });
+  });
+  return out;
+}
+function sanitizeMeta(m){
+  const out = {};
+  if(!m || typeof m !== "object" || Array.isArray(m)) return out;
+  Object.entries(m).forEach(([k, v])=>{ if(/^d\d\d$/.test(k) && v && typeof v === "object" && !Array.isArray(v)) out[k] = v; });
+  return out;
+}
+function pruneOrphans(){
+  const ids = new Set(S.students.map(x=>x.id));
+  Object.keys(S.days || {}).forEach(d=>{ Object.keys(S.days[d] || {}).forEach(k=>{ if(!ids.has(k)) delete S.days[d][k]; }); });
+}
+function normalizeSettings(){
+  const num = (v,d)=>{ const n = parseFloat(v); return Number.isFinite(n) ? n : d; };
+  S.settings.base     = 4.5;   // Basisnote fest seit 11.10.2026, auch für alte Dateien
+  S.settings.startIdx = Math.max(0, Math.trunc(num(S.settings.startIdx, 0)));
+  if(!Array.isArray(S.settings.weekdays) || !S.settings.weekdays.length) S.settings.weekdays = ["mo","tu","we","th"];
+  ["group","team","outlet","teacher"].forEach(k=>{ if(typeof S.settings[k] !== "string") S.settings[k] = ""; });
+}
+normalizeSettings();
+S.students = saubereStudierende(S.students);
+S.days = sanitizeDays(S.days); S.dayMeta = sanitizeMeta(S.dayMeta);
 S.settings.variant = MVARIANT;   // die Datei bestimmt die Variante, nicht der Speicher
 
 /* ---- Startlink (Noten 2.0): Voreinstellungen aus dem Link ----
@@ -412,13 +457,6 @@ function placementText(sid, lg){
                   : (lg === "th") ? ("วันที่ " + rng(g)) : ("Tag " + rng(g));
   return segs.map(g => g.o + " (" + fmtR(g) + ")").join(", ");
 }
-/* Beim Zusammenfuehren: Tage aus einer Datei mit anderem Stammrestaurant behalten ihren Ort. */
-function mitOrt(r, o){
-  const src = String((o && o.meta && o.meta.outlet) || (o && o.settings && o.settings.outlet) || "").trim();
-  if(r && !r.outlet && src && src !== String(S.settings.outlet || "").trim()) return Object.assign({}, r, {outlet: src});
-  return r;
-}
-
 /* Foto und Nickname fuer die Erfassung (Noten 2.0). foto ist ein kleines JPEG aus dem Cockpit. */
 function avatar(s, size){
   const px = (size || 32) + "px";
@@ -449,7 +487,7 @@ function openSlot(id){
   if(!m.outlet)  m.outlet  = S.settings.outlet  || "";
   if(!m.label)   m.label   = slotLabel(sl, "de");
   if(!m.weekday) m.weekday = sl.wd;
-  if(!m.date)    m.date    = new Date().toISOString().slice(0,10);
+  if(!m.date)    m.date    = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date());
   m.source = "mobil";
   S.dayMeta[id] = m;
   persist();
@@ -660,7 +698,7 @@ function openSheet(student){
   const hd = el("div",{class:"sheet-h"});
   { const av0 = avatar(student, 44); if(av0) hd.appendChild(av0); }
   hd.appendChild(el("div",{style:"min-width:0;flex:1"},[
-    el("div",{class:"nm"},[document.createTextNode(student.name + nickTag(student)),
+    el("div",{class:"nm nmflex"},[el("span",{class:"nmt",text:student.name + nickTag(student)}),
       el("button",{class:"nickbtn",id:"nickBtn",title:n2x("nick"),"aria-label":n2x("nick"),text:"✎",onclick:()=>{ nickOpen = !nickOpen; draw(); }})]),
     el("div",{class:"sb"},[document.createTextNode(slotLabel(slotById(curSlot)) + "  "), schichtPill(student, curSlot), el("span",{id:"n2grade",class:"gpill big"})])
   ]));
@@ -733,7 +771,9 @@ function openSheet(student){
       /* Nur den Text ändern: Kriterium, Wirkung und «intern» vom Laptop bleiben erhalten (Entscheid 31.10.2026) */
       const ta = el("textarea",{placeholder:t("notePh"),
         oninput:e=>{ const R = rec();
-          R.note = Object.assign({crit:"", dir:0, w:0, internal:false}, (R.note && typeof R.note === "object") ? R.note : {}, {txt:e.target.value});
+          /* Audit 10.11.2026: ein geleerter Text entfernt den Freitext ganz (wie am Laptop). Vorher blieb eine am Laptop
+             gesetzte Wirkung ohne Text stehen und zählte unsichtbar weiter. Tippt man im offenen Blatt weiter, kommt sie zurück. */
+          R.note = e.target.value.trim() ? Object.assign({crit:"", dir:0, w:0, internal:false}, nt, (R.note && typeof R.note === "object") ? R.note : {}, {txt:e.target.value}) : null;
           persist(); const ok = document.getElementById("noteOk"); if(ok) ok.textContent = n2x("saved"); },
         onblur:()=>persist()});
       ta.value = nt.txt || "";
@@ -947,17 +987,18 @@ async function onLoadBackup(e){
   e.target.value = "";
   if(!f) return false;
   try{
-    const o = JSON.parse(await f.text());
+    const o = JSON.parse((await f.text()).replace(/^\uFEFF/, ""));
     if(o && o.format === "praxisrapport-semesterpaket"){ toast(t("loadSem")); return false; }
     /* Datei aus dem anderen Bereich (Küche/Service) ablehnen: gleiche Baustein-IDs bedeuten dort etwas anderes */
     if(o && o.app && o.app !== "Servicerapport"){ toast(t("loadOther")); return false; }
     if(!o || !o.settings || typeof o.settings !== "object" || !Array.isArray(o.students)) throw new Error("format");
     const other = o.variant && o.variant !== MVARIANT;
     S = {settings:{...DEF, ...o.settings, variant:MVARIANT},
-         students:o.students||[],
-         days: other ? {} : (o.days||{}),
-         dayMeta: other ? {} : (o.dayMeta||{})};
+         students:saubereStudierende(o.students),
+         days: other ? {} : sanitizeDays(o.days),
+         dayMeta: other ? {} : sanitizeMeta(o.dayMeta)};
     delete S.settings.isSample;
+    normalizeSettings(); pruneOrphans();
     L = (T[S.settings.uiLang] ? S.settings.uiLang : "de");
     persist();
     curSlot = slots()[0].id;
@@ -1018,6 +1059,7 @@ function cycleLang(){
 /* ---------- Start ---------- */
 function render(){
   L = T[S.settings.uiLang] ? S.settings.uiLang : "de";
+  if(typeof n2HeadLang === "function") n2HeadLang();
   document.documentElement.setAttribute("lang", L);
   renderHead(); renderSlots(); renderBar();
   if(view === "set") renderSet(); else if(view === "grades") n2RenderGrades(); else renderDay();

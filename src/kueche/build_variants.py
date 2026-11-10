@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Erzeugt die drei Varianten des Küchenrapports als eigenständige HTML-Dateien."""
-import pathlib, re
+import pathlib
 
 BASE = pathlib.Path(__file__).parent
 OUT  = BASE.parent / 'dist'; OUT.mkdir(exist_ok=True)

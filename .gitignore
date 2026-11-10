@@ -8,3 +8,4 @@ __pycache__/
 !testdaten/*.json
 tools/anleitungen/personen_*.json
 tests/.cache/
+tools/anleitungen/out/

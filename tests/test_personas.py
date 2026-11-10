@@ -5,7 +5,7 @@ B  Studierende: Feedback-Mail verständlich, fair, in der richtigen Sprache
 C  Kursleitung/Prüfungsleitung: Notenrechnung, Zusammenführen der täglichen Dateien
 D  Technik-Muffel: falsche Datei, Abbrechen, Speicher gesperrt, Doppeltipps
 """
-import pathlib, json, threading, functools, http.server, socketserver, datetime, urllib.parse
+import pathlib, json, threading, functools, http.server, socketserver, datetime
 from playwright.sync_api import sync_playwright
 R = pathlib.Path(__file__).parent.parent; D = R/"docs"
 res = []

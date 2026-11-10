@@ -4,10 +4,17 @@ import json, zipfile, pathlib, html as H, io, base64, datetime
 import segno
 from playwright.sync_api import sync_playwright
 
-G = pathlib.Path("/tmp/claude-0/guides"); SH = G / "shots"; OUT = G / "pdf"; OUT.mkdir(exist_ok=True)
-FONTS = pathlib.Path("/tmp/claude-0/fonts/node_modules/@fontsource")
-LOGO = open("/home/claude/praxisrapport/src/kueche/_logo.txt").read().strip()
-SEM = zipfile.ZipFile("/tmp/claude-0/hs26/Semesterpakete_HS26.zip")
+# Pfade (Audit 10.11.2026: keine festen Pfade einer einzelnen Arbeitsumgebung mehr). Vorgaben ueber Umgebungsvariablen:
+#   DG_GUIDES  Arbeitsordner (Bildschirmfotos in shots/, PDF in pdf/); Vorgabe tools/anleitungen/out (nicht im Repository)
+#   DG_FONTS   Ordner node_modules/@fontsource (npm: @fontsource/jost, newsreader, noto-sans-thai, noto-serif-thai)
+#   DG_SEMZIP  ZIP mit den Semesterpaketen aus dem Cockpit (enthaelt Namen: nie ins Repository legen)
+import os
+REPO = pathlib.Path(__file__).resolve().parent.parent.parent
+G = pathlib.Path(os.environ.get("DG_GUIDES") or (pathlib.Path(__file__).resolve().parent / "out")); SH = G / "shots"; OUT = G / "pdf"; OUT.mkdir(parents=True, exist_ok=True)
+FONTS = pathlib.Path(os.environ.get("DG_FONTS") or (G / "fonts" / "node_modules" / "@fontsource"))
+LOGO = (REPO / "src" / "kueche" / "_logo.txt").read_text(encoding="utf-8").strip()
+if not os.environ.get("DG_SEMZIP"): raise SystemExit("DG_SEMZIP fehlt: Pfad zum ZIP mit den Semesterpaketen aus dem Cockpit angeben.")
+SEM = zipfile.ZipFile(os.environ["DG_SEMZIP"])
 BASE = "https://pilman1982.github.io/praxisrapport/"
 
 def ff(fam, file, w, uni=""):

@@ -1,4 +1,4 @@
-PRUEFUNG KORREKTUREN KUECHENRAPPORT LAPTOP 31.10.2026
+PRUEFUNG KORREKTUREN KUECHENRAPPORT LAPTOP 10.11.2026
 
 OK      D1 fmt1 rundet x.x5 immer auf (4.45 -> 4.5, auch mit Rundungsfehler)       ['4.5', '4.5', '4.5', '4.0', '–', 4.8]
 OK      D1 Schlussnote 3.958 wird als 4.0 gezeigt, nicht rot                       [5.4375, 3.9583333333333335, '4.0', 'grade num ']

@@ -68,7 +68,7 @@ python3 tests/test_startlink.py     # Startlinks
 python3 tests/test_halbturnus.py    # 5T + 4T in die 10T-Datei
 python3 tests/test_wechsel.py       # Service: Restaurantwechsel
 python3 tests/test_cockpit.py       # Cockpit: Plan, Fotos, Pakete, Eingangskontrolle
-python3 tests/test_altdaten.py      # Rapporte aus dem Pilot (alter Programmstand)
+python3 tests/test_altdaten.py      # Rapporte aus dem Pilot (braucht die archivierten Programme: DG_ALT oder testdaten/alt/, sonst SKIP)
 python3 tests/test_daily_grades.py  # Rückmeldungen Pilot 08.10.2026 (Schichten, OC, Verspätung, Nickname, Zusammenfassung)
 python3 tests/test_regeln_2026_10_11.py  # Basis 4.50, Team Market verspätet 4.00, Sie-Form
 python3 tests/test_notenzentrale.py      # Regeln 31.10.2026 (6.00 erreichbar, Hygiene fest doppelt), Notenzentrale = gleiche Noten wie die Apps
@@ -76,6 +76,8 @@ python3 tests/test_fixes_kueche.py       # Fehlerkorrekturen 31.10.2026 Küche L
 python3 tests/test_fixes_service.py      # Fehlerkorrekturen 31.10.2026 Service Laptop
 python3 tests/test_fixes_mobil.py        # Fehlerkorrekturen 31.10.2026 Mobil und Startseite
 python3 tests/test_abnahme_2026_10_31.py # Befunde der unabhängigen Abnahme 31.10.2026
+python3 tests/test_fuzz_notenmodell.py   # Zufallsprüfung: Tablet, Laptop und Notenzentrale rechnen gleich (alle 6 Varianten)
+python3 tests/test_audit_2026_11_10.py   # Audit 10.11.2026: Befunde und Störfestigkeit (beschädigte Dateien in allen Seiten)
 git commit -am "…" && git push      # GitHub Pages aktualisiert sich in 1 bis 2 Minuten
 ```
 
@@ -159,3 +161,32 @@ Die Seite speichert keine Daten; in Chrome und Edge merkt sie sich nur den gewä
 - Abnahme: Plan ohne Tagesplan bekommt Einsatzdaten aus von/bis; Wechsel Tablet/Laptop bleibt auf dem bearbeiteten Tag;
   Tablet lehnt Dateien aus dem anderen Bereich ab; Laptop übernimmt die bewertende Person pro Wochentag; mein.html zeigt
   alle gleichzeitig laufenden Pakete; Notenzentrale verbindet 5T + 4T auch ohne Zyklusangabe und zählt den alten Baustein «Verspätet».
+
+## Audit 10.11.2026 (Prüfung des ganzen Projekts)
+
+Behoben:
+- **Service Mobil** übernahm «Sicherung laden» ungeprüft: alte Namensform, Einträge ohne Person und kaputte Werte blieben stehen.
+  Jetzt gleiche Bereinigung wie Laptop und Küche (`saubereStudierende`, `sanitizeDays`, `sanitizeMeta`), auch beim Start.
+- Kaputte Tagesangaben (`dayMeta`) liessen in der Küche «Tag erfassen» abbrechen; Service Laptop behielt Einträge ohne Person.
+- **Notenzentrale** liest jeden Eintrag wie die Apps (`cleanRec`): ein Freitext ohne Text zählt nicht, Personenangaben sind immer Text.
+  Vorher konnte dieselbe (beschädigte) Datei in App und Notenzentrale verschiedene Noten ergeben oder die Übersicht anhalten.
+- **Freitext ohne Text wirkt nie auf die Note** (Tablet, Laptop, Notenzentrale gleich). Am Tablet liess ein geleerter Text die am Laptop
+  gesetzte Wirkung (z. B. −1.00 Hygiene) unsichtbar stehen; jetzt entfernt ein geleerter Text den Freitext ganz, wie am Laptop.
+- **Feedback-Mail**: eigene Änderungen am Text gingen verloren, sobald man die Sprache oder den Haken «Praxisnote mitschicken» wechselte. Jetzt Rückfrage.
+- **Cockpit**: ein Datum, das es nicht gibt (31.11.), wurde still in den Folgemonat geschoben; jetzt Fehlermeldung. Zahlen statt Text im Plan
+  (Copilot) halten die Seite nicht mehr an; kein Plan-Objekt ergibt eine Meldung.
+- Erfassungsdatum, «Feedback gesendet» und «Zusammenfassung gesendet» in Ortszeit statt UTC.
+- Dateien mit Byte-Order-Mark (UTF-8 mit BOM) laden in allen Seiten.
+- Zusammenführen am Laptop gleicht zuerst über die Studierendennummer ab (wie die Namensliste).
+- CSV im Service und in der Notenzentrale entschärft Formeln (wie in der Küche).
+- **Telefon (360 bis 430 px)**: in der Fussleiste lief «Sichern» rechts aus dem Bild, und ein langer Name schob den Stift für den Nickname
+  aus dem Blattkopf. Die Knöpfe brechen jetzt um, der Name kürzt mit «…», der Stift bleibt sichtbar.
+- Kopfzeile (Bereich, Knopf «Startseite») folgt der Sprache der Oberfläche (vorher fest Deutsch, auch auf Thai und Englisch);
+  am Laptop heisst der Reiter des Prüfungstags «Exam Day» wie am Tablet.
+- Aufgeräumt: ungenutzte Funktionen, alte Patch-Skripte (`tools/patch_*.py`), feste Pfade in `tools/anleitungen/`, `test_altdaten.py` ohne festen Pfad,
+  Namen von Dozierenden in Kommentaren und Tests durch erfundene ersetzt.
+
+Neu geprüft: `tests/test_fuzz_notenmodell.py` (Zufallsdaten, drei Fassungen müssen auf 1e-9 gleich rechnen) und
+`tests/test_audit_2026_11_10.py` (zufällig beschädigte Dateien in Tablet, Laptop, Notenzentrale, Cockpit und «Meine Startseite»).
+Stand 10.11.2026: 890 Prüfungen in 19 Testreihen bestanden (`test_altdaten.py` übersprungen, siehe oben), Darstellung in 360 bis 1366 px und drei Sprachen ohne seitliches Scrollen.
+Prüfung des Quelltexts: `node --check` und ESLint über alle gebauten Seiten (keine Fehler), `pyflakes` über die Python-Skripte.

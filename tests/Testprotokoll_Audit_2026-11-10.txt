@@ -1,0 +1,95 @@
+PRUEFUNG AUDIT 10.11.2026 (Startwert 20261110)
+
+OK      Kueche Mobil: Sicherung mit alter Namensform laedt, Nachname und Vorname getrennt        
+OK      Kueche Mobil: verwaister und kaputter Eintrag werden nicht uebernommen                   
+OK      Kueche Mobil: kaputte Tagesangaben werden nicht uebernommen                              
+OK      Kueche Mobil: «Tag erfassen» funktioniert an einem Tag mit vorher kaputter Tagesangabe   
+OK      Kueche Mobil: Erfassungsdatum ist das Datum des Geraets (Ortszeit)                       
+OK      Kueche Mobil: Datei mit Byte-Order-Mark laedt                                            
+OK      Kueche Mobil: Datei aus dem anderen Bereich abgelehnt, Stand unveraendert                
+OK      Kueche Mobil: keine JavaScript-Fehler                                                    
+OK      Kueche Laptop: Sicherung mit alter Namensform laedt, Nachname und Vorname getrennt       
+OK      Kueche Laptop: verwaister und kaputter Eintrag werden nicht uebernommen                  
+OK      Kueche Laptop: kaputte Tagesangaben werden nicht uebernommen                             
+OK      Kueche Laptop: «Tag erfassen» funktioniert an einem Tag mit vorher kaputter Tagesangabe  
+OK      Kueche Laptop: Erfassungsdatum ist das Datum des Geraets (Ortszeit)                      
+OK      Kueche Laptop: Datei mit Byte-Order-Mark laedt                                           
+OK      Kueche Laptop: Datei aus dem anderen Bereich abgelehnt, Stand unveraendert               
+OK      Kueche Laptop: keine JavaScript-Fehler                                                   
+OK      Service Mobil: Sicherung mit alter Namensform laedt, Nachname und Vorname getrennt       
+OK      Service Mobil: verwaister und kaputter Eintrag werden nicht uebernommen                  
+OK      Service Mobil: kaputte Tagesangaben werden nicht uebernommen                             
+OK      Service Mobil: «Tag erfassen» funktioniert an einem Tag mit vorher kaputter Tagesangabe  
+OK      Service Mobil: Erfassungsdatum ist das Datum des Geraets (Ortszeit)                      
+OK      Service Mobil: Datei mit Byte-Order-Mark laedt                                           
+OK      Service Mobil: Datei aus dem anderen Bereich abgelehnt, Stand unveraendert               
+OK      Service Mobil: keine JavaScript-Fehler                                                   
+OK      Service Laptop: Sicherung mit alter Namensform laedt, Nachname und Vorname getrennt      
+OK      Service Laptop: verwaister und kaputter Eintrag werden nicht uebernommen                 
+OK      Service Laptop: kaputte Tagesangaben werden nicht uebernommen                            
+OK      Service Laptop: «Tag erfassen» funktioniert an einem Tag mit vorher kaputter Tagesangabe 
+OK      Service Laptop: Erfassungsdatum ist das Datum des Geraets (Ortszeit)                     
+OK      Service Laptop: Datei mit Byte-Order-Mark laedt                                          
+OK      Service Laptop: Datei aus dem anderen Bereich abgelehnt, Stand unveraendert              
+OK      Service Laptop: keine JavaScript-Fehler                                                  
+OK      Kueche Mobil: 00:30 Uhr in Zuerich wird als 11.11. erfasst, nicht als 10.11. (UTC)       
+OK      Service Laptop: 00:30 Uhr in Zuerich wird als 11.11. erfasst, nicht als 10.11. (UTC)     
+OK      Kueche Mobil: Feedback, Notenhaken nach eigener Aenderung fragt nach; Abbrechen behaelt Text und Haken 
+OK      Kueche Mobil: Feedback, Sprachwechsel abgebrochen: Text und Sprache bleiben              
+OK      Kueche Mobil: Feedback, nach Bestaetigung neuer Vorschlag in Englisch                    
+OK      Kueche Mobil: Feedback, ohne eigene Aenderung keine Rueckfrage                           
+OK      Kueche Mobil: Feedback ohne JavaScript-Fehler                                            
+OK      Service Mobil: Feedback, Notenhaken nach eigener Aenderung fragt nach; Abbrechen behaelt Text und Haken 
+OK      Service Mobil: Feedback, Sprachwechsel abgebrochen: Text und Sprache bleiben             
+OK      Service Mobil: Feedback, nach Bestaetigung neuer Vorschlag in Englisch                   
+OK      Service Mobil: Feedback, ohne eigene Aenderung keine Rueckfrage                          
+OK      Service Mobil: Feedback ohne JavaScript-Fehler                                           
+OK      Cockpit: 31.11. wird als falsches Datum gemeldet (vorher still 01.12.)                   
+OK      Cockpit: Beispielplan (mit Byte-Order-Mark) ohne Fehlermeldung                           
+OK      Cockpit: keine JavaScript-Fehler                                                         
+OK      Notenzentrale: Freitext ohne Text wirkt nicht auf die Note (4.50 wie in der App)         
+OK      Notenzentrale: CSV entschaerft einen Nickname, der wie eine Formel beginnt               
+OK      Kueche Mobil: Kopfzeile auf Thai (Bereich und Knopf Startseite)                          
+OK      Kueche Mobil: Kopfzeile wieder Deutsch nach Sprachwechsel                                
+OK      Kueche Mobil: Telefon 360 px, alle drei Knoepfe der Fussleiste im Bild                   
+OK      Kueche Mobil: Telefon 360 px, Stift fuer den Nickname bei langem Namen sichtbar          
+OK      Kueche Mobil: Kopfzeile und Telefonbreite ohne JavaScript-Fehler                         
+OK      Kueche Laptop: Kopfzeile auf Thai (Bereich und Knopf Startseite)                         
+OK      Kueche Laptop: Kopfzeile wieder Deutsch nach Sprachwechsel                               
+OK      Kueche Laptop: Reiter des Pruefungstags heisst «Exam Day» (wie am Tablet), nicht «Prüfung» 
+OK      Kueche Laptop: Kopfzeile und Telefonbreite ohne JavaScript-Fehler                        
+OK      Service Mobil: Kopfzeile auf Thai (Bereich und Knopf Startseite)                         
+OK      Service Mobil: Kopfzeile wieder Deutsch nach Sprachwechsel                               
+OK      Service Mobil: Telefon 360 px, alle drei Knoepfe der Fussleiste im Bild                  
+OK      Service Mobil: Telefon 360 px, Stift fuer den Nickname bei langem Namen sichtbar         
+OK      Service Mobil: Kopfzeile und Telefonbreite ohne JavaScript-Fehler                        
+OK      Service Laptop: Kopfzeile auf Thai (Bereich und Knopf Startseite)                        
+OK      Service Laptop: Kopfzeile wieder Deutsch nach Sprachwechsel                              
+OK      Service Laptop: Reiter des Pruefungstags heisst «Exam Day» (wie am Tablet), nicht «Prüfung» 
+OK      Service Laptop: Kopfzeile und Telefonbreite ohne JavaScript-Fehler                       
+OK      Kueche Mobil: Freitext ohne Text wirkt nicht (4.50), mit Text wirkt er                   
+OK      Kueche Mobil: Tablet, Text geleert: Freitext entfernt, Tagesnote wieder 4.50             
+OK      Kueche Mobil: Tablet, im offenen Blatt weitergetippt: Kriterium und Wirkung vom Laptop wieder da 
+OK      Kueche Mobil: Freitext ohne JavaScript-Fehler                                            
+OK      Kueche Laptop: Freitext ohne Text wirkt nicht (4.50), mit Text wirkt er                  
+OK      Kueche Laptop: Freitext ohne JavaScript-Fehler                                           
+OK      Service Mobil: Freitext ohne Text wirkt nicht (4.50), mit Text wirkt er                  
+OK      Service Mobil: Tablet, Text geleert: Freitext entfernt, Tagesnote wieder 4.50            
+OK      Service Mobil: Tablet, im offenen Blatt weitergetippt: Kriterium und Wirkung vom Laptop wieder da 
+OK      Service Mobil: Freitext ohne JavaScript-Fehler                                           
+OK      Service Laptop: Freitext ohne Text wirkt nicht (4.50), mit Text wirkt er                 
+OK      Service Laptop: Freitext ohne JavaScript-Fehler                                          
+OK      Kueche Laptop: Zusammenfuehren, korrigierter Name mit gleicher Nummer bleibt eine Person 
+OK      Kueche Laptop: Zusammenfuehren, gleicher Name mit anderer Nummer wird nicht vermischt    
+OK      Kueche Laptop: Zusammenfuehren ohne JavaScript-Fehler                                    
+OK      Service Laptop: Zusammenfuehren, korrigierter Name mit gleicher Nummer bleibt eine Person 
+OK      Service Laptop: Zusammenfuehren, gleicher Name mit anderer Nummer wird nicht vermischt   
+OK      Service Laptop: Zusammenfuehren ohne JavaScript-Fehler                                   
+OK      Kueche Mobil: 40 beschaedigte Dateien, kein JavaScript-Fehler (28 geladen, Rest sauber abgelehnt) 
+OK      Kueche Laptop: 40 beschaedigte Dateien, kein JavaScript-Fehler (27 geladen, Rest sauber abgelehnt) 
+OK      Service Mobil: 40 beschaedigte Dateien, kein JavaScript-Fehler (28 geladen, Rest sauber abgelehnt) 
+OK      Service Laptop: 40 beschaedigte Dateien, kein JavaScript-Fehler (24 geladen, Rest sauber abgelehnt) 
+OK      Notenzentrale: 80 beschaedigte Rapporte, kein JavaScript-Fehler in allen Ansichten und Exporten 
+OK      Cockpit: 80 beschaedigte Turnusplaene, kein JavaScript-Fehler (Pruefen, Pakete, Semesterpakete) 
+OK      Meine Startseite: Semesterpaket mit Byte-Order-Mark laedt                                
+OK      Meine Startseite: 40 beschaedigte Semesterpakete, kein JavaScript-Fehler                 

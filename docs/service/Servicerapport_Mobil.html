@@ -211,6 +211,11 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
 }
 .sheet-h .nm{flex:1;min-width:0;font-family:var(--f-disp);font-size:18px;font-weight:600;
              overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Name mit Stift (Nickname): der Name kürzt mit «…», der Stift bleibt immer sichtbar (Audit 10.11.2026; vorher
+   schob ein langer Name den Stift auf dem Telefon aus dem Bild) */
+.sheet-h .nm.nmflex{display:flex;align-items:center;overflow:visible}
+.sheet-h .nm.nmflex .nmt{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.sheet-h .nm.nmflex .nickbtn{flex:none}
 .sheet-h .sb{font-size:11.5px;color:#9FB0C6}
 .sheet-b{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
          padding:14px calc(var(--sar) + 12px) 28px calc(var(--sal) + 12px)}
@@ -229,6 +234,12 @@ h2.sec{font-family:var(--f-disp);font-size:18px;margin:18px 0 8px;font-weight:60
   display:flex;gap:9px;
 }
 .bar .btn{flex:1;min-height:50px;font-size:15px;white-space:nowrap}
+/* Telefon (Audit 10.11.2026): drei Knöpfe passen nicht nebeneinander auf 360 bis 430 px. Dort dürfen sie schmaler
+   werden und auf zwei Zeilen umbrechen, statt dass «Sichern» rechts aus dem Bild läuft. */
+@media (max-width:430px){
+  .bar{gap:6px}
+  .bar .btn{flex:1 1 0;min-width:0;font-size:13.5px;line-height:1.15;padding-left:4px;padding-right:4px;white-space:normal;overflow-wrap:anywhere}
+}
 
 /* ---------- Toast ---------- */
 #toast{
@@ -646,20 +657,65 @@ try{
 }catch(e){ S = null; }
 if(!S || !S.settings) S = {settings:{...DEF}, students:[], days:{}, dayMeta:{}};
 S.settings = {...DEF, ...S.settings};
-S.settings.base = 4.5;   // Basisnote fest seit 11.10.2026, auch für alte Dateien
+/* Eingelesene Daten auf die erwartete Form bringen (Audit 10.11.2026): gleich wie am Laptop und in der Kueche,
+   beim Start und bei «Sicherung laden». Vorher uebernahm die Service-Mobil-Fassung eine Sicherung ungeprueft. */
 /* Altbestand aufteilen: fruehere Dateien kannten nur ein Namensfeld. */
-S.students = (S.students || []).map(s=>{
-  if(!s) return null;
-  let nach = String(s.nachname == null ? "" : s.nachname).trim();
-  let vor  = String(s.vorname  == null ? "" : s.vorname ).trim();
-  if(!nach && !vor){ const g = splitName(s.name); nach = g.nachname; vor = g.vorname; }
-  if(!nach && !vor) return null;
-  const o = {...s, nachname:nach, vorname:vor, nick:String(s.nick || "").trim(),
-             klasse:String(s.klasse || "").trim(), gruppe:String(s.gruppe || "").trim()};
-  o.name = anzeigeName(o);
-  return o;
-}).filter(Boolean);
-S.days = S.days || {}; S.dayMeta = S.dayMeta || {};
+function saubereStudierende(list){
+  return (Array.isArray(list) ? list : []).map(s=>{
+    if(!s || typeof s !== "object" || Array.isArray(s)) return null;
+    let nach = String(s.nachname == null ? "" : s.nachname).trim();
+    let vor  = String(s.vorname  == null ? "" : s.vorname ).trim();
+    if(!nach && !vor){ const g = splitName(s.name); nach = g.nachname; vor = g.vorname; }
+    if(!nach && !vor) return null;
+    const o = {...s, id:String(s.id || ("s" + Math.random().toString(36).slice(2,8))),
+               nachname:nach, vorname:vor, nick:String(s.nick || "").trim(), mail:String(s.mail || "").trim(),
+               klasse:String(s.klasse || "").trim(), gruppe:String(s.gruppe || "").trim()};
+    o.name = anzeigeName(o);
+    return o;
+  }).filter(Boolean);
+}
+const ATT_OK = ["present","late","excused","unexcused","tm","tml"];
+function sanitizeDays(days){
+  const out = {};
+  if(!days || typeof days !== "object" || Array.isArray(days)) return out;
+  Object.entries(days).forEach(([k, recs])=>{
+    if(!/^d\d\d$/.test(k) || !recs || typeof recs !== "object" || Array.isArray(recs)) return;
+    out[k] = {};
+    Object.entries(recs).forEach(([sid, r])=>{
+      if(!r || typeof r !== "object" || Array.isArray(r)) return;
+      const o = {
+        att: ATT_OK.includes(r.att) ? r.att : "present",
+        obs: Array.isArray(r.obs) ? r.obs.filter(x=>typeof x === "string") : [],
+        note: (r.note && typeof r.note === "object" && typeof r.note.txt === "string")
+          ? {txt:r.note.txt, crit:String(r.note.crit||""), dir:Number(r.note.dir)||0, w:Number(r.note.w)||0, internal:!!r.note.internal}
+          : null
+      };
+      if(r.outlet && typeof r.outlet === "string") o.outlet = r.outlet;      // Restaurant des Tages (Wechsel)
+      out[k][sid] = o;
+    });
+  });
+  return out;
+}
+function sanitizeMeta(m){
+  const out = {};
+  if(!m || typeof m !== "object" || Array.isArray(m)) return out;
+  Object.entries(m).forEach(([k, v])=>{ if(/^d\d\d$/.test(k) && v && typeof v === "object" && !Array.isArray(v)) out[k] = v; });
+  return out;
+}
+function pruneOrphans(){
+  const ids = new Set(S.students.map(x=>x.id));
+  Object.keys(S.days || {}).forEach(d=>{ Object.keys(S.days[d] || {}).forEach(k=>{ if(!ids.has(k)) delete S.days[d][k]; }); });
+}
+function normalizeSettings(){
+  const num = (v,d)=>{ const n = parseFloat(v); return Number.isFinite(n) ? n : d; };
+  S.settings.base     = 4.5;   // Basisnote fest seit 11.10.2026, auch für alte Dateien
+  S.settings.startIdx = Math.max(0, Math.trunc(num(S.settings.startIdx, 0)));
+  if(!Array.isArray(S.settings.weekdays) || !S.settings.weekdays.length) S.settings.weekdays = ["mo","tu","we","th"];
+  ["group","team","outlet","teacher"].forEach(k=>{ if(typeof S.settings[k] !== "string") S.settings[k] = ""; });
+}
+normalizeSettings();
+S.students = saubereStudierende(S.students);
+S.days = sanitizeDays(S.days); S.dayMeta = sanitizeMeta(S.dayMeta);
 S.settings.variant = MVARIANT;   // die Datei bestimmt die Variante, nicht der Speicher
 
 /* ---- Startlink (Noten 2.0): Voreinstellungen aus dem Link ----
@@ -842,13 +898,6 @@ function placementText(sid, lg){
                   : (lg === "th") ? ("วันที่ " + rng(g)) : ("Tag " + rng(g));
   return segs.map(g => g.o + " (" + fmtR(g) + ")").join(", ");
 }
-/* Beim Zusammenfuehren: Tage aus einer Datei mit anderem Stammrestaurant behalten ihren Ort. */
-function mitOrt(r, o){
-  const src = String((o && o.meta && o.meta.outlet) || (o && o.settings && o.settings.outlet) || "").trim();
-  if(r && !r.outlet && src && src !== String(S.settings.outlet || "").trim()) return Object.assign({}, r, {outlet: src});
-  return r;
-}
-
 /* Foto und Nickname fuer die Erfassung (Noten 2.0). foto ist ein kleines JPEG aus dem Cockpit. */
 function avatar(s, size){
   const px = (size || 32) + "px";
@@ -879,7 +928,7 @@ function openSlot(id){
   if(!m.outlet)  m.outlet  = S.settings.outlet  || "";
   if(!m.label)   m.label   = slotLabel(sl, "de");
   if(!m.weekday) m.weekday = sl.wd;
-  if(!m.date)    m.date    = new Date().toISOString().slice(0,10);
+  if(!m.date)    m.date    = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date());
   m.source = "mobil";
   S.dayMeta[id] = m;
   persist();
@@ -1090,7 +1139,7 @@ function openSheet(student){
   const hd = el("div",{class:"sheet-h"});
   { const av0 = avatar(student, 44); if(av0) hd.appendChild(av0); }
   hd.appendChild(el("div",{style:"min-width:0;flex:1"},[
-    el("div",{class:"nm"},[document.createTextNode(student.name + nickTag(student)),
+    el("div",{class:"nm nmflex"},[el("span",{class:"nmt",text:student.name + nickTag(student)}),
       el("button",{class:"nickbtn",id:"nickBtn",title:n2x("nick"),"aria-label":n2x("nick"),text:"✎",onclick:()=>{ nickOpen = !nickOpen; draw(); }})]),
     el("div",{class:"sb"},[document.createTextNode(slotLabel(slotById(curSlot)) + "  "), schichtPill(student, curSlot), el("span",{id:"n2grade",class:"gpill big"})])
   ]));
@@ -1163,7 +1212,9 @@ function openSheet(student){
       /* Nur den Text ändern: Kriterium, Wirkung und «intern» vom Laptop bleiben erhalten (Entscheid 31.10.2026) */
       const ta = el("textarea",{placeholder:t("notePh"),
         oninput:e=>{ const R = rec();
-          R.note = Object.assign({crit:"", dir:0, w:0, internal:false}, (R.note && typeof R.note === "object") ? R.note : {}, {txt:e.target.value});
+          /* Audit 10.11.2026: ein geleerter Text entfernt den Freitext ganz (wie am Laptop). Vorher blieb eine am Laptop
+             gesetzte Wirkung ohne Text stehen und zählte unsichtbar weiter. Tippt man im offenen Blatt weiter, kommt sie zurück. */
+          R.note = e.target.value.trim() ? Object.assign({crit:"", dir:0, w:0, internal:false}, nt, (R.note && typeof R.note === "object") ? R.note : {}, {txt:e.target.value}) : null;
           persist(); const ok = document.getElementById("noteOk"); if(ok) ok.textContent = n2x("saved"); },
         onblur:()=>persist()});
       ta.value = nt.txt || "";
@@ -1377,17 +1428,18 @@ async function onLoadBackup(e){
   e.target.value = "";
   if(!f) return false;
   try{
-    const o = JSON.parse(await f.text());
+    const o = JSON.parse((await f.text()).replace(/^\uFEFF/, ""));
     if(o && o.format === "praxisrapport-semesterpaket"){ toast(t("loadSem")); return false; }
     /* Datei aus dem anderen Bereich (Küche/Service) ablehnen: gleiche Baustein-IDs bedeuten dort etwas anderes */
     if(o && o.app && o.app !== "Servicerapport"){ toast(t("loadOther")); return false; }
     if(!o || !o.settings || typeof o.settings !== "object" || !Array.isArray(o.students)) throw new Error("format");
     const other = o.variant && o.variant !== MVARIANT;
     S = {settings:{...DEF, ...o.settings, variant:MVARIANT},
-         students:o.students||[],
-         days: other ? {} : (o.days||{}),
-         dayMeta: other ? {} : (o.dayMeta||{})};
+         students:saubereStudierende(o.students),
+         days: other ? {} : sanitizeDays(o.days),
+         dayMeta: other ? {} : sanitizeMeta(o.dayMeta)};
     delete S.settings.isSample;
+    normalizeSettings(); pruneOrphans();
     L = (T[S.settings.uiLang] ? S.settings.uiLang : "de");
     persist();
     curSlot = slots()[0].id;
@@ -1497,7 +1549,7 @@ function n2Crit(slotId, sid){
     const mine = obs.filter(o => o.c === c.k);
     if(mine.some(o => o.ko)){ g[c.k] = 1; return; }
     let d = 0; mine.forEach(o => { d += o.d * o.w; });
-    if(nt && nt.crit === c.k && nt.dir && nt.w) d += nt.dir * nt.w;
+    if(nt && nt.crit === c.k && nt.dir && nt.w && String(nt.txt || "").trim()) d += nt.dir * nt.w;   // nur mit Text (Audit 10.11.2026)
     d = Math.max(CAP_NEG, Math.min(CAP_POS, d));
     g[c.k] = Math.max(1, Math.min(6, b0 + d));
   });
@@ -1595,17 +1647,17 @@ const N2FB = {
 const N2FBUI = {
   de:{fb:"Feedback", fbTitle:"Feedback-Mail", fbHint:"Am Ende deines Einsatzes: pro Person eine Feedback-Mail. Der Text ist ein Vorschlag, du kannst ihn ändern.",
       withGrades:"Praxisnote mitschicken (ohne Exam)", open:"In Mail öffnen", copy:"Kopieren", close:"Schliessen", noMail:"Keine E-Mail-Adresse hinterlegt. Text kopieren und selbst senden.",
-      sent:"gesendet", copied:"Kopiert", lang:"Sprache",
+      sent:"gesendet", copied:"Kopiert", lang:"Sprache", replace:"Du hast den Text geändert. Er wird durch den neuen Vorschlag ersetzt. Fortfahren?",
       noDays:"Für diese Person gibt es noch keinen bewerteten Tag (z. B. nur Absenzen). Bitte den Text prüfen, bevor du ihn sendest.",
       pasted:"Der Text ist lang und wurde kopiert. In der Mail mit Strg+V (Mac: Cmd+V) einfügen.", pasteHere:"(Feedback-Text hier einfügen: Strg+V)"},
   en:{fb:"Feedback", fbTitle:"Feedback e-mail", fbHint:"At the end of your assignment: one feedback e-mail per student. The text is a suggestion; you can change it.",
       withGrades:"Include practice grade (no exam)", open:"Open in Mail", copy:"Copy", close:"Close", noMail:"No e-mail address on file. Copy the text and send it yourself.",
-      sent:"sent", copied:"Copied", lang:"Language",
+      sent:"sent", copied:"Copied", lang:"Language", replace:"You have changed the text. It will be replaced by the new suggestion. Continue?",
       noDays:"There is no graded day for this student yet (e.g. only absences). Please check the text before sending it.",
       pasted:"The text is long and has been copied. Paste it into the e-mail with Ctrl+V (Mac: Cmd+V).", pasteHere:"(Paste the feedback text here: Ctrl+V)"},
   th:{fb:"ข้อเสนอแนะ", fbTitle:"อีเมลข้อเสนอแนะ", fbHint:"เมื่อจบการฝึก: ส่งอีเมลข้อเสนอแนะให้นักศึกษาแต่ละคน ข้อความเป็นเพียงข้อเสนอ แก้ไขได้",
       withGrades:"ส่งคะแนนภาคปฏิบัติด้วย (ไม่รวมสอบ)", open:"เปิดในแอปเมล", copy:"คัดลอก", close:"ปิด", noMail:"ไม่มีที่อยู่อีเมล ให้คัดลอกข้อความแล้วส่งเอง",
-      sent:"ส่งแล้ว", copied:"คัดลอกแล้ว", lang:"ภาษา",
+      sent:"ส่งแล้ว", copied:"คัดลอกแล้ว", lang:"ภาษา", replace:"คุณแก้ไขข้อความแล้ว ข้อความจะถูกแทนที่ด้วยข้อเสนอใหม่ ดำเนินการต่อหรือไม่",
       noDays:"นักศึกษาคนนี้ยังไม่มีวันที่ได้รับการประเมิน (เช่น มีแต่การขาด) กรุณาตรวจข้อความก่อนส่ง",
       pasted:"ข้อความยาวและถูกคัดลอกแล้ว วางในอีเมลด้วย Ctrl+V (Mac: Cmd+V)", pasteHere:"(วางข้อความข้อเสนอแนะที่นี่: Ctrl+V)"}
 };
@@ -1721,10 +1773,12 @@ function n2OpenFb(s){
   const ta = el("textarea",{class:"fbtext",id:"n2fbtext",oninput:()=>{ edited = true; }});
   const fill = () => { ta.value = n2FbText(s, lg, withGrades).body; edited = false; };
   const row = el("div",{class:"fbopts"});
-  const ls = el("select",{"aria-label":n2u("lang"),onchange:e=>{ lg = e.target.value; fill(); }});
+  /* Eigene Änderungen am Text nicht still überschreiben (Audit 10.11.2026): vor dem neuen Vorschlag fragen */
+  const darfErsetzen = () => { if(!edited) return true; try{ return !!window.confirm(n2u("replace")); }catch(e){ return false; } };
+  const ls = el("select",{"aria-label":n2u("lang"),onchange:e=>{ if(!darfErsetzen()){ e.target.value = lg; return; } lg = e.target.value; fill(); }});
   [["de","Deutsch"],["en","English"]].forEach(([v, n]) => ls.appendChild(el("option",{value:v,text:n,selected:v === lg})));
   row.appendChild(el("label",{},[document.createTextNode(n2u("lang") + " "), ls]));
-  const cb = el("input",{type:"checkbox",onchange:e=>{ withGrades = e.target.checked; fill(); }});
+  const cb = el("input",{type:"checkbox",onchange:e=>{ if(!darfErsetzen()){ e.target.checked = withGrades; return; } withGrades = e.target.checked; fill(); }});
   row.appendChild(el("label",{},[cb, document.createTextNode(" " + n2u("withGrades"))]));
   body.appendChild(row);
   if(!s.mail) body.appendChild(el("div",{class:"banner",text:n2u("noMail")}));
@@ -1736,7 +1790,7 @@ function n2OpenFb(s){
     try{ navigator.clipboard.writeText(ta.value).then(()=>toast(n2u("copied"))); }catch(e){ ta.select(); try{ document.execCommand("copy"); toast(n2u("copied")); }catch(_){} } }}));
   ft.appendChild(el("button",{class:"btn pri",text:"✉ " + n2u("open"),onclick:()=>{
     const subj = n2FbText(s, lg, withGrades).subj;
-    S.settings.fbSent = S.settings.fbSent || {}; S.settings.fbSent[s.id] = new Date().toISOString().slice(0, 10); persist();
+    S.settings.fbSent = S.settings.fbSent || {}; S.settings.fbSent[s.id] = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date()); persist();
     const m = n2FbMailto(s, subj, ta.value, n2Touch());
     if(m.copy){                                                      // zu lang für Outlook unter Windows: Text in die Zwischenablage
       try{ navigator.clipboard.writeText(ta.value); }catch(e){ try{ ta.select(); document.execCommand("copy"); }catch(_){} }
@@ -1794,7 +1848,7 @@ const n2x = k => (N2X[L] && N2X[L][k]) || N2X.de[k] || k;
 function n2NickBox(student, onDone){
   const box = el("div",{class:"nickbox"});
   const inp = el("input",{type:"text",value:student.nick || "",placeholder:n2x("nickPh"),autocapitalize:"words","aria-label":n2x("nick"),maxlength:"30"});
-  const save = v => { student.nick = String(v || "").trim(); student.nickNeu = new Date().toISOString().slice(0, 10); persist(); onDone(); };
+  const save = v => { student.nick = String(v || "").trim(); student.nickNeu = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date()); persist(); onDone(); };
   inp.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); save(inp.value); } });
   box.appendChild(el("label",{class:"eyebrow",text:n2x("nick")}));
   box.appendChild(el("div",{class:"row",style:"gap:8px;flex-wrap:nowrap"},[inp,
@@ -1849,7 +1903,7 @@ function n2SendSummary(){
     try{ navigator.clipboard.writeText(T.body); }catch(e){}
     href = base + "&body=" + encodeURIComponent(n2x("sumCopy")); toast(n2x("sumCopy"));
   }
-  S.settings.sumSent = new Date().toISOString().slice(0, 10); persist();
+  S.settings.sumSent = (d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"))(new Date()); persist();
   location.href = href;
 }
 function n2SummaryCard(){
@@ -1894,6 +1948,22 @@ function n2HomeHref(){
   return /^https?:/.test(location.protocol) ? "../mein.html" : "https://pilman1982.github.io/praxisrapport/mein.html";
 }
 { const h = document.getElementById("btnHome"); if(h){ h.setAttribute("href", n2HomeHref());  } }
+/* Kopfzeile in der Sprache der Oberfläche (Audit 10.11.2026): Bereich und Knopf «Startseite» standen fest auf Deutsch,
+   auch in der englischen und thailändischen Oberfläche. Wird von render() jeder Fassung aufgerufen. */
+const N2_HEAD = {
+  de:{kueche:"Küche", service:"Service", home:"Startseite", myHome:"Meine Startseite"},
+  en:{kueche:"Kitchen", service:"Service", home:"Start page", myHome:"My start page"},
+  th:{kueche:"ครัว", service:"บริการ", home:"หน้าเริ่มต้น", myHome:"หน้าเริ่มต้นของฉัน"}
+};
+function n2HeadLang(){
+  const X = N2_HEAD[S.settings.uiLang] || N2_HEAD.de;
+  const area = /service/i.test(String(location.pathname || "").split("/").pop() || "") ? X.service : X.kueche;
+  const lap = document.querySelector("header.top .brand .txt b"); if(lap) lap.textContent = "Daily Grades · " + area;
+  const mob = document.querySelector("#brandApp .happ2"); if(mob) mob.textContent = " · " + area;
+  const h = document.getElementById("btnHome"); if(!h) return;
+  h.setAttribute("title", X.myHome); h.setAttribute("aria-label", X.myHome);
+  if(lap) h.textContent = "⌂ " + X.home;
+}
 
 function n2Handoff(load){
   let h = null;
@@ -2103,6 +2173,7 @@ window.addEventListener("pageshow", n2OnResume);
 /* ---------- Start ---------- */
 function render(){
   L = T[S.settings.uiLang] ? S.settings.uiLang : "de";
+  if(typeof n2HeadLang === "function") n2HeadLang();
   document.documentElement.setAttribute("lang", L);
   renderHead(); renderSlots(); renderBar();
   if(view === "set") renderSet(); else if(view === "grades") n2RenderGrades(); else renderDay();
