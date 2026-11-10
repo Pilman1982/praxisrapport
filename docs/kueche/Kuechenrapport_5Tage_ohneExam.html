@@ -353,7 +353,7 @@ a.swbtn{text-decoration:none;display:inline-flex;align-items:center}
 <div id="sheetHost"></div>
 <div id="toastHost"></div>
 <div id="printArea"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="../lib/xlsx.full.min.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';document.head.appendChild(s)"></script>
 <script>
 "use strict";
 /* ============================================================
@@ -367,7 +367,7 @@ const LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEwAAABwCAYAAAAE9uV/
 
 const W = {l:0.25, m:0.5, s:1.0};            // leicht / mittel / schwer
 const CAP_NEG = -1.5, CAP_POS = 1.5;         // max. Abweichung pro Tag und Kriterium: Spanne 3.00 bis 6.00 (seit 31.10.2026, vorher +1.00)
-/* Doppelt gewichtete Kriterien, fest (Entscheid 31.10.2026): Hygiene immer doppelt; im Service zusaetzlich die Gastgeberhaltung. */
+/* Doppelt gewichtete Kriterien, fest: Kueche Hygiene (Entscheid 31.10.2026); Service nur Gastgeberhaltung (Entscheid 10.11.2026). */
 const DOUBLE_CRITS = ["hyg"];
 const critWeight = k => DOUBLE_CRITS.includes(k) ? 2 : 1;
 

@@ -35,7 +35,7 @@ day:"Erfassen",week:"Übersicht",rep:"Beurteilung",data:"Daten",set:"Eintragen",
   noData:"Für diesen Zeitraum ist nichts erfasst.",excusedNote:"entschuldigt (zählt nicht)",
   unexcusedNote:"unentschuldigt (Tagesnote 1.0)",
   banner:"Die Daten bleiben nur in diesem Browser. Am Tagesende «Tag speichern» und die Datei an michael.pilman@ehl.ch senden. Oben rechts «📱 Tablet» wechselt zur Tablet-Ansicht.",
-  weighting:"Gewichtung",gas2:"Gastgeberhaltung und Hygiene zählen doppelt",base:"Basisnote «erfüllt die Erwartungen»",baseShort:"Basisnote",
+  weighting:"Gewichtung",gas2:"Gastgeberhaltung zählt doppelt",base:"Basisnote «erfüllt die Erwartungen»",baseShort:"Basisnote",
   teamField:"Gruppe",
   restoreTitle:"Sicherung einlesen",
   restoreHint:"Liest eine zuvor gespeicherte JSON zurück in diese Datei. Damit holen Sie Gruppe, Team, Outlet, Dozent, Turnus, alle Studierenden mit E-Mail-Adresse und alle erfassten Tage zurück, zum Beispiel nach einem Gerätewechsel.",
@@ -78,7 +78,7 @@ day:"Erfassen",week:"Übersicht",rep:"Beurteilung",data:"Daten",set:"Eintragen",
   cl2:"Solide Arbeit. Mit den Punkten oben holen Sie im nächsten Einsatz am meisten heraus.",
   cl3:"Die Basis steht. Nehmen Sie sich die Punkte oben einzeln vor, dann werden Sie merklich sicherer.",
   cl4:"Hier ist Luft nach oben, und die Punkte oben sind konkret machbar. Melden Sie sich, wenn Sie dabei Unterstützung brauchen.",
-  weightNote:"Gastgeberhaltung und Gästekontakt sowie Hygiene und Erscheinungsbild zählen doppelt. Anwesenheit und Pünktlichkeit wirken stark auf die Note.",
+  weightNote:"Gastgeberhaltung und Gästekontakt zählen doppelt. Anwesenheit und Pünktlichkeit wirken stark auf die Note.",
   storeWarn:"Dieses Gerät speichert nichts dauerhaft. Exportiere den Rapport am Ende jedes Einsatztages, sonst gehen die Eingaben verloren.",
   byTeacher:"Erfasst von",outlet:"Abteilung",
   studentListHint:"Eine Person pro Zeile: Nachname; Vorname; Nickname; E-Mail; Sprache; Klasse; Gruppe; #Nr. Nur Nachname und Vorname sind Pflicht. Leere Klasse oder Gruppe = Wert aus der Kopfzeile. Die Studierendennummer mit # am Schluss bitte stehen lassen, daran wird die Person auch nach einer Namenskorrektur erkannt. Beispiel: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
@@ -140,7 +140,7 @@ day:"Record",week:"Overview",rep:"Feedback",data:"Data",set:"Setup",
   noData:"Nothing recorded for this period.",excusedNote:"excused (not counted)",
   unexcusedNote:"unexcused (daily grade 1.0)",
   banner:"Data stays in this browser only. At the end of the day, «Save day» and send the file to michael.pilman@ehl.ch. «📱 Tablet» at the top right switches to the tablet view.",
-  weighting:"Weighting",gas2:"Host attitude and hygiene count double",base:"Baseline grade “meets expectations”",baseShort:"Baseline grade",
+  weighting:"Weighting",gas2:"Host attitude counts double",base:"Baseline grade “meets expectations”",baseShort:"Baseline grade",
   teamField:"Group",
   restoreTitle:"Load a backup",
   restoreHint:"Reads a previously saved JSON back into this file. It brings back group, team, outlet, lecturer, rotation, all students with their e-mail addresses and every recorded day, for example after changing device.",
@@ -183,7 +183,7 @@ day:"Record",week:"Overview",rep:"Feedback",data:"Data",set:"Setup",
   cl2:"Solid work. The points above are where you gain most on your next shift.",
   cl3:"The basics are there. Take the points above one at a time and you will feel noticeably more confident.",
   cl4:"There is room to grow, and the points above are concrete and doable. Come and ask if you want support.",
-  weightNote:"Host attitude and guest contact as well as hygiene and grooming count double. Attendance and punctuality weigh heavily on the grade.",
+  weightNote:"Host attitude and guest contact count double. Attendance and punctuality weigh heavily on the grade.",
   storeWarn:"This device does not store anything permanently. Export the report at the end of each shift day or your entries are lost.",
   byTeacher:"Recorded by",outlet:"Outlet",
   studentListHint:"One person per line: surname; first name; nickname; e-mail; language; class; group; #no. Only surname and first name are required. Empty class or group = value from the header. Leave the student number with # at the end as it is: it identifies the person even after a name correction. Example: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
@@ -245,7 +245,7 @@ day:"บันทึก",week:"ภาพรวม",rep:"ผลประเมิ
   noData:"ไม่มีข้อมูลในช่วงเวลานี้",excusedNote:"ลา (ไม่นับคะแนน)",
   unexcusedNote:"ขาดโดยไม่แจ้ง (คะแนนวันนั้น 1.0)",
   banner:"ข้อมูลเก็บไว้ในเบราว์เซอร์นี้เท่านั้น เมื่อจบวันให้บันทึกข้อมูลของวันแล้วส่งไฟล์ถึง michael.pilman@ehl.ch ปุ่ม «📱 Tablet» มุมขวาบนจะเปลี่ยนเป็นมุมมองแท็บเล็ต",
-  weighting:"การให้น้ำหนัก",gas2:"ความเป็นเจ้าบ้านและสุขอนามัยนับสองเท่า",base:"คะแนนพื้นฐาน «เป็นไปตามที่คาดหวัง»",baseShort:"คะแนนพื้นฐาน",
+  weighting:"การให้น้ำหนัก",gas2:"ความเป็นเจ้าบ้านนับสองเท่า",base:"คะแนนพื้นฐาน «เป็นไปตามที่คาดหวัง»",baseShort:"คะแนนพื้นฐาน",
   teamField:"กลุ่ม",
   restoreTitle:"โหลดไฟล์สำรอง",
   restoreHint:"อ่านไฟล์ JSON ที่เคยบันทึกไว้กลับเข้าไฟล์นี้ จะได้กลุ่ม ทีม เอาต์เล็ต ผู้สอน รอบฝึก รายชื่อนักศึกษาพร้อมอีเมล และวันฝึกที่บันทึกไว้ทั้งหมดกลับคืนมา เช่น หลังเปลี่ยนอุปกรณ์",
@@ -288,7 +288,7 @@ day:"บันทึก",week:"ภาพรวม",rep:"ผลประเมิ
   cl2:"ทำได้ดี จุดข้างต้นคือสิ่งที่จะช่วยให้ครั้งต่อไปดีขึ้นมากที่สุด",
   cl3:"พื้นฐานมั่นคงแล้ว ค่อย ๆ พัฒนาทีละจุดตามข้างต้น แล้วจะมั่นใจขึ้นชัดเจน",
   cl4:"ยังมีพื้นที่ให้พัฒนา และจุดข้างต้นทำได้จริง หากต้องการความช่วยเหลือ บอกได้เสมอ",
-  weightNote:"ความเป็นเจ้าบ้านและการดูแลแขก รวมถึงสุขอนามัยและบุคลิกภาพ คิดเป็นสองเท่า การมาเรียนและตรงต่อเวลามีผลต่อคะแนนมาก",
+  weightNote:"ความเป็นเจ้าบ้านและการดูแลแขก คิดเป็นสองเท่า การมาเรียนและตรงต่อเวลามีผลต่อคะแนนมาก",
   storeWarn:"อุปกรณ์นี้ไม่บันทึกข้อมูลถาวร กรุณาส่งออกรายงานเมื่อจบแต่ละวัน มิฉะนั้นข้อมูลจะหาย",
   byTeacher:"บันทึกโดย",outlet:"แผนก",
   studentListHint:"หนึ่งคนต่อหนึ่งบรรทัด: นามสกุล; ชื่อ; ชื่อเล่น; อีเมล; ภาษา; ชั้นเรียน; กลุ่ม; #เลขประจำตัว จำเป็นเฉพาะนามสกุลและชื่อ กรุณาอย่าแก้ไขเลขประจำตัวที่มี # ท้ายบรรทัด ระบบใช้เลขนี้ระบุตัวบุคคลแม้แก้ไขชื่อแล้ว ตัวอย่าง: Ammann; Lea; Lulu; lea.ammann@stud.ehl.edu; de; HFE1; Gruppe 1",
@@ -351,7 +351,7 @@ day:"记录",week:"总览",rep:"评估",data:"数据",set:"设置",
   grade:"成绩",copy:"复制",copyAll:"全部复制",copied:"已复制",mail:"邮件",
   noData:"该时段没有记录。",excusedNote:"已请假（不计入）",
   unexcusedNote:"旷工（当日成绩 1.00）",
-  base:"基准分「符合预期」",weighting:"权重",gas2:"待客态度与卫生双倍计分",
+  base:"基准分「符合预期」",weighting:"权重",gas2:"待客态度双倍计分",
   group:"班级 / 部门",teacher:"授课教师",
   placements:"实习地点",
   daysCounted:"个计分日",obsCount:"条观察记录",
@@ -363,7 +363,7 @@ day:"记录",week:"总览",rep:"评估",data:"数据",set:"设置",
   cl2:"完成得扎实。上述几点是你下次上岗提升最快的地方。",
   cl3:"基础已经具备。把上述几点逐条攻克，你会明显变得更有把握。",
   cl4:"还有提升空间，而上述几点都是具体可行的。需要支持时随时来找我们。",
-  weightNote:"待客态度与客人接触以及卫生与仪容均按双倍计分。出勤与守时对成绩影响很大。",
+  weightNote:"待客态度与客人接触按双倍计分。出勤与守时对成绩影响很大。",
   fleiss:"",internal:""}
 };
 
@@ -464,7 +464,7 @@ function sanitizeSettings(s){
   if(!o.weekdays.length) o.weekdays = DEF.weekdays.slice();
   const ix = parseInt(o.startIdx, 10);
   o.startIdx = (isFinite(ix) && ix >= 0 && ix < o.weekdays.length) ? ix : 0;
-  o.gas2 = true; o.hyg2 = true;   // fest seit 31.10.2026: Gastgeberhaltung und Hygiene zählen immer doppelt
+  o.gas2 = true; o.hyg2 = false;   // fest: Gastgeberhaltung zählt doppelt, Hygiene einfach (Entscheid 10.11.2026)
   o.hideBanner = !!o.hideBanner;
   if(!T[o.uiLang]) o.uiLang = "de";
   if(!OUT_LANGS.some(x => x.code === o.outLang)) o.outLang = "de";
@@ -2541,7 +2541,7 @@ function renderSet(){
     "Unentschuldigt ergibt eine Tagesnote von <b class='num'>1.00</b>, entschuldigt zählt nicht in den Durchschnitt. "+
     "«Verspätet» lässt den Tag eine Note tiefer starten (<b class='num'>3.50</b>). "+
     "Ein Freitext wirkt nur dann auf die Note, wenn ein Kriterium und eine Wirkung gewählt sind. "+
-    "Gastgeberhaltung und Gästekontakt sowie Hygiene und Erscheinungsbild zählen im Gesamtschnitt immer <b>doppelt</b>. "+
+    "Gastgeberhaltung und Gästekontakt zählen im Gesamtschnitt immer <b>doppelt</b>. "+
     (HAS_EXAM
       ? "Der <b>Exam Day</b> ist der " + SLOT_COUNT + ". und letzte Einsatztag. Er wird mit demselben Raster bewertet, "
         + "ergibt eine <b>eigene Note</b> und fliesst nicht in die Praxisnote ein. Abwesenheit am Exam Day ergibt "

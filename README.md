@@ -188,5 +188,15 @@ Behoben:
 
 Neu geprüft: `tests/test_fuzz_notenmodell.py` (Zufallsdaten, drei Fassungen müssen auf 1e-9 gleich rechnen) und
 `tests/test_audit_2026_11_10.py` (zufällig beschädigte Dateien in Tablet, Laptop, Notenzentrale, Cockpit und «Meine Startseite»).
-Stand 10.11.2026: 890 Prüfungen in 19 Testreihen bestanden (`test_altdaten.py` übersprungen, siehe oben), Darstellung in 360 bis 1366 px und drei Sprachen ohne seitliches Scrollen.
+Stand 10.11.2026: 900 Prüfungen in 19 Testreihen bestanden (`test_altdaten.py` übersprungen, siehe oben), Darstellung in 360 bis 1366 px und drei Sprachen ohne seitliches Scrollen.
 Prüfung des Quelltexts: `node --check` und ESLint über alle gebauten Seiten (keine Fehler), `pyflakes` über die Python-Skripte.
+
+## Entscheide 10.11.2026 (nach dem Audit)
+
+- **Service: nur die Gastgeberhaltung zählt doppelt, Hygiene einfach** (`DOUBLE_CRITS = ["gas"]` in `src/service/_scriptA.js` und `_mobile_head.html`).
+  Küche unverändert: Hygiene doppelt. Gilt sofort für alle Dateien, auch für bereits erfasste Tage.
+- **Freitext mit Wirkung auf die Note auch am Tablet**: Text, Kriterium und Wirkung (+ 0.50, + 1.00, − 0.50, − 1.00), gespeichert wie am Laptop
+  (`n2NoteForm` in `src/_noten2_mobile.js`). Ohne Kriterium oder ohne Text bleibt es eine Bemerkung ohne Wirkung.
+- **Bibliotheken im eigenen Repository** (`site/lib/`, veröffentlicht unter `/lib/`): SheetJS, PDF.js, JSZip, QRCode.js. Die Seiten laden nichts mehr
+  von cdnjs; nur eine einzeln geöffnete Kopie ausserhalb der Webseite lädt von dort nach. Für die Tests braucht es `tests/.cache/` nur noch für die PDF-Fotoliste.
+- Git-Verlauf bereinigt: Namen von Dozierenden stehen in keinem Commit mehr.

@@ -1,13 +1,13 @@
 PRUEFUNG KORREKTUREN MOBIL UND STARTSEITE 10.11.2026
 
 OK      Mobil kueche: Sicherung laden meldet true/false (kaputt, Semesterpaket, gültig) [False, False, True, 2]
-OK      Mobil kueche: M1 Freitext ändern: Kriterium, Wirkung, intern und Tagesnote bleiben (4.5625, [4.5625, {'crit': 'sel', 'dir': 1, 'w': 0.5, 'internal': True, 'txt': 'Hat den Posten übernommen.'}])
-OK      Mobil kueche: M1 Blatt zeigt die Laptop-Zuordnung und «intern»                 0
-✎ Freitext
-
-Am Laptop zugeordnet: Selbständigkeit +0.50. Bleibt erhalten, auch wenn du den Text änderst.
-
-🔒 Interne Notiz: erscheint nicht in der Be
+OK      Mobil kueche: M1 Freitext ändern: Kriterium, Wirkung, intern und Tagesnote bleiben (4.5625, [4.5625, {'txt': 'Hat den Posten übernommen.', 'crit': 'sel', 'dir': 1, 'w': 0.5, 'internal': True}])
+OK      Mobil kueche: M1 Blatt zeigt Kriterium und Wirkung vom Laptop in den Auswahlfeldern und «intern» (['sel', '+0.5'], 'otiz: erscheint nicht in der Beurteilung.\n\nFür eine Wirkung auf die Note: Text schreiben, Kriterium und Wirkung wählen. Ohne Krit
+OK      Mobil kueche: M1b Tablet: Wirkung 0.50 und 1.00 (plus und minus) waehlbar      ['0', '+0.5', '+1', '-0.5', '-1']
+OK      Mobil kueche: M1b Tablet: Kriterium und Wirkung ohne Text wirken nicht und legen keinen Freitext an [None, 4.5]
+OK      Mobil kueche: M1b Tablet: Text + Hygiene − 1.00 ergibt 3.50 in der Hygiene, Kopf zeigt die neue Tagesnote [{'txt': 'Schneidebrett nicht gewechselt', 'crit': 'hyg', 'dir': -1, 'w': 1, 'internal': False}, 3.5, 'Tag 4.25  ·  Ø 4.47', '3.50']
+OK      Mobil kueche: M1b Tablet: Wirkung auf + 0.50 geaendert ergibt 5.00             5
+OK      Mobil kueche: M1b Tablet: ohne Kriterium bleibt es eine Bemerkung ohne Wirkung [{'txt': 'Schneidebrett nicht gewechselt', 'crit': '', 'dir': 0, 'w': 0, 'internal': False}, 4.5]
 OK      Mobil kueche: M2 nach dem Neuladen bleibt die Notiz intern                     {'txt': 'Hat den Posten übernommen.', 'crit': 'sel', 'dir': 1, 'w': 0.5, 'internal': True}
 OK      Mobil kueche: M2 Sicherung laden behält «intern»                               True
 OK      Mobil kueche: D6 Liste und Blatt ansehen legt nichts an, Tippen schon          [False, False, False, 'late']
@@ -41,13 +41,13 @@ OK      Mobil kueche: Startlink-Plan: Komma im Namen                            
 OK      Mobil kueche: Startlink-Plan: alter Link, ganz verschlüsselt                   {'mo': 'Berta', 'we': 'Anna'}
 OK      Mobil kueche: Startlink-Plan: alter Link mit +                                 {'mo': 'Berta Beispiel', 'tu': 'Anna'}
 OK      Mobil service: Sicherung laden meldet true/false (kaputt, Semesterpaket, gültig) [False, False, True, 2]
-OK      Mobil service: M1 Freitext ändern: Kriterium, Wirkung, intern und Tagesnote bleiben (4.545454545454546, [4.545454545454546, {'crit': 'sel', 'dir': 1, 'w': 0.5, 'internal': True, 'txt': 'Hat den Posten übernommen.'}])
-OK      Mobil service: M1 Blatt zeigt die Laptop-Zuordnung und «intern»                0
-✎ Freitext
-
-Am Laptop zugeordnet: Selbständigkeit +0.50. Bleibt erhalten, auch wenn du den Text änderst.
-
-🔒 Interne Notiz: erscheint nicht in der Be
+OK      Mobil service: M1 Freitext ändern: Kriterium, Wirkung, intern und Tagesnote bleiben (4.55, [4.55, {'txt': 'Hat den Posten übernommen.', 'crit': 'sel', 'dir': 1, 'w': 0.5, 'internal': True}])
+OK      Mobil service: M1 Blatt zeigt Kriterium und Wirkung vom Laptop in den Auswahlfeldern und «intern» (['sel', '+0.5'], 'otiz: erscheint nicht in der Beurteilung.\n\nFür eine Wirkung auf die Note: Text schreiben, Kriterium und Wirkung wählen. Ohne Krit
+OK      Mobil service: M1b Tablet: Wirkung 0.50 und 1.00 (plus und minus) waehlbar     ['0', '+0.5', '+1', '-0.5', '-1']
+OK      Mobil service: M1b Tablet: Kriterium und Wirkung ohne Text wirken nicht und legen keinen Freitext an [None, 4.5]
+OK      Mobil service: M1b Tablet: Text + Hygiene − 1.00 ergibt 3.50 in der Hygiene, Kopf zeigt die neue Tagesnote [{'txt': 'Schneidebrett nicht gewechselt', 'crit': 'hyg', 'dir': -1, 'w': 1, 'internal': False}, 3.5, 'Tag 4.40  ·  Ø 4.49', '3.50']
+OK      Mobil service: M1b Tablet: Wirkung auf + 0.50 geaendert ergibt 5.00            5
+OK      Mobil service: M1b Tablet: ohne Kriterium bleibt es eine Bemerkung ohne Wirkung [{'txt': 'Schneidebrett nicht gewechselt', 'crit': '', 'dir': 0, 'w': 0, 'internal': False}, 4.5]
 OK      Mobil service: M2 nach dem Neuladen bleibt die Notiz intern                    {'txt': 'Hat den Posten übernommen.', 'crit': 'sel', 'dir': 1, 'w': 0.5, 'internal': True}
 OK      Mobil service: M2 Sicherung laden behält «intern»                              True
 OK      Mobil service: D6 Liste und Blatt ansehen legt nichts an, Tippen schon         [False, False, False, 'late']
@@ -59,7 +59,7 @@ OK      Mobil service: M8 Anrede mit Vorname, nicht mit Nickname                
 OK      Mobil service: M14 Englisch: «Thank you» gross                                 Dear Emma,
 
 Thank you for your work with us (Campigiana, from 06.11. t
-OK      Mobil service: M5 Zusammenfassung: tml zählt als Verspätung und TM/OC             Ø 9 Tage: 4.43 (8 gewertet) · Exam: 4.50 · entsch. 1, verspätet 1, TM/OC 1 | Muster, Emma · HFE1 · Gruppe 1 Team A |    Ø 9 Tage: 4.33 (9 gewertet)
+OK      Mobil service: M5 Zusammenfassung: tml zählt als Verspätung und TM/OC             Ø 9 Tage: 4.42 (8 gewertet) · Exam: 4.50 · entsch. 1, verspätet 1, TM/OC 1 | Muster, Emma · HFE1 · Gruppe 1 Team A |    Ø 9 Tage: 4.33 (9 gewertet)
 OK      Mobil service: D1 4.15 aus einer Rechnung (4.1499…) ergibt 4.2                 [True, '4.2']
 OK      Mobil service: D1 Praxisnote 3.96 → «4.0», Schlusssatz und Farbe wie 4.0       [True, False, True, '4.0', 'gpill g-mid strong']
 OK      Mobil service: M9 Setup-Hinweis: Rapport über das Symbol «Daily Grades» öffnen (DE/EN/TH) Tipp: Öffne den Rapport immer über das Symbol «Daily Grades» (deine persönliche 
@@ -72,7 +72,7 @@ Bitte hänge die eben heruntergel
 OK      Mobil service: M13 nach dem Laden bleibt die Tagesansicht (kein Setup nach 6 s) ['day', False, False]
 OK      Mobil service: M13 scharf geschaltet und weggewechselt: kein Setup in der Tagesansicht ['day', False]
 OK      Mobil service: M3 Namensliste schreibt die Nummer mit (#21)                    Da Silva; Rui; Zé; rui@beispiel.ch; de; HFD; Gruppe 1 Team A; #21 | Muster; Emma; emma@beispiel.ch; en; HFE1; Gruppe 1 Team A; #22
-OK      Mobil service: M3 Namenskorrektur: gleiche Person (ID, Nr., Foto, Schichtplan, Tage) [True, 'Rui', 'Da Silva Costa', '21', True, True, 4.48989898989899]
+OK      Mobil service: M3 Namenskorrektur: gleiche Person (ID, Nr., Foto, Schichtplan, Tage) [True, 'Rui', 'Da Silva Costa', '21', True, True, 4.488888888888889]
 OK      Mobil service: M3 gleicher Name, andere E-Mail: zwei Personen                  [3, [[True, 'emma@beispiel.ch'], [False, 'emma.zwei@beispiel.ch']]]
 OK      Mobil service: M3 Entfernen mit erfassten Tagen: Rückfrage, Abbrechen ändert nichts (['Diese Personen fehlen in der neuen Liste, haben aber schon erfasste Tage:\n– Muster, Emma\n\nWenn du übernimmst, werden ihre Einträge gelöscht. Tro
 OK      Mobil service: M3 bestätigt: Person und ihre Tage entfernt (keine verwaisten Datensätze) [2, False, False]
@@ -104,4 +104,4 @@ OK      mein.html: fremdes Ziel (javascript:) abgelehnt, Meldung in der Seitensp
 OK      mein.html: Paket ohne Inhalt abgelehnt (Englisch)                              ['Part of the semester package is incomplete. Please ask Michael for a new semester package.']
 OK      mein.html: keine JavaScript-Fehler                                             []
 
-81 von 81
+91 von 91

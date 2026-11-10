@@ -697,25 +697,8 @@ function openSheet(student){
     body.appendChild(bar);
 
     if(sheetCrit === "__note"){
-      const nt = (r.note && typeof r.note === "object") ? r.note : {txt:""};
-      const f = el("div",{class:"field"});
-      /* Nur den Text ändern: Kriterium, Wirkung und «intern» vom Laptop bleiben erhalten (Entscheid 31.10.2026) */
-      const ta = el("textarea",{placeholder:t("notePh"),
-        oninput:e=>{ const R = rec();
-          /* Audit 10.11.2026: ein geleerter Text entfernt den Freitext ganz (wie am Laptop). Vorher blieb eine am Laptop
-             gesetzte Wirkung ohne Text stehen und zählte unsichtbar weiter. Tippt man im offenen Blatt weiter, kommt sie zurück. */
-          R.note = e.target.value.trim() ? Object.assign({crit:"", dir:0, w:0, internal:false}, nt, (R.note && typeof R.note === "object") ? R.note : {}, {txt:e.target.value}) : null;
-          persist(); const ok = document.getElementById("noteOk"); if(ok) ok.textContent = n2x("saved"); },
-        onblur:()=>persist()});
-      ta.value = nt.txt || "";
-      f.appendChild(ta);
-      body.appendChild(f);
-      const zug = !!(nt.crit && nt.dir && nt.w);
-      if(zug) body.appendChild(el("p",{class:"muted",style:"margin:0 0 6px",
-        text:n2x("noteLaptop").replace("{c}", critName(nt.crit)).replace("{v}", (nt.dir > 0 ? "+" : "−") + Math.abs(Number(nt.w)).toFixed(2))}));
-      if(nt.internal) body.appendChild(el("p",{class:"muted",style:"margin:0 0 6px",text:n2x("noteIntern")}));
-      if(!zug) body.appendChild(el("p",{class:"muted",style:"margin:0",text:t("noteHint")}));
-      body.appendChild(el("p",{class:"muted",id:"noteOk",style:"margin:6px 0 0;font-size:13px;color:var(--plus,#2f7d4f)",text:""}));
+      /* Freitext mit Kriterium und Wirkung auf die Note, wie am Laptop (Entscheid 10.11.2026): gemeinsames Formular in _noten2_mobile.js */
+      n2NoteForm(body, r, rec, student.id);
       return;
     }
 

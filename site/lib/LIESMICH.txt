@@ -1,0 +1,17 @@
+Bibliotheken von Daily Grades (seit 10.11.2026 im eigenen Repository statt von cdnjs)
+
+Grund: Die Seiten laden nichts mehr von Dritten. Das funktioniert auch, wenn cdnjs im Schulnetz gesperrt ist,
+und niemand ausserhalb kann den Code austauschen. Die Dateien sind unveraendert aus den npm-Paketen uebernommen.
+
+  xlsx.full.min.js     SheetJS Community Edition 0.18.5   Apache-2.0        npm xlsx@0.18.5, dist/
+  pdf.min.js           PDF.js 3.11.174 (Mozilla)          Apache-2.0        npm pdfjs-dist@3.11.174, build/
+  pdf.worker.min.js    PDF.js 3.11.174 (Mozilla)          Apache-2.0        npm pdfjs-dist@3.11.174, build/
+  jszip.min.js         JSZip 3.10.1 (Stuart Knightley)    MIT               npm jszip@3.10.1, dist/
+  qrcode.min.js        QRCode.js 1.0.0 (davidshimjs)      MIT               npm qrcodejs@1.0.0
+
+Verwendung: Excel-Export (Laptop-Fassungen, Notenzentrale), Fotoliste lesen und ZIP schreiben (Cockpit),
+QR-Code (Startlink-Generator). Die Apps schreiben mit SheetJS nur Excel-Dateien, sie lesen keine.
+
+Aktualisieren: neue Datei aus dem npm-Paket hierher kopieren, python3 build.py, Tests laufen lassen.
+Wird eine Seite als einzelne Datei ausserhalb der Webseite geoeffnet (Kopie im OneDrive), fehlt dieser Ordner;
+dann laedt sie die Bibliothek wie frueher von cdnjs nach.

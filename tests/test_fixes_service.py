@@ -46,10 +46,10 @@ CATCH = """() => { window.__mail = []; window.__saved = [];
     window.saveFile = async (n, d) => { window.__saved.push([n, !!JSON.parse(d).days]); return true }; }"""
 dec = lambda h: urllib.parse.unquote(h or "")
 
-# Fall aus einer Zufallssuche: Praxis 4.1409…, Exam 3.5682…, Schlussnote genau 3.95 (gerechnet 3.9499999999999993)
-CASE = [["d01","present",["tea-n2","ver-n4"]],["d02","late",["tea-n2","ver-n7"]],["d03","present",["mep-n1","tec-p3","sel-n1","gas-n7"]],
-        ["d04","present",["tec-n4","auf-n1","sel-p3","tec-n6","auf-n4"]],["d05","present",["mep-n7","mep-n2","auf-n4","auf-n2"]],
-        ["d10","late",["mot-n3","gas-p3"]]]
+# Fall aus einer Zufallssuche: Praxis 4.15, Exam 3.55, Schlussnote genau 3.95 (gerechnet 3.9499999999999993).
+# Neu gesucht am 10.11.2026, weil im Service nur noch die Gastgeberhaltung doppelt zaehlt (Hygiene einfach).
+CASE = [["d01","late",["gas-p3","sel-p2","tec-n6","gas-p1","hyg-n1"]],["d02","present",["hyg-p1","mep-n2","ver-p2","tea-p5"]],["d03","present",["ver-p3"]],
+        ["d04","present",["mot-n3"]],["d05","late",["ver-n7","sel-p3","tea-n4"]],["d10","late",["hyg-p3"]]]
 
 with sync_playwright() as p:
     b = p.chromium.launch()

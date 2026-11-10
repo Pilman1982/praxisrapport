@@ -168,7 +168,7 @@ with sync_playwright() as p:
     ok("Service: Mittwoch 02.09. statt Woche", g["lab"] == "Mittwoch 02.09.", g["lab"])
     ok("Service: Foto im Erfassungsblatt", g["ava"])
     ok("Service: Tagesnote 4.50 im Kopf, Kriteriennoten sichtbar", g["head"].startswith("Tag 4.50") and g["cg"] == g["n"], g)
-    ok("Service: Gastgeberhaltung und Hygiene doppelt gewichtet (fest seit 31.10.2026)", g["dbl"] == "gas+hyg", g["dbl"])
+    ok("Service: nur Gastgeberhaltung doppelt gewichtet, Hygiene einfach (Entscheid 10.11.2026)", g["dbl"] == "gas", g["dbl"])
     ok("Service: keine JavaScript-Fehler", not errs, errs); c.close()
     b.close()
 srv.shutdown()

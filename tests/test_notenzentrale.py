@@ -108,8 +108,8 @@ with sync_playwright() as p:
     b10 = APPN[("kueche", "10T")]["102"]
     ok("Regel: Bestnote erreichbar: Praxis 6.00, Exam 6.00, Schlussnote 6.0", b10["praxis"] == 6 and b10["exam"] == 6 and round(b10["final"], 1) == 6.0, (b10["praxis"], b10["exam"], b10["final"]))
     s10 = APPN[("service", "10T")]["103"]
-    ok("Regel Service: 1.00 + 0.50 Gastgeberhaltung = 6.00, Tag = (2*6 + 8*4.5)/11", s10["crit"][0]["gas"] == 6 and abs(s10["days"][0] - (2 * 6 + 2 * 4.5 + 7 * 4.5) / 11) < 1e-9, s10["days"][0])
-    ok("Regel Service: Hygiene doppelt (Tag 2 = (2*6 + 2*4.5 + 7*4.5)/11)", abs(s10["days"][1] - (2 * 6 + 2 * 4.5 + 7 * 4.5) / 11) < 1e-9, s10["days"][1])
+    ok("Regel Service: 1.00 + 0.50 Gastgeberhaltung = 6.00, doppelt: Tag = (2*6 + 8*4.5)/10", s10["crit"][0]["gas"] == 6 and abs(s10["days"][0] - (2 * 6 + 8 * 4.5) / 10) < 1e-9, s10["days"][0])
+    ok("Regel Service: Hygiene einfach seit 10.11.2026 (Tag 2 = (6 + 2*4.5 + 7*4.5)/10)", abs(s10["days"][1] - (6 + 2 * 4.5 + 7 * 4.5) / 10) < 1e-9, s10["days"][1])
     ok("Regel Service: verspaetet, drei Plus Team = 5.00 (Deckel ab 3.50)", s10["crit"][3]["tea"] == 5 and s10["crit"][3]["gas"] == 3.5, s10["crit"][3])
 
     # ---------- Laptop rechnet gleich wie Mobil ----------

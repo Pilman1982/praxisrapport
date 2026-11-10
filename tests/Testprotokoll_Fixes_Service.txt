@@ -6,9 +6,9 @@ OK      D0 keine JavaScript-Fehler                                              
 OK      D1 fmt1/bandName mit Toleranz: 3.9499… -> 4.0 Genügend, nicht rot                ['4.0', 'Genügend', '', '4.4', '4.3', '–']
 OK      D1 Übersicht: exakt 3.95 wird 4.0, nicht rot                                     (3.9499999999999993, '4.0', 'grade num ')
 OK      D1 Beurteilung: «Schlussnote: 4.0 (Genügend)» und Schlusssatz ab 4.00            Schlussnote: 4.0 (Genügend)
-OK      D1 Excel: Schlussnote 3.95, gerundet 4.0                                         [3.95, 4, 4.1]
+OK      D1 Excel: Schlussnote 3.95, gerundet 4.0                                         [3.95, 4, 4.2]
 OK      D1 PDF: Schlussnote auf 0.1 gerundet mit Prädikat aus dem gerundeten Wert        Schlussnote4.0Genügend
-OK      D1 Übersichtsmail: Schlussnote 4.0                                               Muster Max  —  Praxisnote 4.14  ·  Prüfung 3.57  ·  Schlussnote 4.0  ·  5 Tage  ·  1× Verspätet
+OK      D1 Übersichtsmail: Schlussnote 4.0                                               Muster Max  —  Praxisnote 4.15  ·  Prüfung 3.55  ·  Schlussnote 4.0  ·  5 Tage  ·  2× Verspätet
 OK      D1 3000 Zufallspersonen: gerundete Schlussnote stimmt mit exakter Rechnung       0
 OK      D1 Tagesnote: Farbe aus der gezeigten Zahl («4.00» nicht rot, «4.75» grün)       [['4.00', 'grade num '], ['4.75', 'grade num g-hi']]
 OK      D1 Übersicht Praxisnote: Farbe aus der gezeigten Zahl                            [['4.00', 'grade num '], ['4.75', 'grade num g-hi']]
@@ -31,7 +31,7 @@ OK      D3 keine JavaScript-Fehler                                              
 OK      D4 Liste zeigt die Studierendennummer mit #                                      ['Amman; Lea; lea@beispiel.ch; #1000000001']
 OK      D4 Namenskorrektur mit Nummer: gleiche Id, Nummer, Foto und Plan bleiben         [['p1', 'Ammann', 'Lea', '1000000001', True, '[2]', 'lea@beispiel.ch']]
 OK      D4 Namenskorrektur mit gleicher E-Mail: gleiche Id                               [['p2', 'Keller', 'Tim', '', False, 'null', 'timo@beispiel.ch']]
-OK      D4 gleicher Name, zwei E-Mail-Adressen: zwei Personen                            [['p3', 'Muster', 'Max', '', False, 'null', 'max1@beispiel.ch'], ['s9u8uh2', 'Muster', 'Max', '', False, 'null', 'max2@beispiel.ch']]
+OK      D4 gleicher Name, zwei E-Mail-Adressen: zwei Personen                            [['p3', 'Muster', 'Max', '', False, 'null', 'max1@beispiel.ch'], ['sm1x6s3', 'Muster', 'Max', '', False, 'null', 'max2@beispiel.ch']]
 OK      D4 erfasste Tage bleiben bei der Person                                          (1, [])
 OK      D4 Wegfall mit Einträgen: Rückfrage, Abbrechen ändert nichts                     ['Diese Personen haben schon Einträge und fallen aus der Liste: Ammann Lea. Deren Einträge werden danach nicht mehr angezeigt. Trotzdem übernehmen?']
 OK      D4 Wegfall bestätigt: Person entfernt                                            ['Keller Tim', 'Muster Max', 'Muster Max']
@@ -47,7 +47,7 @@ OK      D7 Exam Day: fünf Knöpfe, verspätet erscheint als «Verspätet»     
 OK      D7 Exam Day: entschuldigt bleibt 1.00                                            {'n': 5, 'p': ['Entschuldigt'], 'g': '1.00'}
 OK      D7 keine JavaScript-Fehler                                                       []
 OK      D8 Feedback-Mail: Link höchstens 1800 Zeichen, mit Hinweis                       181
-OK      D8 Feedback-Mail: ganzer Text in der Zwischenablage, Meldung = Hinweis           (897, 897, 'Der Text ist in der Zwischenablage. Bitte hier mit Strg+V ei')
+OK      D8 Feedback-Mail: ganzer Text in der Zwischenablage, Meldung = Hinweis           (889, 889, 'Der Text ist in der Zwischenablage. Bitte hier mit Strg+V ei')
 OK      D8 Übersichtsmail an die Kursleitung: Link höchstens 1800 Zeichen                [221]
 OK      D8 keine JavaScript-Fehler                                                       []
 OK      D9 «Übernehmen» aus dem Beispiel: Beispieltage und Tagesangaben weg              {'days': [], 'meta': [], 'sample': False, 'cur': 'd01', 'set': ['', '', 'Umami', ''], 'obs': [0, 0]}

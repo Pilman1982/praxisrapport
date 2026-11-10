@@ -118,6 +118,58 @@ function n2RenderGrades(){
 }
 
 /* ====================================================================================
+   Freitext am Tablet (Entscheid 10.11.2026): Text, Kriterium und Wirkung auf die Note (0.50 oder 1.00, plus oder minus),
+   gleich gespeichert wie am Laptop. Ohne Kriterium oder ohne Text wirkt der Freitext nicht auf die Note.
+   Ein geleerter Text entfernt den Freitext ganz. Eine am Laptop gesetzte Wirkung 0.25 bleibt wählbar, solange sie besteht.
+   ==================================================================================== */
+const N2NOTE = {
+  de:{crit:"Kriterium", eff:"Wirkung auf die Note", neutral:"nur Bemerkung, keine Wirkung", none:"— kein Kriterium —",
+      need:"Für eine Wirkung auf die Note: Text schreiben, Kriterium und Wirkung wählen. Ohne Kriterium bleibt es eine Bemerkung."},
+  en:{crit:"Criterion", eff:"Effect on the grade", neutral:"remark only, no effect", none:"— no criterion —",
+      need:"For an effect on the grade: write the text, choose criterion and effect. Without a criterion it stays a remark."},
+  th:{crit:"หัวข้อประเมิน", eff:"ผลต่อคะแนน", neutral:"บันทึกอย่างเดียว ไม่มีผลต่อคะแนน", none:"— ไม่เลือกหัวข้อ —",
+      need:"หากต้องการให้มีผลต่อคะแนน: เขียนข้อความ แล้วเลือกหัวข้อประเมินและผลต่อคะแนน หากไม่เลือกหัวข้อจะเป็นเพียงบันทึก"}
+};
+function n2NoteForm(body, r, rec, sid){
+  const X = N2NOTE[L] || N2NOTE.de;
+  const nt = (r && r.note && typeof r.note === "object") ? r.note : {txt:""};
+  const st = {crit:String(nt.crit || ""), dir:Number(nt.dir) || 0, w:Number(nt.w) || 0, internal:!!nt.internal};
+  const ta = el("textarea",{id:"n2noteTxt",placeholder:t("notePh")});
+  ta.value = nt.txt || "";
+  const save = () => {
+    const txt = ta.value;
+    if(!txt.trim()){                                   // geleert: Freitext entfernen, keinen Datensatz anlegen
+      const R0 = (S.days[curSlot] || {})[sid];
+      if(R0 && R0.note){ R0.note = null; persist(); }
+    } else {
+      const eff = !!(st.crit && st.dir && st.w);
+      rec().note = {txt, crit:st.crit, dir:eff ? st.dir : 0, w:eff ? st.w : 0, internal:st.internal};
+      persist();
+    }
+    const ok = document.getElementById("noteOk"); if(ok) ok.textContent = n2x("saved");
+    if(typeof n2ShowHead === "function") n2ShowHead(sid);
+    /* Kriteriennoten in der Leiste oben nachführen, ohne das Blatt neu zu zeichnen (das Textfeld behält den Fokus) */
+    const g = n2Crit(curSlot, sid);
+    if(g) document.querySelectorAll(".sheet .critbar button").forEach((bt, i) => { const c = CRITS[i], sp = bt.querySelector(".cg"); if(c && sp) sp.textContent = g[c.k].toFixed(2); });
+  };
+  ta.addEventListener("input", save); ta.addEventListener("blur", () => persist());
+  body.appendChild(el("div",{class:"field"},[ta]));
+  const sc = el("select",{id:"n2noteCrit","aria-label":X.crit,onchange:e=>{ st.crit = e.target.value; save(); }});
+  sc.appendChild(el("option",{value:"",text:X.none,selected:!st.crit}));
+  CRITS.forEach(c => sc.appendChild(el("option",{value:c.k,text:critName(c.k),selected:st.crit === c.k})));
+  const cur = (st.dir && st.w) ? (st.dir > 0 ? "+" : "-") + st.w : "0";
+  const opts = [["0", X.neutral], ["+0.5", "+ 0.50"], ["+1", "+ 1.00"], ["-0.5", "− 0.50"], ["-1", "− 1.00"]];
+  if(!opts.some(o => o[0] === cur)) opts.push([cur, (st.dir > 0 ? "+ " : "− ") + st.w.toFixed(2)]);
+  const se = el("select",{id:"n2noteEff","aria-label":X.eff,onchange:e=>{ const n = parseFloat(e.target.value) || 0; st.dir = n > 0 ? 1 : (n < 0 ? -1 : 0); st.w = Math.abs(n); save(); }});
+  opts.forEach(([v, lb]) => se.appendChild(el("option",{value:v,text:lb,selected:cur === v})));
+  body.appendChild(el("div",{class:"field"},[el("label",{for:"n2noteCrit",text:X.crit}), sc]));
+  body.appendChild(el("div",{class:"field"},[el("label",{for:"n2noteEff",text:X.eff}), se]));
+  if(st.internal) body.appendChild(el("p",{class:"muted",style:"margin:0 0 6px",text:n2x("noteIntern")}));
+  body.appendChild(el("p",{class:"muted",style:"margin:0",text:X.need}));
+  body.appendChild(el("p",{class:"muted",id:"noteOk",style:"margin:6px 0 0;font-size:13px;color:var(--plus,#2f7d4f)",text:""}));
+}
+
+/* ====================================================================================
    Feedback-Mail an die Studierenden (Noten 2.0, 05.10.2026)
    Jede/r Dozierende löst sie am Ende ihres/seines Einsatzes selbst aus (Notenübersicht Ø).
    Sprache: Deutsch für HFD, Englisch für HFE1/HFE2 (oder die Sprache aus der Klassenliste).

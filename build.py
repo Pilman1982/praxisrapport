@@ -66,6 +66,7 @@ for folder, files in PUBLISH.items():
     for f in files:
         shutil.copy2(DIST / f, DOCS / folder / f)
 for f in (R / "site").iterdir():
+    if f.is_dir(): shutil.copytree(f, DOCS / f.name); continue      # lib/: Bibliotheken im eigenen Repository (seit 10.11.2026)
     shutil.copy2(f, DOCS / f.name)
     if f.name == "notenzentrale.html":
         t = (DOCS / f.name).read_text(encoding="utf-8")
