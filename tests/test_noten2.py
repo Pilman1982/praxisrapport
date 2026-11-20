@@ -141,7 +141,12 @@ with sync_playwright() as p:
     pg.evaluate("()=>{ SEM.pakete[1] = Object.assign({}, SEM.pakete[1], {id:'anderes', titel:'Anderes Paket'}); openPack(SEM.pakete[1], false); }")
     ACCEPT[0] = False; pg.wait_for_load_state(); pg.wait_for_timeout(600)
     r = pg.evaluate("()=>({d:Object.keys(S.days).length, id:S.settings.paketId})")
-    ok("Anderes Paket bei erfassten Tagen: Rueckfrage, Abbruch behaelt Daten", len(dialogs) == 1 and r["d"] == 1 and r["id"] != "anderes", (dialogs[:1], r))
+    # 20.11.2026: bisheriges Paket liegt im gemeinsamen Stand -> keine Rueckfrage, erneut oeffnen bringt die Erfassung zurueck
+    pg.goto(U + "mein.html"); pg.wait_for_timeout(400)
+    pg.locator("#main li").nth(1).locator("button").click(); pg.wait_for_load_state(); pg.wait_for_timeout(600)
+    r2 = pg.evaluate("()=>({d:Object.keys(S.days).length, id:S.settings.paketId})")
+    ok("Anderes Paket bei erfassten Tagen: ohne Rueckfrage, erneut oeffnen bringt die Erfassung zurueck",
+       len(dialogs) == 0 and r["id"] == "anderes" and r2["d"] == 1 and r2["id"] != "anderes", (dialogs[:1], r, r2))
     ok("mein.html / Mobil: keine JavaScript-Fehler", not errs, errs); c.close()
 
     # ---------- 3 mein.html -> Laptop ----------

@@ -49,6 +49,8 @@ function n2HeadLang(){
 }
 
 function n2Handoff(load){
+  /* Gemeinsamer Stand pro Paket (20.11.2026): zuerst den eigenen Stand sichern bzw. den neusten holen */
+  try{ if(dgsInit()) render(); }catch(e){}
   let h = null;
   try{ h = JSON.parse(localStorage.getItem("praxisrapport.handoff") || "null"); }catch(e){ h = null; }
   if(!h || !h.target || !h.paket || !h.paket.settings) return;
@@ -58,10 +60,24 @@ function n2Handoff(load){
   if(Date.now() - (h.at || 0) > 10 * 60 * 1000) return;          // nur frische Übergaben
   const id = String(h.id || "");
   const lg = (S.settings.uiLang || "de");
-  if(h.mode === "switch"){                                          // Wechsel Tablet <-> Laptop: Stand 1:1 übernehmen
+  /* Laden ohne Zwischenstände im gemeinsamen Stand; erst nach dem Laden abgleichen */
+  const lade = p => { DGS.hold = true;
+    return Promise.resolve().then(() => load(p)).then(ok => { DGS.hold = false; if(ok !== false){ try{ dgsInit(); }catch(e){} } return ok; },
+                                                     err => { DGS.hold = false; throw err; }); };
+  if(h.mode === "switch"){                                          // Wechsel Tablet <-> Laptop
+    /* 20.11.2026: Die andere Ansicht hat alles in den gemeinsamen Stand geschrieben. Diesen übernehmen statt der
+       einmaligen Kopie: nichts geht verloren, keine Rückfrage, auch wenn hier noch ein anderer Zyklus offen war. */
+    let ueber = false;
+    if(h.sync && dgsHas(h.sync)){ try{ ueber = dgsAdopt(h.sync, h.paket && h.paket.students); }catch(e){ ueber = false; } }
+    if(ueber){
+      if(h.slot && slots().some(x => x.id === h.slot)) curSlot = h.slot; else n2GoToday();
+      view = "day"; render(); toast(h.titel || "✓");
+      return;
+    }
     const p = JSON.parse(JSON.stringify(h.paket));
-    /* Entscheid 31.10.2026: Hat diese Fassung erfasste Tage, die im mitgebrachten Stand fehlen, zuerst fragen. */
-    const fehlt = n2SwitchLoss(p);
+    /* Ohne gemeinsamen Stand (Speicher voll, Datei ohne Paket) wie bisher (Entscheid 31.10.2026):
+       Hat diese Fassung erfasste Tage, die im mitgebrachten Stand fehlen, zuerst fragen. */
+    const fehlt = (S.settings.paketId && p.settings && S.settings.paketId !== p.settings.paketId && dgsSafe()) ? [] : n2SwitchLoss(p);
     if(fehlt.length){
       const liste = fehlt.slice(0, 6).join(", ") + (fehlt.length > 6 ? " …" : "");
       const msg = {
@@ -71,7 +87,7 @@ function n2Handoff(load){
       };
       try{ if(!window.confirm(msg[lg] || msg.de)) return; }catch(e){ return; }
     }
-    Promise.resolve(load(p)).then(ok => {
+    lade(p).then(ok => {
       if(ok === false) return;                                      // nicht geladen: die Ladefunktion meldet den Grund
       /* den Tag weiter zeigen, an dem gerade gearbeitet wurde (Abnahme 31.10.2026); ohne Angabe den heutigen */
       if(h.slot && slots().some(x => x.id === h.slot)) curSlot = h.slot; else n2GoToday();
@@ -88,7 +104,8 @@ function n2Handoff(load){
     return;
   }
   const hatDaten = !S.settings.isSample && Object.keys(S.days || {}).some(k => S.days[k] && Object.keys(S.days[k]).length);
-  if(hatDaten && S.settings.paketId !== id){
+  /* 20.11.2026: Liegt das bisherige Paket sicher in seinem Stand, geht beim Wechsel nichts verloren: keine Rückfrage */
+  if(hatDaten && S.settings.paketId !== id && !dgsSafe()){
     const msg = {
       de: "Neues Paket laden: " + (h.titel || id) + "?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte vorher «Tag senden» oder «Sichern», falls noch nicht geschehen.",
       en: "Load new package: " + (h.titel || id) + "?\n\nThe days recorded so far in this file will be replaced. Please use «Send the day» or «Back up» first if you have not done so.",
@@ -98,8 +115,12 @@ function n2Handoff(load){
   }
   const p = JSON.parse(JSON.stringify(h.paket));
   p.settings.paketId = id;
-  Promise.resolve(load(p)).then(ok => {
+  lade(p).then(ok => {
     if(ok === false) return;                                        // abgelehnt: keine Erfolgsmeldung
+    /* Gab es den Stand schon (z. B. in der anderen Ansicht erfasst), kam er beim Abgleich dazu.
+       Fotos, Nicknames, Einsatzdaten usw. aus dem Paket trotzdem nachführen. */
+    const neuP = n2Refresh(h.paket.students), neuE = n2RefreshSettings(h.paket.settings);
+    if(neuP || neuE) persist();
     n2GoToday(); view = "day"; render();
     if(ok === true && h.titel) toast("✓ " + h.titel);
   });
@@ -186,7 +207,8 @@ function n2SwitchView(){
   const lg = (S.settings.uiLang || "de");
   const msg = {de:toLaptop ? "Laptop-Ansicht" : "Tablet-Ansicht", en:toLaptop ? "Laptop view" : "Tablet view", th:toLaptop ? "มุมมองแล็ปท็อป" : "มุมมองแท็บเล็ต"}[lg] || "";
   try{
-    localStorage.setItem("praxisrapport.handoff", JSON.stringify({target, id:S.settings.paketId || "", titel:"✓ " + msg, at:Date.now(), mode:"switch", slot:(typeof curSlot === "string" ? curSlot : ""), paket:snapshot()}));
+    /* sync: Schlüssel des gemeinsamen Stands, wenn er alles enthält (20.11.2026) */
+    localStorage.setItem("praxisrapport.handoff", JSON.stringify({target, id:S.settings.paketId || "", titel:"✓ " + msg, at:Date.now(), mode:"switch", slot:(typeof curSlot === "string" ? curSlot : ""), sync:dgsFlush(), paket:snapshot()}));
   }catch(e){ try{ toast("Speicher voll"); }catch(_){} return; }
   location.href = target;
 }

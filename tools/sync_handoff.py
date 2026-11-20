@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Uebertraegt src/_handoff.js in die Laptop-Skripte und den Mobil-Zusatz (wird von build.py aufgerufen)."""
+"""Uebertraegt src/_handoff.js und src/_sync.js in die Laptop-Skripte und den Mobil-Zusatz (wird von build.py aufgerufen)."""
 import pathlib
 R = pathlib.Path(__file__).parent.parent / "src"
 H = (R / "_handoff.js").read_text(encoding="utf-8").strip("\n")
+# 20.11.2026: gemeinsamer Stand pro Paket (src/_sync.js) gehört zum selben Block
+H = H + "\n" + (R / "_sync.js").read_text(encoding="utf-8").strip("\n")
 START = "/* ---- Noten 2.0: Übergabe von der persönlichen Startseite (mein.html) ----"
 for f in ("kueche/_scriptB.js", "service/_scriptB.js", "_noten2_mobile.js"):
     p = R / f; s = p.read_text(encoding="utf-8")

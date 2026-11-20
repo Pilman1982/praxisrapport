@@ -78,6 +78,7 @@ python3 tests/test_fixes_mobil.py        # Fehlerkorrekturen 31.10.2026 Mobil un
 python3 tests/test_abnahme_2026_10_31.py # Befunde der unabhängigen Abnahme 31.10.2026
 python3 tests/test_fuzz_notenmodell.py   # Zufallsprüfung: Tablet, Laptop und Notenzentrale rechnen gleich (alle 6 Varianten)
 python3 tests/test_audit_2026_11_10.py   # Audit 10.11.2026: Befunde und Störfestigkeit (beschädigte Dateien in allen Seiten)
+python3 tests/test_gemeinsamer_stand.py  # 20.11.2026: Tablet- und Laptop-Ansicht teilen pro Paket einen Stand (Zykluswechsel, zwei Tabs, alte Daten)
 git commit -am "…" && git push      # GitHub Pages aktualisiert sich in 1 bis 2 Minuten
 ```
 
@@ -200,3 +201,31 @@ Prüfung des Quelltexts: `node --check` und ESLint über alle gebauten Seiten (k
 - **Bibliotheken im eigenen Repository** (`site/lib/`, veröffentlicht unter `/lib/`): SheetJS, PDF.js, JSZip, QRCode.js. Die Seiten laden nichts mehr
   von cdnjs; nur eine einzeln geöffnete Kopie ausserhalb der Webseite lädt von dort nach. Für die Tests braucht es `tests/.cache/` nur noch für die PDF-Fotoliste.
 - Git-Verlauf bereinigt: Namen von Dozierenden stehen in keinem Commit mehr.
+
+## Gemeinsamer Stand pro Paket (20.11.2026)
+
+Fehler: Tablet- und Laptop-Ansicht hatten je einen eigenen Speicher im Browser; der Knopf «Ansicht wechseln» kopierte den Stand nur einmal.
+Wer danach in der anderen Ansicht weiterarbeitete, auf der Startseite einen neuen Zyklus öffnete oder dort «Laptop-Ansicht» wählte,
+sah alte oder leere Daten, oder die Rückfrage «Tage werden ersetzt» drohte mit Verlust. Nachgestellt in drei Wegen (P1 bis P3).
+
+Behoben (`src/_sync.js`, wird von `tools/sync_handoff.py` mit `src/_handoff.js` in alle vier Fassungen eingesetzt):
+- Pro Gerät und Paket gibt es **einen** Stand im Browserspeicher (`dg.stand|App|Variante|paketId`, ohne Fotos). Beide Ansichten schreiben
+  jede Änderung sofort hinein (`persist()` ruft `dgsChanged()`), und holen beim Öffnen, beim Zurückkehren in den Tab (`visibilitychange`, `focus`),
+  nach «Zurück» (`pageshow`) und wenn ein anderer Tab geschrieben hat (`storage`) den neusten Stand. Ein offenes Erfassungsblatt wird vorher
+  ordentlich geschlossen (Freitext bleibt).
+- Einheiten mit Zeitstempel: Einstellungen, Reihenfolge, Person, Einsatztag, Tag und Person, Tagesangaben. Jede Ansicht schreibt nur, was sie
+  selbst geändert hat; zwei gleichzeitig offene Tabs überschreiben sich nicht.
+- **Zykluswechsel ohne Verlust und ohne Rückfrage:** Der bisherige Zyklus bleibt in seinem Stand und erscheint wieder, sobald er erneut
+  geöffnet wird (Startseite, Tablet oder Laptop). «Ansicht wechseln» übernimmt den gemeinsamen Stand statt der einmaligen Kopie.
+- Daten von vor dem 20.11.2026: Hat eine Ansicht ein Paket schon, wird beim ersten Öffnen vereinigt (fehlende Einträge ergänzt; beim gleichen
+  Tag und gleicher Person gewinnt der Eintrag mit mehr Erfasstem). Die zuerst geöffnete Ansicht zeigt ihren Stand, ab der zweiten sind beide gleich.
+- Unverändert: Dateien ohne Paket und das Beispiel (kein Stand, Wechsel mit Kopie wie bisher); «Sicherung einlesen» des gleichen Pakets ersetzt wie bisher.
+  Kann der Stand nicht gespeichert werden (Speicher voll), gilt die bisherige Rückfrage. Aufräumen: höchstens 60 Stände, entfernt werden nur
+  lange unbenutzte (über 60 Tage, bei vollem Speicher über 30 Tage).
+- Zwischen zwei Geräten (iPad und PC) gibt es weiterhin keinen automatischen Abgleich: dafür bleibt «⤓ Sichern» / «Sicherung laden».
+  Ein Abgleich über OneDrive oder den Teams-Ordner bräuchte eine App-Registrierung im EHL-Microsoft-Konto; diese ist für Michaels Konto gesperrt
+  (Entra- und Azure-Portal: «Sie haben keinen Zugriff»), also nur über die IT möglich. Entscheid 20.11.2026: vorerst nicht.
+
+Stand 20.11.2026: 959 Prüfungen in 21 Testreihen bestanden (neu `tests/test_gemeinsamer_stand.py`, 51 Prüfungen; in `test_noten2.py` und
+`test_personas.py` erwarten die Fälle «anderes Paket laden» jetzt: keine Rückfrage, erneut öffnen bringt die Daten zurück).
+

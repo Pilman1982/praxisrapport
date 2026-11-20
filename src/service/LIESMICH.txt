@@ -22,6 +22,12 @@ Alles andere bleibt gleich.
   _logo.txt           EHL-Logo als Base64, wird beim Bauen eingesetzt
   _icon.txt           Touch-Icon fuer den iPhone-Homescreen
 
+  ../_handoff.js      gemeinsam fuer alle Fassungen: Uebergabe von der Startseite, Ansicht wechseln
+  ../_sync.js         gemeinsam fuer alle Fassungen (seit 20.11.2026): EIN Stand pro Paket und Geraet
+                      fuer Tablet- und Laptop-Ansicht (Browserspeicher, ohne Fotos).
+                      tools/sync_handoff.py setzt beide in _scriptB.js und _noten2_mobile.js ein;
+                      dort nie von Hand aendern.
+
   build_variants.py   baut die drei Browser-Dateien (10T, 4T, 5T)
   mobile_build.py     baut die drei iPhone-/iPad-Dateien
 

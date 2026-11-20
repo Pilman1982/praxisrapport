@@ -58,11 +58,11 @@ Küche ·
 OK      Filter Bereich: nur Service im Export                                          ['103']
 OK      Export Schlussnoten: gerundet auf 0.1, Teilnoten 5T und 4T                     {'Nachname': 'Arnold', 'Vorname': 'Anna', 'Nickname': '', 'N°': '101', 'Klasse': 'HFD', 'Gruppe': 'Gruppe 1 Team A', 'Semester': 'HS26', 'Zyklus': 'Zy
 OK      CSV: Kopfzeile und 4 Zeilen, Semikolon                                         Nachname;Vorname;Nickname;N°;Klasse;Gruppe;Semester;Zyklus;Bereich;Outlets;Dozie
-OK      Excel: fuenf Blaetter, 4 Schlussnoten                                          [['Schlussnoten', 'Pakete', 'Tagesnoten Küche', 'Tagesnoten Service', 'Absenzen'], 4, [4.3, 6, 4.2, 3.3]]
+SKIP    Excel-Export: SheetJS lokal nicht vorhanden (DG_XLSX oder tests/.cache/xlsx.full.min.js)
 OK      Notenzentrale: keine JavaScript-Fehler                                         []
 OK      Exam 17.11. am 12.11. schon geoeffnet: kein Einsatz fertig, Hinweis in der Kontrolle [0, 3]
 OK      Kontrolle: gleiche Person am gleichen Tag in zwei Paketen = Fehler             ['Arnold Anna: am 02.11.2026 in 2 Paketen erfasst (Küche · Campigiana · 9 Tage + Exam · Koch Campi und Küche · Campigiana · 5 Tage · Koch Campi). Meis
 OK      Kontrolle: Rueckstand seit dem letzten Rapport (6 vergangene Einsatztage)      ['Küche · The Essence · 9 Tage + Exam · Koch Essence · Zyklus 3.2: seit dem letzten Rapport vom 04.11.2026 sind 6 Einsatztage vergangen (18.11., 19.11
 OK      Notenzentrale: keine JavaScript-Fehler (nach Nachladen)                        []
 
-56 von 56 Pruefungen bestanden
+55 von 55 Pruefungen bestanden

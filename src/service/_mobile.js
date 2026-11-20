@@ -326,7 +326,8 @@ const STARTLINK = (function(){
 const teacherForWd = wd => (S.settings.teacherPlan && S.settings.teacherPlan[wd]) || S.settings.teacher || "";
 try{ localStorage.setItem("kr.probe","1"); localStorage.removeItem("kr.probe"); }catch(e){ storeOK = false; }
 function persist(){
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); }
+  try{ localStorage.setItem(KEY, JSON.stringify(S));
+       if(typeof dgsChanged === "function") dgsChanged(); }   /* gemeinsamer Stand pro Paket (20.11.2026) */
   catch(e){ if(storeOK){ storeOK = false; try{ toast(t("storeWarn")); }catch(_){} } }
 }
 
@@ -963,6 +964,20 @@ function renderSet(){
 
   root.appendChild(el("p",{class:"muted",style:"margin:16px 2px 0",text:t("homeHint")}));
 }
+/* Datensatz übernehmen, ohne Meldung und ohne Ansichtswechsel. Gemeinsam für «Sicherung laden» und den
+   gemeinsamen Stand pro Paket (20.11.2026). Andere Variante: nur Gruppe, Team, Outlet und Personen. */
+function dgLoadObj(o, other){
+  if(!o || !o.settings || typeof o.settings !== "object" || !Array.isArray(o.students)) throw new Error("format");
+  if(o.app && o.app !== "Servicerapport") throw new Error("app");
+  S = {settings:{...DEF, ...o.settings, variant:MVARIANT},
+       students:saubereStudierende(o.students),
+       days: other ? {} : sanitizeDays(o.days),
+       dayMeta: other ? {} : sanitizeMeta(o.dayMeta)};
+  delete S.settings.isSample;
+  normalizeSettings(); pruneOrphans();
+  L = (T[S.settings.uiLang] ? S.settings.uiLang : "de");
+  persist();
+}
 /* Sicherung oder Paket laden. Ergebnis (Vertrag mit der Übergabe, wie onRestore am Laptop):
    true = geladen, false = abgelehnt (nichts geändert). */
 async function onLoadBackup(e){
@@ -976,14 +991,7 @@ async function onLoadBackup(e){
     if(o && o.app && o.app !== "Servicerapport"){ toast(t("loadOther")); return false; }
     if(!o || !o.settings || typeof o.settings !== "object" || !Array.isArray(o.students)) throw new Error("format");
     const other = o.variant && o.variant !== MVARIANT;
-    S = {settings:{...DEF, ...o.settings, variant:MVARIANT},
-         students:saubereStudierende(o.students),
-         days: other ? {} : sanitizeDays(o.days),
-         dayMeta: other ? {} : sanitizeMeta(o.dayMeta)};
-    delete S.settings.isSample;
-    normalizeSettings(); pruneOrphans();
-    L = (T[S.settings.uiLang] ? S.settings.uiLang : "de");
-    persist();
+    dgLoadObj(o, other);
     curSlot = slots()[0].id;
     view = "day"; render();
     toast(other ? t("loadPartial")

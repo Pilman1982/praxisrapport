@@ -206,7 +206,13 @@ with sync_playwright() as p:
         pg.goto(U + "mein.html"); pg.wait_for_timeout(200)
         pg.evaluate("()=>{ const p = JSON.parse(JSON.stringify(SEM.pakete[0])); p.id = 'anderes'; p.paket.settings.paketId = 'anderes'; openPack(p, false); }")
         pg.wait_for_load_state(); pg.wait_for_timeout(500)
-        ok(P + "D5 Fremdes Paket: Rückfrage nennt «Tag senden», Abbrechen behält Daten", dlg and "Tag senden" in dlg[0] and pg.evaluate("()=>JSON.stringify(S.days)") != "{}", dlg[:1])
+        # 20.11.2026: Das bisherige Paket liegt sicher im gemeinsamen Stand, also keine Rückfrage; erneut öffnen bringt es zurück
+        # (Rückfrage mit «Tag senden» nur noch ohne gemeinsamen Stand, siehe test_gemeinsamer_stand.py «Speicher voll»)
+        r5 = pg.evaluate("()=>[S.settings.paketId, JSON.stringify(S.days)]")
+        pg.goto(U + "mein.html"); pg.wait_for_timeout(200)
+        pg.evaluate("()=>openPack(SEM.pakete[0], false)"); pg.wait_for_load_state(); pg.wait_for_timeout(600)
+        ok(P + "D5 Fremdes Paket: ohne Rückfrage geladen, erneut öffnen bringt die Daten zurück",
+           not dlg and r5[0] == "anderes" and pg.evaluate("()=>JSON.stringify(S.days)") != "{}", (dlg[:1], r5[0]))
         pg.remove_listener("dialog", onD)
         ok(P + "D6 keine JavaScript-Fehler", not errs, errs[:2]); c.close()
         # Speicher gesperrt (z. B. privater Modus): Warnung sichtbar in der Tagesansicht

@@ -26,6 +26,11 @@ _mobile.js         Logik der iPhone-Fassung
 _logo.txt          EHL-Logo, Base64
 _icon.txt          App-Icon für "Zum Home-Bildschirm", Base64
 
+../_handoff.js     gemeinsam für alle Fassungen: Übergabe von der Startseite, Ansicht wechseln
+../_sync.js        gemeinsam für alle Fassungen (seit 20.11.2026): EIN Stand pro Paket und
+                   Gerät für Tablet- und Laptop-Ansicht (Browserspeicher, ohne Fotos).
+                   tools/sync_handoff.py setzt beide in _scriptB.js und _noten2_mobile.js ein;
+                   dort nie von Hand ändern.
 
 BAUEN
 -----

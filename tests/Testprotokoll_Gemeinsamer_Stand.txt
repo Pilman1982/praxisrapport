@@ -1,0 +1,55 @@
+PRUEFUNG GEMEINSAMER STAND PRO PAKET 20.11.2026
+
+OK      Kueche: P2 Startseite «Öffnen»: Tablet zeigt den Laptop-Eintrag                        ['d01:Da:hyg-p1', 'd02:Da:hyg-p2#Laptop-Notiz']
+OK      Kueche: P2 ohne Rückfrage                                                              []
+OK      Kueche: neuer Zyklus am Tablet: ohne Rückfrage «Tage werden ersetzt»                   ([], 'Zyklus 1.2')
+OK      Kueche: P3 Umschaltknopf: Laptop zeigt Zyklus 1.2 mit dem Tablet-Eintrag, keine Rückfrage ({'file': 'Kuechenrapport.html', 'block': 'Zyklus 1.2', 'names': ['Beispiel Berta', 'Muster Emma'], 'fotos': 2, 'rec': ['d01:Muster:hyg-p3']}, [])
+OK      Kueche: P3 Fotos kommen mit (stehen nicht im Stand)                                    2
+OK      Kueche: P1 Startseite «Laptop-Ansicht»: Tablet- und Laptop-Eintrag da                  ['d01:Muster:hyg-p3', 'd02:Beispiel:@late']
+OK      Kueche: P1 danach am Tablet: gleicher Stand                                            ['d01:Muster:hyg-p3', 'd02:Beispiel:@late']
+OK      Kueche: Zyklus 1.1 wieder öffnen: Tablet und Laptop haben beide Einträge               (['d01:Da:hyg-p1', 'd02:Da:hyg-p2#Laptop-Notiz'], ['d01:Da:hyg-p1', 'd02:Da:hyg-p2#Laptop-Notiz'])
+OK      Kueche: Fotos nach dem Zykluswechsel                                                   (1, 1)
+OK      Kueche: je Zyklus ein Stand, ohne Fotos                                                {'n': 2, 'foto': False, 'keys': ['dg.stand|Kuechenrapport|10T|Paket_Zyklus-1-1_Kueche_The-Essence_10T_2026-10-31', 'dg.stand|Kuechenrapport|10T|Paket_
+OK      Kueche: keine JavaScript-Fehler                                                        []
+OK      Kueche: zwei Tabs: beide Einträge in beiden Ansichten                                  (['d01:Muster:hyg-p3', 'd02:Beispiel:@late', 'd03:Muster:hyg-p1#aus Tablet', 'd04:Beispiel:hyg-p2#aus Laptop'], ['d01:Muster:hyg-p3', 'd02:Beispiel:@l
+OK      Kueche: zwei Tabs: offenes Blatt geschlossen, neuer Eintrag aus dem Laptop da          (0, ['d01:Muster:hyg-p3', 'd02:Beispiel:@late', 'd03:Muster:hyg-p1#aus Tablet', 'd04:Beispiel:hyg-p2#aus Laptop', 'd05:Beispiel:hyg-p3'])
+OK      Kueche: Zurück (pageshow) holt den neusten Stand                                       ['d01:Muster:hyg-p3', 'd02:Beispiel:@late', 'd03:Muster:hyg-p1#aus Tablet', 'd04:Beispiel:hyg-p2#aus Laptop', 'd05:Beispiel:hyg-p3', 'd06:Muster:hyg-p
+OK      Kueche: alte Daten: Tablet zuerst geöffnet zeigt seinen bisherigen Stand               ['d01:Muster:hyg-p1', 'd02:Muster:hyg-p2']
+OK      Kueche: alte Daten: Laptop danach zeigt die Vereinigung (d01, d03, d02 mit mehr Erfasstem) ['d01:Muster:hyg-p1', 'd02:Muster:hyg-p2+hyg-p3', 'd03:Beispiel:hyg-p3']
+OK      Kueche: alte Daten: Tablet beim nächsten Öffnen gleich                                 ['d01:Muster:hyg-p1', 'd02:Muster:hyg-p2+hyg-p3', 'd03:Beispiel:hyg-p3']
+OK      Kueche: nach Zurücksetzen: Paket erneut öffnen bringt die Einträge zurück              {'file': 'Kuechenrapport.html', 'block': 'Zyklus 1.2', 'names': ['Beispiel Berta', 'Muster Emma'], 'fotos': 2, 'rec': ['d01:Muster:hyg-p1', 'd02:Muste
+OK      Kueche: Sicherung einlesen (gleiches Paket) gilt auch für die andere Ansicht           ['d01:Muster:hyg-p1', 'd02:Muster:hyg-p2+hyg-p3']
+OK      Kueche: alte Daten/Zurücksetzen: keine JavaScript-Fehler                               []
+OK      Kueche: Speicher voll: Rückfrage (nennt «Tag senden») vor dem Ersetzen, Abbrechen behält Zyklus 1.1 (['Neues Paket laden: Zyklus 1.2 · Küche The Essence · 9 Tage + Exam · ab 18.11.?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte v
+OK      Kueche: Speicher voll: keine JavaScript-Fehler                                         []
+OK      Kueche: ohne Paket: kein Stand, Wechsel bringt den Eintrag wie bisher                  (0, ['d01:Muster:hyg-p1'])
+OK      Kueche: ohne Paket: keine JavaScript-Fehler                                            []
+OK      Service: P2 Startseite «Öffnen»: Tablet zeigt den Laptop-Eintrag                       ['d01:Da:gas-p1', 'd02:Da:gas-p3#Laptop-Notiz']
+OK      Service: P2 ohne Rückfrage                                                             []
+OK      Service: neuer Zyklus am Tablet: ohne Rückfrage «Tage werden ersetzt»                  ([], 'Zyklus 1.2')
+OK      Service: P3 Umschaltknopf: Laptop zeigt Zyklus 1.2 mit dem Tablet-Eintrag, keine Rückfrage ({'file': 'Servicerapport.html', 'block': 'Zyklus 1.2', 'names': ['Beispiel Berta', 'Muster Emma'], 'fotos': 2, 'rec': ['d01:Muster:gas-p4']}, [])
+OK      Service: P3 Fotos kommen mit (stehen nicht im Stand)                                   2
+OK      Service: P1 Startseite «Laptop-Ansicht»: Tablet- und Laptop-Eintrag da                 ['d01:Muster:gas-p4', 'd02:Beispiel:@late']
+OK      Service: P1 danach am Tablet: gleicher Stand                                           ['d01:Muster:gas-p4', 'd02:Beispiel:@late']
+OK      Service: Zyklus 1.1 wieder öffnen: Tablet und Laptop haben beide Einträge              (['d01:Da:gas-p1', 'd02:Da:gas-p3#Laptop-Notiz'], ['d01:Da:gas-p1', 'd02:Da:gas-p3#Laptop-Notiz'])
+OK      Service: Fotos nach dem Zykluswechsel                                                  (1, 1)
+OK      Service: je Zyklus ein Stand, ohne Fotos                                               {'n': 2, 'foto': False, 'keys': ['dg.stand|Servicerapport|10T|Paket_Zyklus-1-2_Service_Campigiana_10T_2026-11-18', 'dg.stand|Servicerapport|10T|Paket_
+OK      Service: keine JavaScript-Fehler                                                       []
+OK      Service: zwei Tabs: beide Einträge in beiden Ansichten                                 (['d01:Muster:gas-p4', 'd02:Beispiel:@late', 'd03:Muster:gas-p1#aus Tablet', 'd04:Beispiel:gas-p3#aus Laptop'], ['d01:Muster:gas-p4', 'd02:Beispiel:@l
+OK      Service: zwei Tabs: offenes Blatt geschlossen, neuer Eintrag aus dem Laptop da         (0, ['d01:Muster:gas-p4', 'd02:Beispiel:@late', 'd03:Muster:gas-p1#aus Tablet', 'd04:Beispiel:gas-p3#aus Laptop', 'd05:Beispiel:gas-p4'])
+OK      Service: Zurück (pageshow) holt den neusten Stand                                      ['d01:Muster:gas-p4', 'd02:Beispiel:@late', 'd03:Muster:gas-p1#aus Tablet', 'd04:Beispiel:gas-p3#aus Laptop', 'd05:Beispiel:gas-p4', 'd06:Muster:gas-p
+OK      Service: alte Daten: Tablet zuerst geöffnet zeigt seinen bisherigen Stand              ['d01:Muster:gas-p1', 'd02:Muster:gas-p3']
+OK      Service: alte Daten: Laptop danach zeigt die Vereinigung (d01, d03, d02 mit mehr Erfasstem) ['d01:Muster:gas-p1', 'd02:Muster:gas-p3+gas-p4', 'd03:Beispiel:gas-p4']
+OK      Service: alte Daten: Tablet beim nächsten Öffnen gleich                                ['d01:Muster:gas-p1', 'd02:Muster:gas-p3+gas-p4', 'd03:Beispiel:gas-p4']
+OK      Service: nach Zurücksetzen: Paket erneut öffnen bringt die Einträge zurück             {'file': 'Servicerapport.html', 'block': 'Zyklus 1.2', 'names': ['Beispiel Berta', 'Muster Emma'], 'fotos': 2, 'rec': ['d01:Muster:gas-p1', 'd02:Muste
+OK      Service: Sicherung einlesen (gleiches Paket) gilt auch für die andere Ansicht          ['d01:Muster:gas-p1', 'd02:Muster:gas-p3+gas-p4']
+OK      Service: alte Daten/Zurücksetzen: keine JavaScript-Fehler                              []
+OK      Service: Speicher voll: Rückfrage (nennt «Tag senden») vor dem Ersetzen, Abbrechen behält Zyklus 1.1 (['Neues Paket laden: Zyklus 1.2 · Service Campigiana · 9 Tage + Exam · ab 18.11.?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt. Bitte 
+OK      Service: Speicher voll: keine JavaScript-Fehler                                        []
+OK      Service: ohne Paket: kein Stand, Wechsel bringt den Eintrag wie bisher                 (0, ['d01:Muster:gas-p1'])
+OK      Service: ohne Paket: keine JavaScript-Fehler                                           []
+OK      Aufräumen: höchstens 60 Stände, frische und aktueller bleiben, älteste zuerst weg      {'n': 60, 'neu': 30, 'jetzt': True, 'alt': 29}
+OK      Aufräumen bei vollem Speicher: nur Stände über 30 Tage                                 {'alt': 0, 'neu': 30}
+OK      Aufräumen: keine JavaScript-Fehler                                                     []
+
+51 von 51

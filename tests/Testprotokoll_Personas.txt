@@ -1,4 +1,4 @@
-QA-LOOP MIT VIER PERSONAS 10.11.2026
+QA-LOOP MIT VIER PERSONAS 20.11.2026
 
 OK      Kueche · A1 Paket öffnen am Mittwoch: Tag Mittwoch 07.10. vorgewählt       Mittwoch 07.10.
 OK      Kueche · A2 App erneut öffnen (ohne Startseite): wieder der heutige Tag    Mittwoch 07.10.
@@ -48,7 +48,7 @@ OK      Kueche · D1 Falsche Dateien: Meldung, nichts geht verloren             
 OK      Kueche · D2 Semesterpaket in der falschen Seite: Hinweis auf die Startseite Das ist Ihr Semesterpaket. Bitte auf Ihrer persönlichen Startseite laden (Symbol auf dem Home-Bildschirm), nicht hier.
 OK      Kueche · D3 Teilen abgebrochen: kein ungewollter Download, kein Fehler     0
 OK      Kueche · D4 Doppeltipp auf «Tag öffnen»: ein Tag, alle Personen            
-OK      Kueche · D5 Fremdes Paket: Rückfrage nennt «Tag senden», Abbrechen behält Daten ['Neues Paket laden: Zyklus 2.1 · Küche Patisserie · 4 Tage + Exam · ab 05.10.?\n\nDie bisher in dieser Datei erfassten Tage werden ersetzt.
+OK      Kueche · D5 Fremdes Paket: ohne Rückfrage geladen, erneut öffnen bringt die Daten zurück ([], 'anderes')
 OK      Kueche · D6 keine JavaScript-Fehler                                        []
 OK      Kueche · D7 Speicher gesperrt: Warnung direkt in der Tagesansicht          Achtung: Dieses Gerät speichert gerade nichts (privater Modus oder Speicher voll). Bitte jetzt «⤓ Sichern» tippen und de
 OK      Kueche · D8 keine JavaScript-Fehler                                        []
@@ -100,7 +100,7 @@ OK      Service · D1 Falsche Dateien: Meldung, nichts geht verloren            
 OK      Service · D2 Semesterpaket in der falschen Seite: Hinweis auf die Startseite Das ist Ihr Semesterpaket. Bitte auf Ihrer persönlichen Startseite laden (Symbol auf dem Home-Bildschirm), nicht hier.
 OK      Service · D3 Teilen abgebrochen: kein ungewollter Download, kein Fehler    0
 OK      Service · D4 Doppeltipp auf «Tag öffnen»: ein Tag, alle Personen           
-OK      Service · D5 Fremdes Paket: Rückfrage nennt «Tag senden», Abbrechen behält Daten ['Neues Paket laden: Zyklus 2.1 · Service Da Fortunat · 4 Tage + Exam · ab 05.10.?\n\nDie bisher in dieser Datei erfassten Tage werden erset
+OK      Service · D5 Fremdes Paket: ohne Rückfrage geladen, erneut öffnen bringt die Daten zurück ([], 'anderes')
 OK      Service · D6 keine JavaScript-Fehler                                       []
 OK      Service · D7 Speicher gesperrt: Warnung direkt in der Tagesansicht         Achtung: Dieses Gerät speichert gerade nichts (privater Modus oder Speicher voll). Bitte jetzt «⤓ Sichern» tippen und de
 OK      Service · D8 keine JavaScript-Fehler                                       []
